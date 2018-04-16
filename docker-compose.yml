@@ -1,0 +1,12 @@
+---
+version: '3'
+
+services:
+  snl-front:
+    build:
+      context: .
+    image: snl-front
+    environment:
+      - SNL_API_URL=http://localhost:3451
+    ports:
+      - 3451:80

@@ -1,0 +1,24 @@
+<div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Search sessions</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="chosenDate" placeholder="Choose date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <button mat-button (click)="getSessions(chosenDate)">Get Sessions</button>
+
+      </mat-card-content>
+  </mat-card>
+
+  <mat-divider></mat-divider>
+
+  <div>
+   <app-session-table></app-session-table>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Scheduling and listing</span>
+
+    <span class="example-spacer"></span>
+
+    <button mat-button (click)="setView('main')">Main</button>
+    <button mat-button (click)="setView('sessions')">Sessions</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div style="width:80%; margin-left: 15px">
+  <div *ngIf="chosenView === 'main'">
+    <span>Main</span>
+  </div>
+
+  <div *ngIf="chosenView === 'sessions'">
+    <app-sessions-page></app-sessions-page>
+  </div>
+</div>
+
+

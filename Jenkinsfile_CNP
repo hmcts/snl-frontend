@@ -1,0 +1,14 @@
+#!groovy
+properties(
+    [[$class: 'GithubProjectProperty', projectUrlStr: 'our project url'],
+     pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+)
+
+@Library("Infrastructure")
+
+def product = "snl"
+def app = "snl"
+
+withPipeline("angular", product, app) {
+
+}
