@@ -1,0 +1,18 @@
+#!groovy
+@Library("Infrastructure") _
+
+properties([
+    parameters([
+        string(name: 'PRODUCT_NAME', defaultValue: 'snl', description: ''),
+        string(name: 'APP', defaultValue: 'snl-front', description: ''),
+        string(name: 'TYPE', defaultValue: 'angular', description: ''),
+        string(name: 'ENVIRONMENT', defaultValue: 'sandbox', description: 'Environment where code should be build and deployed'),
+        choice(name: 'SUBSCRIPTION', choices: 'sandbox', description: 'Azure subscriptions available to build in')
+    ]),
+    [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend.git'],
+    pipelineTriggers([[$class: 'GitHubPushTrigger']])
+])
+
+withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+
+}
