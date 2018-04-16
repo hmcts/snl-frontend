@@ -19,6 +19,8 @@ import { MatTableModule, MatListModule, MatCardModule, MatIconModule,
 import { SessionsPageComponent } from './core/components/sessions-page/sessions-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {AppConfig} from "./app.config";
+import { AppConfigGuard } from './app-config.guard';
+import { AppRoutingModule } from './/app-routing.module';
 
 
 @NgModule({
@@ -44,9 +46,10 @@ import {AppConfig} from "./app.config";
     MatListModule,
     BrowserAnimationsModule,
     FormsModule,
-    MatTableModule
+    MatTableModule,
+    AppRoutingModule
   ],
-  providers: [SessionsService, AppConfig],
+  providers: [SessionsService, AppConfig, AppConfigGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

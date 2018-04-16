@@ -11,9 +11,7 @@ export class AppConfig {
 
   protected config: Config;
 
-  constructor(private http: HttpClient) {
-    this.load();
-  }
+  constructor(private http: HttpClient) {}
 
   public load(): Promise<void> {
     console.log('Loading app config...');

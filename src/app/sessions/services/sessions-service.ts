@@ -8,15 +8,12 @@ import { AppConfig } from "../../app.config";
 
 @Injectable()
 export class SessionsService {
-  private API_PATH = '/api/get-sessions';
-
   constructor(private http: HttpClient, private config: AppConfig) {
-    this.API_PATH = this.config.getApiUrl();
   }
 
   searchSessions(query: SessionQuery): Observable<Session[]> {
     return this.http
-      .get<Session[]>(`${this.API_PATH}?date=${query.date}`)
+      .get<Session[]>(`${this.config.getApiUrl()}/get-sessions?date=${query.date}`)
       .pipe(map(sessions => sessions || []));
   }
 }

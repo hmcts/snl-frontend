@@ -15,9 +15,6 @@ export class SessionTableComponent implements OnInit {
   dataSource;
 
   constructor(private store: Store<AppState>, private config: AppConfig) {
-    config.load().then(() => {
-      console.log(config.getApiUrl());
-    });
 
     this.store.pipe(select(state => state.sessionsReducer.sessions)).subscribe(data => {
       if(data) {
