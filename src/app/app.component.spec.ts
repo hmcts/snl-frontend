@@ -1,35 +1,24 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatDatepickerModule, MatFormFieldModule,
-  MatGridListModule, MatIconModule, MatInputModule,
-  MatListModule,
-  MatNativeDateModule,
-  MatTableModule, MatToolbarModule
-} from "@angular/material";
-import {FormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {SessionsPageComponent} from './sessions/containers/sessions-page/sessions-page.component';
+import {SessionTableComponent} from './sessions/containers/session-table/session-table.component';
+import {AngularMaterialModule} from '../angular-material/angular-material.module';
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent,
-        MatCardModule,
-        MatIconModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatGridListModule,
-        MatListModule,
+      imports: [
         BrowserAnimationsModule,
         FormsModule,
-        MatTableModule
+        AngularMaterialModule
       ],
+      declarations: [
+        AppComponent,
+        SessionsPageComponent,
+        SessionTableComponent
+      ]
     }).compileComponents();
   }));
   it('should create the app', async(() => {
@@ -37,15 +26,10 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   }));
-  it(`should have as title 'app'`, async(() => {
+  it(`should be on sessions view`, async(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
+
+    expect(app.chosenView).toEqual('main');
   }));
 });

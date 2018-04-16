@@ -6,21 +6,18 @@ import { sessionReducer } from './sessions/reducers/session.reducer';
 
 import { AppComponent } from './app.component';
 import { SessionTableComponent } from './sessions/containers/session-table/session-table.component';
-import { EffectsModule } from "@ngrx/effects";
-import { SessionEffects } from "./sessions/effects/session.effects";
-import { HttpClientModule } from "@angular/common/http";
-import { SessionsService } from "./sessions/services/sessions-service";
+import { EffectsModule } from '@ngrx/effects';
+import { SessionEffects } from './sessions/effects/session.effects';
+import { HttpClientModule } from '@angular/common/http';
+import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
-import { MatTableModule, MatListModule, MatCardModule, MatIconModule,
-  MatToolbarModule, MatButtonModule, MatFormFieldModule, MatInputModule,
-  MatDatepickerModule, MatNativeDateModule, MatGridListModule } from '@angular/material';
-
-import { SessionsPageComponent } from './core/components/sessions-page/sessions-page.component';
+import { SessionsPageComponent } from './sessions/containers/sessions-page/sessions-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {AppConfig} from "./app.config";
+import {AppConfig} from './app.config';
 import { AppConfigGuard } from './app-config.guard';
 import { AppRoutingModule } from './/app-routing.module';
+import {AngularMaterialModule} from '../angular-material/angular-material.module';
 
 
 @NgModule({
@@ -31,23 +28,13 @@ import { AppRoutingModule } from './/app-routing.module';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     StoreModule.forRoot({sessionsReducer: sessionReducer}),
     EffectsModule.forRoot([SessionEffects]),
     HttpClientModule,
-    MatCardModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatGridListModule,
-    MatListModule,
-    BrowserAnimationsModule,
     FormsModule,
-    MatTableModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AngularMaterialModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard],
   bootstrap: [AppComponent]

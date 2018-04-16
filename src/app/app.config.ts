@@ -16,7 +16,7 @@ export class AppConfig {
   public load(): Promise<void> {
     console.log('Loading app config...');
 
-    let configUrl = environment.configUrl;
+    const configUrl = environment.configUrl;
 
     return new Promise<void>((resolve, reject) => {
       this.http

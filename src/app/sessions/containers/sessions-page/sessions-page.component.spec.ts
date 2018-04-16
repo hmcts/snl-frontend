@@ -1,29 +1,37 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SessionTableComponent } from './session-table.component';
+import { SessionsPageComponent } from './sessions-page.component';
+import {SessionTableComponent} from '../session-table/session-table.component';
+import {FormsModule} from '@angular/forms';
 import {Store, StoreModule} from '@ngrx/store';
 import {sessionReducer} from '../../reducers/session.reducer';
 import {AppState} from '../../../app.state';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AngularMaterialModule} from '../../../../angular-material/angular-material.module';
-import {AppConfig} from '../../../app.config';
 import {HttpClientModule} from '@angular/common/http';
+import {AppConfig} from '../../../app.config';
 
-describe('SessionTableComponent', () => {
-  let component: SessionTableComponent;
-  let fixture: ComponentFixture<SessionTableComponent>;
+describe('SessionsPageComponent', () => {
+  let component: SessionsPageComponent;
+  let fixture: ComponentFixture<SessionsPageComponent>;
   let store: Store<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         AngularMaterialModule,
-        StoreModule.forRoot( { sessionsReducer: sessionReducer} ),
+        FormsModule,
+        StoreModule.forRoot( { sessionsReducer: sessionReducer } ),
         HttpClientModule
       ],
       declarations: [
+        SessionsPageComponent,
         SessionTableComponent
       ],
-      providers: [ AppConfig ]
+      providers: [
+          AppConfig
+      ]
     })
     .compileComponents();
   }));
@@ -33,7 +41,7 @@ describe('SessionTableComponent', () => {
 
     spyOn(store, 'dispatch').and.callThrough();
 
-    fixture = TestBed.createComponent(SessionTableComponent);
+    fixture = TestBed.createComponent(SessionsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
