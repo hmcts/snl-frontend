@@ -1,6 +1,6 @@
 #!groovy
 properties(
-    [[$class: 'GithubProjectProperty', projectUrlStr: 'our project url'],
+    [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend.git'],
      pipelineTriggers([[$class: 'GitHubPushTrigger']])]
 )
 
