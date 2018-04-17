@@ -6,8 +6,8 @@ properties(
 
 @Library("Infrastructure")
 
-def product = "snl"
-def app = "snl"
+def product = "sandl"
+def app = "snl-frontend"
 
 withPipeline("angular", product, app) {
 
