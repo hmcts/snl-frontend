@@ -3,8 +3,8 @@
   "hostname": "localhost",
   "buildInfo": {
     "environment": "local",
-    "project": "ccdata",
-    "name": "case-management-web",
-    "version": "1.0.0"
+    "project": "snl",
+    "name": "snl-frontend",
+    "version": "0.1.0"
   }
 }
