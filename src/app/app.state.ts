@@ -6,5 +6,5 @@ export interface AppState {
     readonly sessions: Session[];
     readonly loading: boolean;
     readonly error: string;
-  }
+  };
 }

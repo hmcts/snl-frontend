@@ -1,10 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import {FormsModule} from '@angular/forms';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {SessionsPageComponent} from './sessions/containers/sessions-page/sessions-page.component';
-import {SessionTableComponent} from './sessions/containers/session-table/session-table.component';
-import {AngularMaterialModule} from '../angular-material/angular-material.module';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SessionsPageComponent } from './sessions/containers/sessions-page/sessions-page.component';
+import { SessionTableComponent } from './sessions/containers/session-table/session-table.component';
+import { AngularMaterialModule } from '../angular-material/angular-material.module';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
