@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
-import {SessionQuery} from '../models/session-query.model';
+import { SessionQuery } from '../models/session-query.model';
 
 export enum SessionActionTypes {
   Search = '[Book] Search',
@@ -39,4 +39,3 @@ export class SearchFailed implements Action {
 
   }
 }
-

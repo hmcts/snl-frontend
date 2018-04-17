@@ -1,0 +1,86 @@
+@import '~@ccd/case-ui-toolkit/dist/cut-styles/components/typography';
+@import 'shims';
+@import 'conditionals';
+@import 'measurements';
+
+$black: #323232;
+
+$path: "/assets/";
+
+$fa-font-path: "/node_modules/font-awesome/fonts";
+$govuk-frontend-toolkit-image-path: "/assets";
+$govuk-template-image-path: "/assets";
+
+@import "govuk-elements";
+
+// Organise SASS (TODO / TS)
+@import "./buttons";
+@import "./forms";
+@import "./markdown";
+
+// Bootstrap
+
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-bottom: 30px;
+}
+
+.column-three-quarters {
+  float: left;
+  width: 75%;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.side-padding {
+  padding-left: 210px;
+  padding-right: 210px;
+}
+
+
+@media (max-width: 991px) {
+
+  // Add bottom margin when column are stacked up
+  [class*="col-md"] {
+    margin-bottom: 30px;
+  }
+
+}
+
+@import './notifications';
+
+table.form-table {
+  td.form-cell {
+    padding-top: 5px;
+    padding-bottom: 4px;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  margin-bottom: 30px;
+}
+
+@media (min-width: 641px) {
+  a[rel="external"]:after {
+    content: "\A0\A0\A0\A0";
+    background-position: right 4px;
+  }
+
+  a[rel="external"]:hover:after {
+    background-position: right -384px;
+  }
+}
+
+.plain-message {
+  @include core-12pt;
+  color: $black;
+  margin-bottom: 4px;
+  font-weight: 100;
+}
+
+.field-label {
+    font-weight: 900;
+}
