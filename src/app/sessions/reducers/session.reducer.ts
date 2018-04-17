@@ -1,5 +1,5 @@
-import { SearchComplete, SessionActionTypes } from "../actions/session.action";
-import {AppState} from "../../app.state";
+import { SessionActionTypes } from '../actions/session.action';
+import { AppState } from '../../app.state';
 
 export function sessionReducer(state: AppState[] = [], action) {
   switch (action.type) {

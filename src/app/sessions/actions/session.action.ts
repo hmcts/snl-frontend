@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
-import {SessionQuery} from "../models/session-query.model";
+import {SessionQuery} from '../models/session-query.model';
 
 export enum SessionActionTypes {
   Search = '[Book] Search',
@@ -19,7 +19,7 @@ export class Search implements Action {
   readonly type = SessionActionTypes.Search;
 
   constructor(public payload: SessionQuery) {
-    console.log("Action: search");
+    console.log('Action: search');
   }
 }
 

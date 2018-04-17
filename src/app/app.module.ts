@@ -14,10 +14,10 @@ import { FormsModule } from '@angular/forms';
 
 import { SessionsPageComponent } from './sessions/containers/sessions-page/sessions-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {AppConfig} from './app.config';
+import { AppConfig } from './app.config';
 import { AppConfigGuard } from './app-config.guard';
 import { AppRoutingModule } from './/app-routing.module';
-import {AngularMaterialModule} from '../angular-material/angular-material.module';
+import { AngularMaterialModule } from '../angular-material/angular-material.module';
 
 
 @NgModule({
