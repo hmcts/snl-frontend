@@ -17,7 +17,6 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
     * [Prerequisites](#prerequisites)
     * [Install dependencies](#install-dependencies)
     * [Running](#running)
-    * [Stubbing](#stubbing)
     * [Testing](#testing)
     * [Production](#production)
     * [Documentation](#documentation)
@@ -32,6 +31,8 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
 * [Node.js](https://nodejs.org/) >= v8.0.0
 * [yarn](https://yarnpkg.com/)
 * [Docker](https://www.docker.com)
+
+You can use NVM (Node Version Manager) to get proper Node version
 
 ### Environment variables
 

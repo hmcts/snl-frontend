@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
-    { path: '', component: AppComponent, canActivate: [AppConfigGuard] }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: AppComponent, canActivate: [AppConfigGuard] }
 ];
 
 @NgModule({

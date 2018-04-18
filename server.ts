@@ -52,8 +52,8 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.get('/config', (req, res) => {
-  res.status(200).json(CONFIG);
+app.get('/cfg', (req, res) => {
+    res.status(200).json(CONFIG);
 });
 
 // TODO: implement data requests securely
