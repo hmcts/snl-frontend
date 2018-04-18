@@ -1,11 +1,13 @@
-
-module "snl-frontend" {
+locals {
+  app_full_name = "${var.product}-${var.component}"
+}
+module "snl-rules" {
   source               = "git@github.com:hmcts/moj-module-webapp"
-  product              = "${var.product}-frontend"
+  product              = "${var.product}-${var.component}"
   location             = "${var.location}"
   env                  = "${var.env}"
   ilbIp                = "${var.ilbIp}"
-  is_frontend          = true
+  is_frontend          = false
   subscription         = "${var.subscription}"
   additional_host_name = "${var.external_host_name}"
 
