@@ -1,7 +1,7 @@
 locals {
   app_full_name = "${var.product}-${var.component}"
 }
-module "snl-rules" {
+module "snl-frontend" {
   source               = "git@github.com:hmcts/moj-module-webapp"
   product              = "${var.product}-${var.component}"
   location             = "${var.location}"
