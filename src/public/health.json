@@ -1,0 +1,10 @@
+{
+  "status": "UP",
+  "hostname": "localhost",
+  "buildInfo": {
+    "environment": "local",
+    "project": "snl",
+    "name": "snl-frontend",
+    "version": "0.1.0"
+  }
+}

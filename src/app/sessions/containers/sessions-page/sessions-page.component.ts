@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {Search} from "../../../sessions/actions/session.action";
-import {AppState} from "../../../app.state";
-import {Store} from "@ngrx/store";
-import {DatePipe} from "@angular/common";
+import { Search } from '../../../sessions/actions/session.action';
+import { AppState } from '../../../app.state';
+import { Store } from '@ngrx/store';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sessions-page',

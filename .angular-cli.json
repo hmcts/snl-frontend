@@ -1,16 +1,14 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "s-n-l"
+    "name": "angular.io-example"
   },
   "apps": [
     {
       "root": "src",
-      "outDir": "dist",
+      "outDir": "dist/browser",
       "assets": [
-        "assets",
-        "favicon.ico",
-        "config.json"
+        { "glob": "**/*", "input": "./public", "output": "./" }
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -22,6 +20,36 @@
       "styles": [
         "styles.css"
       ],
+      "stylePreprocessorOptions": {
+        "includePaths": [
+        ]
+      },
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "platform": "server",
+      "root": "src",
+      "outDir": "dist/server",
+      "assets": [
+        { "glob": "**/*", "input": "./public", "output": "./" }
+      ],
+      "index": "index.html",
+      "main": "main.server.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.server.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "app",
+      "styles": [
+      ],
+      "stylePreprocessorOptions": {
+        "includePaths": [
+        ]
+      },
       "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -55,7 +83,10 @@
     }
   },
   "defaults": {
-    "styleExt": "css",
-    "component": {}
+    "styleExt": "scss",
+    "component": {},
+    "serve": {
+      "port": 3451
+    }
   }
 }
