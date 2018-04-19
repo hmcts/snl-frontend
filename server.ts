@@ -14,7 +14,7 @@ enableProdMode();
 const app = express();
 
 const PORT = process.env.PORT || 3451;
-const DIST_FOLDER = join(process.cwd(), 'dist');
+const DIST_FOLDER = join(process.cwd());
 const CONFIG = {
   'api_url': process.env['SNL_API_URL'] || 'http://localhost:3451/api',
 };
