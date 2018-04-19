@@ -219,6 +219,13 @@
   dependencies:
     typescript "~2.6.2"
 
+"@types/fullcalendar@3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@types/fullcalendar/-/fullcalendar-3.5.2.tgz#88cfb8962e1eb5ce11824fd95bc2f8d97a8e3518"
+  dependencies:
+    "@types/jquery" "*"
+    moment ">=2.14.0"
+
 "@types/jasmine@*", "@types/jasmine@~2.8.0":
   version "2.8.6"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.6.tgz#14445b6a1613cf4e05dd61c3c3256d0e95c0421e"
@@ -228,6 +235,14 @@
   resolved "https://registry.yarnpkg.com/@types/jasminewd2/-/jasminewd2-2.0.3.tgz#0d2886b0cbdae4c0eeba55e30792f584bf040a95"
   dependencies:
     "@types/jasmine" "*"
+
+"@types/jquery@*":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.1.tgz#55758d44d422756d6329cbf54e6d41931d7ba28f"
+
+"@types/jquery@3.2.17":
+  version "3.2.17"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.2.17.tgz#01df9805dd5cf83a14cf5bfd81adced7d4fbd970"
 
 "@types/node@^6.0.45", "@types/node@^6.0.46":
   version "6.0.106"
@@ -2809,6 +2824,13 @@ fstream@^1.0.0, fstream@^1.0.10, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
+fullcalendar@3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-3.6.1.tgz#0b9b62b1e697d52d39c1118af9e4e411e5045590"
+  dependencies:
+    jquery "2 - 3"
+    moment "^2.9.0"
+
 function-bind@^1.0.2, function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
@@ -3957,6 +3979,10 @@ jju@^1.1.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/jju/-/jju-1.3.0.tgz#dadd9ef01924bc728b03f2f7979bdbd62f7a2aaa"
 
+"jquery@2 - 3", jquery@^3.2.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.3.tgz#2e545ec2b0f2957f41356510205214e98fad6582"
@@ -4780,6 +4806,10 @@ mocha@^5.0.5:
     mkdirp "0.5.1"
     supports-color "4.4.0"
 
+moment@>=2.14.0, moment@^2.9.0:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
+
 morgan@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.0.tgz#d01fa6c65859b76fcf31b3cb53a3821a311d8051"
@@ -4870,6 +4900,15 @@ neo-async@^2.5.0:
 next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
+
+ng-fullcalendar@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/ng-fullcalendar/-/ng-fullcalendar-1.5.5.tgz#95275ef4df1bdccf575d08f8d6b69d402345a388"
+  dependencies:
+    "@types/fullcalendar" "3.5.2"
+    "@types/jquery" "3.2.17"
+    fullcalendar "3.6.1"
+    jquery "^3.2.1"
 
 ng2-mock-component@^0.1.1:
   version "0.1.1"
