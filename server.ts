@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 3451;
 const DIST_FOLDER = join(process.cwd());
 const CONFIG = {
-  'api_url': process.env['SNL_API_URL'] || 'http://localhost:3451/api',
+  'api_url': process.env['SNL_API_URL'] || 'http://snl-api-sandbox.service.core-compute-sandbox.internal' // 'http://localhost:3451/api',
 };
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
