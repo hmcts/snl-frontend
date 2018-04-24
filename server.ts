@@ -19,24 +19,6 @@ const CONFIG = {
   'api_url': process.env['SNL_API_URL'] || 'http://localhost:8090'
 };
 
-// * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/server/main.bundle');
-
-// Express Engine
-import { ngExpressEngine } from '@nguniversal/express-engine';
-// Import module map for lazy loading
-import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
-import { AppConfig } from './src/app/app.config';
-import { AppServerConfig } from './src/app/app.server.config';
-
-app.engine('html', ngExpressEngine({
-  bootstrap: AppServerModuleNgFactory,
-  providers: [
-    provideModuleMap(LAZY_MODULE_MAP),
-    { provide: AppConfig, useValue: new AppServerConfig(CONFIG) },
-  ]
-}));
-
 app.all('/*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', CONFIG.api_url);
     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
