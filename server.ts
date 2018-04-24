@@ -54,7 +54,7 @@ app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {
-  res.render(join(DIST_FOLDER, 'browser', 'index.html'), { req });
+  res.sendFile(join(DIST_FOLDER, 'browser', 'index.html'), { req });
 });
 
 // Start up the Node server
