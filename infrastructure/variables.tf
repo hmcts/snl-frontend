@@ -3,7 +3,11 @@ variable "product" {
   default     = "snl"
   description = "Scheduling and Listing "
 }
-
+variable "component" {
+  type        = "string"
+  default     = "frontend"
+  description = "Scheduling and Listing "
+}
 variable "location" {
   type    = "string"
   default = "UK South"
@@ -29,6 +33,6 @@ variable "object_id" {
 
 
 variable "external_host_name" {
-  default = "snl-front.reform.hmcts.net"
+  default = "snl-frontend.reform.hmcts.net"
 }
 variable "subscription" {}

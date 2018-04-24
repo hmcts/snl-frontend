@@ -1,11 +1,9 @@
 locals {
   app_full_name = "${var.product}-${var.component}"
-  ase_name = "${data.terraform_remote_state.core_apps_compute.ase_name[0]}"
-  local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
 }
-module "sln-frontend" {
+module "snl-frontend" {
   source               = "git@github.com:hmcts/moj-module-webapp"
-  product              = "${var.product}-frontend"
+  product              = "${var.product}-${var.component}"
   location             = "${var.location}"
   env                  = "${var.env}"
   ilbIp                = "${var.ilbIp}"
@@ -18,6 +16,6 @@ module "sln-frontend" {
     # REDIS_PORT                   = "${module.redis-cache.redis_port}"
     # REDIS_PASSWORD               = "${module.redis-cache.access_key}"
     # RECIPE_BACKEND_URL = "http://snl-recipe-backend-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
-
+    SNL_API_URL = "http://snl-api-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   }
 }

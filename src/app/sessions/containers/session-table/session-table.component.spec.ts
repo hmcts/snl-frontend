@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SessionTableComponent } from './session-table.component';
-import {Store, StoreModule} from '@ngrx/store';
-import {sessionReducer} from '../../reducers/session.reducer';
-import {AppState} from '../../../app.state';
-import {AngularMaterialModule} from '../../../../angular-material/angular-material.module';
-import {AppConfig} from '../../../app.config';
-import {HttpClientModule} from '@angular/common/http';
+import { Store, StoreModule } from '@ngrx/store';
+import { sessionReducer } from '../../reducers/session.reducer';
+import { AppState } from '../../../app.state';
+import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
+import { AppConfig } from '../../../app.config';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SessionTableComponent', () => {
   let component: SessionTableComponent;
