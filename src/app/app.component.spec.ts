@@ -5,6 +5,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SessionsPageComponent } from './sessions/containers/sessions-page/sessions-page.component';
 import { SessionTableComponent } from './sessions/containers/session-table/session-table.component';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
+import { CallendarComponent } from './core/callendar/callendar.component';
+import { FullCalendarModule } from 'ng-fullcalendar';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -12,12 +14,14 @@ describe('AppComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
-        AngularMaterialModule
+        AngularMaterialModule,
+        FullCalendarModule
       ],
       declarations: [
         AppComponent,
         SessionsPageComponent,
-        SessionTableComponent
+        SessionTableComponent,
+        CallendarComponent
       ]
     }).compileComponents();
   }));

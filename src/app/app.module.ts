@@ -20,11 +20,15 @@ import { AppRoutingModule } from './/app-routing.module';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { isPlatformBrowser } from '@angular/common';
 
+import { FullCalendarModule } from 'ng-fullcalendar';
+import { CallendarComponent } from './core/callendar/callendar.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     SessionTableComponent,
-    SessionsPageComponent
+    SessionsPageComponent,
+    CallendarComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -34,7 +38,8 @@ import { isPlatformBrowser } from '@angular/common';
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+    FullCalendarModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard],
   bootstrap: [AppComponent]
