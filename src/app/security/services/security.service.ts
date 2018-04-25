@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
+import { Subject } from 'rxjs/Subject';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class SecurityService {
 
-    private authenticated = false;
+    userSubject$: Subject<User> = new Subject();
+    currentUser: User = User.emptyUser();
 
     constructor(private http: HttpClient, private config: AppConfig) {
-        console.log("SERVICE CREATED")
+        this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
     authenticate(credentials, callback) {
@@ -18,32 +21,37 @@ export class SecurityService {
         } : {});
 
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
-            if (response['principal']) {
-                this.authenticated = true;
-                console.log("AUTHED PRINCIPAL!")
-            } else {
-                this.authenticated = false;
-                console.log("AUTHED NOT!")
-
-            }
+            this.parseAuthenticationRespone(response);
             return callback && callback();
         });
-
     }
 
-    isAuthenticated() { return this.authenticated; }
+    isAuthenticated() {
+        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked && this.currentUser.credentialsNonExpired;
+    }
 
     logout(callback) {
         this.http.post(this.config.createApiUrl('/logout'), {}).subscribe(success => {
-            this.authenticated = false;
+            this.userSubject$.next(User.emptyUser());
             callback(success);
         });
     }
 
-    getAuthenticatedUser(callback) {
-        if (!this.authenticated) { return; }
-        this.http.get(this.config.createApiUrl('/security/user')).subscribe(data =>
-            callback(data)
-        );
+    refreshAuthenticatedUser(callback) {
+        if (!this.isAuthenticated) {
+            return;
+        }
+        this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
+            this.parseAuthenticationRespone(response);
+            callback(response);
+        });
+    }
+
+    private parseAuthenticationRespone(response) {
+        if (response['username']) {
+            this.userSubject$.next(Object.assign(new User(), response));
+        } else {
+            this.userSubject$.next(User.emptyUser());
+        }
     }
 }

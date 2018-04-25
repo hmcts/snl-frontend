@@ -16,9 +16,10 @@ export class AuthToolbarElementComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.security.getAuthenticatedUser(data =>
-            this.loggedInUsername = data['principal']['username']
-        );
+        this.loggedInUsername = this.security.currentUser.username;
+        this.security.userSubject$.subscribe(user => {
+            this.loggedInUsername = user.username;
+        });
     }
 
     authenticated() {
