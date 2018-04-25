@@ -37,7 +37,7 @@ export class AppConfig {
    * @returns {string} full url to call the api
    */
   public createApiUrl(suffix) {
-    return this.config.api_url + suffix;
+    return this.getApiUrl() + suffix;
   }
 }
 
