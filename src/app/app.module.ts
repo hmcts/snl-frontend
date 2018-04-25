@@ -24,6 +24,9 @@ import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
 import { SecurityModule } from './security/security.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { HomeComponent } from './core/home/home.component';
+import { AuthGuard } from './security/guards/auth.guard';
+import { SecurityService } from './security/services/security.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -43,6 +46,7 @@ export class XhrInterceptor implements HttpInterceptor {
         SessionsPageComponent,
         CallendarComponent,
         DashboardComponent,
+        HomeComponent,
     ],
     imports: [
         BrowserModule.withServerTransition({appId: 'snl-frontend'}),
@@ -56,7 +60,7 @@ export class XhrInterceptor implements HttpInterceptor {
         FullCalendarModule,
         SecurityModule
     ],
-    providers: [SessionsService, AppConfig, AppConfigGuard,
+    providers: [SessionsService, AppConfig, AppConfigGuard, AuthGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}],
     bootstrap: [AppComponent]
 })
