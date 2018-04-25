@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { State } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { Search } from '../../actions/session.action';
 import { DatePipe } from '@angular/common';
+import * as fromSessions from '../../reducers/session.reducer';
 
 @Component({
   selector: 'app-sessions-search',
@@ -13,7 +13,7 @@ export class SessionsSearchComponent implements OnInit {
 
     chosenDate;
 
-    constructor(private store: Store<State>) { }
+    constructor(private store: Store<fromSessions.State>) { }
 
     ngOnInit() {
     }

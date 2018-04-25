@@ -15,7 +15,7 @@ export class SessionTableComponent implements OnInit {
 
   constructor(private store: Store<fromSessions.State>) {
 
-    this.store.pipe(select(fromSessions.getSessionsEntitiesState)).subscribe(data => {
+    this.store.pipe(select(fromSessions.getSessionsEntities)).subscribe(data => {
       console.log(data);
       if (data && data.map) {
         data.map(element => { element.date = new Date(element.date); });
