@@ -14,6 +14,7 @@ const routes: Routes = [
         path: 'sessions',
         component: SessionsPageComponent,
         children: [
+            { path: '', redirectTo: 'search', pathMatch: 'full' },
             {
                 path: 'search',
                 component: SessionsSearchComponent
