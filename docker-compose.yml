@@ -7,6 +7,6 @@ services:
       context: .
     image: snl-front
     environment:
-      - SNL_API_URL=http://localhost:3451
+      - SNL_API_URL=http://localhost:8090
     ports:
       - 3451:80

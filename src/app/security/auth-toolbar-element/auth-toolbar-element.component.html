@@ -1,0 +1,7 @@
+<span [hidden]="!authenticated()">
+      {{ loggedInUsername }}
+      <button mat-button (click)="logout()">Logout</button>
+</span>
+<span [hidden]="authenticated()">
+      <button mat-button routerLink='/login' routerLinkActive="active">Login</button>
+</span>
