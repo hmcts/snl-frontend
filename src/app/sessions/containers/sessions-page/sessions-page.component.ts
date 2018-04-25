@@ -9,19 +9,8 @@ import { DatePipe } from '@angular/common';
   templateUrl: './sessions-page.component.html',
   styleUrls: ['./sessions-page.component.css']
 })
-export class SessionsPageComponent implements OnInit {
+export class SessionsPageComponent  {
 
-  chosenDate;
 
-  constructor(private store: Store<AppState>) { }
-
-  ngOnInit() {
-  }
-
-  getSessions(date) {
-    date = new DatePipe('en-US').transform(date, 'dd-MM-yyyy');
-
-    this.store.dispatch(new Search({date: date}));
-  }
 
 }

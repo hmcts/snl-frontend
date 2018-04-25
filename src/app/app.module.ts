@@ -23,6 +23,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
+import { SessionsSearchComponent } from './sessions/components/sessions-search/sessions-search.component';
+import { SessionsCreateComponent } from './sessions/components/sessions-create/sessions-create.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { CallendarComponent } from './core/callendar/callendar.component';
     SessionTableComponent,
     SessionsPageComponent,
     CallendarComponent,
+    SessionsSearchComponent,
+    SessionsCreateComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
