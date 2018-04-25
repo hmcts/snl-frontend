@@ -19,6 +19,7 @@ import { AppConfigGuard } from './app-config.guard';
 import { AppRoutingModule } from './/app-routing.module';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { isPlatformBrowser } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
@@ -39,7 +40,8 @@ import { CallendarComponent } from './core/callendar/callendar.component';
     FormsModule,
     AppRoutingModule,
     AngularMaterialModule,
-    FullCalendarModule
+    FullCalendarModule,
+    FlexLayoutModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard],
   bootstrap: [AppComponent]

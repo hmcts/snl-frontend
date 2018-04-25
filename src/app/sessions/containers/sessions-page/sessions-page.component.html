@@ -1,24 +1,31 @@
-<div>
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Search sessions</mat-card-title>
-    </mat-card-header>
+<div fxLayout="row" fxLayoutGap="2.0%">
+    <div fxFlex="10%" fxLayout="column" fxLayoutGap="5%" class="side-buttons-group">
+        <button mat-raised-button color="primary">Search</button>
+        <button mat-raised-button color="primary">Create</button>
+    </div>
+    <div fxFlex="80%">
+        <mat-card >
+            <mat-card-header>
+                <mat-card-subtitle>Search sessions</mat-card-subtitle>
+            </mat-card-header>
 
-    <mat-card-content>
-        <mat-form-field>
-          <input matInput [matDatepicker]="picker" [(ngModel)]="chosenDate" placeholder="Choose date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+            <mat-card-content fxLayout="row" fxLayoutGap="3%">
+                <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="chosenDate" placeholder="Choose date">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
 
-        <button mat-button (click)="getSessions(chosenDate)">Get Sessions</button>
+                <button mat-raised-button color="accent"  fxFlexAlign="center" (click)="getSessions(chosenDate)" class="get-sessions-button">Get Sessions</button>
+            </mat-card-content>
+        </mat-card>
 
-      </mat-card-content>
-  </mat-card>
+        <mat-divider></mat-divider>
 
-  <mat-divider></mat-divider>
+        <div>
+            <app-session-table></app-session-table>
+        </div>
+    </div>
 
-  <div>
-   <app-session-table></app-session-table>
-  </div>
 </div>
+

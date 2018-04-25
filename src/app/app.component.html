@@ -1,27 +1,20 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>Scheduling and listing</span>
+<div class="container" fxLayout="column" fxLayoutAlign="center" class="main-container">
+  <div class="toolbar-container">
+    <mat-toolbar color="primary">
+      <mat-toolbar-row fxLayout="row" fxLayoutGap="8px">
+        <span class="name-element">Scheduling and listing</span>
 
-    <span class="example-spacer"></span>
-
-    <button mat-button (click)="setView('main')">Main</button>
-    <button mat-button (click)="setView('sessions')">Sessions</button>
-    <button mat-button (click)="setView('callendar')">Calendar</button>
-  </mat-toolbar-row>
-</mat-toolbar>
-
-<div style="width:80%; margin-left: 15px">
-  <div *ngIf="chosenView === 'main'">
-    <span>Main</span>
+        <a routerLink="/main" routerLinkActive="active"><button class="nav-button" mat-button>Main</button></a>
+        <a routerLink="/sessions" routerLinkActive="active"><button class="nav-button" mat-button>Sessions</button></a>
+        <a routerLink="/calendar" routerLinkActive="active"><button class="nav-button" mat-button>Calendar</button></a>
+      </mat-toolbar-row>
+    </mat-toolbar>
   </div>
-
-  <div *ngIf="chosenView === 'sessions'">
-    <app-sessions-page></app-sessions-page>
-  </div>
-
-  <div *ngIf="chosenView === 'callendar'">
-    <app-core-callendar></app-core-callendar>
+  <div class="toolbar-to-content-spacer"></div>
+  <div>
+      <router-outlet></router-outlet>
   </div>
 </div>
+
 
 
