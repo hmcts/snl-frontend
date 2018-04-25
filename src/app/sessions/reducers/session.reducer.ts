@@ -1,7 +1,24 @@
 import { SessionActionTypes } from '../actions/session.action';
-import { AppState } from '../../app.state';
+import { Session } from '../models/session.model';
 
-export function sessionReducer(state: AppState[] = [], action) {
+import * as fromRoot from '../../app.state';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+
+export interface SessionsState {
+    readonly entities: Session[];
+    readonly loading: boolean;
+    readonly error: string;
+}
+
+export interface State extends fromRoot.State {
+    sessions: SessionsState;
+}
+
+export const getRootSessionsState = createFeatureSelector<State>('sessions');
+export const getSessionsState = createSelector(getRootSessionsState, state => state.sessions);
+export const getSessionsEntitiesState = createSelector(getSessionsState, state => state.entities);
+
+export function reducer(state = [], action) {
   switch (action.type) {
     case SessionActionTypes.Search: {
       return {...state, loading: true};
@@ -10,7 +27,7 @@ export function sessionReducer(state: AppState[] = [], action) {
       return {...state, loading: false, error: action.payload};
     }
     case SessionActionTypes.SearchComplete: {
-      return {sessions: action.payload, loading: false};
+      return {entities: action.payload, loading: false};
     }
     default:
       return state;

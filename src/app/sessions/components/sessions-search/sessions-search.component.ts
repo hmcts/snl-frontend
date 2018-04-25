@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppState } from '../../../app.state';
+import { State } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { Search } from '../../actions/session.action';
 import { DatePipe } from '@angular/common';
@@ -13,7 +13,7 @@ export class SessionsSearchComponent implements OnInit {
 
     chosenDate;
 
-    constructor(private store: Store<AppState>) { }
+    constructor(private store: Store<State>) { }
 
     ngOnInit() {
     }

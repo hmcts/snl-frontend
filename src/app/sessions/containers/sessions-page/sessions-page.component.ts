@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Search } from '../../../sessions/actions/session.action';
-import { AppState } from '../../../app.state';
 import { Store } from '@ngrx/store';
 import { DatePipe } from '@angular/common';
 
@@ -10,7 +9,4 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./sessions-page.component.css']
 })
 export class SessionsPageComponent  {
-
-
-
 }
