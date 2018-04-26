@@ -8,6 +8,7 @@ export class SecurityService {
     private authenticated = false;
 
     constructor(private http: HttpClient, private config: AppConfig) {
+        console.log("SERVICE CREATED")
     }
 
     authenticate(credentials, callback) {
@@ -19,8 +20,11 @@ export class SecurityService {
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
             if (response['principal']) {
                 this.authenticated = true;
+                console.log("AUTHED PRINCIPAL!")
             } else {
                 this.authenticated = false;
+                console.log("AUTHED NOT!")
+
             }
             return callback && callback();
         });

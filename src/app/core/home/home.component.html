@@ -1,0 +1,17 @@
+
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Scheduling and listing</span>
+
+    <span class="example-spacer"></span>
+
+    <button mat-button routerLink='sessions' routerLinkActive="active">Sessions</button>
+    <button mat-button routerLink='calendar' routerLinkActive="active">Calendar</button>
+
+    <span class="fill-remaining-space"></span>
+    <app-auth-toolbar-element></app-auth-toolbar-element>
+
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

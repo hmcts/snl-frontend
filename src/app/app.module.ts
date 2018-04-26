@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppConfig } from './app.config';
 import { AppConfigGuard } from './app-config.guard';
-import { AppRoutingModule } from './/app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { isPlatformBrowser } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -20,13 +20,14 @@ import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
 import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
-import { AuthPageComponent } from './security/containers/auth-page/auth-page.component';
+import { HomeComponent } from './core/home/home.component';
+import { SecurityService } from './security/services/security.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     CallendarComponent,
-    AuthPageComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -42,7 +43,7 @@ import { AuthPageComponent } from './security/containers/auth-page/auth-page.com
     SessionModule,
     SecurityModule
   ],
-  providers: [SessionsService, AppConfig, AppConfigGuard],
+  providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -52,5 +53,7 @@ export class AppModule {
     const platform = isPlatformBrowser(platformId) ?
       'in the browser' : 'on the server';
     console.log(`Running ${platform} with appId=${appId}`);
+      console.log("MAIN APP CREATED")
+
   }
 }

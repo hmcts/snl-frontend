@@ -1,19 +1,5 @@
 <div class="container" fxLayout="column" fxLayoutAlign="center" class="main-container">
-  <div class="toolbar-container">
-    <mat-toolbar color="primary">
-      <mat-toolbar-row fxLayout="row" fxLayoutGap="8px">
-        <span class="name-element">Scheduling and listing</span>
-
-        <a routerLink="/main" routerLinkActive="active"><button class="nav-button" mat-button>Main</button></a>
-        <a routerLink="/sessions" routerLinkActive="active"><button class="nav-button" mat-button>Sessions</button></a>
-        <a routerLink="/calendar" routerLinkActive="active"><button class="nav-button" mat-button>Calendar</button></a>
-      </mat-toolbar-row>
-    </mat-toolbar>
-  </div>
-  <div class="toolbar-to-content-spacer"></div>
-  <div>
-      <router-outlet></router-outlet>
-  </div>
+  <router-outlet></router-outlet>
 </div>
 
 

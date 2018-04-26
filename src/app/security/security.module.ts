@@ -5,9 +5,15 @@ import { FormsModule } from '@angular/forms';
 import { SecurityService } from './services/security.service';
 import { MatButtonModule, MatFormFieldModule, MatInputModule } from '@angular/material';
 import { AuthToolbarElementComponent } from './auth-toolbar-element/auth-toolbar-element.component';
-import { AppRoutingModule } from '../app-routing.module';
 import { RouterModule } from '@angular/router';
 import { AuthPageComponent } from './containers/auth-page/auth-page.component';
+import { AuthGuard } from './guards/auth.guard';
+
+export const COMPONENTS = [
+    AuthPageComponent,
+    LoginComponent,
+    AuthToolbarElementComponent
+];
 
 @NgModule({
     imports: [
@@ -16,7 +22,6 @@ import { AuthPageComponent } from './containers/auth-page/auth-page.component';
         MatButtonModule,
         MatInputModule,
         MatFormFieldModule,
-        AppRoutingModule,
         RouterModule.forChild([{
             path: '',
             component: AuthPageComponent,
@@ -29,9 +34,9 @@ import { AuthPageComponent } from './containers/auth-page/auth-page.component';
             ]},
         ]),
     ],
-    exports: [AuthToolbarElementComponent],
-    declarations: [LoginComponent, AuthToolbarElementComponent],
-    providers: [SecurityService]
+    exports: COMPONENTS,
+    declarations: COMPONENTS,
+    providers: [AuthGuard]
 })
 export class SecurityModule {
 }
