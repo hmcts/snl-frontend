@@ -10,25 +10,17 @@
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.judge.name}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.judgeId}} </mat-cell>
   </ng-container>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.room.name}} </mat-cell>
-  </ng-container>
-
-  <!-- Name Column -->
   <ng-container matColumnDef="time">
     <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.date.getHours()}}:{{element.date.getMinutes()}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.start.getHours()}}:{{element.start.getMinutes()}} </mat-cell>
   </ng-container>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="jurisdiction">
-    <mat-header-cell *matHeaderCellDef> Jurisdiction </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.jurisdiction}} </mat-cell>
+  <ng-container matColumnDef="duration">
+    <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

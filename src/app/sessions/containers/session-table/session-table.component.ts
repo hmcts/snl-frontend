@@ -10,15 +10,14 @@ import * as fromSessions from '../../reducers/session.reducer';
 })
 export class SessionTableComponent implements OnInit {
 
-  displayedColumns = ['position', 'name', 'time', 'jurisdiction'];
+  displayedColumns = ['position', 'time', 'duration'];
   dataSource;
 
   constructor(private store: Store<fromSessions.State>) {
 
     this.store.pipe(select(fromSessions.getSessionsEntities)).subscribe(data => {
-      console.log(data);
       if (data && data.map) {
-        data.map(element => { element.date = new Date(element.date); });
+        data.map(element => { element.start = new Date(element.start); });
         this.dataSource = new MatTableDataSource(data);
       }
     });
