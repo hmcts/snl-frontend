@@ -10,14 +10,14 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class SessionTableComponent implements OnInit {
 
-  displayedColumns = ['position', 'name', 'time', 'jurisdiction'];
+  displayedColumns = ['position', 'time', 'duration'];
   dataSource;
 
   constructor(private store: Store<AppState>) {
 
     this.store.pipe(select(state => state.sessionsReducer.sessions)).subscribe(data => {
       if (data) {
-        data.map(element => { element.date = new Date(element.date); });
+        data.map(element => { element.start = new Date(element.start); });
         this.dataSource = new MatTableDataSource(data);
       }
     });

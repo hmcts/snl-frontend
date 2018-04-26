@@ -12,7 +12,7 @@ export class SessionsService {
 
   searchSessions(query: SessionQuery): Observable<Session[]> {
     return this.http
-      .get<Session[]>(`${this.config.getApiUrl()}/get-sessions?date=${query.date}`)
+      .get<Session[]>(`${this.config.getApiUrl()}/sessions?date=${query.date}`)
       .pipe(map(sessions => sessions || []));
   }
 }
