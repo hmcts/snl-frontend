@@ -2,9 +2,9 @@ import { Room } from '../../rooms/models/room.model';
 import { Judge } from '../../judges/models/judge.model';
 
 export interface Session {
-  date: Date;
-  durationInMinutes: Number;
+  start: Date;
+  duration: String;
   room: Room;
-  judge: Judge;
+  judgeId: String;
   jurisdiction: String;
 }

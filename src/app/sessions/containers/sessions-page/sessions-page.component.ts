@@ -19,7 +19,7 @@ export class SessionsPageComponent implements OnInit {
   }
 
   getSessions(date) {
-    date = new DatePipe('en-US').transform(date, 'dd-MM-yyyy');
+    date = new DatePipe('en-US').transform(date, 'yyyy-MM-dd');
 
     this.store.dispatch(new Search({date: date}));
   }
