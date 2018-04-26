@@ -30,6 +30,15 @@ export class AppConfig {
   public getApiUrl() {
     return this.config.api_url;
   }
+
+  /**
+   * Creates url to call api service, provides hostname and protocol
+   * @param suffix - should start '/' and contain the rest of url
+   * @returns {string} full url to call the api
+   */
+  public createApiUrl(suffix) {
+    return this.getApiUrl() + suffix;
+  }
 }
 
 export class Config {

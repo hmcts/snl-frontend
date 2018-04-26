@@ -1,0 +1,25 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>Scheduling and listing</span>
+
+    <span class="example-spacer"></span>
+
+    <div *ngIf="isInRole('officer')">
+      <button mat-button routerLink='/' routerLinkActive="active">Main</button>
+      <button mat-button routerLink='sessions' routerLinkActive="active">Sessions</button>
+      <button mat-button routerLink='calendar' routerLinkActive="active">Calendar</button>
+    </div>
+
+    <div *ngIf="isInRole('judge')">
+      <button mat-button routerLink='/' routerLinkActive="active">Main</button>
+    </div>
+
+    <span class="fill-remaining-space"></span>
+    <app-auth-toolbar-element></app-auth-toolbar-element>
+
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="container" style="width:80%; margin-left: 15px">
+  <router-outlet></router-outlet>
+</div>
