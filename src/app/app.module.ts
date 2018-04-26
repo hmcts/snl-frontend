@@ -19,11 +19,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
 import { SessionModule } from './sessions/session.module';
+import { SecurityModule } from './security/security.module';
+import { AuthPageComponent } from './security/containers/auth-page/auth-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CallendarComponent,
+    AuthPageComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -36,7 +39,8 @@ import { SessionModule } from './sessions/session.module';
     AngularMaterialModule,
     FullCalendarModule,
     FlexLayoutModule,
-    SessionModule
+    SessionModule,
+    SecurityModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard],
   bootstrap: [AppComponent]

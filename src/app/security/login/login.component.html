@@ -1,0 +1,19 @@
+<div class="alert alert-danger" [hidden]="!error">
+  There was a problem logging in. Please try again.
+</div>
+<form #loginForm="ngForm" role="form" class="login-form" (submit)="login()">
+
+  <mat-form-field class="login-full-width">
+    <input matInput placeholder="Username:" type="text"
+           class="form-control" id="username" name="username" [(ngModel)]="credentials.username">
+  </mat-form-field>
+
+  <mat-form-field class="login-full-width">
+    <input matInput placeholder="Password:" type="password"
+           class="form-control" id="password" name="password" [(ngModel)]="credentials.password">
+  </mat-form-field>
+
+  <br />
+  <button mat-raised-button >Log in</button>
+
+</form>

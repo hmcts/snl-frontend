@@ -8,6 +8,7 @@ const routes: Routes = [
     { path: 'main', component: CallendarComponent, canActivate: [AppConfigGuard] },
     { path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard] },
     { path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
+    { path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
 ];
 
 @NgModule({
