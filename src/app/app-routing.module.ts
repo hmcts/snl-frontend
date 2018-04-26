@@ -6,8 +6,8 @@ import { CallendarComponent } from './core/callendar/callendar.component';
 const routes: Routes = [
     { path: '', redirectTo: '/main', pathMatch: 'full' },
     { path: 'main', component: CallendarComponent, canActivate: [AppConfigGuard] },
-    { path: 'calendar', component: CallendarComponent },
-    { path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule'},
+    { path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard] },
+    { path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
 ];
 
 @NgModule({
