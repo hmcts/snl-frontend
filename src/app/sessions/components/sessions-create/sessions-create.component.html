@@ -3,7 +3,7 @@
     <mat-card-subtitle>Create session</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content fxLayout="column" fxLayoutGap="0.5%">
+  <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
     <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
       <input matInput [matDatepicker]="picker" [(ngModel)]="chosenDate" placeholder="Choose date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
