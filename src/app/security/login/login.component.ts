@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent {
 
+    error;
     credentials = {username: '', password: ''};
 
     constructor(private security: SecurityService, private http: HttpClient, private router: Router, private route: ActivatedRoute) {

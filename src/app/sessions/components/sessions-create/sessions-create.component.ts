@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SessionsCreateComponent implements OnInit {
 
+  chosenDate;
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  create(date) {
+
   }
 
 }
