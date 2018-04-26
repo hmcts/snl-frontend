@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_ID, Inject, Injectable, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
@@ -22,6 +22,17 @@ import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
+
+@Injectable()
+export class XhrInterceptor implements HttpInterceptor {
+
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        const xhr = req.clone({
+            headers: req.headers.set('X-Requested-With', 'XMLHttpRequest')
+        });
+        return next.handle(xhr);
+    }
+}
 
 @NgModule({
   declarations: [
@@ -43,7 +54,9 @@ import { SecurityService } from './security/services/security.service';
     SessionModule,
     SecurityModule
   ],
-  providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService],
+  providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
+      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
+],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -53,7 +66,5 @@ export class AppModule {
     const platform = isPlatformBrowser(platformId) ?
       'in the browser' : 'on the server';
     console.log(`Running ${platform} with appId=${appId}`);
-      console.log("MAIN APP CREATED")
-
   }
 }
