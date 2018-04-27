@@ -23,6 +23,7 @@ export interface State extends fromRoot.State {
 export const getRootSessionsState = createFeatureSelector<State>('sessions');
 export const getSessionsState = createSelector(getRootSessionsState, state => state.sessions);
 export const getSessionsEntities = createSelector(getSessionsState, state => state.entities);
+export const getSessionsWithRooms = createSelector(getSessionsEntities, )
 export const getSessionsLoading = createSelector(getSessionsState, state => state.loading);
 export const getSessionsError = createSelector(getSessionsState, state => state.error);
 

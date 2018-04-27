@@ -11,7 +11,7 @@ export interface RoomState {
 }
 
 const initialState: RoomState = {
-    entities: [{name: 'Room one'}, {name: 'Room two'}, {name: 'Room three'}, {name: 'Room four'}, {name: 'Room five'}],
+    entities: [{id: 1, name: 'Room one'}, {id: 2, name: 'Room two'}, {id: 3, name: 'Room three'}, {id: 4, name: 'Room four'}, {id: 5, name: 'Room five'}],
     loading: false,
     error: '',
 };

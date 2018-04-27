@@ -23,8 +23,8 @@ export class SessionsCreateComponent implements OnInit {
     this.session = {
       start: new Date(),
       duration: '',
-      roomId: '',
-      judgeId: '',
+      roomId: 0,
+      judgeId: 0,
       jurisdiction: ''
     };
   }

@@ -11,7 +11,7 @@ export interface JudgeState {
 }
 
 const initialState: JudgeState = {
-    entities: [{name: 'Judge one'}, {name: 'Judge two'}, {name: 'Judge three'}, {name: 'Judge four'}, {name: 'Judge five'}],
+    entities: [{id: 1, name: 'Judge one'}, {id: 2, name: 'Judge two'}, {id: 3, name: 'Judge three'}, {id: 4, name: 'Judge four'}, {id: 5, name: 'Judge five'}],
     loading: false,
     error: '',
 };
