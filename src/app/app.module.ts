@@ -22,6 +22,7 @@ import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -45,6 +46,10 @@ export class XhrInterceptor implements HttpInterceptor {
     BrowserAnimationsModule,
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
+      StoreDevtoolsModule.instrument({
+          maxAge: 25, // Retains last 25 states
+          logOnly: false, // Restrict extension to log-only mode
+      }),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,

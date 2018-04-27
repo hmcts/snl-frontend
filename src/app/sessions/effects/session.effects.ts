@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
-import { Search, SearchComplete, SearchFailed, SessionActionTypes } from '../actions/session.action';
+import { Create, CreateComplete, CreateFailed, Search, SearchComplete, SearchFailed, SessionActionTypes } from '../actions/session.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -15,12 +15,21 @@ export class SessionEffects {
     ofType<Search>(SessionActionTypes.Search),
     mergeMap(action =>
       this.sessionsService.searchSessions(action.payload).pipe(
-        // If successful, dispatch success action with result
         map(data => (new SearchComplete(data))),
-        // If request fails, dispatch failed action
         catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
       )
     )
+  );
+
+  @Effect()
+  create$: Observable<Action> = this.actions$.pipe(
+      ofType<Create>(SessionActionTypes.Create),
+      mergeMap(action =>
+          this.sessionsService.createSession(action.payload).pipe(
+              map(data => (new CreateComplete(data))),
+              catchError((err: HttpErrorResponse) => of(new CreateFailed('Error: ' + err.error)))
+          )
+      )
   );
 
   constructor(private sessionsService: SessionsService, private actions$: Actions) {}

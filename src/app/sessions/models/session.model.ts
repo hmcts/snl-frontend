@@ -4,7 +4,7 @@ import { Judge } from '../../judges/models/judge.model';
 export interface Session {
   start: Date;
   duration: String;
-  room: Room;
+  roomId: String;
   judgeId: String;
   jurisdiction: String;
 }

@@ -3,9 +3,12 @@ import { Session } from '../models/session.model';
 import { SessionQuery } from '../models/session-query.model';
 
 export enum SessionActionTypes {
-  Search = '[Book] Search',
-  SearchComplete = '[Book] Search Complete',
-  SearchFailed = '[Book] Search Failed',
+  Search = '[Session] Search',
+  SearchComplete = '[Session] Search Complete',
+  SearchFailed = '[Session] Search Failed',
+  Create = '[Session] Create',
+  CreateComplete = '[Session] Create Complete',
+  CreateFailed = '[Session] Create Failed',
 }
 
 /**
@@ -19,7 +22,7 @@ export class Search implements Action {
   readonly type = SessionActionTypes.Search;
 
   constructor(public payload: SessionQuery) {
-    console.log('Action: search');
+      console.log(this.type);
   }
 }
 
@@ -35,7 +38,30 @@ export class SearchFailed implements Action {
   readonly type = SessionActionTypes.SearchFailed;
 
   constructor(public payload: string) {
-    console.log('Action: searchFailed | ' + payload);
-
+      console.log(this.type);
   }
+}
+
+export class Create implements Action {
+    readonly type = SessionActionTypes.Create;
+
+    constructor(public payload: Session) {
+        console.log(this.type);
+    }
+}
+
+export class CreateComplete implements Action {
+    readonly type = SessionActionTypes.CreateComplete;
+
+    constructor(public payload: Session) {
+        console.log(this.type);
+    }
+}
+
+export class CreateFailed implements Action {
+    readonly type = SessionActionTypes.CreateFailed;
+
+    constructor(public payload: string) {
+        console.log(this.type);
+    }
 }

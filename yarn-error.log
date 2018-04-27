@@ -1,14 +1,14 @@
 Arguments: 
-  /Users/radoslawl/.nvm/versions/node/v8.0.0/bin/node /Users/radoslawl/.yarn/bin/yarn.js build
+  /Users/radoslawl/.nvm/versions/node/v8.9.4/bin/node /Users/radoslawl/.yarn/bin/yarn.js test
 
 PATH: 
-  /Users/radoslawl/.yarn/bin:/Users/radoslawl/.config/yarn/global/node_modules/.bin:/Users/radoslawl/.nvm/versions/node/v8.0.0/bin:/Users/radoslawl/.rvm/gems/ruby-2.4.1/bin:/Users/radoslawl/.rvm/gems/ruby-2.4.1@global/bin:/Users/radoslawl/.rvm/rubies/ruby-2.4.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/usr/local/share/dotnet:/usr/local/mysql/bin:/Users/radoslawl/.rvm/bin:/Users/radoslawl/.rvm/bin
+  /Users/radoslawl/.yarn/bin:/Users/radoslawl/.config/yarn/global/node_modules/.bin:/Users/radoslawl/.nvm/versions/node/v8.9.4/bin:/Users/radoslawl/.rvm/gems/ruby-2.4.1/bin:/Users/radoslawl/.rvm/gems/ruby-2.4.1@global/bin:/Users/radoslawl/.rvm/rubies/ruby-2.4.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/usr/local/share/dotnet:/usr/local/mysql/bin:/Users/radoslawl/.rvm/bin:/Users/radoslawl/.rvm/bin
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  8.0.0
+  8.9.4
 
 Platform: 
   darwin x64
@@ -43,14 +43,15 @@ npm manifest:
     },
     "dependencies": {
       "@angular/animations": "~5.0.0",
-      "@angular/cdk": "^5.2.4",
+      "@angular/cdk": "^5.2.5",
       "@angular/common": "~5.0.0",
       "@angular/compiler": "~5.0.0",
-      "@angular/compiler-cli": "5.2.10",
+      "@angular/compiler-cli": "~5.0.0",
       "@angular/core": "~5.0.0",
+      "@angular/flex-layout": "^5.0.0-beta.14",
       "@angular/forms": "~5.0.0",
       "@angular/http": "~5.0.0",
-      "@angular/material": "^5.2.4",
+      "@angular/material": "^5.2.5",
       "@angular/platform-browser": "~5.0.0",
       "@angular/platform-browser-dynamic": "~5.0.0",
       "@angular/platform-server": "~5.0.0",
@@ -63,9 +64,11 @@ npm manifest:
       "class-transformer": "^0.1.8",
       "core-js": "^2.4.1",
       "font-awesome": "^4.7.0",
+      "fullcalendar": "3.6.1",
       "govuk-elements-sass": "^3.1.2",
       "govuk_template_mustache": "^0.23.0",
       "mocha": "^5.0.5",
+      "ng-fullcalendar": "^1.5.5",
       "ngx-md": "^3.1.1",
       "ngx-pagination": "^3.0.3",
       "reflect-metadata": "^0.1.12",
@@ -146,9 +149,9 @@ Lockfile:
     dependencies:
       tslib "^1.7.1"
   
-  "@angular/cdk@^5.2.4":
-    version "5.2.4"
-    resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-5.2.4.tgz#c0a429a8710d8fedb157f546e21cb49d4335f7f7"
+  "@angular/cdk@^5.2.5":
+    version "5.2.5"
+    resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-5.2.5.tgz#cae2b12e1990a692dd267a73fdb1d49db37f9604"
     dependencies:
       tslib "^1.7.1"
   
@@ -222,14 +225,14 @@ Lockfile:
     dependencies:
       tslib "^1.7.1"
   
-  "@angular/compiler-cli@5.2.10":
-    version "5.2.10"
-    resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-5.2.10.tgz#7e9dead0730dc20f7658e110a558b557b60e7be2"
+  "@angular/compiler-cli@~5.0.0":
+    version "5.0.5"
+    resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-5.0.5.tgz#4c25ce6f0a04eac9e56007be3639f86172a9c7ea"
     dependencies:
       chokidar "^1.4.2"
       minimist "^1.2.0"
       reflect-metadata "^0.1.2"
-      tsickle "^0.27.2"
+      tsickle "^0.24.0"
   
   "@angular/compiler@~5.0.0":
     version "5.0.5"
@@ -240,6 +243,12 @@ Lockfile:
   "@angular/core@~5.0.0":
     version "5.0.5"
     resolved "https://registry.yarnpkg.com/@angular/core/-/core-5.0.5.tgz#9f032aff4cfacce0e33629338466f93bba4cbec4"
+    dependencies:
+      tslib "^1.7.1"
+  
+  "@angular/flex-layout@^5.0.0-beta.14":
+    version "5.0.0-beta.14"
+    resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-5.0.0-beta.14.tgz#300e1cba2ef1a70f43fe7ea68ea78267cb4241e4"
     dependencies:
       tslib "^1.7.1"
   
@@ -255,9 +264,9 @@ Lockfile:
     dependencies:
       tslib "^1.7.1"
   
-  "@angular/material@^5.2.4":
-    version "5.2.4"
-    resolved "https://registry.yarnpkg.com/@angular/material/-/material-5.2.4.tgz#9e823798324283d23ea839156fac5bcb73443d55"
+  "@angular/material@^5.2.5":
+    version "5.2.5"
+    resolved "https://registry.yarnpkg.com/@angular/material/-/material-5.2.5.tgz#287af95d234e0644244d9db565f7a05c10b737f8"
     dependencies:
       tslib "^1.7.1"
   
@@ -332,6 +341,13 @@ Lockfile:
     dependencies:
       typescript "~2.6.2"
   
+  "@types/fullcalendar@3.5.2":
+    version "3.5.2"
+    resolved "https://registry.yarnpkg.com/@types/fullcalendar/-/fullcalendar-3.5.2.tgz#88cfb8962e1eb5ce11824fd95bc2f8d97a8e3518"
+    dependencies:
+      "@types/jquery" "*"
+      moment ">=2.14.0"
+  
   "@types/jasmine@*", "@types/jasmine@~2.8.0":
     version "2.8.6"
     resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.6.tgz#14445b6a1613cf4e05dd61c3c3256d0e95c0421e"
@@ -341,6 +357,14 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/jasminewd2/-/jasminewd2-2.0.3.tgz#0d2886b0cbdae4c0eeba55e30792f584bf040a95"
     dependencies:
       "@types/jasmine" "*"
+  
+  "@types/jquery@*":
+    version "3.3.1"
+    resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.3.1.tgz#55758d44d422756d6329cbf54e6d41931d7ba28f"
+  
+  "@types/jquery@3.2.17":
+    version "3.2.17"
+    resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.2.17.tgz#01df9805dd5cf83a14cf5bfd81adced7d4fbd970"
   
   "@types/node@^6.0.45", "@types/node@^6.0.46":
     version "6.0.106"
@@ -804,8 +828,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-0.1.5.tgz#73926771923b5a19747ad666aa5cd4bf9c6e9ce8"
   
   base64-js@^1.0.2:
-    version "1.2.3"
-    resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.2.3.tgz#fb13668233d9614cf5fb4bce95a9ba4096cdf801"
+    version "1.3.0"
+    resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.3.0.tgz#cab1e6118f051095e58b5281aea8c1cd22bfc0e3"
   
   base64id@1.0.0:
     version "1.0.0"
@@ -2181,8 +2205,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   
   ejs@^2.5.7:
-    version "2.5.8"
-    resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.8.tgz#2ab6954619f225e6193b7ac5f7c39c48fefe4380"
+    version "2.5.9"
+    resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.5.9.tgz#7ba254582a560d267437109a68354112475b0ce5"
   
   electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
     version "1.3.42"
@@ -2922,6 +2946,13 @@ Lockfile:
       mkdirp ">=0.5 0"
       rimraf "2"
   
+  fullcalendar@3.6.1:
+    version "3.6.1"
+    resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-3.6.1.tgz#0b9b62b1e697d52d39c1118af9e4e411e5045590"
+    dependencies:
+      jquery "2 - 3"
+      moment "^2.9.0"
+  
   function-bind@^1.0.2, function-bind@^1.1.1:
     version "1.1.1"
     resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
@@ -3128,8 +3159,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/govuk_frontend_toolkit/-/govuk_frontend_toolkit-7.4.2.tgz#67c0b386c2761272464322ed1fc22db38d69afc3"
   
   govuk_template_mustache@^0.23.0:
-    version "0.23.1"
-    resolved "https://registry.yarnpkg.com/govuk_template_mustache/-/govuk_template_mustache-0.23.1.tgz#949f11b29b15455a9cfc6df953264fb3cbddaf69"
+    version "0.23.2"
+    resolved "https://registry.yarnpkg.com/govuk_template_mustache/-/govuk_template_mustache-0.23.2.tgz#560ba77a61bbc065f89fba766acfe409ff080f97"
   
   graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
     version "4.1.11"
@@ -3283,12 +3314,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/has/-/has-1.0.1.tgz#8461733f538b0837c9361e39a9ab9e9704dc2f28"
     dependencies:
       function-bind "^1.0.2"
-  
-  hash-base@^2.0.0:
-    version "2.0.2"
-    resolved "https://registry.yarnpkg.com/hash-base/-/hash-base-2.0.2.tgz#66ea1d856db4e8a5470cadf6fce23ae5244ef2e1"
-    dependencies:
-      inherits "^2.0.1"
   
   hash-base@^3.0.0:
     version "3.0.4"
@@ -4075,6 +4100,10 @@ Lockfile:
   jju@^1.1.0:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/jju/-/jju-1.3.0.tgz#dadd9ef01924bc728b03f2f7979bdbd62f7a2aaa"
+  
+  "jquery@2 - 3", jquery@^3.2.1:
+    version "3.3.1"
+    resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
   
   js-base64@^2.1.8, js-base64@^2.1.9:
     version "2.4.3"
@@ -4884,8 +4913,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
   
   mocha@^5.0.5:
-    version "5.1.0"
-    resolved "https://registry.yarnpkg.com/mocha/-/mocha-5.1.0.tgz#5ff11cc39c0bb65330ac6c41f9086634e3e3f686"
+    version "5.1.1"
+    resolved "https://registry.yarnpkg.com/mocha/-/mocha-5.1.1.tgz#b774c75609dac05eb48f4d9ba1d827b97fde8a7b"
     dependencies:
       browser-stdout "1.3.1"
       commander "2.11.0"
@@ -4898,6 +4927,10 @@ Lockfile:
       minimatch "3.0.4"
       mkdirp "0.5.1"
       supports-color "4.4.0"
+  
+  moment@>=2.14.0, moment@^2.9.0:
+    version "2.22.1"
+    resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
   
   morgan@^1.9.0:
     version "1.9.0"
@@ -4989,6 +5022,15 @@ Lockfile:
   next-tick@1:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
+  
+  ng-fullcalendar@^1.5.5:
+    version "1.5.5"
+    resolved "https://registry.yarnpkg.com/ng-fullcalendar/-/ng-fullcalendar-1.5.5.tgz#95275ef4df1bdccf575d08f8d6b69d402345a388"
+    dependencies:
+      "@types/fullcalendar" "3.5.2"
+      "@types/jquery" "3.2.17"
+      fullcalendar "3.6.1"
+      jquery "^3.2.1"
   
   ng2-mock-component@^0.1.1:
     version "0.1.1"
@@ -6482,10 +6524,10 @@ Lockfile:
       glob "^7.0.5"
   
   ripemd160@^2.0.0, ripemd160@^2.0.1:
-    version "2.0.1"
-    resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.1.tgz#0f4584295c53a3628af7e6d79aca21ce57d1c6e7"
+    version "2.0.2"
+    resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.2.tgz#a1c1a6f624751577ba5d07914cbc92850585890c"
     dependencies:
-      hash-base "^2.0.0"
+      hash-base "^3.0.0"
       inherits "^2.0.1"
   
   run-async@^2.2.0:
@@ -6667,8 +6709,8 @@ Lockfile:
       statuses "~1.4.0"
   
   serialize-javascript@^1.4.0:
-    version "1.4.0"
-    resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.4.0.tgz#7c958514db6ac2443a8abc062dc9f7886a7f6005"
+    version "1.5.0"
+    resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.5.0.tgz#1aa336162c88a890ddad5384baebc93a655161fe"
   
   serve-index@^1.7.2:
     version "1.9.1"
@@ -6909,17 +6951,11 @@ Lockfile:
       source-map-url "^0.4.0"
       urix "^0.1.0"
   
-  source-map-support@^0.4.0, source-map-support@^0.4.1, source-map-support@~0.4.0:
+  source-map-support@^0.4.0, source-map-support@^0.4.1, source-map-support@^0.4.2, source-map-support@~0.4.0:
     version "0.4.18"
     resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.4.18.tgz#0286a6de8be42641338594e97ccea75f0a2c585f"
     dependencies:
       source-map "^0.5.6"
-  
-  source-map-support@^0.5.0:
-    version "0.5.4"
-    resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.4.tgz#54456efa89caa9270af7cd624cc2f123e51fbae8"
-    dependencies:
-      source-map "^0.6.0"
   
   source-map-url@^0.4.0:
     version "0.4.0"
@@ -6945,7 +6981,7 @@ Lockfile:
     dependencies:
       amdefine ">=0.0.4"
   
-  source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.1:
+  source-map@^0.6.1, source-map@~0.6.1:
     version "0.6.1"
     resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   
@@ -7305,8 +7341,8 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   
   timers-browserify@^2.0.4:
-    version "2.0.7"
-    resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.7.tgz#e74093629cb62c20332af587ddc0c86b4ba97a05"
+    version "2.0.10"
+    resolved "https://registry.yarnpkg.com/timers-browserify/-/timers-browserify-2.0.10.tgz#1d28e3d2aadf1d5a5996c4e9f95601cd053480ae"
     dependencies:
       setimmediate "^1.0.4"
   
@@ -7430,14 +7466,14 @@ Lockfile:
       strip-bom "^3.0.0"
       strip-json-comments "^2.0.0"
   
-  tsickle@^0.27.2:
-    version "0.27.5"
-    resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.27.5.tgz#41e1a41a5acf971cbb2b0558a9590779234d591f"
+  tsickle@^0.24.0:
+    version "0.24.1"
+    resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.24.1.tgz#039343b205bf517a333b0703978892f80a7d848e"
     dependencies:
       minimist "^1.2.0"
       mkdirp "^0.5.1"
-      source-map "^0.6.0"
-      source-map-support "^0.5.0"
+      source-map "^0.5.6"
+      source-map-support "^0.4.2"
   
   tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1:
     version "1.9.0"
@@ -7545,8 +7581,8 @@ Lockfile:
       webpack-sources "^1.0.1"
   
   uglifyjs-webpack-plugin@^1.1.5:
-    version "1.2.4"
-    resolved "https://registry.yarnpkg.com/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-1.2.4.tgz#5eec941b2e9b8538be0a20fc6eda25b14c7c1043"
+    version "1.2.5"
+    resolved "https://registry.yarnpkg.com/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-1.2.5.tgz#2ef8387c8f1a903ec5e44fa36f9f3cbdcea67641"
     dependencies:
       cacache "^10.0.4"
       find-cache-dir "^1.0.0"
@@ -8223,4 +8259,17 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.8.26.tgz#7bdd72f7668c5a7ad6b118148b4ea39c59d08d2d"
 
 Trace: 
-  Error: EACCES: permission denied, scandir '/Users/radoslawl/.config/yarn/link'
+  Error: Command failed.
+  Exit code: 1
+  Command: sh
+  Arguments: -c ng test --single-run --code-coverage
+  Directory: /Users/radoslawl/s-n-l/snl-frontend
+  Output:
+  
+      at ProcessTermError.MessageError (/Users/radoslawl/.yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/Users/radoslawl/.yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/Users/radoslawl/.yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:126:13)
+      at ChildProcess.emit (events.js:214:7)
+      at maybeClose (internal/child_process.js:925:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
