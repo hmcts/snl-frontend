@@ -1,3 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~fullcalendar/dist/fullcalendar.css";
+
+html * {
+    font-family: sans-serif !important;
+}

@@ -28,7 +28,7 @@ export class AuthToolbarElementComponent implements OnInit {
 
     logout() {
         this.security.logout(() =>
-            this.router.navigateByUrl('/')
+            this.router.navigateByUrl('/auth')
         );
     }
 }
