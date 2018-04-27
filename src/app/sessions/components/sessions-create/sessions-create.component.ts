@@ -6,6 +6,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromRooms from '../../../rooms/reducers/room.reducer';
+import * as fromJudges from '../../../judges/reducers/judge.reducer';
 import { Session } from '../../models/session.model';
 
 @Component({
@@ -14,19 +15,17 @@ import { Session } from '../../models/session.model';
   styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
+    rooms$: Observable<Room[]>;
+    judges$: Observable<Judge[]>;
+    caseTypes: ['SCLAIMS', 'FTRACK', 'MTRACK'];
 
-  rooms$: Observable<Room[]>;
-  session: Session;
+    session: Session;
 
-  constructor(private store: Store<State>) {
+    constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
-    this.session = {
-      start: new Date(),
-      duration: '',
-      roomId: 0,
-      judgeId: 0,
-      jurisdiction: ''
-    };
+    this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
+
+    this.session = {} as Session;
   }
 
   create() {
@@ -35,13 +34,4 @@ export class SessionsCreateComponent implements OnInit {
 
   ngOnInit() {
   }
-}
-
-export class SessionCreationModel {
-  date: Date;
-  startTime: Date;
-  endTime: Date;
-  caseType: String;
-  judgeId: String;
-  roomId: String;
 }

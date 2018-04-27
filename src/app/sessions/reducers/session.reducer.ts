@@ -3,6 +3,7 @@ import { Session } from '../models/session.model';
 
 import * as fromRoot from '../../app.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromRooms from '../../rooms/reducers/room.reducer';
 
 export interface SessionsState {
     readonly entities: Session[];
@@ -23,7 +24,6 @@ export interface State extends fromRoot.State {
 export const getRootSessionsState = createFeatureSelector<State>('sessions');
 export const getSessionsState = createSelector(getRootSessionsState, state => state.sessions);
 export const getSessionsEntities = createSelector(getSessionsState, state => state.entities);
-export const getSessionsWithRooms = createSelector(getSessionsEntities, )
 export const getSessionsLoading = createSelector(getSessionsState, state => state.loading);
 export const getSessionsError = createSelector(getSessionsState, state => state.error);
 

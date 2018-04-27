@@ -4,10 +4,14 @@
   </mat-card-header>
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+    <!--mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
       <input matInput [matDatepicker]="picker" [(ngModel)]="session.start" placeholder="Choose date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field-->
+
+    <mat-form-field>
+      <input [(ngModel)]="session.start" matInput placeholder="Start">
     </mat-form-field>
 
     <mat-form-field>
@@ -15,13 +19,23 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input [(ngModel)]="session.judgeId" matInput placeholder="Judge">
+      <mat-select placeholder="Select the case type" [(value)]="session.caseTypeId">
+        <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <input [(ngModel)]="session.roomId" matInput placeholder="Room">
+      <mat-select placeholder="Select the room" [(value)]="session.roomId">
+        <mat-option *ngFor="let room of rooms$ | async" value="{{room.id}}">{{room.name}}</mat-option>
+      </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="accent"  fxFlexAlign="center" (click)="create()">Create</button>
+    <mat-form-field>
+      <mat-select placeholder="Select the judge" [(value)]="session.judgeId">
+        <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
   </mat-card-content>
 </mat-card>

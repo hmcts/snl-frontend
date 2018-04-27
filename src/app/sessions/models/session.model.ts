@@ -3,5 +3,6 @@ export interface Session {
   duration: String;
   roomId: Number;
   judgeId: Number;
+  caseTypeId: Number;
   jurisdiction: String;
 }

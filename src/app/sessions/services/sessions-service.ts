@@ -14,14 +14,14 @@ export class SessionsService {
 
   searchSessions(query: SessionQuery): Observable<Session[]> {
     return this.http
-      .get<Session[]>(`${this.config.getApiUrl()}/sessions`) // ?date=${query.date} TODO: get it back
+      .get<Session[]>(`${this.config.getApiUrl()}/sessions?date=${query.date}`) //  TODO: get it back
       .pipe(map(sessions => sessions || []));
   }
 
     createSession(session: Session): Observable<Session> {
     console.log(session);
       return this.http
-          .post<Session>(`${this.config.getApiUrl()}/sessions`, session)
+          .put<Session>(`${this.config.getApiUrl()}/sessions`, session)
           .pipe(map(sess => sess));
     }
 }
