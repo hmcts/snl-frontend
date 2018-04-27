@@ -9,6 +9,8 @@ import { SecurityService } from '../../security/services/security.service';
 })
 export class HomeComponent implements OnInit {
 
+    error;
+
     constructor(private security: SecurityService, private http: HttpClient) {
     }
 

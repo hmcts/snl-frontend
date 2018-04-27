@@ -1,29 +1,25 @@
 import { NgModule } from '@angular/core';
 import { AppConfigGuard } from './app-config.guard';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './security/login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { CalendarComponent } from 'ng-fullcalendar';
-import { SessionsPageComponent } from './sessions/containers/sessions-page/sessions-page.component';
-import { HomeComponent } from './core/home/home.component';
+import { CallendarComponent } from './core/callendar/callendar.component';
 import { AuthGuard } from './security/guards/auth.guard';
+import { HomeComponent } from './core/home/home.component';
 
 const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: 'home', component: HomeComponent,
         children: [
-        { path: '', redirectTo: 'dashboard',  pathMatch: 'full' },
-        { path: 'dashboard', component: DashboardComponent, canActivate: [AppConfigGuard] },
-        { path: 'calendar', component: CalendarComponent, canActivate: [AppConfigGuard] },
-        { path: 'sessions', component: SessionsPageComponent, canActivate: [AppConfigGuard] }
+            { path: '', redirectTo: 'calendar',  pathMatch: 'full' },
+            { path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard] },
+            { path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
         ],
         canActivate: [AuthGuard]
     },
-    { path: 'login', component: LoginComponent, canActivate: [AppConfigGuard]}
+    { path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
 ];
 
 @NgModule({
-    imports: [ RouterModule.forRoot(routes) ],
+    imports: [ RouterModule.forRoot(routes, {enableTracing: true}) ],
     exports: [ RouterModule ],
     providers: [
         AppConfigGuard

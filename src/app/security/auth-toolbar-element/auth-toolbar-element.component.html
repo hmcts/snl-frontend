@@ -1,5 +1,5 @@
-<span [hidden]="!authenticated()">
-      {{ loggedInUsername }}
+<span [hidden]="!authenticated()" class="auth-user-name">
+      Logged in as: {{ loggedInUsername }}
       <button mat-button (click)="logout()">Logout</button>
 </span>
 <span [hidden]="authenticated()">
