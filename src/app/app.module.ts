@@ -54,7 +54,6 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         const headerName = 'X-XSRF-TOKEN';
         let token = this.tokenExtractor.getToken() as string;
         if (token !== null && !req.headers.has(headerName)) {
-            console.log("Token added");
             req = req.clone({ headers: req.headers.set(headerName, token) });
         }
         return next.handle(req);

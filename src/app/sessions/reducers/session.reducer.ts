@@ -45,7 +45,7 @@ export function sessionReducer(state: SessionsState = initialState, action) {
         return {...state, loading: false, error: action.payload};
     }
     case SessionActionTypes.CreateComplete: {
-        return {...state, entities: [...state.entities, action.payload], loading: false};
+        return {...state, loading: false};
     }
     default:
         return state;

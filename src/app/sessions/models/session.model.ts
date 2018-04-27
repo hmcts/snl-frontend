@@ -1,8 +1,8 @@
 export interface Session {
   start: Date;
-  duration: String;
+  duration: Number;
   roomId: Number;
-  judgeId: Number;
+  personId: Number;
   caseTypeId: Number;
   jurisdiction: String;
 }

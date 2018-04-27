@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import * as fromRooms from '../../../rooms/reducers/room.reducer';
 import * as fromJudges from '../../../judges/reducers/judge.reducer';
 import { Session } from '../../models/session.model';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-sessions-create',
@@ -25,7 +26,16 @@ export class SessionsCreateComponent implements OnInit {
     this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
     this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
 
-    this.session = {} as Session;
+    let sessionUuid = uuid();
+    this.session = {
+        id: sessionUuid,
+        start: undefined,
+        duration: 0,
+        roomId: undefined,
+        personId: undefined,
+        caseTypeId: null,
+        jurisdiction: undefined,
+    } as Session;
   }
 
   create() {

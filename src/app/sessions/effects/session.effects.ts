@@ -26,8 +26,8 @@ export class SessionEffects {
       ofType<Create>(SessionActionTypes.Create),
       mergeMap(action =>
           this.sessionsService.createSession(action.payload).pipe(
-              map(data => (new CreateComplete(data))),
-              catchError((err: HttpErrorResponse) => of(new CreateFailed('Error: ' + err.error)))
+              map(() => (new CreateComplete())),
+              catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
           )
       )
   );

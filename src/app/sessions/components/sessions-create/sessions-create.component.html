@@ -31,7 +31,7 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Select the judge" [(value)]="session.judgeId">
+      <mat-select placeholder="Select the judge" [(value)]="session.personId">
         <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>
     </mat-form-field>

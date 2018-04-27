@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Session } from '../models/session.model';
 import { SessionQuery } from '../models/session-query.model';
 import { AppConfig } from '../../app.config';
+import { HttpParamsOptions } from '@angular/common/http/src/params';
 
 @Injectable()
 export class SessionsService {
@@ -18,10 +19,9 @@ export class SessionsService {
       .pipe(map(sessions => sessions || []));
   }
 
-    createSession(session: Session): Observable<Session> {
-    console.log(session);
+    createSession(session: Session): Observable<String> {
       return this.http
-          .put<Session>(`${this.config.getApiUrl()}/sessions`, session)
-          .pipe(map(sess => sess));
+          .put<String>(`${this.config.getApiUrl()}/sessions`, session)
+          //.pipe(map(sess => sess));
     }
 }

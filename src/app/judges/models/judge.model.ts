@@ -1,4 +1,4 @@
 export interface Judge {
-  id: Number;
+  id: string;
   name: string;
 }

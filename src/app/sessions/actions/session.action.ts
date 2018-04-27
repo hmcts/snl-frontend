@@ -53,7 +53,7 @@ export class Create implements Action {
 export class CreateComplete implements Action {
     readonly type = SessionActionTypes.CreateComplete;
 
-    constructor(public payload: Session) {
+    constructor() {
         console.log(this.type);
     }
 }
@@ -62,6 +62,6 @@ export class CreateFailed implements Action {
     readonly type = SessionActionTypes.CreateFailed;
 
     constructor(public payload: string) {
-        console.log(this.type);
+        console.log(payload);
     }
 }
