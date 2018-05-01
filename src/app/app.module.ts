@@ -22,6 +22,7 @@ import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
+import { JudgesModule } from './judges/judges.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -53,7 +54,8 @@ export class XhrInterceptor implements HttpInterceptor {
     FullCalendarModule,
     FlexLayoutModule,
     SessionModule,
-    SecurityModule
+    SecurityModule,
+    JudgesModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
