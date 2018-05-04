@@ -3,8 +3,8 @@ import { Judge } from '../../judges/models/judge.model';
 
 export interface Session {
   start: Date;
-  duration: String;
+  duration: string;
   room: Room;
-  judgeId: String;
-  jurisdiction: String;
+  judge: Judge;
+  jurisdiction: string;
 }

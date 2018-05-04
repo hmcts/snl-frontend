@@ -17,7 +17,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
-    {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard]},
+    {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
 ];
 
 @NgModule({

@@ -5,6 +5,11 @@ import { AuthPageComponent } from '../security/containers/auth-page/auth-page.co
 import { RouterModule } from '@angular/router';
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { SecurityModule } from '../security/security.module';
+import { StoreModule } from '@ngrx/store';
+import * as fromReducers from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { DiaryEffectEffects } from './effects/diary-effect.effects';
+import { DiaryService } from './services/diary.service';
 
 @NgModule({
     imports: [
@@ -23,8 +28,12 @@ import { SecurityModule } from '../security/security.module';
             ]
         },
         ]),
+        // StoreModule.forFeature('judgeSessions', fromReducers.reducer),
+        StoreModule.forFeature('judgeSessions', {sessions: fromReducers.reducer}),
+        EffectsModule.forFeature([DiaryEffectEffects])
     ],
-    declarations: [DiaryCalendarComponent]
+    declarations: [DiaryCalendarComponent],
+    providers: [DiaryService]
 })
 export class JudgesModule {
 }

@@ -43,6 +43,7 @@
     "@angular/upgrade": "~5.0.0",
     "@ngrx/effects": "^5.2.0",
     "@ngrx/store": "^5.2.0",
+    "@ngrx/store-devtools": "^5.2.0",
     "@nguniversal/express-engine": "^5.0.0-beta.5",
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0-beta.5",
     "class-transformer": "^0.1.8",

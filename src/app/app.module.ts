@@ -23,6 +23,8 @@ import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
 import { JudgesModule } from './judges/judges.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -46,6 +48,10 @@ export class XhrInterceptor implements HttpInterceptor {
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
     BrowserAnimationsModule,
     StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
     EffectsModule.forRoot([]),
     HttpClientModule,
     FormsModule,
