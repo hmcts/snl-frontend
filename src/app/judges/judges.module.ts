@@ -9,28 +9,28 @@ import * as fromReducers from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { DiaryEffectEffects } from './effects/diary-effect.effects';
 import { DiaryService } from './services/diary.service';
+import { MainComponent } from './components/main/main.component';
 
 @NgModule({
     imports: [
         CommonModule,
         FullCalendarModule,
         SecurityModule,
-        RouterModule.forChild([{
-            path: '',
-            component: DiaryCalendarComponent,
-            children: [
-                {path: '', redirectTo: 'diary-calendar', pathMatch: 'full'},
-                {
-                    path: 'diary-calendar',
-                    component: DiaryCalendarComponent
-                }
-            ]
-        }
+        RouterModule.forChild([
+            {path: '', redirectTo: 'main', pathMatch: 'full'},
+            {
+                path: 'main',
+                component: MainComponent
+            },
+            {
+                path: 'diary-calendar',
+                component: DiaryCalendarComponent
+            }
         ]),
         StoreModule.forFeature('judgeSessions', {sessions: fromReducers.reducer}),
         EffectsModule.forFeature([DiaryEffectEffects])
     ],
-    declarations: [DiaryCalendarComponent],
+    declarations: [DiaryCalendarComponent, MainComponent],
     providers: [DiaryService]
 })
 export class JudgesModule {
