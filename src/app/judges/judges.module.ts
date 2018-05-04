@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiaryCalendarComponent } from './diary-calendar/diary-calendar.component';
-import { AuthPageComponent } from '../security/containers/auth-page/auth-page.component';
 import { RouterModule } from '@angular/router';
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { SecurityModule } from '../security/security.module';
@@ -18,7 +17,7 @@ import { DiaryService } from './services/diary.service';
         SecurityModule,
         RouterModule.forChild([{
             path: '',
-            component: AuthPageComponent,
+            component: DiaryCalendarComponent,
             children: [
                 {path: '', redirectTo: 'diary-calendar', pathMatch: 'full'},
                 {
@@ -26,9 +25,8 @@ import { DiaryService } from './services/diary.service';
                     component: DiaryCalendarComponent
                 }
             ]
-        },
+        }
         ]),
-        // StoreModule.forFeature('judgeSessions', fromReducers.reducer),
         StoreModule.forFeature('judgeSessions', {sessions: fromReducers.reducer}),
         EffectsModule.forFeature([DiaryEffectEffects])
     ],

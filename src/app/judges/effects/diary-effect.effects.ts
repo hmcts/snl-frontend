@@ -18,8 +18,6 @@ export class DiaryEffectEffects {
             this.diaryService.getDiarySessions(action.payload).pipe(
                 // If successful, dispatch success action with result
                 map(data => {
-                    console.log('effects insides ');
-                    console.log(data);
                     return (new LoadComplete(data))
                 }),
                 // If request fails, dispatch failed action

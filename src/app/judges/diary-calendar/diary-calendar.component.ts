@@ -1,18 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Options } from 'fullcalendar';
+import { Options, ViewObject } from 'fullcalendar';
 import { CalendarComponent } from 'ng-fullcalendar';
-import { select, Store } from '@ngrx/store';
-import * as fromState from '../../app.state';
+import { Store } from '@ngrx/store';
+import { State } from '../../app.state';
 import * as fromReducer from '../reducers/index';
 import { Session } from '../../sessions/models/session.model';
 import { Observable } from 'rxjs/Observable';
 import { Load } from '../actions/diary.actions';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { SecurityService } from '../../security/services/security.service';
-import { map } from 'rxjs/operators';
-import * as moment from 'moment'
-import { AfterContentInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { State } from '../../app.state';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -25,24 +22,26 @@ export class DiaryCalendarComponent implements OnInit {
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     sessions$: Observable<Session[]>;
     events: any[] = [];
+    errors: string;
 
     constructor(private store: Store<State>, private security: SecurityService) {
         this.sessions$ = this.store.select(fromReducer.getSessionsEntities);
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
+        }, error => {
+            this.errors = error;
         });
     }
 
-    dataTransformer(session: Session) {
-        console.log('in da transformer');
-        console.log(session);
-        return {
-            title: session.room.name + ' - ' + session.judge.name,
-            start: session.start,
-            end: moment(session.start).add(session.duration).toDate(),
-            description: 'This is a BACKGROUND event Conference <br/> second line test <b> bolder test </b>'
-        }
+    clickButton(model: any) {
+        console.log('CurrentView: ');
+        let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
+        let startDate = view.intervalStart.format('YYYY-MM-DD');
+        let endDate = view.intervalEnd.format('YYYY-MM-DD');
+        console.log(startDate);
+        console.log(endDate);
+        this.loadData(new Date(startDate), new Date(endDate));
     }
 
     ngOnInit() {
@@ -56,31 +55,18 @@ export class DiaryCalendarComponent implements OnInit {
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listMonth'
             },
-            events: this.events,
-            //     , {
-            //     title: 'event2',
-            //     start: '2018-04-19T13:00:00',
-            //     end: '2018-04-19T16:00:00',
-            //     backgroundColor: 'rgba(143, 223, 130, 0.3)',
-            //     description: 'This is a cool event'
-            //     // rendering: 'background'
-            // }, {
-            //     title: 'event3',
-            //     start: '2018-04-19T13:00:00',
-            //     end: '2018-04-19T16:00:00',
-            //     backgroundColor: 'rgba(143, 223, 130, 0.3)',
-            //     description: 'This is a cool event'
-            //     // rendering: 'background'
-            // }
-            // eventRender: function (event, element) {
-            //     alert(element);
-            //     console.log(event);
-            // },
             eventDataTransform: this.dataTransformer
         };
-
         this.loadData();
+    }
 
+    private dataTransformer(session: Session) {
+        return {
+            title: session.room.name + ' - ' + session.judge.name,
+            start: session.start,
+            end: moment(session.start).add(session.duration).toDate(),
+            description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
+        };
     }
 
     private loadData(startDate?: Date, endDate?: Date) {

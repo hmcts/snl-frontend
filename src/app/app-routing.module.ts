@@ -13,11 +13,11 @@ const routes: Routes = [
             {path: '', redirectTo: 'calendar', pathMatch: 'full'},
             {path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard]},
             {path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
+            {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard]},
         ],
         canActivate: [AuthGuard]
     },
     {path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
-    {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
 ];
 
 @NgModule({
