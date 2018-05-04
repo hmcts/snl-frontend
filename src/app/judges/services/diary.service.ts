@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { Session } from '../../sessions/models/session.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -16,12 +15,9 @@ export class DiaryService {
     getDiarySessions(parameters: DiaryLoadParameters): Observable<Session[]> {
         let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
         let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
-        let username = parameters.judgeUsername; // this.security.currentUser.username;
+        let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
         return this.http
-            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
-            // .pipe(
-            //     map(sessions => sessions || [])
-            // );
+            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`);
     }
 
 }

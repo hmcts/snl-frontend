@@ -38,10 +38,3 @@ export function reducer(state = initialState, action: DiaryActions) {
             return state;
     }
 }
-
-// export const reducers: ActionReducerMap<State> = {
-//
-// };
-//
-//
-// export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];
