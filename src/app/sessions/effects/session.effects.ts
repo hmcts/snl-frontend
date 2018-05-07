@@ -16,7 +16,7 @@ export class SessionEffects {
     mergeMap(action =>
       this.sessionsService.searchSessions(action.payload).pipe(
         map(data => (new SearchComplete(data))),
-        catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+        catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error)))
       )
     )
   );

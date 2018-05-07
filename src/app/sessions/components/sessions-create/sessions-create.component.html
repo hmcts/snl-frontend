@@ -4,22 +4,22 @@
   </mat-card-header>
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
-    <!--mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
       <input matInput [matDatepicker]="picker" [(ngModel)]="session.start" placeholder="Choose date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!--mat-form-field>
+      <input [(ngModel)]="session.start" matInput placeholder="Start">
     </mat-form-field-->
 
     <mat-form-field>
-      <input [(ngModel)]="session.start" matInput placeholder="Start">
+      <input [(ngModel)]="session.duration" type="number" matInput placeholder="Duration">
     </mat-form-field>
 
     <mat-form-field>
-      <input [(ngModel)]="session.duration" matInput placeholder="Duration">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-select placeholder="Select the case type" [(value)]="session.caseTypeId">
+      <mat-select placeholder="Select the case type" [(value)]="session.caseType">
         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
       </mat-select>
     </mat-form-field>

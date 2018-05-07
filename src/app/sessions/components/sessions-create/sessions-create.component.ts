@@ -9,6 +9,7 @@ import * as fromRooms from '../../../rooms/reducers/room.reducer';
 import * as fromJudges from '../../../judges/reducers/judge.reducer';
 import { Session } from '../../models/session.model';
 import { v4 as uuid } from 'uuid';
+import { SessionCreate } from '../../models/session-create.model';
 
 @Component({
   selector: 'app-sessions-create',
@@ -18,28 +19,28 @@ import { v4 as uuid } from 'uuid';
 export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
-    caseTypes: ['SCLAIMS', 'FTRACK', 'MTRACK'];
+    caseTypes;
 
-    session: Session;
+    session: SessionCreate;
 
     constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
     this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
+    this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
 
-    let sessionUuid = uuid();
     this.session = {
-        id: sessionUuid,
+        id: undefined,
         start: undefined,
         duration: 0,
         roomId: undefined,
         personId: undefined,
-        caseTypeId: null,
-        jurisdiction: undefined,
-    } as Session;
+        caseType: null
+    } as SessionCreate;
   }
 
   create() {
-      this.store.dispatch(new SessionActions.Create(this.session))
+    this.session.id = uuid();
+    this.store.dispatch(new SessionActions.Create(this.session))
   }
 
   ngOnInit() {
