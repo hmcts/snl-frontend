@@ -33,8 +33,8 @@ export class SessionsCreateComponent implements OnInit {
         id: undefined,
         start: undefined,
         duration: 0,
-        roomId: undefined,
-        personId: undefined,
+        roomId: null,
+        personId: null,
         caseType: null
     } as SessionCreate;
   }
