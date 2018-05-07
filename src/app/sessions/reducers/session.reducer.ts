@@ -21,17 +21,20 @@ export const getSessionsLoading = createSelector(getSessionsState, state => stat
 export const getSessionsError = createSelector(getSessionsState, state => state.error);
 
 export function reducer(state = [], action) {
-  switch (action.type) {
-    case SessionActionTypes.Search: {
-      return {...state, loading: true};
+    switch (action.type) {
+        case SessionActionTypes.Search: {
+            return {...state, loading: true};
+        }
+        case SessionActionTypes.SearchFailed: {
+            return {...state, loading: false, error: action.payload};
+        }
+        case SessionActionTypes.SearchComplete: {
+            return {entities: action.payload, loading: false};
+        }
+        case SessionActionTypes.SearchForDates: {
+            return {...state, loading: true};
+        }
+        default:
+            return state;
     }
-    case SessionActionTypes.SearchFailed: {
-      return {...state, loading: false, error: action.payload};
-    }
-    case SessionActionTypes.SearchComplete: {
-      return {entities: action.payload, loading: false};
-    }
-    default:
-      return state;
-  }
 }

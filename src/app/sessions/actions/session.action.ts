@@ -1,8 +1,9 @@
 import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
-import { SessionQuery } from '../models/session-query.model';
+import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 
 export enum SessionActionTypes {
+  SearchForDates = '[Session] Search for given dates',
   Search = '[Book] Search',
   SearchComplete = '[Book] Search Complete',
   SearchFailed = '[Book] Search Failed',
@@ -38,4 +39,10 @@ export class SearchFailed implements Action {
     console.log('Action: searchFailed | ' + payload);
 
   }
+}
+
+export class SearchForDates implements Action {
+    readonly type = SessionActionTypes.SearchForDates;
+
+    constructor(public payload: SessionQueryForDates) {}
 }

@@ -1,4 +1,11 @@
+<p *ngIf="errors">{{errors}}</p>
+
 <div *ngIf="calendarOptions" class="calendar-element">
-  <ng-fullcalendar #ucCalendar [options]="calendarOptions" (eventClick)="eventClick($event.detail)" (eventDrop)="updateEvent($event.detail)"
-                   (eventResize)="updateEvent($event.detail)" (clickButton)="clickButton($event.detail)"></ng-fullcalendar>
+  <ng-fullcalendar #ucCalendar [options]="calendarOptions"
+                   (eventClick)="eventClick($event.detail)"
+                   (eventDrop)="updateEvent($event.detail)"
+                   (eventResize)="updateEvent($event.detail)"
+                   (clickButton)="clickButton($event.detail)"
+                   [(eventsModel)]="events"
+  ></ng-fullcalendar>
 </div>
