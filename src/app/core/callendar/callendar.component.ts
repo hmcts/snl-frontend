@@ -58,8 +58,11 @@ export class CallendarComponent implements OnInit {
     }
 
     private dataTransformer(session: Session) {
+        let judgeName = (session.judge) ? session.judge.name : 'No Judge';
+        let roomName = (session.room) ? session.room.name : 'No Room';
+        let caseType = 'No Case type';
         return {
-            title: session.room.name + ' - ' + session.judge.name,
+            title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
             end: moment(session.start).add(session.duration).toDate()
         };
