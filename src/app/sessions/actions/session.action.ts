@@ -1,11 +1,16 @@
 import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
-import { SessionQuery } from '../models/session-query.model';
+import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
+import { SessionCreate } from '../models/session-create.model';
 
 export enum SessionActionTypes {
-  Search = '[Book] Search',
-  SearchComplete = '[Book] Search Complete',
-  SearchFailed = '[Book] Search Failed',
+  Search = '[Session] Search',
+  SearchForDates = '[Session] Search for given dates',
+  SearchComplete = '[Session] Search Complete',
+  SearchFailed = '[Session] Search Failed',
+  Create = '[Session] Create',
+  CreateComplete = '[Session] Create Complete',
+  CreateFailed = '[Session] Create Failed'
 }
 
 /**
@@ -19,7 +24,7 @@ export class Search implements Action {
   readonly type = SessionActionTypes.Search;
 
   constructor(public payload: SessionQuery) {
-    console.log('Action: search');
+      console.log(this.type);
   }
 }
 
@@ -35,7 +40,36 @@ export class SearchFailed implements Action {
   readonly type = SessionActionTypes.SearchFailed;
 
   constructor(public payload: string) {
-    console.log('Action: searchFailed | ' + payload);
-
+      console.log(this.type);
   }
+}
+
+export class SearchForDates implements Action {
+    readonly type = SessionActionTypes.SearchForDates;
+
+    constructor(public payload: SessionQueryForDates) {}
+}
+
+export class Create implements Action {
+    readonly type = SessionActionTypes.Create;
+
+    constructor(public payload: SessionCreate) {
+        console.log(this.type);
+    }
+}
+
+export class CreateComplete implements Action {
+    readonly type = SessionActionTypes.CreateComplete;
+
+    constructor() {
+        console.log(this.type);
+    }
+}
+
+export class CreateFailed implements Action {
+    readonly type = SessionActionTypes.CreateFailed;
+
+    constructor(public payload: string) {
+        console.log(payload);
+    }
 }
