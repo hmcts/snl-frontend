@@ -3,9 +3,9 @@ import { Judge } from '../../judges/models/judge.model';
 
 export interface Session {
   start: Date;
-  duration: Number;
+  duration: number;
   room: Room;
   person: Judge;
-  caseType: String;
-  jurisdiction: String;
+  caseType: string;
+  jurisdiction: string;
 }

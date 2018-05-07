@@ -61,13 +61,13 @@ export class DiaryCalendarComponent implements OnInit {
     }
 
     private dataTransformer(session: Session) {
-        let judgeName = (session.judge) ? session.person.name : 'No Judge';
+        let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = 'No Case type';
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
-            end: moment(session.start).add(session.duration.toString()).toDate(),
+            end: moment(session.start).add(session.duration).toDate(),
             description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
         };
     }

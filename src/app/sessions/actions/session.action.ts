@@ -72,3 +72,4 @@ export class CreateFailed implements Action {
     constructor(public payload: string) {
         console.log(payload);
     }
+}
