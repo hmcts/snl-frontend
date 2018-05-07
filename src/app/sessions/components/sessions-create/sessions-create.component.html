@@ -10,9 +10,9 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <!--mat-form-field>
-      <input [(ngModel)]="session.start" matInput placeholder="Start">
-    </mat-form-field-->
+    <mat-form-field>
+      <input matInput placeholder="Start time" type="time">
+    </mat-form-field>
 
     <mat-form-field>
       <input [(ngModel)]="session.duration" type="number" matInput placeholder="Duration">
