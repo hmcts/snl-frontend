@@ -11,7 +11,7 @@ import * as moment from 'moment';
 })
 export class SessionTableComponent implements OnInit {
 
-  displayedColumns = ['position', 'time', 'duration'];
+  displayedColumns = ['position', 'time', 'duration', 'room'];
   dataSource;
   tableVisible;
 
