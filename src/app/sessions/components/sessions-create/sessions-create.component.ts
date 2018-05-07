@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-sessions-create',
@@ -21,6 +22,7 @@ export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
     caseTypes;
+    time;
 
     session: SessionCreate;
 
@@ -45,6 +47,9 @@ export class SessionsCreateComponent implements OnInit {
     }
 
   create() {
+    let time_arr = this.time.split(':');
+    this.session.start.setHours(time_arr[0]);
+    this.session.start.setMinutes(time_arr[1]);
     this.session.id = uuid();
     this.store.dispatch(new SessionActions.Create(this.session))
   }
