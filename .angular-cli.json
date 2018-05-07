@@ -8,7 +8,12 @@
       "root": "src",
       "outDir": "dist/browser",
       "assets": [
-        { "glob": "**/*", "input": "./public", "output": "./" }
+        {
+  "glob": "**/*",
+  "input": "./public",
+  "output": "./",
+  "allowOutsideOutDir": false
+}
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -21,8 +26,7 @@
         "styles.css"
       ],
       "stylePreprocessorOptions": {
-        "includePaths": [
-        ]
+        "includePaths": []
       },
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -32,23 +36,26 @@
       }
     },
     {
-      "platform": "server",
       "root": "src",
       "outDir": "dist/server",
       "assets": [
-        { "glob": "**/*", "input": "./public", "output": "./" }
+        {
+  "glob": "**/*",
+  "input": "./public",
+  "output": "./",
+  "allowOutsideOutDir": false
+}
       ],
+      "platform": "server",
       "index": "index.html",
       "main": "main.server.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.server.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
-      "styles": [
-      ],
+      "styles": [],
       "stylePreprocessorOptions": {
-        "includePaths": [
-        ]
+        "includePaths": []
       },
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -84,9 +91,13 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {},
+    "component": {
+    },
     "serve": {
       "port": 3451
+    },
+    "schematics": {
+      "collection": "@ngrx/schematics"
     }
   }
 }

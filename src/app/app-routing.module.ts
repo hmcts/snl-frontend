@@ -6,23 +6,27 @@ import { AuthGuard } from './security/guards/auth.guard';
 import { HomeComponent } from './core/home/home.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: '/home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent,
+    {path: '', redirectTo: '/home', pathMatch: 'full'},
+    {
+        path: 'home', component: HomeComponent,
         children: [
-            { path: '', redirectTo: 'calendar',  pathMatch: 'full' },
-            { path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard] },
-            { path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
+            {path: '', redirectTo: 'calendar', pathMatch: 'full'},
+            {path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard]},
+            {path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
+            {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]}
         ],
         canActivate: [AuthGuard]
     },
-    { path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
+    {path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
+    {path: '**', redirectTo: 'auth'}
 ];
 
 @NgModule({
-    imports: [ RouterModule.forRoot(routes, ) ],
-    exports: [ RouterModule ],
+    imports: [RouterModule.forRoot(routes, {enableTracing: true})],
+    exports: [RouterModule],
     providers: [
         AppConfigGuard
     ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

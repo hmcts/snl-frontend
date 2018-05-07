@@ -29,6 +29,8 @@ import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
+import { JudgesModule } from './judges/judges.module';
+import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 
@@ -70,11 +72,11 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
     BrowserAnimationsModule,
     StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
+    }),
     EffectsModule.forRoot([]),
-      StoreDevtoolsModule.instrument({
-          maxAge: 25, // Retains last 25 states
-          logOnly: false, // Restrict extension to log-only mode
-      }),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,
@@ -86,7 +88,9 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
       HttpClientXsrfModule.withOptions({
           cookieName: 'XSRF-TOKEN', // this is optional
           headerName: 'X-XSRF-TOKEN' // this is optional
-      })
+      }),
+    SecurityModule,
+    JudgesModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
