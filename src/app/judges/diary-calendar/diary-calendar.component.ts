@@ -62,9 +62,9 @@ export class DiaryCalendarComponent implements OnInit {
 
     private dataTransformer(session: Session) {
         return {
-            title: session.room.name + ' - ' + session.judge.name,
+            title: session.room.name + ' - ' + session.person.name,
             start: session.start,
-            end: moment(session.start).add(session.duration).toDate(),
+            end: moment(session.start).add(session.duration.toString()).toDate(),
             description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
         };
     }
