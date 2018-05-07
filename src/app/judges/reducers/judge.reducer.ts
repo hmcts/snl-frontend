@@ -11,7 +11,7 @@ export interface JudgeState {
 }
 
 const initialState: JudgeState = {
-    entities: [{id: 'dfba5778-137c-fad0-734e-6c7bddcbf583', name: 'John Harris'}],
+    entities: [],
     loading: false,
     error: '',
 };
