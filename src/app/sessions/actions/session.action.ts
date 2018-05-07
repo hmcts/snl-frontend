@@ -1,15 +1,16 @@
 import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
-import { SessionQuery } from '../models/session-query.model';
+import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { SessionCreate } from '../models/session-create.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
+  SearchForDates = '[Session] Search for given dates',
   SearchComplete = '[Session] Search Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   CreateComplete = '[Session] Create Complete',
-  CreateFailed = '[Session] Create Failed',
+  CreateFailed = '[Session] Create Failed'
 }
 
 /**
@@ -43,6 +44,12 @@ export class SearchFailed implements Action {
   }
 }
 
+export class SearchForDates implements Action {
+    readonly type = SessionActionTypes.SearchForDates;
+
+    constructor(public payload: SessionQueryForDates) {}
+}
+
 export class Create implements Action {
     readonly type = SessionActionTypes.Create;
 
@@ -65,4 +72,3 @@ export class CreateFailed implements Action {
     constructor(public payload: string) {
         console.log(payload);
     }
-}

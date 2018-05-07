@@ -32,6 +32,9 @@ export function sessionReducer(state: SessionsState = initialState, action) {
     case SessionActionTypes.Search: {
         return {...state, loading: true};
     }
+    case SessionActionTypes.SearchForDates: {
+        return {...state, loading: true};
+    }
     case SessionActionTypes.SearchFailed: {
         return {...state, loading: false, error: action.payload};
     }
