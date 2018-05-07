@@ -3,6 +3,7 @@ import * as fromRoot from '../../app.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Room } from '../models/room.model';
 import { JudgeActionTypes } from '../../judges/actions/judge.action';
+import { RoomActionTypes } from '../actions/room.action';
 
 export interface RoomState {
     readonly entities: Room[];
@@ -28,13 +29,13 @@ export const getRoomsError = createSelector(getRoomsState, state => state.error)
 
 export function roomReducer(state: RoomState = initialState, action) {
   switch (action.type) {
-    case JudgeActionTypes.Get: {
+    case RoomActionTypes.Get: {
         return {...state, loading: true};
     }
-    case JudgeActionTypes.GetFailed: {
+    case RoomActionTypes.GetFailed: {
         return {...state, loading: false, error: action.payload};
     }
-    case JudgeActionTypes.GetComplete: {
+    case RoomActionTypes.GetComplete: {
         return {entities: action.payload, loading: false};
     }
     default:

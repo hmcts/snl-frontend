@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Judge } from '../../judges/models/judge.model';
+import { Room } from '../models/room.model';
 
 export enum RoomActionTypes {
   Get = '[Room] Get',
@@ -25,7 +25,7 @@ export class Get implements Action {
 export class GetComplete implements Action {
     readonly type = RoomActionTypes.GetComplete;
 
-    constructor(public payload: Judge[]) {
+    constructor(public payload: Room[]) {
         console.log(this.type);
     }
 }

@@ -7,9 +7,10 @@ import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromRooms from '../../../rooms/reducers/room.reducer';
 import * as fromJudges from '../../../judges/reducers/judge.reducer';
-import { Session } from '../../models/session.model';
 import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
+import * as JudgeActions from '../../../judges/actions/judge.action';
+import * as RoomActions from '../../../rooms/actions/room.action';
 
 @Component({
   selector: 'app-sessions-create',
@@ -37,6 +38,11 @@ export class SessionsCreateComponent implements OnInit {
         caseType: null
     } as SessionCreate;
   }
+
+    getData() {
+        this.store.dispatch(new JudgeActions.Get())
+        this.store.dispatch(new RoomActions.Get())
+    }
 
   create() {
     this.session.id = uuid();
