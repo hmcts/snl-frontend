@@ -1,4 +1,4 @@
-<div *ngIf="!dataSource">
+<div *ngIf="!tableVisible">
   <mat-card>
     <mat-card-header>
       <mat-card-title>No sessions avaiable!</mat-card-title>
@@ -6,16 +6,21 @@
   </mat-card>
 </div>
 
-<mat-table *ngIf="dataSource" #table [dataSource]="dataSource">
+<mat-table *ngIf="dataSource && tableVisible" #table [dataSource]="dataSource">
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.judge.name}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
   </ng-container>
+
+    <ng-container matColumnDef="room">
+        <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.room?.name}} </mat-cell>
+    </ng-container>
 
   <ng-container matColumnDef="time">
     <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.start.getHours()}}:{{element.start.getMinutes()}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.start.getHours()}}:{{(element.start.getMinutes()<10?'0':'') + element.start.getMinutes() }} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="duration">

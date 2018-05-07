@@ -61,7 +61,7 @@ export class DiaryCalendarComponent implements OnInit {
     }
 
     private dataTransformer(session: Session) {
-        let judgeName = (session.judge) ? session.judge.name : 'No Judge';
+        let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = 'No Case type';
         return {

@@ -3,12 +3,19 @@ import { Session } from '../models/session.model';
 
 import * as fromRoot from '../../app.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromRooms from '../../rooms/reducers/room.reducer';
 
 export interface SessionsState {
     readonly entities: Session[];
     readonly loading: boolean;
     readonly error: string;
 }
+
+const initialState: SessionsState = {
+    entities: [] as Session[],
+    loading: false,
+    error: '',
+};
 
 export interface State extends fromRoot.State {
     sessions: SessionsState;
@@ -20,21 +27,30 @@ export const getSessionsEntities = createSelector(getSessionsState, state => sta
 export const getSessionsLoading = createSelector(getSessionsState, state => state.loading);
 export const getSessionsError = createSelector(getSessionsState, state => state.error);
 
-export function reducer(state = [], action) {
-    switch (action.type) {
-        case SessionActionTypes.Search: {
-            return {...state, loading: true};
-        }
-        case SessionActionTypes.SearchFailed: {
-            return {...state, loading: false, error: action.payload};
-        }
-        case SessionActionTypes.SearchComplete: {
-            return {entities: action.payload, loading: false};
-        }
-        case SessionActionTypes.SearchForDates: {
-            return {...state, loading: true};
-        }
-        default:
-            return state;
+export function sessionReducer(state: SessionsState = initialState, action) {
+  switch (action.type) {
+    case SessionActionTypes.Search: {
+        return {...state, loading: true};
     }
+    case SessionActionTypes.SearchForDates: {
+        return {...state, loading: true};
+    }
+    case SessionActionTypes.SearchFailed: {
+        return {...state, loading: false, error: action.payload};
+    }
+    case SessionActionTypes.SearchComplete: {
+        return {entities: action.payload, loading: false};
+    }
+    case SessionActionTypes.Create: {
+        return {...state, loading: true};
+    }
+    case SessionActionTypes.CreateFailed: {
+        return {...state, loading: false, error: action.payload};
+    }
+    case SessionActionTypes.CreateComplete: {
+        return {...state, loading: false};
+    }
+    default:
+        return state;
+  }
 }

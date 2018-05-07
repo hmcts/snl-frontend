@@ -4,7 +4,14 @@ import { APP_ID, Inject, Injectable, NgModule, PLATFORM_ID } from '@angular/core
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+    HTTP_INTERCEPTORS,
+    HttpClientModule,
+    HttpClientXsrfModule, HttpEvent,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest, HttpXsrfTokenExtractor,
+} from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
@@ -23,8 +30,9 @@ import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
 import { SecurityService } from './security/services/security.service';
 import { JudgesModule } from './judges/judges.module';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -35,6 +43,22 @@ export class XhrInterceptor implements HttpInterceptor {
             withCredentials: true
         });
         return next.handle(xhr);
+    }
+}
+
+@Injectable()
+export class HttpXsrfInterceptor implements HttpInterceptor {
+
+    constructor(private tokenExtractor: HttpXsrfTokenExtractor) {
+    }
+
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const headerName = 'X-XSRF-TOKEN';
+        let token = this.tokenExtractor.getToken() as string;
+        if (token !== null && !req.headers.has(headerName)) {
+            req = req.clone({ headers: req.headers.set(headerName, token) });
+        }
+        return next.handle(req);
     }
 }
 
@@ -61,11 +85,17 @@ export class XhrInterceptor implements HttpInterceptor {
     FlexLayoutModule,
     SessionModule,
     SecurityModule,
+      HttpClientXsrfModule.withOptions({
+          cookieName: 'XSRF-TOKEN', // this is optional
+          headerName: 'X-XSRF-TOKEN' // this is optional
+      }),
+    SecurityModule,
     JudgesModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
-      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
-],
+      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+      { provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
