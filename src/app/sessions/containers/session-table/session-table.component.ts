@@ -29,6 +29,10 @@ export class SessionTableComponent implements OnInit {
     });
   }
 
+  humanizeDuration(duration) {
+      return moment.duration(duration).humanize();
+  }
+
   ngOnInit() {
   }
 
