@@ -33,6 +33,7 @@ import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -94,7 +95,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-      { provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true }
+      {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
+      {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
   ],
   bootstrap: [AppComponent]
 })
