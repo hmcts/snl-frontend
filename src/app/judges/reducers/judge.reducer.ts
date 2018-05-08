@@ -29,7 +29,7 @@ export const getJudgesError = createSelector(getJudgesState, state => state.erro
 export function judgeReducer(state: JudgeState = initialState, action) {
   switch (action.type) {
     case JudgeActionTypes.Get: {
-        return state;
+        return {...state, loading: true};
     }
     case JudgeActionTypes.GetFailed: {
         return {...state, loading: false, error: action.payload};
