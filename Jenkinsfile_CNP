@@ -1,0 +1,18 @@
+#!groovy
+
+@Library("Infrastructure")
+
+def product = "snl"
+def component = "frontend"
+
+withPipeline("java", product, component) {
+  after('checkout') {
+    echo 'sln-frontend checked out'
+  }
+
+  before('buildinfra:aat') {
+    error 'This is PoC project for Scheduling and Listing therefore the environments will not be built'
+  }
+}
+
+
