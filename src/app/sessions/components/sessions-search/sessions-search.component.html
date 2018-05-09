@@ -20,6 +20,14 @@
   <app-session-table></app-session-table>
 </div>
 
+<div style="margin-top: 30px; margin-bottom: 10px">
+  Listing Requests:
+</div>
+
 <div>
-  <app-hearing-parts-preview [hearingParts]="hearingParts$ | async" (assignToSession)="assignToSession($event)"></app-hearing-parts-preview>
+  <app-hearing-parts-preview
+          [hearingParts]="hearingParts$ | async"
+          [sessions]="sessions$ | async"
+          (assignToSession)="assignToSession($event)">
+  </app-hearing-parts-preview>
 </div>

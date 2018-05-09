@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
 import { MatTableDataSource } from '@angular/material';
+import { Session } from '../../../sessions/models/session.model';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -9,7 +10,10 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class HearingPartsPreviewComponent implements OnInit {
   @Input() hearingParts: HearingPart[];
-  @Output() assignToSession = new EventEmitter<number>();
+  @Input() sessions: Session[];
+  @Output() assignToSession = new EventEmitter<any>();
+
+  chosenSessionId: number;
 
     hearingPartsDataSource: MatTableDataSource<HearingPart>;
   displayedColumns = ['case number',
