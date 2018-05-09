@@ -4,16 +4,19 @@
     </mat-card-header>
 
     <mat-card-content class="inputs-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+
+        <div *ngIf="errors">{{errors}}</div>
+
         <div fxLayout="row">
             <mat-form-field fxFlex="90">
-                <input [(ngModel)]="caseNumber" matInput placeholder="Case number" type="text">
+                <input [(ngModel)]="listing.caseNumber" matInput placeholder="Case number" type="text">
             </mat-form-field>
             <div fxLayoutAlign="center center" fxFlex="10">*</div>
         </div>
 
         <div fxLayout="row">
             <mat-form-field fxFlex="90">
-                <input [(ngModel)]="caseTitle" matInput placeholder="Case title" type="text">
+                <input [(ngModel)]="listing.caseTitle" matInput placeholder="Case title" type="text">
             </mat-form-field>
             <div fxLayoutAlign="center center" fxFlex="10">*</div>
         </div>
@@ -29,7 +32,7 @@
 
         <div class="inputs-container" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
             <mat-form-field fxFlex="90">
-                <mat-select placeholder="Hearing type" [(value)]="listing.hearing">
+                <mat-select placeholder="Hearing type" [(value)]="listing.hearingType">
                     <mat-option *ngFor="let hearing of hearings" value="{{hearing}}">{{hearing}}</mat-option>
                 </mat-select>
             </mat-form-field>
@@ -38,7 +41,7 @@
 
         <div class="inputs-container" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
             <mat-form-field fxFlex="80">
-                <input [(ngModel)]="listing.duration" type="number" matInput placeholder="Duration">
+                <input [(ngModel)]="duration" type="number" matInput placeholder="Duration">
             </mat-form-field>
             <div fxLayoutAlign="center center" fxFlexOffset="5%" fxFlex="10">Minutes</div>
             <div fxLayoutAlign="center center" fxFlex="10">*</div>
@@ -51,7 +54,7 @@
                     <div fxFlex="20%" fxLayoutAlign="start start">From:</div>
                     <div>
                         <mat-form-field class="date-picker-element">
-                            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.start"
+                            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart"
                                    placeholder="M/D/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                             <mat-datepicker #pickerStart></mat-datepicker>
@@ -62,7 +65,7 @@
                     <div fxFlex="20%" fxLayoutAlign="start start">To:</div>
                     <div>
                         <mat-form-field class="date-picker-element">
-                            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.end"
+                            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd"
                                    placeholder="M/D/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                             <mat-datepicker #pickerEnd></mat-datepicker>
