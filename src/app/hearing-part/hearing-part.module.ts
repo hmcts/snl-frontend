@@ -5,6 +5,8 @@ import { AngularMaterialModule } from '../../angular-material/angular-material.m
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HearingPartsPreviewComponent } from './components/hearing-parts-preview/hearing-parts-preview.component';
+import { StoreModule } from '@ngrx/store';
+import { hearingPartReducer } from './reducers/hearing-part.reducer';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -17,6 +19,7 @@ export const COMPONENTS = [
     AngularMaterialModule,
     FlexLayoutModule,
     FormsModule,
+    StoreModule.forFeature('hearingParts', {hearingParts: hearingPartReducer}),
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Search } from '../../actions/session.action';
 import { DatePipe } from '@angular/common';
-import * as fromSessions from '../../reducers/session.reducer';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
-import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import { State } from '../../../app.state';
+import * as fromHearingParts from '../../../hearing-part/reducers/hearing-part.reducer';
 
 @Component({
   selector: 'app-sessions-search',
@@ -18,20 +18,11 @@ export class SessionsSearchComponent implements OnInit {
     chosenDate;
     hearingParts$: Observable<HearingPart[]>;
 
-    constructor(private store: Store<fromSessions.State>) { }
+    constructor(private store: Store<State>) {
+        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartEntities));
+    }
 
     ngOnInit() {
-        this.hearingParts$ = Observable.of([
-            {
-                id: 'asd',
-                caseNumber: 'asd',
-                caseType: 'asd',
-                hearingType: 'asd',
-                duration: moment.duration('10'),
-                scheduleStart: new Date(),
-                scheduleEnd: new Date(),
-            } as HearingPart
-        ])
     }
 
     getSessions(date) {
