@@ -26,7 +26,7 @@ export class SessionsService {
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
             .pipe(map(sessions => sessions || []));
     }
-  
+
     createSession(session: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, session)
