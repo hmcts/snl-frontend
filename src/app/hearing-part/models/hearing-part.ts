@@ -1,6 +1,6 @@
 import * as moment from 'moment'
 
-export interface ListingCreate {
+export interface HearingPart {
     id: string;
     caseNumber: string;
     caseType: string;

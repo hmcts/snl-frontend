@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import * as SessionActions from '../../../sessions/actions/session.action';
 import { State } from '../../../app.state';
 import { v4 as uuid } from 'uuid';
-import { ListingCreate } from '../../models/listing-create';
+import { HearingPart } from '../../models/hearing-part';
 import * as moment from 'moment'
 
 @Component({
@@ -19,7 +19,7 @@ export class ListingCreateComponent implements OnInit {
     caseTypes: string[];
     time;
 
-    listing: ListingCreate;
+    listing: HearingPart;
 
     constructor(private store: Store<State>) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
@@ -33,7 +33,7 @@ export class ListingCreateComponent implements OnInit {
             duration: moment.duration(0),
             scheduleStart: undefined,
             scheduleEnd: undefined,
-        } as ListingCreate;
+        } as HearingPart;
     }
 
     create() {

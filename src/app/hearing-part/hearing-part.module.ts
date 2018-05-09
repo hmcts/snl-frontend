@@ -4,6 +4,12 @@ import { ListingCreateComponent } from './components/listing-create/listing-crea
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { HearingPartsPreviewComponent } from './components/hearing-parts-preview/hearing-parts-preview.component';
+
+export const COMPONENTS = [
+    HearingPartsPreviewComponent,
+    ListingCreateComponent
+];
 
 @NgModule({
   imports: [
@@ -12,6 +18,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     FlexLayoutModule,
     FormsModule,
   ],
-  declarations: [ListingCreateComponent]
+  declarations: COMPONENTS,
+  exports: COMPONENTS
 })
 export class HearingPartModule { }

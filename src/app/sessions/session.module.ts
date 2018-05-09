@@ -19,6 +19,7 @@ import { JudgeEffects } from '../judges/effects/judge.effects';
 import { RoomEffects } from '../rooms/effects/room.effects';
 import { JudgeService } from '../judges/services/judge.service';
 import { RoomService } from '../rooms/services/room.service';
+import { HearingPartModule } from '../hearing-part/hearing-part.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -33,6 +34,7 @@ export const COMPONENTS = [
     AngularMaterialModule,
       FlexLayoutModule,
       FormsModule,
+      HearingPartModule,
     StoreModule.forFeature('sessions', {sessions: sessionReducer, rooms: roomReducer, judges: judgeReducer}),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{

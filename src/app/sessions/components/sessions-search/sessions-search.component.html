@@ -19,3 +19,7 @@
 <div>
   <app-session-table></app-session-table>
 </div>
+
+<div>
+  <app-hearing-parts-preview [hearingParts]="hearingParts$ | async" (assignToSession)="assignToSession($event)"></app-hearing-parts-preview>
+</div>
