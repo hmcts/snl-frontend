@@ -57,6 +57,15 @@ export function hearingPartReducer(state: HearingPartState = initialState, actio
     case HearingPartActionTypes.CreateComplete: {
         return {...state, loading: false};
     }
+    case HearingPartActionTypes.AssignToSession: {
+      return {...state, loading: true};
+    }
+    case HearingPartActionTypes.AssignComplete: {
+      return {...state, loading: false};
+    }
+    case HearingPartActionTypes.AssignFailed: {
+      return {...state, loading: false, error: action.payload};
+    }
     default:
         return state;
   }

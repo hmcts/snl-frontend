@@ -7,6 +7,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HearingPartsPreviewComponent } from './components/hearing-parts-preview/hearing-parts-preview.component';
 import { StoreModule } from '@ngrx/store';
 import { hearingPartReducer } from './reducers/hearing-part.reducer';
+import { HearingPartService } from './services/hearing-part-service';
+import { EffectsModule } from '@ngrx/effects';
+import { HearingPartEffects } from './effects/hearing-part.effects';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -20,8 +23,10 @@ export const COMPONENTS = [
     FlexLayoutModule,
     FormsModule,
     StoreModule.forFeature('hearingParts', {hearingParts: hearingPartReducer}),
+    EffectsModule.forFeature([HearingPartEffects]),
   ],
   declarations: COMPONENTS,
-  exports: COMPONENTS
+  exports: COMPONENTS,
+  providers: [HearingPartService]
 })
 export class HearingPartModule { }

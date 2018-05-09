@@ -9,6 +9,8 @@ import { State } from '../../../app.state';
 import * as fromHearingParts from '../../../hearing-part/reducers/hearing-part.reducer';
 import * as fromSessions from '../../reducers/session.reducer';
 import { Session } from '../../models/session.model';
+import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 
 @Component({
   selector: 'app-sessions-search',
@@ -23,7 +25,6 @@ export class SessionsSearchComponent implements OnInit {
     constructor(private store: Store<State>) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartEntities));
         this.sessions$ = this.store.pipe(select(fromSessions.getSessionsEntities));
-        this.sessions$.subscribe(console.log);
     }
 
     ngOnInit() {
@@ -35,8 +36,8 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new Search({date: date}));
     }
 
-    assignToSession(event) {
-        console.log(event);
+    assignToSession(event: SessionAssignment) {
+        this.store.dispatch(new AssignToSession(event));
     }
 
 }
