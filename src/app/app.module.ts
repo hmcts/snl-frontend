@@ -33,6 +33,7 @@ import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
+import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { MAT_DATE_LOCALE } from '@angular/material';
 
 @Injectable()
@@ -91,7 +92,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
           headerName: 'X-XSRF-TOKEN' // this is optional
       }),
     SecurityModule,
-    JudgesModule
+    JudgesModule,
+    HearingPartModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
