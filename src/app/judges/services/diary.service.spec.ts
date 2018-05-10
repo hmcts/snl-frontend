@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { DiaryService } from './diary.service';
-import { HttpClient } from "@angular/common/http";
-import { AppConfig } from "../../app.config";
+import { HttpClient } from '@angular/common/http';
+import { AppConfig } from '../../app.config';
 
 describe('DiaryService', () => {
   beforeEach(() => {

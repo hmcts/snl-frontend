@@ -3,7 +3,7 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs/Observable';
 
 import { DiaryEffectEffects } from './diary-effect.effects';
-import { DiaryService } from "../services/diary.service";
+import { DiaryService } from '../services/diary.service';
 
 describe('DiaryEffectService', () => {
   let actions$: Observable<any>;

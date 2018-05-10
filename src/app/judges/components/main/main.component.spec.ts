@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainComponent } from './main.component';
-import { SecurityService } from "../../../security/services/security.service";
+import { SecurityService } from '../../../security/services/security.service';
 
 describe('MainComponent', () => {
   let component: MainComponent;
