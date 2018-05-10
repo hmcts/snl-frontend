@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SecurityService } from '../services/security.service';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,12 +8,16 @@ import { ActivatedRoute, Router } from '@angular/router';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
     error;
     credentials = {username: '', password: ''};
+    returnUrl: string;
 
     constructor(private security: SecurityService, private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+        this.route.queryParamMap.subscribe(params => {
+            this.returnUrl = params.get('returnUrl');
+        });
     }
 
     login() {
@@ -22,6 +26,8 @@ export class LoginComponent {
             if (this.security.currentUser.hasRole('JUDGE')) {
                 // TODO find a way to get away from /home just keep /judge
                 this.router.navigate(['/home/judge/main']);
+            } else if (this.returnUrl) {
+                this.router.navigateByUrl(this.returnUrl);
             } else {
                 this.router.navigate(['/home']);
             }
@@ -29,4 +35,12 @@ export class LoginComponent {
         return false;
     }
 
+    ngOnInit(): void {
+        // check, cookies might be still valid
+        this.security.refreshAuthenticatedUser(response => {
+            if (this.security.isAuthenticated() && this.returnUrl) {
+                this.router.navigateByUrl(this.returnUrl);
+            }
+        });
+    }
 }
