@@ -18,9 +18,11 @@ export class SessionTableComponent implements OnInit {
   constructor(private store: Store<fromSessions.State>) {
     this.tableVisible = false;
 
-    this.store.pipe(select(fromSessions.getSessionsEntities)).subscribe(data => {
-      this.tableVisible = data.length !== 0;
-      if (data && data.map) {
+    this.store.pipe(select(fromSessions.getSessionsWithRoomsAndJudges)).subscribe(data => {
+      this.tableVisible = false;
+      if (data) {
+        data = Object.values(data);
+        this.tableVisible = data.length !== 0;
         data.map(element => {
           element.start = new Date(element.start);
         });

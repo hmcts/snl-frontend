@@ -10,6 +10,7 @@ import { Load } from '../actions/diary.actions';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
+import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -60,7 +61,7 @@ export class DiaryCalendarComponent implements OnInit {
         this.loadData();
     }
 
-    private dataTransformer(session: Session) {
+    private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = 'No Case type';

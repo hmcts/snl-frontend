@@ -12,6 +12,8 @@ import { Session } from '../../models/session.model';
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import * as moment from 'moment';
+import { normalize, schema } from 'normalizr';
+import { SessionViewModel } from '../../models/session.viewmodel';
 
 @Component({
   selector: 'app-sessions-search',
@@ -22,10 +24,11 @@ export class SessionsSearchComponent implements OnInit {
 
     chosenDate;
     hearingParts$: Observable<HearingPart[]>;
-    sessions$: Observable<Session[]>;
+    sessions$: Observable<SessionViewModel[]>;
     constructor(private store: Store<State>) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartEntities));
-        this.sessions$ = this.store.pipe(select(fromSessions.getSessionsEntities));
+        this.sessions$ = this.store.pipe(select(fromSessions.getSessionsWithRoomsAndJudges));
+        this.sessions$.subscribe(console.log)
     }
 
     ngOnInit() {

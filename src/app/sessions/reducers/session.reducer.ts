@@ -4,6 +4,7 @@ import { Session } from '../models/session.model';
 import * as fromRoot from '../../app.state';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromRooms from '../../rooms/reducers/room.reducer';
+import { SessionViewModel } from '../models/session.viewmodel';
 
 export interface SessionsState {
     readonly entities: Session[];
@@ -24,6 +25,22 @@ export interface State extends fromRoot.State {
 export const getRootSessionsState = createFeatureSelector<State>('sessions');
 export const getSessionsState = createSelector(getRootSessionsState, state => state.sessions);
 export const getSessionsEntities = createSelector(getSessionsState, state => state.entities);
+export const getSessionsWithRoomsAndJudges = createSelector(getSessionsEntities, fromRooms.getRoomsEntities, (sessions, rooms) => {
+    let finalSessions: SessionViewModel[];
+    finalSessions = [];
+    if (sessions === undefined) {return []};
+    Object.keys(sessions).map(sessionKey => {
+        let sessionData = sessions[sessionKey];
+        let finalSession = {
+         start: sessionData.start,
+         duration: sessionData.duration,
+         room: rooms[sessionData.room],
+         caseType: sessionData.caseType
+        } as SessionViewModel;
+        finalSessions.push(finalSession);
+    });
+    return finalSessions;
+});
 export const getSessionsLoading = createSelector(getSessionsState, state => state.loading);
 export const getSessionsError = createSelector(getSessionsState, state => state.error);
 

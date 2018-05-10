@@ -9,6 +9,7 @@ import * as fromReducer from '../../sessions/reducers/session.reducer';
 import * as moment from 'moment';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
+import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 
 @Component({
     selector: 'app-core-callendar',
@@ -19,12 +20,12 @@ export class CallendarComponent implements OnInit {
 
     calendarOptions: Options;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
-    sessions$: Observable<Session[]>;
+    sessions$: Observable<SessionViewModel[]>;
     events: any[] = [];
     errors: string;
 
     constructor(private store: Store<State>) {
-        this.sessions$ = this.store.select(fromReducer.getSessionsEntities);
+        this.sessions$ = this.store.select(fromReducer.getSessionsWithRoomsAndJudges);
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
@@ -57,7 +58,7 @@ export class CallendarComponent implements OnInit {
         this.loadData();
     }
 
-    private dataTransformer(session: Session) {
+    private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = 'No Case type';

@@ -1,11 +1,9 @@
-import { Room } from '../../rooms/models/room.model';
-import { Judge } from '../../judges/models/judge.model';
-
 export interface Session {
+  id: number,
   start: Date;
   duration: number;
-  room: Room;
-  person: Judge;
+  room: string;
+  person: string;
   caseType: string;
   jurisdiction: string;
 }

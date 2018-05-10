@@ -32,15 +32,15 @@ export class SearchComplete implements Action {
   readonly type = SessionActionTypes.SearchComplete;
 
   constructor(public payload: Session[]) {
-    console.log('Action: searchComplete');
+    console.log(this.payload);
   }
 }
 
 export class SearchFailed implements Action {
   readonly type = SessionActionTypes.SearchFailed;
 
-  constructor(public payload: string) {
-      console.log(this.type);
+  constructor(public payload: any) {
+      console.log(this.payload);
   }
 }
 
@@ -53,7 +53,7 @@ export class SearchForDates implements Action {
 export class Create implements Action {
     readonly type = SessionActionTypes.Create;
 
-    constructor(public payload: SessionCreate) {
+    constructor(public payload: Session) {
         console.log(this.type);
     }
 }

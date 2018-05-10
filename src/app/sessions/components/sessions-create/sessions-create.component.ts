@@ -11,6 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
+import { Session } from '../../models/session.model';
 
 @Component({
   selector: 'app-sessions-create',
@@ -19,6 +20,7 @@ import * as RoomActions from '../../../rooms/actions/room.action';
 })
 export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
+    rooms: Room[];
     judges$: Observable<Judge[]>;
     roomsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
@@ -28,7 +30,7 @@ export class SessionsCreateComponent implements OnInit {
     caseTypes;
     time;
 
-    session: SessionCreate;
+    session: Session;
 
     constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
@@ -37,6 +39,7 @@ export class SessionsCreateComponent implements OnInit {
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
+    this.rooms$.subscribe(data => {this.rooms = Object.values(data)});
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
     this.judgesLoading$.subscribe(isLoading => { this.judgesPlaceholder = isLoading ? 'Loading the judges...' : 'Select the judge'; });
 
@@ -44,10 +47,11 @@ export class SessionsCreateComponent implements OnInit {
         id: undefined,
         start: undefined,
         duration: 0,
-        roomId: null,
-        personId: null,
-        caseType: null
-    } as SessionCreate;
+        room: null,
+        person: null,
+        caseType: null,
+        jurisdiction: null
+    } as Session;
   }
 
     ngOnInit() {

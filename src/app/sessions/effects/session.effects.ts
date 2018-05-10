@@ -1,19 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
-import {
-    Create,
-    CreateComplete,
-    CreateFailed,
-    Search,
-    SearchComplete,
-    SearchFailed,
-    SearchForDates,
-    SessionActionTypes
-} from '../actions/session.action';
+import * as sessionActions from '../actions/session.action';
+import * as roomActions from '../../rooms/actions/room.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -22,36 +14,42 @@ export class SessionEffects {
 
     @Effect()
     search$: Observable<Action> = this.actions$.pipe(
-        ofType<Search>(SessionActionTypes.Search),
+        ofType<sessionActions.Search>(sessionActions.SessionActionTypes.Search),
         mergeMap(action =>
             this.sessionsService.searchSessions(action.payload).pipe(
-                map(data => (new SearchComplete(data))),
-                catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error)))
+                switchMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
+                    new roomActions.GetComplete(data.entities.rooms),
+                ]),
+                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
         )
     );
 
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
-        ofType<Create>(SessionActionTypes.Create),
+        ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                map(() => (new CreateComplete())),
-                catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
+                map(() => (new sessionActions.CreateComplete())),
+                catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
     );
 
     @Effect()
     searchForDates$: Observable<Action> = this.actions$.pipe(
-        ofType<SearchForDates>(SessionActionTypes.SearchForDates),
+        ofType<sessionActions.SearchForDates>(sessionActions.SessionActionTypes.SearchForDates),
         mergeMap(action =>
             this.sessionsService.searchSessionsForDates(action.payload).pipe(
                 // If successful, dispatch success action with result
-                map(data => (new SearchComplete(data))),
-                // If request fails, dispatch failed action
-                catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+                switchMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
+                    new roomActions.GetComplete(data.entities.rooms),
+                ]),
+                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )
+        )
         )
     );
 
