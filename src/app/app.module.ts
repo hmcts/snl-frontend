@@ -7,10 +7,12 @@ import { EffectsModule } from '@ngrx/effects';
 import {
     HTTP_INTERCEPTORS,
     HttpClientModule,
-    HttpClientXsrfModule, HttpEvent,
+    HttpClientXsrfModule,
+    HttpEvent,
     HttpHandler,
     HttpInterceptor,
-    HttpRequest, HttpXsrfTokenExtractor,
+    HttpRequest,
+    HttpXsrfTokenExtractor,
 } from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +36,6 @@ import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
-import { MAT_DATE_LOCALE } from '@angular/material';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -58,56 +59,56 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         const headerName = 'X-XSRF-TOKEN';
         let token = this.tokenExtractor.getToken() as string;
         if (token !== null && !req.headers.has(headerName)) {
-            req = req.clone({ headers: req.headers.set(headerName, token) });
+            req = req.clone({headers: req.headers.set(headerName, token)});
         }
         return next.handle(req);
     }
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CallendarComponent,
-    HomeComponent
-  ],
-  imports: [
-    BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
-    BrowserAnimationsModule,
-    StoreModule.forRoot({}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: environment.production, // Restrict extension to log-only mode
-    }),
-    EffectsModule.forRoot([]),
-    HttpClientModule,
-    FormsModule,
-    AppRoutingModule,
-    AngularMaterialModule,
-    FullCalendarModule,
-    FlexLayoutModule,
-    SessionModule,
-    SecurityModule,
-      HttpClientXsrfModule.withOptions({
-          cookieName: 'XSRF-TOKEN', // this is optional
-          headerName: 'X-XSRF-TOKEN' // this is optional
-      }),
-    SecurityModule,
-    JudgesModule,
-    HearingPartModule
-  ],
-  providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
-      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-      {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
-      {provide: LOCALE_ID, useValue: 'en-GB'},
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        CallendarComponent,
+        HomeComponent
+    ],
+    imports: [
+        BrowserModule.withServerTransition({appId: 'snl-frontend'}),
+        BrowserAnimationsModule,
+        StoreModule.forRoot({}),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+            logOnly: environment.production, // Restrict extension to log-only mode
+        }),
+        EffectsModule.forRoot([]),
+        HttpClientModule,
+        FormsModule,
+        AppRoutingModule,
+        AngularMaterialModule,
+        FullCalendarModule,
+        FlexLayoutModule,
+        SessionModule,
+        SecurityModule,
+        HttpClientXsrfModule.withOptions({
+            cookieName: 'XSRF-TOKEN', // this is optional
+            headerName: 'X-XSRF-TOKEN' // this is optional
+        }),
+        SecurityModule,
+        JudgesModule,
+        HearingPartModule
+    ],
+    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
+        {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
+        {provide: LOCALE_ID, useValue: 'en-GB'},
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(APP_ID) private appId: string) {
-    const platform = isPlatformBrowser(platformId) ?
-      'in the browser' : 'on the server';
-    console.log(`Running ${platform} with appId=${appId}`);
-  }
+    constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(APP_ID) private appId: string) {
+        const platform = isPlatformBrowser(platformId) ?
+            'in the browser' : 'on the server';
+        console.log(`Running ${platform} with appId=${appId}`);
+    }
 }

@@ -19,6 +19,7 @@ export class ListingCreateComponent implements OnInit {
     caseTypes: string[];
     duration = 0;
     errors = '';
+    success: boolean;
 
     listing: ListingCreate;
 
@@ -49,6 +50,7 @@ export class ListingCreateComponent implements OnInit {
             } else {
                 this.store.dispatch(new Create(this.listing));
                 this.initiateListing();
+                this.success = true;
             }
         } else {
             this.errors = 'Required (*) field is missing value';
@@ -71,6 +73,7 @@ export class ListingCreateComponent implements OnInit {
         } as ListingCreate;
         this.duration = 0;
         this.errors = '';
+        this.success = false;
     }
 
     private checkRequiredFields(listing: ListingCreate) {
@@ -86,7 +89,7 @@ export class ListingCreateComponent implements OnInit {
         if (listing.hearingType === undefined || listing.hearingType.trim() === '') {
             return false;
         }
-        if (listing.duration === undefined || listing.duration.get(DURATION_UNIT) === 0) {
+        if (listing.duration === undefined || listing.duration <= moment.duration(0)) {
             return false;
         }
         return true;
