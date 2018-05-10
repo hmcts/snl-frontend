@@ -7,19 +7,19 @@ describe('MainComponent', () => {
   let component: MainComponent;
   let fixture: ComponentFixture<MainComponent>;
 
-	const mockUser = jasmine.createSpyObj('currentUser', [ 'username' ]);
-	mockUser.username.and.returnValue('JohnSmith');
+  const mockUser = jasmine.createSpyObj('currentUser', [ 'username' ]);
+  mockUser.username.and.returnValue('JohnSmith');
   const mockSecurityService = jasmine.createSpyObj('securityService', [ 'currentUser' ]);
-	mockSecurityService.currentUser.and.returnValue(mockUser);
+  mockSecurityService.currentUser.and.returnValue(mockUser);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-			declarations : [ MainComponent ],
-			providers : [ MainComponent,
-				{
-					provide : SecurityService,
-					useValue : mockSecurityService
-				}]
+      declarations : [ MainComponent ],
+      providers : [ MainComponent,
+        {
+          provide : SecurityService,
+          useValue : mockSecurityService
+        }]
     })
     .compileComponents();
   }));
@@ -31,6 +31,6 @@ describe('MainComponent', () => {
   });
 
   it('should create', () => {
-  	expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });
