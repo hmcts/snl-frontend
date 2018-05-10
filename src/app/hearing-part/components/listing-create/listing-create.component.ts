@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { Create } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
+import * as dateUtils from '../../../utils/date-utils';
 
 const DURATION_UNIT = 'minute';
 
@@ -40,12 +41,7 @@ export class ListingCreateComponent implements OnInit {
         this.listing.id = uuid();
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (this.checkRequiredFields(this.listing)) {
-            if ((this.listing.scheduleStart === null && this.listing.scheduleEnd !== null)
-                || (this.listing.scheduleStart !== null && this.listing.scheduleEnd === null)
-                || (this.listing.scheduleStart !== null
-                    && this.listing.scheduleEnd !== null
-                    && this.listing.scheduleStart.getDate() > this.listing.scheduleEnd.getDate())
-            ) {
+            if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
                 this.errors = 'Start date should be before End date';
             } else {
                 this.store.dispatch(new Create(this.listing));
