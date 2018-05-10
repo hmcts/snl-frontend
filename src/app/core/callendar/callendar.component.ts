@@ -60,7 +60,7 @@ export class CallendarComponent implements OnInit {
     private dataTransformer(session: Session) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
-        let caseType = 'No Case type';
+        let caseType = (session.caseType) ? session.caseType : 'No Case type';
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
