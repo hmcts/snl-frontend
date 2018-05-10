@@ -11,13 +11,13 @@ describe('DiaryService', () => {
 				{
 					provide: HttpClient,
 					useClass: class {
-						httpClient = jasmine.createSpy("httpClient");
+						httpClient = jasmine.createSpy('httpClient');
 					}
 				},
 				{
 					provide: AppConfig,
 					useClass: class {
-						appConfig = jasmine.createSpy("appConfig");
+						appConfig = jasmine.createSpy('appConfig');
 					}
 				}],
     });

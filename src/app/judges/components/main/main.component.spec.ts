@@ -1,4 +1,4 @@
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MainComponent } from './main.component';
 import { SecurityService } from "../../../security/services/security.service";
@@ -9,7 +9,7 @@ describe('MainComponent', () => {
 
 
 	const mockUser = jasmine.createSpyObj('currentUser', ['username']);
-	mockUser.username.and.returnValue("JohnSmith");
+	mockUser.username.and.returnValue('JohnSmith');
   const mockSecurityService = jasmine.createSpyObj('securityService', ['currentUser']);
 	mockSecurityService.currentUser.and.returnValue(mockUser);
 
