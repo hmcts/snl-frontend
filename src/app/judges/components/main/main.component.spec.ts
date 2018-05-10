@@ -7,19 +7,18 @@ describe('MainComponent', () => {
   let component: MainComponent;
   let fixture: ComponentFixture<MainComponent>;
 
-
-	const mockUser = jasmine.createSpyObj('currentUser', ['username']);
+	const mockUser = jasmine.createSpyObj('currentUser', [ 'username' ]);
 	mockUser.username.and.returnValue('JohnSmith');
-  const mockSecurityService = jasmine.createSpyObj('securityService', ['currentUser']);
+  const mockSecurityService = jasmine.createSpyObj('securityService', [ 'currentUser' ]);
 	mockSecurityService.currentUser.and.returnValue(mockUser);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-			declarations: [MainComponent],
-			providers: [ MainComponent,
+			declarations : [ MainComponent ],
+			providers : [ MainComponent,
 				{
-					provide: SecurityService,
-					useValue: mockSecurityService
+					provide : SecurityService,
+					useValue : mockSecurityService
 				}]
     })
     .compileComponents();

@@ -11,10 +11,10 @@ describe('DiaryEffectService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ DiaryEffectEffects,
+      providers : [ DiaryEffectEffects,
         {
-          provide: DiaryService,
-          useClass: class {
+          provide : DiaryService,
+          useClass : class {
               diaryService = jasmine.createSpy('diaryService');
           }
         },

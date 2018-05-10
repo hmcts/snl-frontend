@@ -7,16 +7,16 @@ import { AppConfig } from '../../app.config';
 describe('DiaryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ DiaryService,
+      providers : [ DiaryService,
 				{
-					provide: HttpClient,
-					useClass: class {
+					provide : HttpClient,
+					useClass : class {
 						httpClient = jasmine.createSpy('httpClient');
 					}
 				},
 				{
-					provide: AppConfig,
-					useClass: class {
+					provide : AppConfig,
+					useClass : class {
 						appConfig = jasmine.createSpy('appConfig');
 					}
 				}],
