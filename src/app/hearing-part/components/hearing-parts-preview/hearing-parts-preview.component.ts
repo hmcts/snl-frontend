@@ -14,8 +14,6 @@ export class HearingPartsPreviewComponent implements OnInit {
     @Input() sessions: Session[];
     @Output() assignToSession = new EventEmitter<SessionAssignment>();
 
-    chosenSessionId: number;
-
     hearingPartsDataSource: MatTableDataSource<HearingPart>;
     displayedColumns = [
       'case number',
@@ -25,7 +23,8 @@ export class HearingPartsPreviewComponent implements OnInit {
       'duration',
       'target schedule from',
       'target schedule to',
-      'sessions'
+      'session',
+      'listed'
     ];
 
     constructor() {
@@ -33,6 +32,10 @@ export class HearingPartsPreviewComponent implements OnInit {
 
     ngOnInit() {
       this.hearingPartsDataSource = new MatTableDataSource(this.hearingParts);
+    }
+
+    isListed(hearingPartId) {
+        return hearingPartId !== undefined && hearingPartId !== null && hearingPartId !== '';
     }
 
 }

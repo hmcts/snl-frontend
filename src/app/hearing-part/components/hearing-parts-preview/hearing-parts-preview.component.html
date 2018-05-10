@@ -35,16 +35,26 @@
     <mat-cell *matCellDef="let element"> {{element.scheduleEnd}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="sessions" >
-    <mat-header-cell *matHeaderCellDef> Available sessions </mat-header-cell>
+  <ng-container matColumnDef="session" >
+    <mat-header-cell *matHeaderCellDef> Session </mat-header-cell>
     <mat-cell *matCellDef="let element">
         <mat-form-field>
-          <mat-select [(value)]="chosenSessionId">
+          <mat-select [(value)]="element.sessionId">
             <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{session.start}}</mat-option>
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: chosenSessionId})">Assign</button>
+        <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.sessionId})">Assign</button>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="listed">
+    <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span *ngIf="isListed(element.sessionId); else notListed">Yes</span>
+      <ng-template #notListed>
+        <span>No</span>
+      </ng-template>
     </mat-cell>
   </ng-container>
 

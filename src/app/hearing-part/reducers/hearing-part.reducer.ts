@@ -15,10 +15,20 @@ const initialState: HearingPartState = {
     entities: [
         {
             id: 'asd',
+            sessionId: 'b32bf0f7-8a71-4cb2-8596-70559c56f4c8',
             caseNumber: 'asd',
             caseType: 'asd',
             hearingType: 'asd',
             duration: moment.duration('10'),
+            scheduleStart: new Date(),
+            scheduleEnd: new Date(),
+        } as HearingPart, {
+            id: 'ds',
+            sessionId: 'bc0f52f1-c090-4f1d-8b8d-ef4091c170d9',
+            caseNumber: 'd',
+            caseType: 'aa',
+            hearingType: 'd',
+            duration: moment.duration('23'),
             scheduleStart: new Date(),
             scheduleEnd: new Date(),
         } as HearingPart
@@ -39,10 +49,13 @@ export const getHearingPartError = createSelector(getHearingPartState, state => 
 
 export function hearingPartReducer(state: HearingPartState = initialState, action) {
   switch (action.type) {
-    case HearingPartActionTypes.Search: {
+    case HearingPartActionTypes.Search:
+    case HearingPartActionTypes.AssignToSession: {
         return {...state, loading: true};
     }
-    case HearingPartActionTypes.SearchFailed: {
+    case HearingPartActionTypes.SearchFailed:
+    case HearingPartActionTypes.CreateFailed:
+    case HearingPartActionTypes.AssignFailed: {
         return {...state, loading: false, error: action.payload};
     }
     case HearingPartActionTypes.SearchComplete: {
@@ -51,20 +64,11 @@ export function hearingPartReducer(state: HearingPartState = initialState, actio
     case HearingPartActionTypes.Create: {
         return {...state, loading: true};
     }
-    case HearingPartActionTypes.CreateFailed: {
-        return {...state, loading: false, error: action.payload};
-    }
     case HearingPartActionTypes.CreateComplete: {
         return {...state, loading: false};
     }
-    case HearingPartActionTypes.AssignToSession: {
-      return {...state, loading: true};
-    }
     case HearingPartActionTypes.AssignComplete: {
       return {...state, loading: false};
-    }
-    case HearingPartActionTypes.AssignFailed: {
-      return {...state, loading: false, error: action.payload};
     }
     default:
         return state;
