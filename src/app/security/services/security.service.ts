@@ -38,9 +38,6 @@ export class SecurityService {
     }
 
     refreshAuthenticatedUser(callback) {
-        if (!this.isAuthenticated) {
-            return;
-        }
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
             this.parseAuthenticationRespone(response);
             callback(response);

@@ -1,0 +1,83 @@
+<mat-card class="sessions-create-container">
+    <mat-card-header>
+        <mat-card-subtitle>Create a new listing request</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content class="inputs-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+
+        <div *ngIf="errors">Error: {{errors}}</div>
+        <div *ngIf="success">Listing added successfully</div>
+
+        <div fxLayout="row">
+            <mat-form-field fxFlex="90">
+                <input [(ngModel)]="listing.caseNumber" matInput placeholder="Case number" type="text">
+            </mat-form-field>
+            <div fxLayoutAlign="center center" fxFlex="10">*</div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-form-field fxFlex="90">
+                <input [(ngModel)]="listing.caseTitle" matInput placeholder="Case title" type="text">
+            </mat-form-field>
+            <div fxLayoutAlign="center center" fxFlex="10">*</div>
+        </div>
+
+        <div fxLayout="row">
+            <mat-form-field fxFlex="90">
+                <mat-select placeholder="Case type" [(value)]="listing.caseType">
+                    <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxLayoutAlign="center center" fxFlex="10">*</div>
+        </div>
+
+        <div class="inputs-container" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <mat-form-field fxFlex="90">
+                <mat-select placeholder="Hearing type" [(value)]="listing.hearingType">
+                    <mat-option *ngFor="let hearing of hearings" value="{{hearing}}">{{hearing}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxLayoutAlign="center center" fxFlex="10">*</div>
+        </div>
+
+        <div class="inputs-container" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <mat-form-field fxFlex="80">
+                <input [(ngModel)]="duration" type="number" matInput placeholder="Duration">
+            </mat-form-field>
+            <div fxLayoutAlign="center center" fxFlexOffset="5%" fxFlex="10">Minutes</div>
+            <div fxLayoutAlign="center center" fxFlex="10">*</div>
+        </div>
+
+        <div fxLayout="row">
+            <div fxFlex="50%" fxLayoutAlign="start start">Target Schedule</div>
+            <div fxFlex="50%">
+                <div fxLayout="row">
+                    <div fxFlex="20%" fxLayoutAlign="start start">From:</div>
+                    <div>
+                        <mat-form-field class="date-picker-element">
+                            <input matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart"
+                                   placeholder="M/D/YYYY">
+                            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStart></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div fxLayout="row">
+                    <div fxFlex="20%" fxLayoutAlign="start start">To:</div>
+                    <div>
+                        <mat-form-field class="date-picker-element">
+                            <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd"
+                                   placeholder="M/D/YYYY">
+                            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerEnd></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-raised-button color="accent" fxFlexAlign="right" (click)="create()">Save</button>
+    </mat-card-actions>
+</mat-card>

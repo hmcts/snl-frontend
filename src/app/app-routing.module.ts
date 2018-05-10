@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CallendarComponent } from './core/callendar/callendar.component';
 import { AuthGuard } from './security/guards/auth.guard';
 import { HomeComponent } from './core/home/home.component';
+import { ListingCreateComponent } from './hearing-part/components/listing-create/listing-create.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -13,7 +14,8 @@ const routes: Routes = [
             {path: '', redirectTo: 'calendar', pathMatch: 'full'},
             {path: 'calendar', component: CallendarComponent, canActivate: [AppConfigGuard]},
             {path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
-            {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]}
+            {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
+            {path: 'listing', component: ListingCreateComponent, canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard]
     },
