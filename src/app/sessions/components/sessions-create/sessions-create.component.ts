@@ -11,7 +11,6 @@ import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-sessions-create',
@@ -21,6 +20,11 @@ import * as moment from 'moment';
 export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
+    roomsLoading$: Observable<boolean>;
+    judgesLoading$: Observable<boolean>;
+    roomsPlaceholder: String;
+    judgesPlaceholder: String;
+    durationInMinutes: Number;
     caseTypes;
     time;
 
@@ -29,7 +33,12 @@ export class SessionsCreateComponent implements OnInit {
     constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
     this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
+    this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
+    this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
+    this.durationInMinutes = 30;
+    this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
+    this.judgesLoading$.subscribe(isLoading => { this.judgesPlaceholder = isLoading ? 'Loading the judges...' : 'Select the judge'; });
 
     this.session = {
         id: undefined,
@@ -41,19 +50,18 @@ export class SessionsCreateComponent implements OnInit {
     } as SessionCreate;
   }
 
-    getData() {
-        this.store.dispatch(new JudgeActions.Get())
-        this.store.dispatch(new RoomActions.Get())
+    ngOnInit() {
+        this.store.dispatch(new RoomActions.Get());
+        this.store.dispatch(new JudgeActions.Get());
     }
 
   create() {
+    this.session.id = uuid();
     let time_arr = this.time.split(':');
     this.session.start.setHours(time_arr[0]);
     this.session.start.setMinutes(time_arr[1]);
-    this.session.id = uuid();
+    this.session.duration = this.durationInMinutes.valueOf() * 60;
     this.store.dispatch(new SessionActions.Create(this.session))
   }
 
-  ngOnInit() {
-  }
 }

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, Injectable, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
@@ -33,6 +33,7 @@ import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -94,7 +95,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-      { provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true }
+      {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
+      {provide: LOCALE_ID, useValue: 'en-GB'},
   ],
   bootstrap: [AppComponent]
 })

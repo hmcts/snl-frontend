@@ -10,11 +10,11 @@ export class MainComponent implements OnInit {
 
     judge = '"Unknown name"';
 
-    constructor(private security: SecurityService) {
+    constructor(private securityService: SecurityService) {
     }
 
     ngOnInit() {
-        this.judge = this.security.currentUser.username;
+        this.judge = this.securityService.currentUser.username;
         // TODO do a call to get the full user Name
     }
 
