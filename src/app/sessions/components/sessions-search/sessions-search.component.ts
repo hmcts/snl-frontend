@@ -8,6 +8,8 @@ import 'rxjs/add/observable/of';
 import { State } from '../../../app.state';
 import * as fromHearingParts from '../../../hearing-part/reducers/hearing-part.reducer';
 import * as fromSessions from '../../reducers/session.reducer';
+import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
+
 import { Session } from '../../models/session.model';
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
@@ -34,7 +36,8 @@ export class SessionsSearchComponent implements OnInit {
     ngOnInit() {
         let start = moment().toDate();
         let end = moment().add(10, 'years').toDate();
-        this.store.dispatch(new SearchForDates({startDate: start, endDate: end}))
+        this.store.dispatch(new SearchForDates({startDate: start, endDate: end}));
+        this.store.dispatch(new fromHearingPartsActions.Search());
     }
 
     getSessions(date) {
