@@ -12,27 +12,7 @@ export interface HearingPartState {
 }
 
 const initialState: HearingPartState = {
-    entities: [
-        {
-            id: 'asd',
-            sessionId: '',
-            caseNumber: 'asd',
-            caseType: 'asd',
-            hearingType: 'asd',
-            duration: moment.duration('10'),
-            scheduleStart: new Date(),
-            scheduleEnd: new Date(),
-        } as HearingPart, {
-            id: 'ds',
-            sessionId: 'e842812a-750a-40e2-a4d4-f2cde37453ca',
-            caseNumber: 'd',
-            caseType: 'aa',
-            hearingType: 'd',
-            duration: moment.duration('23'),
-            scheduleStart: new Date(),
-            scheduleEnd: new Date(),
-        } as HearingPart
-    ] as HearingPart[],
+    entities: [] as HearingPart[],
     loading: false,
     error: '',
 };
