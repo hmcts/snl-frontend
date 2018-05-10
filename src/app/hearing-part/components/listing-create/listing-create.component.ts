@@ -4,6 +4,8 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { Create } from '../../actions/hearing-part.action';
+import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 
 const DURATION_UNIT = 'minute';
 
@@ -24,6 +26,13 @@ export class ListingCreateComponent implements OnInit {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
+        this.store.select(getHearingPartError).subscribe(error => {
+            if (typeof error === 'string') {
+                this.errors = error.toString();
+            } else {
+                this.errors = `[${error.status}] - ${error.error} - ${error.message}`;
+            }
+        });
     }
 
     create() {
@@ -38,8 +47,7 @@ export class ListingCreateComponent implements OnInit {
             ) {
                 this.errors = 'Start date should be before End date';
             } else {
-                // this.store.dispatch(new Action())
-
+                this.store.dispatch(new Create(this.listing));
                 this.initiateListing();
             }
         } else {
