@@ -36,10 +36,10 @@
   </ng-container>
 
   <ng-container matColumnDef="session" >
-    <mat-header-cell *matHeaderCellDef> Session </mat-header-cell>
-    <mat-cell *matCellDef="let element">
+    <mat-header-cell *matHeaderCellDef fxFlex="200px"> Session </mat-header-cell>
+    <mat-cell *matCellDef="let element" fxFlex="200px">
         <mat-form-field>
-          <mat-select [(value)]="element.sessionId">
+          <mat-select [(value)]="element.sessionId" fxFlex="400px">
             <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{session.start}}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -51,10 +51,7 @@
   <ng-container matColumnDef="listed">
     <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span *ngIf="isListed(element.sessionId); else notListed">Yes</span>
-      <ng-template #notListed>
-        <span>No</span>
-      </ng-template>
+      <span>{{isListed(element.sessionId)}}</span>
     </mat-cell>
   </ng-container>
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { Search, SessionActionTypes } from '../../actions/session.action';
+import { Search, SearchForDates, SessionActionTypes } from '../../actions/session.action';
 import { DatePipe } from '@angular/common';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +11,7 @@ import * as fromSessions from '../../reducers/session.reducer';
 import { Session } from '../../models/session.model';
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-sessions-search',
@@ -28,6 +29,9 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
+        let start = moment().toDate();
+        let end = moment().add(10, 'years').toDate();
+        this.store.dispatch(new SearchForDates({startDate: start, endDate: end}))
     }
 
     getSessions(date) {

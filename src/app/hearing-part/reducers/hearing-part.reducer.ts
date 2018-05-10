@@ -15,7 +15,7 @@ const initialState: HearingPartState = {
     entities: [
         {
             id: 'asd',
-            sessionId: 'b32bf0f7-8a71-4cb2-8596-70559c56f4c8',
+            sessionId: '',
             caseNumber: 'asd',
             caseType: 'asd',
             hearingType: 'asd',
@@ -24,7 +24,7 @@ const initialState: HearingPartState = {
             scheduleEnd: new Date(),
         } as HearingPart, {
             id: 'ds',
-            sessionId: 'bc0f52f1-c090-4f1d-8b8d-ef4091c170d9',
+            sessionId: 'e842812a-750a-40e2-a4d4-f2cde37453ca',
             caseNumber: 'd',
             caseType: 'aa',
             hearingType: 'd',

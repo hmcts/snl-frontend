@@ -35,7 +35,7 @@ export class HearingPartsPreviewComponent implements OnInit {
     }
 
     isListed(hearingPartId) {
-        return hearingPartId !== undefined && hearingPartId !== null && hearingPartId !== '';
+        return hearingPartId !== undefined && hearingPartId !== null && hearingPartId !== '' ? 'Yes' : 'No';
     }
 
 }
