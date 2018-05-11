@@ -5,16 +5,18 @@ import { AppConfig } from '../../app.config';
 import { SessionAssignment } from '../models/session-assignment';
 import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
+import { hearingParts } from '../schemas/hearing-part.schema';
+import { normalize } from 'normalizr';
 
 @Injectable()
 export class HearingPartService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 
-    searchHearingParts(): Observable<HearingPart[]> {
+    searchHearingParts(): Observable<any> {
         return this.http
             .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`)
-            .pipe(map(hearingParts => hearingParts || []));
+            .pipe(map(data => {console.log(normalize(data, hearingParts)); return normalize(data, hearingParts)}));
     }
 
     assignToSession(query: SessionAssignment): Observable<HearingPart> {

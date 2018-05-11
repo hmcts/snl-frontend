@@ -34,7 +34,7 @@ export class HearingPartEffects {
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(action =>
             this.hearingPartService.searchHearingParts().pipe(
-                map(data => (new SearchComplete(data))),
+                map(data => (new SearchComplete(data.entities.hearingParts))),
                 catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error)))
             )
         )

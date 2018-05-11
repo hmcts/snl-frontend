@@ -3,6 +3,7 @@ import { HearingPart } from '../../models/hearing-part';
 import { MatTableDataSource } from '@angular/material';
 import { Session } from '../../../sessions/models/session.model';
 import { SessionAssignment } from '../../models/session-assignment';
+import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -11,7 +12,7 @@ import { SessionAssignment } from '../../models/session-assignment';
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearingParts: HearingPart[];
-    @Input() sessions: Session[];
+    @Input() sessions: SessionViewModel[];
     @Output() assignToSession = new EventEmitter<SessionAssignment>();
 
     hearingPartsDataSource: MatTableDataSource<HearingPart>;
@@ -34,10 +35,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        this.hearingPartsDataSource = new MatTableDataSource(this.hearingParts);
+        this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.hearingParts));
     }
 
-    isListed(hearingPartId) {
-        return hearingPartId !== undefined && hearingPartId !== null && hearingPartId !== '' ? 'Yes' : 'No';
+    isListed(sessionId) {
+        return sessionId !== undefined && sessionId !== null && sessionId !== '' ? 'Yes' : 'No';
     }
 }

@@ -6,6 +6,7 @@ import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as roomActions from '../../rooms/actions/room.action';
+import * as judgeActions from '../../judges/actions/judge.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -17,9 +18,10 @@ export class SessionEffects {
         ofType<sessionActions.Search>(sessionActions.SessionActionTypes.Search),
         mergeMap(action =>
             this.sessionsService.searchSessions(action.payload).pipe(
-                switchMap(data => [
-                    new sessionActions.SearchComplete(data.entities.sessions),
+                mergeMap(data => [
                     new roomActions.GetComplete(data.entities.rooms),
+                    new judgeActions.GetComplete(data.entities.persons),
+                    new sessionActions.SearchComplete(data.entities.sessions)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
@@ -43,9 +45,10 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.searchSessionsForDates(action.payload).pipe(
                 // If successful, dispatch success action with result
-                switchMap(data => [
-                    new sessionActions.SearchComplete(data.entities.sessions),
+                mergeMap(data => [
                     new roomActions.GetComplete(data.entities.rooms),
+                    new judgeActions.GetComplete(data.entities.persons),
+                    new sessionActions.SearchComplete(data.entities.sessions)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )

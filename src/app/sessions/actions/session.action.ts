@@ -32,7 +32,7 @@ export class SearchComplete implements Action {
   readonly type = SessionActionTypes.SearchComplete;
 
   constructor(public payload: Session[]) {
-    console.log(this.payload);
+    console.log(this.type);
   }
 }
 

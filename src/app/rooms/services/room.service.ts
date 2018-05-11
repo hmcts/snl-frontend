@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { Room } from '../models/room.model';
+import { normalize } from 'normalizr';
+import { rooms } from '../schemas/room.schema';
 
 @Injectable()
 export class RoomService {
@@ -11,10 +13,10 @@ export class RoomService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 
-    get(): Observable<Room[]> {
+    get(): Observable<any> {
         return this.http
             .get<Room[]>(`${this.config.getApiUrl()}/room`) //  TODO: get it back
-            .pipe(map(rooms => rooms || []));
+            .pipe(map(data => normalize(data, rooms)));
     }
 
 }

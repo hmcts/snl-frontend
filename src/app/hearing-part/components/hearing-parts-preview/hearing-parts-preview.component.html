@@ -7,7 +7,7 @@
 
   <ng-container matColumnDef="case title">
     <mat-header-cell *matHeaderCellDef> Case Title </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="case type">
@@ -39,19 +39,19 @@
     <mat-header-cell *matHeaderCellDef fxFlex="200px"> Session </mat-header-cell>
     <mat-cell *matCellDef="let element" fxFlex="200px">
         <mat-form-field>
-          <mat-select [(value)]="element.sessionId" fxFlex="400px">
+          <mat-select [(value)]="element.session" fxFlex="400px">
             <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{session.start}}</mat-option>
           </mat-select>
         </mat-form-field>
 
-        <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.sessionId})">Assign</button>
+        <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.session})">Assign</button>
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="listed">
     <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span>{{isListed(element.sessionId)}}</span>
+      <span>{{isListed(element.session)}}</span>
     </mat-cell>
   </ng-container>
 

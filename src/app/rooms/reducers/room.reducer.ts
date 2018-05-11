@@ -36,7 +36,7 @@ export function roomReducer(state: RoomState = initialState, action) {
         return {...state, loading: false, error: action.payload};
     }
     case RoomActionTypes.GetComplete: {
-        return {entities: action.payload, loading: false};
+        return {entities: {...state.entities, ...action.payload}, loading: false};
     }
     default:
         return state;

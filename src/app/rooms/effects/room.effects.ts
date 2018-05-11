@@ -15,7 +15,7 @@ export class RoomEffects {
         ofType<Get>(RoomActionTypes.Get),
         mergeMap(action =>
             this.roomService.get().pipe(
-                map(data => (new GetComplete(data))),
+                map(data => (new GetComplete(data.entities.rooms))),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
         )

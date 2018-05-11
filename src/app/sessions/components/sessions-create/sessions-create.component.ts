@@ -19,9 +19,8 @@ import { Session } from '../../models/session.model';
   styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
-    rooms$: Observable<Room[]>;
     rooms: Room[];
-    judges$: Observable<Judge[]>;
+    judges: Judge[];
     roomsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
     roomsPlaceholder: String;
@@ -33,13 +32,12 @@ export class SessionsCreateComponent implements OnInit {
     session: Session;
 
     constructor(private store: Store<State>) {
-    this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
-    this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
+    this.store.pipe(select(fromRooms.getRoomsEntities)).subscribe(data => this.rooms = Object.values(data));
+    this.store.pipe(select(fromJudges.getJudgesEntities)).subscribe(data => this.judges = Object.values(data));
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
-    this.rooms$.subscribe(data => {this.rooms = Object.values(data)});
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
     this.judgesLoading$.subscribe(isLoading => { this.judgesPlaceholder = isLoading ? 'Loading the judges...' : 'Select the judge'; });
 

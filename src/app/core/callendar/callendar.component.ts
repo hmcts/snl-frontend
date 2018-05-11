@@ -6,6 +6,8 @@ import { Session } from '../../sessions/models/session.model';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../sessions/reducers/session.reducer';
+import * as fromRoomsActions from '../../rooms/actions/room.action';
+import * as fromJudgesActions from '../../judges/actions/judge.action';
 import * as moment from 'moment';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -29,8 +31,11 @@ export class CallendarComponent implements OnInit {
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
+            console.log(sessions);
         }, error => {
             this.errors = error;
+            console.log(error);
+            console.log(this.events);
         });
     }
 
@@ -75,5 +80,7 @@ export class CallendarComponent implements OnInit {
 
         let query: SessionQueryForDates = {startDate: startDate, endDate: endDate};
         this.store.dispatch(new SearchForDates(query));
+        //this.store.dispatch(new fromRoomsActions.Get());
+        //this.store.dispatch(new fromJudgesActions.Get());
     }
 }
