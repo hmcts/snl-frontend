@@ -5,12 +5,10 @@ import { RouterModule } from '@angular/router';
 import { FullCalendarModule } from 'ng-fullcalendar';
 import { SecurityModule } from '../security/security.module';
 import { StoreModule } from '@ngrx/store';
-import * as fromReducers from './reducers';
 import { EffectsModule } from '@ngrx/effects';
-import { DiaryEffectEffects } from './effects/diary-effect.effects';
-import { DiaryService } from './services/diary.service';
 import { MainComponent } from './components/main/main.component';
 import { reducers } from './reducers';
+import { JudgeEffects } from './effects/judge.effects';
 
 @NgModule({
     imports: [
@@ -29,10 +27,10 @@ import { reducers } from './reducers';
             }
         ]),
         StoreModule.forFeature('judges', reducers),
-        EffectsModule.forFeature([DiaryEffectEffects])
+        EffectsModule.forFeature([JudgeEffects])
     ],
     declarations: [DiaryCalendarComponent, MainComponent],
-    providers: [DiaryService]
+    providers: []
 })
 export class JudgesModule {
 }

@@ -9,6 +9,7 @@ import * as roomActions from '../../rooms/actions/room.action';
 import * as judgeActions from '../../judges/actions/judge.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SearchComplete, SearchFailed, SearchForDates, SessionActionTypes } from '../actions/session.action';
 
 @Injectable()
 export class SessionEffects {
@@ -39,7 +40,7 @@ export class SessionEffects {
         )
     );
 
-    @Effect() 
+    @Effect()
     searchForDates$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.SearchForDates>(sessionActions.SessionActionTypes.SearchForDates),
         mergeMap(action =>
@@ -53,6 +54,23 @@ export class SessionEffects {
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )
         )
+        )
+    );
+
+    @Effect()
+    load$: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.SearchForJudge>(SessionActionTypes.SearchForJudge),
+        mergeMap(action =>
+            this.sessionsService.searchSessionsForJudge(action.payload).pipe(
+                // If successful, dispatch success action with result
+                mergeMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
+                    new roomActions.GetComplete(data.entities.rooms),
+                    new judgeActions.GetComplete(data.entities.persons)
+                ]),
+                // If request fails, dispatch failed action
+                catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+            )
         )
     );
 

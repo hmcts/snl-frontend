@@ -4,10 +4,9 @@ import { CalendarComponent } from 'ng-fullcalendar';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import * as fromSessions from '../../sessions/reducers/index';
-import { Session } from '../../sessions/models/session.model';
+import * as fromSessionActions from '../../sessions/actions/session.action';
 import { Observable } from 'rxjs/Observable';
-import { Load } from '../actions/diary.actions';
-import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
+import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters.model';
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
@@ -81,6 +80,6 @@ export class DiaryCalendarComponent implements OnInit {
             startDate: startDate,
             endDate: endDate
         };
-        this.store.dispatch(new Load(params));
+        this.store.dispatch(new fromSessionActions.SearchForJudge(params));
     }
 }

@@ -2,10 +2,12 @@ import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { SessionCreate } from '../models/session-create.model';
+import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
   SearchForDates = '[Session] Search for given dates',
+  SearchForJudge = '[Session] Search for judge',
   SearchComplete = '[Session] Search Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
@@ -49,6 +51,12 @@ export class SearchForDates implements Action {
     readonly type = SessionActionTypes.SearchForDates;
 
     constructor(public payload: SessionQueryForDates) {}
+}
+
+export class SearchForJudge implements Action {
+    readonly type = SessionActionTypes.SearchForJudge;
+
+    constructor(public payload: DiaryLoadParameters) {}
 }
 
 export class Create implements Action {

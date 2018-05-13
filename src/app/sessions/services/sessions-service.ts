@@ -9,7 +9,7 @@ import { SessionCreate } from '../models/session-create.model';
 import { DatePipe } from '@angular/common';
 import { sessions } from '../schemas/session.schema';
 import { normalize, schema } from 'normalizr';
-import { DiaryLoadParameters } from '../../judges/models/diary-load-parameters.model';
+import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 @Injectable()
 export class SessionsService {
@@ -36,7 +36,8 @@ export class SessionsService {
         let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
         let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
         return this.http
-            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`);
+            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
+            .pipe(map(data => {return normalize(data, sessions)}));
     }
 
     createSession(session: Session): Observable<String> {
