@@ -25,6 +25,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'target schedule from',
       'target schedule to',
       'session',
+      'action',
       'listed'
     ];
 

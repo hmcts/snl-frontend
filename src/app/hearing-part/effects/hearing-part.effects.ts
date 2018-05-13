@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, pairwise, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
@@ -16,6 +16,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as sessionActions from '../../sessions/actions/session.action';
 import { UpsertMany } from '../../sessions/actions/session.action';
+import { Create } from '../../core/notification/actions/notification.action';
+import { ASSIGN_HEARING_PART, HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
 
 @Injectable()
 export class HearingPartEffects {
@@ -25,7 +27,7 @@ export class HearingPartEffects {
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                map(data => (new AssignComplete(data))),
+                mergeMap(data => [new AssignComplete(data), new Create(HEARING_PART_ASSIGN_SUCCESS)]),
                 catchError((err: HttpErrorResponse) => of(new AssignFailed(err.error)))
             )
         )

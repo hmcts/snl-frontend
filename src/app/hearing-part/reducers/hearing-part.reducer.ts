@@ -43,12 +43,6 @@ export function reducer(state: State = initialState, action) {
   }
 }
 
-export const {
-    selectIds: getHearingPartIds,
-    selectEntities: getHearingPartEntities,
-    selectAll: getAllHearingParts,
-    selectTotal: getTotalHearingParts,
-} = adapter.getSelectors();
-
 export const getHearingPartError = (state: State) => state.error;
+export const getHearingPartLoading = (state: State) => state.loading;
 

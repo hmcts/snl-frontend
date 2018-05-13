@@ -36,16 +36,21 @@
   </ng-container>
 
   <ng-container matColumnDef="session" >
-    <mat-header-cell *matHeaderCellDef fxFlex="200px"> Session </mat-header-cell>
-    <mat-cell *matCellDef="let element" fxFlex="200px">
+    <mat-header-cell *matHeaderCellDef fxFlex="250px"> Session </mat-header-cell>
+    <mat-cell *matCellDef="let element" fxFlex="250px" fxLayout="row">
         <mat-form-field>
-          <mat-select [(value)]="element.session" fxFlex="400px">
+          <mat-select [(value)]="element.session" fxFlex="200px">
             <mat-option value="">(No session)</mat-option>
             <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{parseDate(session.start)}}</mat-option>
           </mat-select>
         </mat-form-field>
+    </mat-cell>
+  </ng-container>
 
-        <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.session})">Assign</button>
+  <ng-container matColumnDef="action">
+    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.session})">Assign</button>
     </mat-cell>
   </ng-container>
 

@@ -37,6 +37,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { MAT_DATE_LOCALE } from '@angular/material';
+import { reducer } from './core/notification/reducers/notification.reducer';
+import { NotificationEffects } from './core/notification/effects/notification.effects';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -75,12 +77,12 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
     BrowserAnimationsModule,
-    StoreModule.forRoot({}),
+    StoreModule.forRoot({core: reducer}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([NotificationEffects]),
     HttpClientModule,
     FormsModule,
     AppRoutingModule,

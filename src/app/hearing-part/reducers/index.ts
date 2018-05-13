@@ -26,6 +26,11 @@ export const getHearingParts = createSelector(
     state => state.entities
 );
 
+export const getHearingPartsLoading = createSelector(
+    getHearingPartsEntitiesState,
+    state => state.loading
+);
+
 export const {
     selectIds: getHearingPartsIds,
     selectEntities: getHearingPartsEntities,
