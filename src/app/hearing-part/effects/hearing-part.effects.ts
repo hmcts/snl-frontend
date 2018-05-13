@@ -16,7 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as sessionActions from '../../sessions/actions/session.action';
 import { UpsertMany } from '../../sessions/actions/session.action';
-import { Create } from '../../core/notification/actions/notification.action';
+import { Notify } from '../../core/notification/actions/notification.action';
 import { ASSIGN_HEARING_PART, HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class HearingPartEffects {
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                mergeMap(data => [new AssignComplete(data), new Create(HEARING_PART_ASSIGN_SUCCESS)]),
+                mergeMap(data => [new AssignComplete(data), new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
                 catchError((err: HttpErrorResponse) => of(new AssignFailed(err.error)))
             )
         )

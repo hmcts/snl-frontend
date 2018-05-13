@@ -10,6 +10,11 @@ export const HEARING_PART_ASSIGN_FAILED = {
     duration: 3000
 } as CoreNotification
 
+export const LISTING_REQUEST_CREATED = {
+    message: 'Listing request created!',
+    duration: 3000
+} as CoreNotification
+
 export const ASSIGN_HEARING_PART = {
     message: 'Assigning hearing part...'
 } as CoreNotification

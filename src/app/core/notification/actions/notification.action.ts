@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { CoreNotification } from '../model/core-notification';
 
 export enum NotificationActionTypes {
-  Create = '[CoreNotification] Create',
+  Create = '[CoreNotification] Notify',
   Dismiss = '[CoreNotification] Dismiss',
 }
 
@@ -13,7 +13,7 @@ export enum NotificationActionTypes {
  *
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
-export class Create implements Action {
+export class Notify implements Action {
   readonly type = NotificationActionTypes.Create;
 
   constructor(public payload: CoreNotification) {

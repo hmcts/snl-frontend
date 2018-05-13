@@ -5,7 +5,7 @@ import { AppConfig } from '../../app.config';
 import { SessionAssignment } from '../models/session-assignment';
 import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
-import { hearingParts } from '../schemas/hearing-part.schema';
+import { hearingPart, hearingParts } from '../schemas/hearing-part.schema';
 import { normalize } from 'normalizr';
 import { ListingCreate } from '../models/listing-create';
 
@@ -20,10 +20,11 @@ export class HearingPartService {
             .pipe(map(data => {console.log(normalize(data, hearingParts)); return normalize(data, hearingParts)}));
     }
 
-    assignToSession(query: SessionAssignment): Observable<HearingPart> {
+    assignToSession(query: SessionAssignment): Observable<any> {
         return this.http
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
                 {sessionId: query.sessionId})
+            .pipe(map(data => normalize(data, hearingPart)));
     }
 
 

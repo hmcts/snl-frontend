@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
-import { Create, NotificationActionTypes } from '../actions/notification.action';
+import { Notify, NotificationActionTypes } from '../actions/notification.action';
 import { MatSnackBar } from '@angular/material';
 import * as sessionActions from '../../../sessions/actions/session.action';
 
@@ -17,7 +17,7 @@ export class NotificationEffects {
 
     @Effect({ dispatch: false })
     create$: Observable<Action> = this.actions$.pipe(
-        ofType<Create>(NotificationActionTypes.Create),
+        ofType<Notify>(NotificationActionTypes.Create),
         tap(action => {
             this.createNotification(action);
         })
@@ -25,7 +25,7 @@ export class NotificationEffects {
 
     @Effect({ dispatch: false })
     dismiss$: Observable<Action> = this.actions$.pipe(
-        ofType<Create>(NotificationActionTypes.Dismiss),
+        ofType<Notify>(NotificationActionTypes.Dismiss),
         tap(action => {
             this.dismissNotification();
         })

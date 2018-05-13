@@ -10,7 +10,7 @@ import * as judgeActions from '../../judges/actions/judge.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchComplete, SearchFailed, SearchForDates, SessionActionTypes } from '../actions/session.action';
-import { Create } from '../../core/notification/actions/notification.action';
+import { Notify } from '../../core/notification/actions/notification.action';
 import { SESSION_CREATED } from '../models/sessions-notifications';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateComplete(), new Create(SESSION_CREATED)]),
+                mergeMap(() => [new sessionActions.CreateComplete(), new Notify(SESSION_CREATED)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
