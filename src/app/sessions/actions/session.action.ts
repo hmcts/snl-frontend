@@ -10,7 +10,8 @@ export enum SessionActionTypes {
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   CreateComplete = '[Session] Create Complete',
-  CreateFailed = '[Session] Create Failed'
+  CreateFailed = '[Session] Create Failed',
+  UpsertMany = '[Session] Upsert Many'
 }
 
 /**
@@ -71,5 +72,13 @@ export class CreateFailed implements Action {
 
     constructor(public payload: string) {
         console.log(payload);
+    }
+}
+
+export class UpsertMany implements Action {
+    readonly type = SessionActionTypes.UpsertMany;
+
+    constructor(public payload: Session[]) {
+        console.log(this.type);
     }
 }

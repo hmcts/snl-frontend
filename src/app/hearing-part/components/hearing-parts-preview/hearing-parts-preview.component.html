@@ -22,7 +22,7 @@
 
   <ng-container matColumnDef="duration">
     <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="target schedule from">
@@ -40,7 +40,8 @@
     <mat-cell *matCellDef="let element" fxFlex="200px">
         <mat-form-field>
           <mat-select [(value)]="element.session" fxFlex="400px">
-            <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{session.start}}</mat-option>
+            <mat-option value="">(No session)</mat-option>
+            <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{parseDate(session.start)}}</mat-option>
           </mat-select>
         </mat-form-field>
 

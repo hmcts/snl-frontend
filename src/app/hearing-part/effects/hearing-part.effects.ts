@@ -14,6 +14,8 @@ import {
 } from '../actions/hearing-part.action';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
+import * as sessionActions from '../../sessions/actions/session.action';
+import { UpsertMany } from '../../sessions/actions/session.action';
 
 @Injectable()
 export class HearingPartEffects {
@@ -34,7 +36,10 @@ export class HearingPartEffects {
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(action =>
             this.hearingPartService.searchHearingParts().pipe(
-                map(data => (new SearchComplete(data.entities.hearingParts))),
+                mergeMap(data => [
+                    new SearchComplete(data.entities.hearingParts),
+                    new sessionActions.UpsertMany(data.entities.sessions)
+                ]),
                 catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error)))
             )
         )

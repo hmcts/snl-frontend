@@ -10,6 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DiaryEffectEffects } from './effects/diary-effect.effects';
 import { DiaryService } from './services/diary.service';
 import { MainComponent } from './components/main/main.component';
+import { reducers } from './reducers';
 
 @NgModule({
     imports: [
@@ -27,7 +28,7 @@ import { MainComponent } from './components/main/main.component';
                 component: DiaryCalendarComponent
             }
         ]),
-        StoreModule.forFeature('judgeSessions', {sessions: fromReducers.reducer}),
+        StoreModule.forFeature('judges', reducers),
         EffectsModule.forFeature([DiaryEffectEffects])
     ],
     declarations: [DiaryCalendarComponent, MainComponent],

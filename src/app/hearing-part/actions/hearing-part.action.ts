@@ -11,7 +11,7 @@ export enum HearingPartActionTypes {
   CreateFailed = '[HearingPart] Create Failed',
   AssignToSession = '[HearingPart] Assign to session',
   AssignComplete = '[HearingPart] Assign Complete',
-  AssignFailed = '[HearingPart] Assign Failed',
+  AssignFailed = '[HearingPart] Assign Failed'
 }
 
 /**
@@ -92,3 +92,6 @@ export class AssignFailed implements Action {
         console.log(payload);
     }
 }
+
+
+

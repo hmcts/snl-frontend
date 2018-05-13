@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MatTableDataSource } from '@angular/material';
-import * as fromSessions from '../../reducers/session.reducer';
+import * as fromSessions from '../../reducers';
 import * as moment from 'moment';
 
 @Component({
@@ -11,15 +11,16 @@ import * as moment from 'moment';
 })
 export class SessionTableComponent implements OnInit {
 
-  displayedColumns = ['position', 'time', 'duration', 'room'];
+  displayedColumns = ['position', 'date', 'time', 'duration', 'room','hearings', 'allocated','utilisation', 'available'];
   dataSource;
   tableVisible;
 
   constructor(private store: Store<fromSessions.State>) {
     this.tableVisible = false;
 
-    this.store.pipe(select(fromSessions.getSessionsWithRoomsAndJudges)).subscribe(data => {
+    this.store.pipe(select(fromSessions.getFullSessions)).subscribe(data => {
       this.tableVisible = false;
+      console.log(data);
       if (data) {
         data = Object.values(data);
         this.tableVisible = data.length !== 0;
@@ -31,8 +32,28 @@ export class SessionTableComponent implements OnInit {
     });
   }
 
+  parseDate(date) {
+      return moment(date).format('MMM Do YY');
+  }
+
   humanizeDuration(duration) {
       return moment.duration(duration).humanize();
+  }
+
+  calculateAllocated(session) {
+    let allocated = moment.duration();
+    session.hearingParts.forEach(hearingPart => {
+        allocated.add(moment.duration(hearingPart.duration));
+    })
+    return allocated;
+  }
+
+  calculateUtilized(duration: string, allocated: moment.Duration) {
+    return (allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100;
+  }
+
+  calculateAvailable(duration: string, allocated: moment.Duration) {
+    return moment.duration(duration).asMinutes() - allocated.asMinutes();
   }
 
   ngOnInit() {

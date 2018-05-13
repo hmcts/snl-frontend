@@ -1,33 +1,21 @@
 import { HearingPartActionTypes } from '../actions/hearing-part.action';
 
-import * as fromRoot from '../../app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
-import * as moment from 'moment';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
-export interface HearingPartState {
-    readonly entities: HearingPart[];
-    readonly loading: boolean;
-    readonly error: string;
+export interface State extends EntityState<HearingPart> {
+    loading: boolean | false;
+    error: string | '';
 }
 
-const initialState: HearingPartState = {
-    entities: [] as HearingPart[],
+export const adapter: EntityAdapter<HearingPart> = createEntityAdapter<HearingPart>();
+
+export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: '',
-};
+    error: ''
+});
 
-export interface State extends fromRoot.State {
-    hearingParts: HearingPartState;
-}
-
-export const getRootHearingPartState = createFeatureSelector<State>('hearingParts');
-export const getHearingPartState = createSelector(getRootHearingPartState, state => state.hearingParts);
-export const getHearingPartEntities = createSelector(getHearingPartState, state => state.entities);
-export const getHearingPartLoading = createSelector(getHearingPartState, state => state.loading);
-export const getHearingPartError = createSelector(getHearingPartState, state => state.error);
-
-export function hearingPartReducer(state: HearingPartState = initialState, action) {
+export function reducer(state: State = initialState, action) {
   switch (action.type) {
     case HearingPartActionTypes.Search:
     case HearingPartActionTypes.AssignToSession: {
@@ -39,7 +27,7 @@ export function hearingPartReducer(state: HearingPartState = initialState, actio
         return {...state, loading: false, error: action.payload};
     }
     case HearingPartActionTypes.SearchComplete: {
-        return {entities: action.payload, loading: false};
+        return {...state, ...adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false})};
     }
     case HearingPartActionTypes.Create: {
         return {...state, loading: true};
@@ -54,3 +42,10 @@ export function hearingPartReducer(state: HearingPartState = initialState, actio
         return state;
   }
 }
+
+export const {
+    selectIds: getHearingPartIds,
+    selectEntities: getHearingPartEntities,
+    selectAll: getAllHearingParts,
+    selectTotal: getTotalHearingParts,
+} = adapter.getSelectors();

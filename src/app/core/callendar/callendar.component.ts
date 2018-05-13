@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Session } from '../../sessions/models/session.model';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
-import * as fromReducer from '../../sessions/reducers/session.reducer';
+import * as fromReducer from '../../sessions/reducers/index';
 import * as fromRoomsActions from '../../rooms/actions/room.action';
 import * as fromJudgesActions from '../../judges/actions/judge.action';
 import * as moment from 'moment';
@@ -27,7 +27,7 @@ export class CallendarComponent implements OnInit {
     errors: string;
 
     constructor(private store: Store<State>) {
-        this.sessions$ = this.store.select(fromReducer.getSessionsWithRoomsAndJudges);
+        this.sessions$ = this.store.select(fromReducer.getFullSessions);
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
@@ -70,7 +70,7 @@ export class CallendarComponent implements OnInit {
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
-            end: moment(session.start).add(session.duration).toDate()
+            end: moment(session.start).add(moment.duration(session.duration)).toDate()
         };
     }
 

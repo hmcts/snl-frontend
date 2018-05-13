@@ -1,33 +1,19 @@
 
-import * as fromRoot from '../../app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Room } from '../models/room.model';
-import { JudgeActionTypes } from '../../judges/actions/judge.action';
 import { RoomActionTypes } from '../actions/room.action';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
-export interface RoomState {
-    readonly entities: Room[];
-    readonly loading: boolean;
-    readonly error: string;
+export interface State extends EntityState<Room> {
+    loading: boolean | false;
 }
 
-const initialState: RoomState = {
-    entities: [],
+export const adapter: EntityAdapter<Room> = createEntityAdapter<Room>();
+
+export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: '',
-};
+});
 
-export interface State extends fromRoot.State {
-    rooms: RoomState;
-}
-
-export const getRootRoomsState = createFeatureSelector<State>('sessions');
-export const getRoomsState = createSelector(getRootRoomsState, state => state.rooms);
-export const getRoomsEntities = createSelector(getRoomsState, state => state.entities);
-export const getRoomsLoading = createSelector(getRoomsState, state => state.loading);
-export const getRoomsError = createSelector(getRoomsState, state => state.error);
-
-export function roomReducer(state: RoomState = initialState, action) {
+export function reducer(state: State = initialState, action) {
   switch (action.type) {
     case RoomActionTypes.Get: {
         return {...state, loading: true};
@@ -36,9 +22,13 @@ export function roomReducer(state: RoomState = initialState, action) {
         return {...state, loading: false, error: action.payload};
     }
     case RoomActionTypes.GetComplete: {
-        return {entities: {...state.entities, ...action.payload}, loading: false};
+        return adapter.addAll( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
     }
     default:
         return state;
   }
 }
+
+export const getRoomsState = (state: State) => state;
+export const getRooms = (state: State) => state.entities;
+export const getLoading = (state: State) => state.loading;

@@ -1,43 +1,34 @@
 
-import * as fromRoot from '../../app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { Judge } from '../models/judge.model';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { JudgeActionTypes } from '../actions/judge.action';
+import { Judge } from '../models/judge.model';
 
-export interface JudgeState {
-    readonly entities: Judge[];
-    readonly loading: boolean;
-    readonly error: string;
+export interface State extends EntityState<Judge> {
+    loading: boolean | false;
 }
 
-const initialState: JudgeState = {
-    entities: [],
+export const adapter: EntityAdapter<Judge> = createEntityAdapter<Judge>();
+
+export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: '',
-};
+});
 
-export interface State extends fromRoot.State {
-    judges: JudgeState;
+export function reducer(state: State = initialState, action) {
+    switch (action.type) {
+        case JudgeActionTypes.Get: {
+            return {...state, loading: true};
+        }
+        case JudgeActionTypes.GetFailed: {
+            return {...state, loading: false, error: action.payload};
+        }
+        case JudgeActionTypes.GetComplete: {
+            return adapter.addMany( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
+        }
+        default:
+            return state;
+    }
 }
 
-export const getRootJudgesState = createFeatureSelector<State>('sessions');
-export const getJudgesState = createSelector(getRootJudgesState, state => state.judges);
-export const getJudgesEntities = createSelector(getJudgesState, state => state.entities);
-export const getJudgesLoading = createSelector(getJudgesState, state => state.loading);
-export const getJudgesError = createSelector(getJudgesState, state => state.error);
-
-export function judgeReducer(state: JudgeState = initialState, action) {
-  switch (action.type) {
-    case JudgeActionTypes.Get: {
-        return {...state, loading: true};
-    }
-    case JudgeActionTypes.GetFailed: {
-        return {...state, loading: false, error: action.payload};
-    }
-    case JudgeActionTypes.GetComplete: {
-        return {entities: action.payload, loading: false};
-    }
-    default:
-        return state;
-  }
-}
+export const getJudgesState = (state: State) => state;
+export const getJudges = (state: State) => state.entities;
+export const getLoading = (state: State) => state.loading;

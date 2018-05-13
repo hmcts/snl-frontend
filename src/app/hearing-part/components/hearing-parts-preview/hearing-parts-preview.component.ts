@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material';
 import { Session } from '../../../sessions/models/session.model';
 import { SessionAssignment } from '../../models/session-assignment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
-
+import * as moment from 'moment'
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -36,6 +36,14 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.hearingParts));
+    }
+
+    parseDate(date) {
+        return moment(date).format('MMM Do YY');
+    }
+
+    humanizeDuration(duration) {
+        return moment.duration(duration).humanize();
     }
 
     isListed(sessionId) {

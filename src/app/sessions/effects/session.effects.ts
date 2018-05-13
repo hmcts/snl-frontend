@@ -19,9 +19,9 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.searchSessions(action.payload).pipe(
                 mergeMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
-                    new sessionActions.SearchComplete(data.entities.sessions)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
@@ -39,16 +39,16 @@ export class SessionEffects {
         )
     );
 
-    @Effect()
+    @Effect() 
     searchForDates$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.SearchForDates>(sessionActions.SessionActionTypes.SearchForDates),
         mergeMap(action =>
             this.sessionsService.searchSessionsForDates(action.payload).pipe(
                 // If successful, dispatch success action with result
                 mergeMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
-                    new sessionActions.SearchComplete(data.entities.sessions)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )
