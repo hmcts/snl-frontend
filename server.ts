@@ -15,10 +15,11 @@ enableProdMode();
 const app = express();
 
 const PORT = process.env.PORT || 3451;
-const DIST_FOLDER = join(process.cwd(), 'dist');
 const CONFIG = {
-  'api_url': process.env['SNL_API_URL'] || 'http://localhost:8090'
+  'api_url': process.env['SNL_API_URL'] || 'http://localhost:8090',
+  'dist_folder': process.env['SNL_DIST_FOLDER'] || 'dist'
 };
+const DIST_FOLDER = join(process.cwd(), CONFIG.dist_folder);
 
 app.use(cors())
 app.options('*', cors()) // include before other routes

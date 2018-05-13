@@ -1,12 +1,14 @@
 import { Action } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
 import { SessionAssignment } from '../models/session-assignment';
+import { ListingCreate } from '../models/listing-create';
 
 export enum HearingPartActionTypes {
   Search = '[HearingPart] Search',
   SearchComplete = '[HearingPart] Search Complete',
   SearchFailed = '[HearingPart] Search Failed',
   Create = '[HearingPart] Create',
+  CreateListingRequest = '[HearingPart] Create Listing Request',
   CreateComplete = '[HearingPart] Create Complete',
   CreateFailed = '[HearingPart] Create Failed',
   AssignToSession = '[HearingPart] Assign to session',
@@ -53,6 +55,14 @@ export class Create implements Action {
     }
 }
 
+export class CreateListingRequest implements Action {
+    readonly type = HearingPartActionTypes.CreateListingRequest;
+
+    constructor(public payload: ListingCreate) {
+        console.log(this.type);
+    }
+}
+
 export class CreateComplete implements Action {
     readonly type = HearingPartActionTypes.CreateComplete;
 
@@ -92,6 +102,3 @@ export class AssignFailed implements Action {
         console.log(payload);
     }
 }
-
-
-

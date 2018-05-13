@@ -49,3 +49,6 @@ export const {
     selectAll: getAllHearingParts,
     selectTotal: getTotalHearingParts,
 } = adapter.getSelectors();
+
+export const getHearingPartError = (state: State) => state.error;
+

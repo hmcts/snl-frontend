@@ -10,6 +10,7 @@ import { reducers } from './reducers/index';
 import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
+import { ListingCreateEffects } from './effects/listing-create.effects';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -23,7 +24,7 @@ export const COMPONENTS = [
     FlexLayoutModule,
     FormsModule,
     StoreModule.forFeature('hearingParts', reducers),
-    EffectsModule.forFeature([HearingPartEffects]),
+    EffectsModule.forFeature([HearingPartEffects, ListingCreateEffects]),
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

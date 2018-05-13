@@ -7,10 +7,12 @@ import { EffectsModule } from '@ngrx/effects';
 import {
     HTTP_INTERCEPTORS,
     HttpClientModule,
-    HttpClientXsrfModule, HttpEvent,
+    HttpClientXsrfModule,
+    HttpEvent,
     HttpHandler,
     HttpInterceptor,
-    HttpRequest, HttpXsrfTokenExtractor,
+    HttpRequest,
+    HttpXsrfTokenExtractor,
 } from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
@@ -58,7 +60,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         const headerName = 'X-XSRF-TOKEN';
         let token = this.tokenExtractor.getToken() as string;
         if (token !== null && !req.headers.has(headerName)) {
-            req = req.clone({ headers: req.headers.set(headerName, token) });
+            req = req.clone({headers: req.headers.set(headerName, token)});
         }
         return next.handle(req);
     }
@@ -103,11 +105,11 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    @Inject(APP_ID) private appId: string) {
-    const platform = isPlatformBrowser(platformId) ?
-      'in the browser' : 'on the server';
-    console.log(`Running ${platform} with appId=${appId}`);
-  }
+    constructor(
+        @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(APP_ID) private appId: string) {
+        const platform = isPlatformBrowser(platformId) ?
+            'in the browser' : 'on the server';
+        console.log(`Running ${platform} with appId=${appId}`);
+    }
 }

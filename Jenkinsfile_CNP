@@ -1,18 +1,20 @@
 #!groovy
 
+properties(
+    [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend/'],
+     pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+)
+
 @Library("Infrastructure")
 
 def product = "snl"
-def component = "frontend"
+def app = "frontend"
 
-withPipeline("java", product, component) {
-  after('checkout') {
-    echo 'sln-frontend checked out'
-  }
 
-  before('buildinfra:aat') {
-    error 'This is PoC project for Scheduling and Listing therefore the environments will not be built'
-  }
+withPipeline("angular", product, app) {
+
+     before('buildinfra:aat') {
+       error 'This is PoC project for Scheduling and Listing therefore the environments will not be built'
+     }
+
 }
-
-

@@ -7,6 +7,7 @@ import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
 import { hearingParts } from '../schemas/hearing-part.schema';
 import { normalize } from 'normalizr';
+import { ListingCreate } from '../models/listing-create';
 
 @Injectable()
 export class HearingPartService {
@@ -23,6 +24,14 @@ export class HearingPartService {
         return this.http
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
                 {sessionId: query.sessionId})
+    }
+
+
+    createListing(query: ListingCreate): Observable<String> {
+        return this.http
+            .put<String>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
+                headers: {'Content-Type': 'application/json'}
+            });
     }
 
 }

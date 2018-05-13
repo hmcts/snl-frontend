@@ -3,3 +3,4 @@ dist/
 .idea/
 coverage/
 package-lock.json
+yarn-error.log
