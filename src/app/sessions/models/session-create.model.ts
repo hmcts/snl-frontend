@@ -1,7 +1,7 @@
 
 export interface SessionCreate {
     id: String;
-    judgeId: String;
+    personId: String;
     roomId: String;
     duration: Number;
     start: Date;

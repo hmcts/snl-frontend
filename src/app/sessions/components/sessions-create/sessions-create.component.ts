@@ -11,7 +11,6 @@ import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
-import { Session } from '../../models/session.model';
 import * as fromSessions from '../../reducers';
 
 @Component({
@@ -48,7 +47,7 @@ export class SessionsCreateComponent implements OnInit {
         start: undefined,
         duration: 0,
         roomId: null,
-        judgeId: null,
+        personId: null,
         caseType: null,
     } as SessionCreate;
   }
