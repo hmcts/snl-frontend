@@ -12,13 +12,12 @@ import { AngularMaterialModule } from '../../angular-material/angular-material.m
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { SessionsService } from './services/sessions-service';
-import { sessionReducer } from './reducers/session.reducer';
-import { roomReducer } from '../rooms/reducers/room.reducer';
-import { judgeReducer } from '../judges/reducers/judge.reducer';
+import { reducers } from './reducers/index';
 import { JudgeEffects } from '../judges/effects/judge.effects';
 import { RoomEffects } from '../rooms/effects/room.effects';
 import { JudgeService } from '../judges/services/judge.service';
 import { RoomService } from '../rooms/services/room.service';
+import { HearingPartModule } from '../hearing-part/hearing-part.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -33,7 +32,8 @@ export const COMPONENTS = [
     AngularMaterialModule,
       FlexLayoutModule,
       FormsModule,
-    StoreModule.forFeature('sessions', {sessions: sessionReducer, rooms: roomReducer, judges: judgeReducer}),
+      HearingPartModule,
+    StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
         path: '',

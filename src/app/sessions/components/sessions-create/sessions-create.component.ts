@@ -6,11 +6,12 @@ import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromRooms from '../../../rooms/reducers/room.reducer';
-import * as fromJudges from '../../../judges/reducers/judge.reducer';
+import * as fromJudges from '../../../judges/reducers/index';
 import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
+import * as fromSessions from '../../reducers';
 
 @Component({
   selector: 'app-sessions-create',
@@ -18,8 +19,8 @@ import * as RoomActions from '../../../rooms/actions/room.action';
   styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
-    rooms$: Observable<Room[]>;
-    judges$: Observable<Judge[]>;
+    rooms: Room[];
+    judges: Judge[];
     roomsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
     roomsPlaceholder: String;
@@ -31,10 +32,11 @@ export class SessionsCreateComponent implements OnInit {
     session: SessionCreate;
 
     constructor(private store: Store<State>) {
-    this.rooms$ = this.store.pipe(select(fromRooms.getRoomsEntities));
-    this.judges$ = this.store.pipe(select(fromJudges.getJudgesEntities));
-    this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
+    this.store.pipe(select(fromSessions.getRooms)).subscribe(data => this.rooms = Object.values(data));
+    this.store.pipe(select(fromJudges.getJudges)).subscribe(data => this.judges = Object.values(data));
+    this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
+    this.store.pipe(select(fromRooms.getRooms)).subscribe(console.log);
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
@@ -46,13 +48,15 @@ export class SessionsCreateComponent implements OnInit {
         duration: 0,
         roomId: null,
         personId: null,
-        caseType: null
+        caseType: null,
     } as SessionCreate;
   }
 
     ngOnInit() {
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
+
+        this.store.pipe(select(fromJudges.getJudgesIds)).subscribe(console.log);
     }
 
   create() {

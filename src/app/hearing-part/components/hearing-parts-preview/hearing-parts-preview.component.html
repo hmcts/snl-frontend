@@ -1,0 +1,57 @@
+<mat-table *ngIf="hearingPartsDataSource" #table [dataSource]="hearingPartsDataSource">
+  <!-- Position Column -->
+  <ng-container matColumnDef="case number">
+    <mat-header-cell *matHeaderCellDef> Case Number </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="case title">
+    <mat-header-cell *matHeaderCellDef> Case Title </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="case type">
+    <mat-header-cell *matHeaderCellDef> Case Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hearing type">
+    <mat-header-cell *matHeaderCellDef> Hearing Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="duration">
+    <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="target schedule from">
+    <mat-header-cell *matHeaderCellDef> Target Schedule From </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.scheduleStart}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="target schedule to">
+    <mat-header-cell *matHeaderCellDef> Target Schedule To </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.scheduleEnd}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="listed">
+    <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span>{{isListed(element.session)}}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="select hearing">
+    <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleHearing(element.id) : null"
+                    [checked]="selectedHearingPartId.isSelected(element.id)">&nbsp;
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

@@ -1,33 +1,21 @@
 import { SessionActionTypes } from '../actions/session.action';
 import { Session } from '../models/session.model';
 
-import * as fromRoot from '../../app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as fromRooms from '../../rooms/reducers/room.reducer';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
-export interface SessionsState {
-    readonly entities: Session[];
-    readonly loading: boolean;
-    readonly error: string;
+export interface State extends EntityState<Session> {
+    loading: boolean | false;
+    error: string | '';
 }
 
-const initialState: SessionsState = {
-    entities: [] as Session[],
+export const adapter: EntityAdapter<Session> = createEntityAdapter<Session>();
+
+export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: '',
-};
+    error: ''
+});
 
-export interface State extends fromRoot.State {
-    sessions: SessionsState;
-}
-
-export const getRootSessionsState = createFeatureSelector<State>('sessions');
-export const getSessionsState = createSelector(getRootSessionsState, state => state.sessions);
-export const getSessionsEntities = createSelector(getSessionsState, state => state.entities);
-export const getSessionsLoading = createSelector(getSessionsState, state => state.loading);
-export const getSessionsError = createSelector(getSessionsState, state => state.error);
-
-export function sessionReducer(state: SessionsState = initialState, action) {
+export function reducer(state: State = initialState, action) {
   switch (action.type) {
     case SessionActionTypes.Search: {
         return {...state, loading: true};
@@ -39,7 +27,16 @@ export function sessionReducer(state: SessionsState = initialState, action) {
         return {...state, loading: false, error: action.payload};
     }
     case SessionActionTypes.SearchComplete: {
-        return {entities: action.payload, loading: false};
+        return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
+    }
+    case SessionActionTypes.UpsertMany: {
+        let updatedCollection = Object.values(action.payload || []).map((session: Session) => {
+        return {
+            id: session.id,
+            changes: session
+        } as Update<Session>;
+    });
+    return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};
     }
     case SessionActionTypes.Create: {
         return {...state, loading: true};
@@ -54,3 +51,7 @@ export function sessionReducer(state: SessionsState = initialState, action) {
         return state;
   }
 }
+
+export const getSessions = (state: State) => state.entities;
+export const getLoading = (state: State) => state.loading;
+export const getError = (state: State) => state.error;
