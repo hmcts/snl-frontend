@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material';
 import { SessionAssignment } from '../../models/session-assignment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
+import { SelectionModel } from '@angular/cdk/collections';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -12,7 +13,9 @@ import * as moment from 'moment'
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearingParts: HearingPart[];
     @Input() sessions: SessionViewModel[];
-    @Output() assignToSession = new EventEmitter<SessionAssignment>();
+    @Output() selectHearingPart = new EventEmitter();
+
+    selectedHearingPartId;
 
     hearingPartsDataSource: MatTableDataSource<HearingPart>;
     displayedColumns = [
@@ -23,23 +26,19 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'duration',
       'target schedule from',
       'target schedule to',
-      'session',
-      'action',
-      'listed'
+      'listed',
+      'select hearing'
     ];
 
     constructor() {
     }
 
     ngOnInit() {
+        this.selectedHearingPartId = new SelectionModel<string>(false, []);
     }
 
     ngOnChanges() {
         this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.hearingParts));
-    }
-
-    parseDate(date) {
-        return moment(date).format('MMM Do YY');
     }
 
     humanizeDuration(duration) {
@@ -47,6 +46,12 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     isListed(sessionId) {
-        return sessionId !== undefined && sessionId !== '' ? 'Yes' : 'No';
+        console.log(sessionId);
+        return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
+    }
+
+    toggleHearing(id) {
+        this.selectedHearingPartId.toggle(id)
+        this.selectHearingPart.emit(this.selectedHearingPartId.isSelected(id) ? id : '')
     }
 }

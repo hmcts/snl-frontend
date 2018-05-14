@@ -1,5 +1,5 @@
 
 export interface SessionAssignment {
-    sessionId: number,
-    hearingPartId: number
+    sessionId: string,
+    hearingPartId: string
 }

@@ -35,29 +35,20 @@
     <mat-cell *matCellDef="let element"> {{element.scheduleEnd}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="session" >
-    <mat-header-cell *matHeaderCellDef fxFlex="250px"> Session </mat-header-cell>
-    <mat-cell *matCellDef="let element" fxFlex="250px" fxLayout="row">
-        <mat-form-field>
-          <mat-select [(value)]="element.session" fxFlex="200px">
-            <mat-option value="null">(No session)</mat-option>
-            <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{parseDate(session.start)}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="action">
-    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <button mat-raised-button color="accent" (click)="assignToSession.emit({hearingPartId: element.id, sessionId: element.session})">Assign</button>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="listed">
     <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span>{{isListed(element.session)}}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="select hearing">
+    <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleHearing(element.id) : null"
+                    [checked]="selectedHearingPartId.isSelected(element.id)">&nbsp;
+      </mat-checkbox>
     </mat-cell>
   </ng-container>
 

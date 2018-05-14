@@ -9,7 +9,6 @@ import * as fromSessions from '../../reducers';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
-import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import * as moment from 'moment';
 import { schema } from 'normalizr';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -25,6 +24,8 @@ export class SessionsSearchComponent implements OnInit {
     endDate;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
+    selectedSessionId;
+    selectedHearingPartId;
 
     constructor(private store: Store<fromHearingParts.State>) {
         this.store.pipe(select(fromHearingParts.getHearingPartsEntities)).subscribe(data => {
@@ -44,10 +45,19 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new SearchForDates({startDate: startDate, endDate: endDate}));
     }
 
-    assignToSession(sessionAssignment: SessionAssignment) {
-        this.store.dispatch(new AssignToSession(sessionAssignment));
+    assignToSession() {
+        this.store.dispatch(new AssignToSession({hearingPartId: this.selectedHearingPartId, sessionId: this.selectedSessionId}));
     }
 
+    deassign() {
+        this.store.dispatch(new AssignToSession({hearingPartId: this.selectedHearingPartId, sessionId: null}));
+    }
 
+    selectHearingPart(id: string) {
+        this.selectedHearingPartId = id;
+    }
+
+    selectSession(id: string) {
+        this.selectedSessionId = id;
+    }
 }
-

@@ -23,8 +23,27 @@
 <mat-divider></mat-divider>
 
 <div>
-  <app-session-table></app-session-table>
+  <app-session-table
+          (selectSession)="selectSession($event)">
+  </app-session-table>
 </div>
+
+<div style="margin-top: 30px; margin-bottom: 10px">
+  Actions:
+</div>
+
+<button mat-raised-button
+        color="accent"
+        fxFlexAlign="center"
+        (click)="assignToSession()"
+        class="get-sessions-button">Assign</button>
+
+<button mat-raised-button
+        color="accent"
+        fxFlexAlign="center"
+        (click)="deassign()"
+        class="get-sessions-button">Deassign</button>
+
 
 <div style="margin-top: 30px; margin-bottom: 10px">
   Listing Requests:
@@ -34,6 +53,6 @@
   <app-hearing-parts-preview
           [hearingParts]="hearingParts$ | async"
           [sessions]="sessions$ | async"
-          (assignToSession)="assignToSession($event)">
+          (selectHearingPart)="selectHearingPart($event)">
   </app-hearing-parts-preview>
 </div>

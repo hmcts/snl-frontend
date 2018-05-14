@@ -53,6 +53,16 @@
     <mat-cell *matCellDef="let element"> {{calculateAvailable(element.duration, calculateAllocated(element))}} minutes</mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="select session">
+    <mat-header-cell *matHeaderCellDef> Select session </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleSession(element.id) : null"
+                    [checked]="selectedSesssionId.isSelected(element.id)">&nbsp;
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>

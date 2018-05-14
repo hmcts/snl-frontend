@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     MatButtonModule,
-    MatCardModule,
+    MatCardModule, MatCheckboxModule,
     MatDatepickerModule, MatFormFieldModule,
     MatGridListModule,
     MatIconModule, MatInputModule, MatListModule,
@@ -26,6 +26,7 @@ import {
       MatSidenavModule,
       MatSelectModule,
       MatSnackBarModule,
+      MatCheckboxModule,
   ],
   exports: [
     MatCardModule,
@@ -42,7 +43,7 @@ import {
       MatSidenavModule,
       MatSelectModule,
       MatSnackBarModule,
-
+      MatCheckboxModule
 
   ],
   declarations: []
