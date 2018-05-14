@@ -5,12 +5,18 @@
 
   <mat-card-content fxLayout="row" fxLayoutGap="3%">
     <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="chosenDate" placeholder="Choose date">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" placeholder="Choose date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <button mat-raised-button color="accent"  fxFlexAlign="center" (click)="getSessions(chosenDate)" class="get-sessions-button">Get Sessions</button>
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+      <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="endDate" placeholder="Choose end date">
+      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd></mat-datepicker>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="getSessions(startDate, endDate)" class="get-sessions-button">Get Sessions</button>
   </mat-card-content>
 </mat-card>
 

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
 import { MatTableDataSource } from '@angular/material';
-import { Session } from '../../../sessions/models/session.model';
 import { SessionAssignment } from '../../models/session-assignment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
@@ -48,6 +47,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     isListed(sessionId) {
-        return sessionId !== undefined && sessionId !== null && sessionId !== '' ? 'Yes' : 'No';
+        return sessionId !== undefined && sessionId !== '' ? 'Yes' : 'No';
     }
 }

@@ -40,7 +40,7 @@
     <mat-cell *matCellDef="let element" fxFlex="250px" fxLayout="row">
         <mat-form-field>
           <mat-select [(value)]="element.session" fxFlex="200px">
-            <mat-option value="">(No session)</mat-option>
+            <mat-option value="null">(No session)</mat-option>
             <mat-option *ngFor="let session of sessions" value="{{session.id}}">{{session.person?.name}} | {{session.room?.name}} | {{parseDate(session.start)}}</mat-option>
           </mat-select>
         </mat-form-field>
