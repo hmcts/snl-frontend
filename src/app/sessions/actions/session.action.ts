@@ -62,7 +62,7 @@ export class SearchForJudge implements Action {
 export class Create implements Action {
     readonly type = SessionActionTypes.Create;
 
-    constructor(public payload: Session) {
+    constructor(public payload: SessionCreate) {
         console.log(this.type);
     }
 }

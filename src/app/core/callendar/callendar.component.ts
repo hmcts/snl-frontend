@@ -2,12 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { Options, ViewObject } from 'fullcalendar';
 import { Store } from '@ngrx/store';
-import { Session } from '../../sessions/models/session.model';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../sessions/reducers/index';
-import * as fromRoomsActions from '../../rooms/actions/room.action';
-import * as fromJudgesActions from '../../judges/actions/judge.action';
 import * as moment from 'moment';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -80,7 +77,5 @@ export class CallendarComponent implements OnInit {
 
         let query: SessionQueryForDates = {startDate: startDate, endDate: endDate};
         this.store.dispatch(new SearchForDates(query));
-        //this.store.dispatch(new fromRoomsActions.Get());
-        //this.store.dispatch(new fromJudgesActions.Get());
     }
 }

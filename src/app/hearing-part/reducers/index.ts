@@ -1,7 +1,6 @@
 import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
-import { hearingPart } from '../schemas/hearing-part.schema';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;

@@ -30,7 +30,6 @@ export class SessionsService {
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
-
     searchSessionsForJudge(parameters: DiaryLoadParameters): Observable<any> {
         let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
         let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
@@ -40,7 +39,7 @@ export class SessionsService {
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
-    createSession(session: Session): Observable<String> {
+    createSession(session: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, session)
     }

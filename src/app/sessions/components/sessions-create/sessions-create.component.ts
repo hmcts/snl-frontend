@@ -30,28 +30,27 @@ export class SessionsCreateComponent implements OnInit {
     caseTypes;
     time;
 
-    session: Session;
+    session: SessionCreate;
 
     constructor(private store: Store<State>) {
     this.store.pipe(select(fromSessions.getRooms)).subscribe(data => this.rooms = Object.values(data));
     this.store.pipe(select(fromJudges.getJudges)).subscribe(data => this.judges = Object.values(data));
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
-    //this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
+    this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.store.pipe(select(fromRooms.getRooms)).subscribe(console.log);
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
-    //this.judgesLoading$.subscribe(isLoading => { this.judgesPlaceholder = isLoading ? 'Loading the judges...' : 'Select the judge'; });
+    this.judgesLoading$.subscribe(isLoading => { this.judgesPlaceholder = isLoading ? 'Loading the judges...' : 'Select the judge'; });
 
     this.session = {
         id: undefined,
         start: undefined,
         duration: 0,
-        room: null,
-        person: null,
+        roomId: null,
+        judgeId: null,
         caseType: null,
-        jurisdiction: null
-    } as Session;
+    } as SessionCreate;
   }
 
     ngOnInit() {

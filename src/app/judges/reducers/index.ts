@@ -25,6 +25,11 @@ export const getJudges = createSelector(
     state => state.entities
 );
 
+export const getJudgesLoading = createSelector(
+    getJudgesEntitiesState,
+    fromJudges.getLoading
+);
+
 export const {
     selectIds: getJudgesIds,
     selectEntities: getJudgesEntities,

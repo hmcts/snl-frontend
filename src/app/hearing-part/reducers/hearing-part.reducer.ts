@@ -27,7 +27,8 @@ export function reducer(state: State = initialState, action) {
         return {...state, loading: false, error: action.payload};
     }
     case HearingPartActionTypes.SearchComplete: {
-        return {...state, ...adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false})};
+        return {...state, ...adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload),
+                {...state, loading: false})};
     }
     case HearingPartActionTypes.Create: {
         return {...state, loading: true};
@@ -36,7 +37,8 @@ export function reducer(state: State = initialState, action) {
         return {...state, loading: false};
     }
     case HearingPartActionTypes.AssignComplete: {
-      return {...state, ...adapter.upsertOne({id: Object.keys(action.payload)[0], changes: Object.values(action.payload)[0]}, {...state, loading: false} )};
+      return {...state, ...adapter.upsertOne({id: Object.keys(action.payload)[0], changes: Object.values(action.payload)[0]},
+              {...state, loading: false} )};
     }
     default:
         return state;
@@ -45,4 +47,3 @@ export function reducer(state: State = initialState, action) {
 
 export const getHearingPartError = (state: State) => state.error;
 export const getHearingPartLoading = (state: State) => state.loading;
-

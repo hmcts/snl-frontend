@@ -17,7 +17,18 @@ export class SessionTableComponent implements OnInit {
   selectSession = new EventEmitter();
 
   selectedSesssion;
-  displayedColumns = ['position', 'date', 'time', 'duration', 'room','hearings', 'allocated','utilisation', 'available', 'select session'];
+  displayedColumns = [
+      'position',
+      'date',
+      'time',
+      'duration',
+      'room',
+      'hearings',
+      'allocated',
+      'utilisation',
+      'available',
+      'select session'
+  ];
   dataSource;
   tableVisible;
 

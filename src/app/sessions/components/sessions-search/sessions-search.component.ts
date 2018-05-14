@@ -61,7 +61,7 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new AssignToSession({
             hearingPartId: this.selectedHearingPartId,
             sessionId: this.selectedSession.id,
-            start: this.calculateStartOfHearing(this.selectedSession)
+            start: null // this.calculateStartOfHearing(this.selectedSession)
         }));
     }
 
