@@ -24,7 +24,7 @@ export class SessionsSearchComponent implements OnInit {
     endDate;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
-    selectedSessionId;
+    selectedSession;
     selectedHearingPartId;
 
     constructor(private store: Store<fromHearingParts.State>) {
@@ -45,19 +45,34 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new SearchForDates({startDate: startDate, endDate: endDate}));
     }
 
-    assignToSession() {
-        this.store.dispatch(new AssignToSession({hearingPartId: this.selectedHearingPartId, sessionId: this.selectedSessionId}));
-    }
-
     deassign() {
-        this.store.dispatch(new AssignToSession({hearingPartId: this.selectedHearingPartId, sessionId: null}));
+        this.store.dispatch(new AssignToSession({
+            hearingPartId: this.selectedHearingPartId,
+            sessionId: null,
+            start: null
+        }));
     }
 
     selectHearingPart(id: string) {
         this.selectedHearingPartId = id;
     }
 
-    selectSession(id: string) {
-        this.selectedSessionId = id;
+    assignToSession() {
+        this.store.dispatch(new AssignToSession({
+            hearingPartId: this.selectedHearingPartId,
+            sessionId: this.selectedSession.id,
+            start: this.calculateStartOfHearing(this.selectedSession)
+        }));
+    }
+
+    calculateStartOfHearing(session: SessionViewModel) {
+        let duration = moment.duration();
+        session.hearingParts.forEach(hp => duration.add(hp.duration));
+
+        return moment(session.start).add(duration).toDate();
+    }
+
+    selectSession(session: SessionViewModel) {
+        this.selectedSession = session;
     }
 }

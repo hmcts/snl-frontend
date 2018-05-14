@@ -57,8 +57,8 @@
     <mat-header-cell *matHeaderCellDef> Select session </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? toggleSession(element.id) : null"
-                    [checked]="selectedSesssionId.isSelected(element.id)">&nbsp;
+                    (change)="$event ? toggleSession(element) : null"
+                    [checked]="selectedSesssion.isSelected(element)">&nbsp;
       </mat-checkbox>
     </mat-cell>
   </ng-container>

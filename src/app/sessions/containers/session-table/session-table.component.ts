@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material';
 import * as fromSessions from '../../reducers';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
+import { SessionViewModel } from '../../models/session.viewmodel';
 
 @Component({
   selector: 'app-session-table',
@@ -15,19 +16,18 @@ export class SessionTableComponent implements OnInit {
   @Output()
   selectSession = new EventEmitter();
 
-  selectedSesssionId;
+  selectedSesssion;
   displayedColumns = ['position', 'date', 'time', 'duration', 'room','hearings', 'allocated','utilisation', 'available', 'select session'];
   dataSource;
   tableVisible;
 
   constructor(private store: Store<fromSessions.State>) {
-    this.selectedSesssionId = new SelectionModel<string>(false, []);
+    this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
 
     this.store.pipe(select(fromSessions.getFullSessions)).subscribe(data => {
       this.tableVisible = false;
-      console.log(data);
       if (data) {
         data = Object.values(data);
         this.tableVisible = data.length !== 0;
@@ -63,9 +63,9 @@ export class SessionTableComponent implements OnInit {
     return moment.duration(duration).asMinutes() - allocated.asMinutes();
   }
 
-  toggleSession(id) {
-    this.selectedSesssionId.toggle(id);
-    this.selectSession.emit(this.selectedSesssionId.isSelected(id) ? id : '')
+  toggleSession(session) {
+    this.selectedSesssion.toggle(session);
+    this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : '')
   }
 
   ngOnInit() {

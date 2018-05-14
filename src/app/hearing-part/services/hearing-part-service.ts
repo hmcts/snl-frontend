@@ -23,10 +23,9 @@ export class HearingPartService {
     assignToSession(query: SessionAssignment): Observable<any> {
         return this.http
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
-                {sessionId: query.sessionId})
+                {sessionId: query.sessionId, start: query.start})
             .pipe(map(data => normalize(data, hearingPart)));
     }
-
 
     createListing(query: ListingCreate): Observable<String> {
         return this.http

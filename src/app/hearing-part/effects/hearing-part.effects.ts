@@ -23,11 +23,12 @@ import { ASSIGN_HEARING_PART, HEARING_PART_ASSIGN_SUCCESS } from '../models/hear
 export class HearingPartEffects {
 
     @Effect()
-    search$: Observable<Action> = this.actions$.pipe(
+    assign$: Observable<Action> = this.actions$.pipe(
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                mergeMap(data => [new AssignComplete(data.entities.hearingParts), new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
+                mergeMap(data => [new AssignComplete(data.entities.hearingParts),
+                    new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
                 catchError((err: HttpErrorResponse) => of(new AssignFailed(err.error)))
             )
         )

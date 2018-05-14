@@ -3,7 +3,7 @@ import { Room } from '../../rooms/models/room.model';
 import { HearingPart } from '../../hearing-part/models/hearing-part';
 
 export interface SessionViewModel {
-    id: number;
+    id: string;
     start: Date;
     duration: number;
     room: Room;

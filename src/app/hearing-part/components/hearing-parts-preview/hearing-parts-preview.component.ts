@@ -46,7 +46,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     isListed(sessionId) {
-        console.log(sessionId);
         return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
     }
 
