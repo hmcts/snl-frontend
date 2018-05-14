@@ -17,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 3451;
 const CONFIG = {
   'api_url': process.env['SNL_API_URL'] || 'http://localhost:8090',
-  'dist_folder': process.env['SNL_DIST_FOLDER'] || 'dist'
+  'dist_folder': process.env['SNL_DIST_FOLDER'] || ''
 };
 const DIST_FOLDER = join(process.cwd(), CONFIG.dist_folder);
 
