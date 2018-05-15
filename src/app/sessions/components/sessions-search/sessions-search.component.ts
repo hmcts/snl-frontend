@@ -24,7 +24,7 @@ export class SessionsSearchComponent implements OnInit {
     endDate;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
-    selectedSession;
+    selectedSession: any;
     selectedHearingPartId;
 
     constructor(private store: Store<fromHearingParts.State>) {
@@ -34,6 +34,8 @@ export class SessionsSearchComponent implements OnInit {
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment().toDate();
         this.endDate = moment().add(5, 'years').toDate();
+        this.selectedHearingPartId = '';
+        this.selectedSession = {} ;
     }
 
     ngOnInit() {
@@ -74,5 +76,9 @@ export class SessionsSearchComponent implements OnInit {
 
     selectSession(session: SessionViewModel) {
         this.selectedSession = session;
+    }
+
+    assignButtonEnabled() {
+        return (this.selectedHearingPartId !== '') && (this.selectedSession.id);
     }
 }
