@@ -1,0 +1,12 @@
+<mat-card class="admin-poc-container">
+  <mat-card-header>
+    <mat-card-title>PoC Admin</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-actions>
+    <button mat-raised-button color="accent" (click)="loadRulesFromDb()">Load Rules Engine Facts from Database</button>
+  </mat-card-actions>
+  <mat-card-content>
+    <div>{{loadRulesFromDbResult}}</div>
+  </mat-card-content>
+</mat-card>

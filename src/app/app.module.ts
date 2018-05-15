@@ -37,8 +37,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { MAT_DATE_LOCALE } from '@angular/material';
+import { PocComponent } from './admin/components/poc/poc.component';
 import { reducer } from './core/notification/reducers/notification.reducer';
 import { NotificationEffects } from './core/notification/effects/notification.effects';
+import { AdminModule } from './admin/admin.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -72,7 +74,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   declarations: [
     AppComponent,
     CallendarComponent,
-    HomeComponent
+    HomeComponent,
+        PocComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -91,6 +94,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     FlexLayoutModule,
     SessionModule,
     SecurityModule,
+    AdminModule,
       HttpClientXsrfModule.withOptions({
           cookieName: 'XSRF-TOKEN', // this is optional
           headerName: 'X-XSRF-TOKEN' // this is optional
