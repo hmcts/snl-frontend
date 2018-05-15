@@ -41,6 +41,7 @@ import { reducer } from './core/notification/reducers/notification.reducer';
 import { NotificationEffects } from './core/notification/effects/notification.effects';
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
+import { ProblemsModule } from './problems/problems.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -101,7 +102,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
       }),
     SecurityModule,
     JudgesModule,
-    HearingPartModule
+    HearingPartModule,
+    ProblemsModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
