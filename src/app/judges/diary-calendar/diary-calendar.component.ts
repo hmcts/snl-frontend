@@ -35,12 +35,9 @@ export class DiaryCalendarComponent implements OnInit {
     }
 
     clickButton(model: any) {
-        console.log('CurrentView: ');
         let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
         let startDate = view.intervalStart.format('YYYY-MM-DD');
         let endDate = view.intervalEnd.format('YYYY-MM-DD');
-        console.log(startDate);
-        console.log(endDate);
         this.loadData(new Date(startDate), new Date(endDate));
     }
 

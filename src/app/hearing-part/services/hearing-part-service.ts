@@ -17,7 +17,7 @@ export class HearingPartService {
     searchHearingParts(): Observable<any> {
         return this.http
             .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`)
-            .pipe(map(data => {console.log(normalize(data, hearingParts)); return normalize(data, hearingParts)}));
+            .pipe(map(data => {return normalize(data, hearingParts)}));
     }
 
     assignToSession(query: SessionAssignment): Observable<any> {

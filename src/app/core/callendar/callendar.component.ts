@@ -28,16 +28,12 @@ export class CallendarComponent implements OnInit {
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
-            console.log(sessions);
         }, error => {
             this.errors = error;
-            console.log(error);
-            console.log(this.events);
         });
     }
 
     clickButton(model: any) {
-        console.log('CurrentView: ');
         let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
         let startDate = view.intervalStart.format('YYYY-MM-DD');
         let endDate = view.intervalEnd.format('YYYY-MM-DD');

@@ -16,15 +16,11 @@ export enum NotificationActionTypes {
 export class Notify implements Action {
   readonly type = NotificationActionTypes.Create;
 
-  constructor(public payload: CoreNotification) {
-      console.log(this.type);
-  }
+  constructor(public payload: CoreNotification) {}
 }
 
 export class Dismiss implements Action {
     readonly type = NotificationActionTypes.Dismiss;
 
-    constructor() {
-        console.log(this.type);
-    }
+    constructor() {}
 }
