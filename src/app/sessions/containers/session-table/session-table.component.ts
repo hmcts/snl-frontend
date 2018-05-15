@@ -51,7 +51,7 @@ export class SessionTableComponent implements OnInit {
   }
 
   parseDate(date) {
-      return moment(date).format('MMM Do YY');
+      return moment(date).format('DD/MM/YYYY');
   }
 
   humanizeDuration(duration) {
@@ -67,11 +67,12 @@ export class SessionTableComponent implements OnInit {
   }
 
   calculateUtilized(duration: string, allocated: moment.Duration) {
-    return (allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100;
+    return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
   }
 
   calculateAvailable(duration: string, allocated: moment.Duration) {
-    return moment.duration(duration).asMinutes() - allocated.asMinutes();
+    let available = moment.duration(duration).asMinutes() - allocated.asMinutes();
+    return available > 0 ? available : 0;
   }
 
   toggleSession(session) {
