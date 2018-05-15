@@ -27,12 +27,12 @@
 
   <ng-container matColumnDef="target schedule from">
     <mat-header-cell *matHeaderCellDef> Target Schedule From </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.scheduleStart}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="target schedule to">
     <mat-header-cell *matHeaderCellDef> Target Schedule To </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.scheduleEnd}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="listed">

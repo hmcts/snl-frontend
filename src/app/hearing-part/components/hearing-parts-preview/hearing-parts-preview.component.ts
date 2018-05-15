@@ -45,6 +45,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         return moment.duration(duration).humanize();
     }
 
+    parseDate(date) {
+        return moment(date).format('DD/MM/YYYY');
+    }
+
     isListed(sessionId) {
         return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
     }

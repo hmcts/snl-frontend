@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, Injectable, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
@@ -36,11 +36,11 @@ import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
-import { MAT_DATE_LOCALE } from '@angular/material';
 import { PocComponent } from './admin/components/poc/poc.component';
 import { reducer } from './core/notification/reducers/notification.reducer';
 import { NotificationEffects } from './core/notification/effects/notification.effects';
 import { AdminModule } from './admin/admin.module';
+import * as moment from 'moment';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -106,16 +106,19 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
       {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
-      {provide: MAT_DATE_LOCALE, useValue: 'en-GB'},
+      {provide: LOCALE_ID, useValue: 'en-GB'},
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
     constructor(
         @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(LOCALE_ID) private localeId: string,
         @Inject(APP_ID) private appId: string) {
         const platform = isPlatformBrowser(platformId) ?
             'in the browser' : 'on the server';
         console.log(`Running ${platform} with appId=${appId}`);
+
+        moment.locale(localeId);
     }
 }
