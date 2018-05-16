@@ -9,11 +9,13 @@
         <button mat-button routerLink='sessions' routerLinkActive="active">Sessions</button>
         <button mat-button routerLink='calendar' routerLinkActive="active">Calendar</button>
         <button mat-button routerLink='listing' routerLinkActive="active">Listing (new)</button>
+        <button mat-button routerLink='problems' routerLinkActive="active">Problems</button>
       </div>
 
       <div *ngIf="isInRole('judge')">
         <button mat-button routerLink='/home/judge/main' routerLinkActive="active">Main</button>
         <button mat-button routerLink='/home/judge/diary-calendar' routerLinkActive="active">Calendar</button>
+        <button mat-button routerLink='problems' routerLinkActive="active">Problems</button>
       </div>
 
     <span class="fill-space"></span>
@@ -27,6 +29,6 @@
 
 <div class="toolbar-to-content-spacer" ></div>
 
-<div class="content-container" style="width:80%; margin-left: 15px">
+<div class="content-container" style="width:90%; margin-left: 15px">
   <router-outlet></router-outlet>
 </div>

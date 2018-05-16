@@ -4,19 +4,21 @@ import { Observable } from 'rxjs/Observable';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
-import { Create, CreateComplete, CreateFailed, HearingPartActionTypes } from '../actions/hearing-part.action';
+import { Create, CreateComplete, CreateFailed, CreateListingRequest, HearingPartActionTypes } from '../actions/hearing-part.action';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HearingPartService } from '../services/hearing-part.service';
+import { HearingPartService } from '../services/hearing-part-service';
+import { LISTING_REQUEST_CREATED } from '../models/hearing-part-notifications';
+import { Notify } from '../../core/notification/actions/notification.action';
 
 @Injectable()
 export class ListingCreateEffects {
 
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
-        ofType<Create>(HearingPartActionTypes.Create),
+        ofType<CreateListingRequest>(HearingPartActionTypes.CreateListingRequest),
         mergeMap(action =>
             this.hearingPartService.createListing(action.payload).pipe(
-                map(data => (new CreateComplete())),
+                mergeMap(data => [new CreateComplete(), new Notify(LISTING_REQUEST_CREATED)]),
                 catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
             )
         )

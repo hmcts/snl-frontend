@@ -97,7 +97,6 @@
       "port": 3451
     },
     "schematics": {
-      "collection": "@ngrx/schematics"
     }
   }
 }

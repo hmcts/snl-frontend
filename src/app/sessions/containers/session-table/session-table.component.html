@@ -13,9 +13,20 @@
     <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
   </ng-container>
 
+
     <ng-container matColumnDef="room">
         <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.room?.name}} </mat-cell>
+    </ng-container>
+
+  <ng-container matColumnDef="casetype">
+    <mat-header-cell *matHeaderCellDef> Case type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+  </ng-container>
+
+    <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{parseDate(element.start)}} </mat-cell>
     </ng-container>
 
   <ng-container matColumnDef="time">
@@ -28,6 +39,37 @@
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="hearings">
+    <mat-header-cell *matHeaderCellDef> Hearings </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingParts.length}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="allocated">
+    <mat-header-cell *matHeaderCellDef> Allocated </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(calculateAllocated(element))}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="utilisation">
+    <mat-header-cell *matHeaderCellDef> Utilisation </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{calculateUtilized(element.duration, calculateAllocated(element))}} %</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="available">
+    <mat-header-cell *matHeaderCellDef> Available </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{calculateAvailable(element.duration, calculateAllocated(element))}} minutes</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="select session">
+    <mat-header-cell *matHeaderCellDef> Select session </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleSession(element) : null"
+                    [checked]="selectedSesssion.isSelected(element)">&nbsp;
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
+

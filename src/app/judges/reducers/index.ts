@@ -1,40 +1,38 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
 import * as fromRoot from '../../app.state';
-import { Session } from '../../sessions/models/session.model';
-import { DiaryActions, DiaryActionTypes } from '../actions/diary.actions';
+import * as fromJudges from './judge.reducer';
+import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 
-export interface DiarySessionsState {
-    readonly entities: Session[];
-    readonly error: string;
+export interface JudgesState {
+    readonly judges: fromJudges.State;
 }
 
-export const initialState: DiarySessionsState = {
-    entities: [],
-    error: ''
+export interface State extends fromRoot.State {
+    judges: JudgesState;
+}
+
+export const reducers: ActionReducerMap<JudgesState> = {
+    judges: fromJudges.reducer,
 };
 
-export interface DiaryState extends fromRoot.State {
-    sessions: DiarySessionsState
-}
+export const getJudgesState = createFeatureSelector<JudgesState>('judges');
+export const getJudgesEntitiesState = createSelector(
+    getJudgesState,
+    state => state.judges
+);
 
-export const getRootDiarySessionsState = createFeatureSelector<DiaryState>('judgeSessions');
-export const getDiarySessionsState = createSelector(getRootDiarySessionsState, state => state.sessions);
+export const getJudges = createSelector(
+    getJudgesEntitiesState,
+    state => state.entities
+);
 
-export const getSessionsEntities = createSelector(getDiarySessionsState, state => state.entities);
-export const getSessionsError = createSelector(getDiarySessionsState, state => state.error);
+export const getJudgesLoading = createSelector(
+    getJudgesEntitiesState,
+    fromJudges.getLoading
+);
 
-export function reducer(state = initialState, action: DiaryActions) {
-    switch (action.type) {
-        case DiaryActionTypes.DiaryLoadSessions: {
-            return {...state};
-        }
-        case DiaryActionTypes.DiaryLoadFailed: {
-            return {...state, error: action.payload};
-        }
-        case DiaryActionTypes.DiaryLoadComplete: {
-            return {entities: action.payload, error: undefined};
-        }
-        default:
-            return state;
-    }
-}
+export const {
+    selectIds: getJudgesIds,
+    selectEntities: getJudgesEntities,
+    selectAll: getAllJudges,
+    selectTotal: getTotalJudges,
+} = fromJudges.adapter.getSelectors(getJudgesEntitiesState);

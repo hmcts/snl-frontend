@@ -2,15 +2,18 @@ import { Action } from '@ngrx/store';
 import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { SessionCreate } from '../models/session-create.model';
+import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
   SearchForDates = '[Session] Search for given dates',
+  SearchForJudge = '[Session] Search for judge',
   SearchComplete = '[Session] Search Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   CreateComplete = '[Session] Create Complete',
-  CreateFailed = '[Session] Create Failed'
+  CreateFailed = '[Session] Create Failed',
+  UpsertMany = '[Session] Upsert Many'
 }
 
 /**
@@ -32,15 +35,15 @@ export class SearchComplete implements Action {
   readonly type = SessionActionTypes.SearchComplete;
 
   constructor(public payload: Session[]) {
-    console.log('Action: searchComplete');
+    console.log(this.type);
   }
 }
 
 export class SearchFailed implements Action {
   readonly type = SessionActionTypes.SearchFailed;
 
-  constructor(public payload: string) {
-      console.log(this.type);
+  constructor(public payload: any) {
+      console.log(this.payload);
   }
 }
 
@@ -48,6 +51,12 @@ export class SearchForDates implements Action {
     readonly type = SessionActionTypes.SearchForDates;
 
     constructor(public payload: SessionQueryForDates) {}
+}
+
+export class SearchForJudge implements Action {
+    readonly type = SessionActionTypes.SearchForJudge;
+
+    constructor(public payload: DiaryLoadParameters) {}
 }
 
 export class Create implements Action {
@@ -71,5 +80,13 @@ export class CreateFailed implements Action {
 
     constructor(public payload: string) {
         console.log(payload);
+    }
+}
+
+export class UpsertMany implements Action {
+    readonly type = SessionActionTypes.UpsertMany;
+
+    constructor(public payload: Session[]) {
+        console.log(this.type);
     }
 }

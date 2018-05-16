@@ -4,7 +4,7 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { Create } from '../../actions/hearing-part.action';
+import { Create, CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
 
@@ -29,11 +29,7 @@ export class ListingCreateComponent implements OnInit {
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
         this.store.select(getHearingPartError).subscribe(error => {
-            if (typeof error === 'string') {
-                this.errors = error.toString();
-            } else {
-                this.errors = `[${error.status}] - ${error.error} - ${error.message}`;
-            }
+            this.errors = error;
         });
     }
 
@@ -44,7 +40,7 @@ export class ListingCreateComponent implements OnInit {
             if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
                 this.errors = 'Start date should be before End date';
             } else {
-                this.store.dispatch(new Create(this.listing));
+                this.store.dispatch(new CreateListingRequest(this.listing));
                 this.initiateListing();
                 this.success = true;
             }

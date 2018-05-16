@@ -1,42 +1,49 @@
 import { HearingPartActionTypes } from '../actions/hearing-part.action';
 
-import * as fromRoot from '../../app.state';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
-export interface HearingPartState {
-    readonly entities: HearingPart[];
-    readonly loading: boolean;
-    readonly error: any;
+export interface State extends EntityState<HearingPart> {
+    loading: boolean | false;
+    error: string | '';
 }
 
-const initialState: HearingPartState = {
-    entities: [] as HearingPart[],
+export const adapter: EntityAdapter<HearingPart> = createEntityAdapter<HearingPart>();
+
+export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: '',
-};
+    error: ''
+});
 
-export interface State extends fromRoot.State {
-    hearingParts: HearingPartState;
-}
-
-export const getRootHearingPartState = createFeatureSelector<State>('hearingParts');
-export const getHearingPartState = createSelector(getRootHearingPartState, state => state.hearingParts);
-export const getHearingPartLoading = createSelector(getHearingPartState, state => state.loading);
-export const getHearingPartError = createSelector(getHearingPartState, state => state.error);
-
-export function hearingPartReducer(state: HearingPartState = initialState, action) {
-    switch (action.type) {
-        case HearingPartActionTypes.CreateFailed: {
-            return {...state, loading: false, error: action.payload};
-        }
-        case HearingPartActionTypes.Create: {
-            return {...state, loading: true};
-        }
-        case HearingPartActionTypes.CreateComplete: {
-            return {...state, loading: false};
-        }
-        default:
-            return state;
+export function reducer(state: State = initialState, action) {
+  switch (action.type) {
+    case HearingPartActionTypes.Search:
+    case HearingPartActionTypes.AssignToSession: {
+        return {...state, loading: true};
     }
+    case HearingPartActionTypes.SearchFailed:
+    case HearingPartActionTypes.CreateFailed:
+    case HearingPartActionTypes.AssignFailed: {
+        return {...state, loading: false, error: action.payload};
+    }
+    case HearingPartActionTypes.SearchComplete: {
+        return {...state, ...adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload),
+                {...state, loading: false})};
+    }
+    case HearingPartActionTypes.Create: {
+        return {...state, loading: true};
+    }
+    case HearingPartActionTypes.CreateComplete: {
+        return {...state, loading: false};
+    }
+    case HearingPartActionTypes.AssignComplete: {
+      return {...state, ...adapter.upsertOne({id: Object.keys(action.payload)[0], changes: Object.values(action.payload)[0]},
+              {...state, loading: false} )};
+    }
+    default:
+        return state;
+  }
 }
+
+export const getHearingPartError = (state: State) => state.error;
+export const getHearingPartLoading = (state: State) => state.loading;

@@ -27,6 +27,7 @@ export class GetComplete implements Action {
 
     constructor(public payload: Judge[]) {
         console.log(this.type);
+        console.log(payload);
     }
 }
 

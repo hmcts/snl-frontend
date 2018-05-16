@@ -3,13 +3,13 @@ import { Options, ViewObject } from 'fullcalendar';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
-import * as fromReducer from '../reducers/index';
-import { Session } from '../../sessions/models/session.model';
+import * as fromSessions from '../../sessions/reducers/index';
+import * as fromSessionActions from '../../sessions/actions/session.action';
 import { Observable } from 'rxjs/Observable';
-import { Load } from '../actions/diary.actions';
-import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
+import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters.model';
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
+import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -20,12 +20,12 @@ export class DiaryCalendarComponent implements OnInit {
 
     calendarOptions: Options;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
-    sessions$: Observable<Session[]>;
+    sessions$: Observable<SessionViewModel[]>;
     events: any[] = [];
     errors: string;
 
     constructor(private store: Store<State>, private security: SecurityService) {
-        this.sessions$ = this.store.select(fromReducer.getSessionsEntities);
+        this.sessions$ = this.store.select(fromSessions.getFullSessions);
 
         this.sessions$.subscribe(sessions => {
             this.events = sessions;
@@ -60,14 +60,14 @@ export class DiaryCalendarComponent implements OnInit {
         this.loadData();
     }
 
-    private dataTransformer(session: Session) {
+    private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = (session.caseType) ? session.caseType : 'No Case type';
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
-            end: moment(session.start).add(session.duration).toDate(),
+            end: moment(session.start).add(moment.duration(session.duration)).toDate(),
             description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
         };
     }
@@ -80,6 +80,6 @@ export class DiaryCalendarComponent implements OnInit {
             startDate: startDate,
             endDate: endDate
         };
-        this.store.dispatch(new Load(params));
+        this.store.dispatch(new fromSessionActions.SearchForJudge(params));
     }
 }
