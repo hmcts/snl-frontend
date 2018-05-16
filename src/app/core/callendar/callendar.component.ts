@@ -63,8 +63,17 @@ export class CallendarComponent implements OnInit {
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
-            end: moment(session.start).add(moment.duration(session.duration)).toDate()
+            end: moment(session.start).add(moment.duration(session.duration)).toDate(),
+            id: session.id,
+            hearingParts: session.hearingParts
         };
+    }
+
+    public eventRender(event) {
+        event.detail.event.hearingParts.forEach(hearing => {
+            event.detail.element.append(hearing.caseTitle);
+            event.detail.element.append('</br>')
+        })
     }
 
     private loadData(startDate?: Date, endDate?: Date) {

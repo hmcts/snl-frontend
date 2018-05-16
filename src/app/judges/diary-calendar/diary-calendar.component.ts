@@ -57,6 +57,13 @@ export class DiaryCalendarComponent implements OnInit {
         this.loadData();
     }
 
+    public eventRender(event) {
+        event.detail.event.hearingParts.forEach(hearing => {
+            event.detail.element.append(hearing.caseTitle);
+            event.detail.element.append('</br>')
+        })
+    }
+
     private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';

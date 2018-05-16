@@ -4,5 +4,6 @@
   <ng-fullcalendar #ucCalendar [options]="calendarOptions"
                    (clickButton)="clickButton($event.detail)"
                    [(eventsModel)]="events"
+                   (eventRender)="eventRender($event)"
   ></ng-fullcalendar>
 </div>
