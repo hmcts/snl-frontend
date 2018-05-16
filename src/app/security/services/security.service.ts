@@ -22,12 +22,16 @@ export class SecurityService {
 
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
             this.parseAuthenticationRespone(response);
-            return callback && callback();
+              this.http.get(this.config.createApiUrl('/security/csrftoken'), {headers: headers}).subscribe(response2 => {
+                this.currentUser.token = response2['value'] as string;
+                return callback && callback();
+              });
         });
     }
 
     isAuthenticated() {
-        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked && this.currentUser.credentialsNonExpired;
+        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked
+          && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
     }
 
     logout(callback) {

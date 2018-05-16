@@ -4,8 +4,8 @@ export class User {
     authorities: Authority[] = [] as Authority[];
     credentialsNonExpired: boolean;
     enabled: boolean;
-    password: string;
     username: string;
+    token: string;
 
     static emptyUser(): User {
         let user = new User();
