@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../sessions/reducers/index';
+import * as fromHearingsParts from '../../hearing-part/reducers/index';
+import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import * as moment from 'moment';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -70,10 +72,11 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventRender(event) {
+        console.log(event.detail);
         event.detail.event.hearingParts.forEach(hearing => {
             event.detail.element.append(hearing.caseTitle);
             event.detail.element.append('</br>')
-        })
+        });
     }
 
     private loadData(startDate?: Date, endDate?: Date) {
@@ -82,5 +85,6 @@ export class CallendarComponent implements OnInit {
 
         let query: SessionQueryForDates = {startDate: startDate, endDate: endDate};
         this.store.dispatch(new SearchForDates(query));
+        this.store.dispatch(new hearingPartsActions.Search());
     }
 }

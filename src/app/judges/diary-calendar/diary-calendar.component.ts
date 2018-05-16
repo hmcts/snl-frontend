@@ -10,6 +10,8 @@ import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import { HearingPart } from '../../hearing-part/models/hearing-part';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -58,8 +60,9 @@ export class DiaryCalendarComponent implements OnInit {
     }
 
     public eventRender(event) {
-        event.detail.event.hearingParts.forEach(hearing => {
-            event.detail.element.append(hearing.caseTitle);
+        console.log(event.detail);
+        event.detail.event.hearingParts.forEach((hearing: HearingPart)  => {
+            event.detail.element.append(`${hearing.caseNumber} - ${hearing.caseTitle} - ${hearing.caseNumber} - ${hearing.duration}`);
             event.detail.element.append('</br>')
         })
     }
@@ -72,7 +75,8 @@ export class DiaryCalendarComponent implements OnInit {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
             end: moment(session.start).add(moment.duration(session.duration)).toDate(),
-            description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
+            description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>',
+            hearingParts: session.hearingParts
         };
     }
 
@@ -85,5 +89,6 @@ export class DiaryCalendarComponent implements OnInit {
             endDate: endDate
         };
         this.store.dispatch(new fromSessionActions.SearchForJudge(params));
+        this.store.dispatch(new hearingPartsActions.Search());
     }
 }
