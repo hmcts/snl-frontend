@@ -22,7 +22,7 @@ export class SecurityService {
 
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
             this.parseAuthenticationRespone(response);
-              this.http.get(this.config.createApiUrl('/security/csrftoken'), {headers: headers}).subscribe(xsrftokenResponse => {
+              this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
                 this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
                 return callback && callback();
               });
@@ -43,8 +43,11 @@ export class SecurityService {
 
     refreshAuthenticatedUser(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-            this.parseAuthenticationRespone(response);
-            callback(response);
+          this.parseAuthenticationRespone(response);
+          this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
+            this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
+            callback();
+          });
         });
     }
 
