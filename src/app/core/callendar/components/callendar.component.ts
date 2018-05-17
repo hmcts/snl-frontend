@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { CalendarComponent } from 'ng-fullcalendar';
 import { Options, ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
@@ -22,16 +22,14 @@ export class CallendarComponent implements OnInit {
     }
 
     clickButton(model: any) {
+        this.loadData.emit(this.parseDates());
+    }
+
+    parseDates() {
         let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
         let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
         let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
-        this.loadData.emit({startDate: startDate, endDate: endDate});
-    }
-
-    lol() {
-        console.warn(this.references);
-
-        this.references.forEach(ref => ref.css('overflow', 'auto'))
+        return {startDate: startDate, endDate: endDate};
     }
 
     ngOnInit() {
@@ -47,6 +45,7 @@ export class CallendarComponent implements OnInit {
             },
             eventDataTransform: this.dataTransformer,
         };
+
     }
 
     private dataTransformer(session: SessionViewModel) {
@@ -54,11 +53,11 @@ export class CallendarComponent implements OnInit {
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = (session.caseType) ? session.caseType : 'No Case type';
         return {
-            title: roomName + ' - ' + judgeName + ' - ' + caseType + 'assssssssssssssssswdwdwdwdawdawdawdawdasdasdasdasdsdfasdf asdf asdf asdf asdf asdf asdf asdf asdf asdf sadf asd fd',
+            title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
             end: moment(session.start).add(moment.duration(session.duration)).toDate(),
             id: session.id,
-            hearingParts: session.hearingParts,
+            hearingParts: session.hearingParts
         };
     }
 
