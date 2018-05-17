@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import {APP_ID, Inject, Injectable, Injector, LOCALE_ID, NgModule, PLATFORM_ID} from '@angular/core';
+import { APP_ID, Inject, Injectable, Injector, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
