@@ -3,7 +3,7 @@ import { CalendarComponent } from 'ng-fullcalendar';
 import { Options, ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
-
+import * as Ellipsis from 'ftellipsis'
 @Component({
     selector: 'app-core-callendar',
     templateUrl: './callendar.component.html',
@@ -23,6 +23,16 @@ export class CallendarComponent implements OnInit {
 
     clickButton(model: any) {
         this.loadData.emit(this.parseDates());
+    }
+
+    lol() {
+        this.references.forEach(el => {
+            let wordArray = el.innerHTML.split(' ');
+            while (el.scrollHeight > el.offsetHeight) {
+                wordArray.pop();
+                el.innerHTML = wordArray.join(' ') + '...';
+            }
+        })
     }
 
     parseDates() {
@@ -62,12 +72,11 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventRender(event) {
-        event.detail.element.css('text-overflow', 'ellipsis');
-        console.warn(event.detail.element.offsetHeight + '=' + event.detail.element.innerText);
-        this.references.push(event.detail.element);
+
+        this.references.push(event.detail.element.find('div.fc-content').find('div.fc-title').get(0));
         event.detail.event.hearingParts.forEach(hearing => {
-            event.detail.element.find('div.fc-content').find('div.fc-title').append(hearing.caseTitle);
             event.detail.element.find('div.fc-content').find('div.fc-title').append('</br>')
+            event.detail.element.find('div.fc-content').find('div.fc-title').append(hearing.caseTitle);
         });
     }
 
