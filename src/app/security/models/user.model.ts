@@ -5,7 +5,7 @@ export class User {
     credentialsNonExpired: boolean;
     enabled: boolean;
     username: string;
-    token: string;
+    xsrftoken: string;
 
     static emptyUser(): User {
         let user = new User();

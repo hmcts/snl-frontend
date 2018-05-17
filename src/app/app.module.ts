@@ -65,8 +65,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         const headerName = 'X-XSRF-TOKEN';
         let token = null;
         let securityService = this.injector.get<SecurityService>(SecurityService);
-        if (securityService && securityService.currentUser && securityService.currentUser.token) {
-          token = securityService.currentUser.token as string;
+        if (securityService && securityService.currentUser && securityService.currentUser.xsrftoken) {
+          token = securityService.currentUser.xsrftoken as string;
           console.log('Token: ' + token);
         }
 

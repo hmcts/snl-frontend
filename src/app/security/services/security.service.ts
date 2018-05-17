@@ -22,8 +22,8 @@ export class SecurityService {
 
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
             this.parseAuthenticationRespone(response);
-              this.http.get(this.config.createApiUrl('/security/csrftoken'), {headers: headers}).subscribe(response2 => {
-                this.currentUser.token = response2['value'] as string;
+              this.http.get(this.config.createApiUrl('/security/csrftoken'), {headers: headers}).subscribe(xsrftokenResponse => {
+                this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
                 return callback && callback();
               });
         });
