@@ -11,11 +11,9 @@ import { SessionQueryForDates } from '../../../sessions/models/session-query.mod
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { ActivatedRoute } from '@angular/router';
 import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.action';
-import * as sessionActions from '../../../sessions/actions/session.action';
 import { Actions, ofType } from '@ngrx/effects';
 import { SecurityService } from '../../../security/services/security.service';
 import { DiaryLoadParameters } from '../../../sessions/models/diary-load-parameters.model';
-import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-core-callendar-container',
@@ -25,12 +23,10 @@ import { switchMap } from 'rxjs/operators';
 export class CalendarContainerComponent implements OnInit {
 
     sessions$: Observable<SessionViewModel[]>;
-    sessionIds;
     loadData;
 
     constructor(private store: Store<State>, private route: ActivatedRoute, private actions$: Actions, private security: SecurityService) {
         this.sessions$ = this.store.select(fromReducer.getFullSessions);
-        this.store.select(fromReducer.getSessionIds).subscribe(data => this.sessionIds = data);
     }
 
     ngOnInit() {
