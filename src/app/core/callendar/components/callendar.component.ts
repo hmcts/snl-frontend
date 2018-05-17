@@ -3,7 +3,7 @@ import { CalendarComponent } from 'ng-fullcalendar';
 import { Options, ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
-import * as Ellipsis from 'ftellipsis'
+
 @Component({
     selector: 'app-core-callendar',
     templateUrl: './callendar.component.html',
@@ -23,6 +23,7 @@ export class CallendarComponent implements OnInit {
 
     clickButton(model: any) {
         this.loadData.emit(this.parseDates());
+        this.references = [];
     }
 
     lol() {
@@ -44,7 +45,7 @@ export class CallendarComponent implements OnInit {
 
     ngOnInit() {
         this.calendarOptions = {
-            defaultDate: '2018-04-12T08:00:00',
+            defaultDate: '2018-05-17T08:00:00',
             defaultView: 'agendaDay',
             editable: false,
             eventLimit: false,
@@ -72,12 +73,13 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventRender(event) {
-
-        this.references.push(event.detail.element.find('div.fc-content').find('div.fc-title').get(0));
+        let el = event.detail.element
         event.detail.event.hearingParts.forEach(hearing => {
-            event.detail.element.find('div.fc-content').find('div.fc-title').append('</br>')
-            event.detail.element.find('div.fc-content').find('div.fc-title').append(hearing.caseTitle);
+            el.append('</br>')
+            el.append(hearing.caseTitle);
         });
-    }
 
+        el = el.get(0);
+        this.references.push(el);
+    }
 }
