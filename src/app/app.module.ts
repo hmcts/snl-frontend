@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_ID, Inject, Injectable, Injector, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
@@ -58,12 +58,18 @@ export class XhrInterceptor implements HttpInterceptor {
 @Injectable()
 export class HttpXsrfInterceptor implements HttpInterceptor {
 
-    constructor(private tokenExtractor: HttpXsrfTokenExtractor) {
+    constructor(private tokenExtractor: HttpXsrfTokenExtractor, private injector: Injector) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const headerName = 'X-XSRF-TOKEN';
-        let token = this.tokenExtractor.getToken() as string;
+        let token = null;
+        let securityService = this.injector.get<SecurityService>(SecurityService);
+        if (securityService && securityService.currentUser && securityService.currentUser.xsrftoken) {
+          token = securityService.currentUser.xsrftoken as string;
+          console.log('Token: ' + token);
+        }
+
         if (token !== null && !req.headers.has(headerName)) {
             req = req.clone({headers: req.headers.set(headerName, token)});
         }
