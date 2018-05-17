@@ -39,6 +39,15 @@ export class SessionsService {
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
+    searchSessionsForJudgeWithHearings(parameters: DiaryLoadParameters): Observable<any> {
+        let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
+        let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
+        let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
+        return this.http
+            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
+            .pipe(map(data => {return normalize(data, sessions)}));
+    }
+
     createSession(session: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, session)

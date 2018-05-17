@@ -1,0 +1,17 @@
+.calendar-element {
+  max-width: 80%;
+  margin: auto;
+}
+
+.scrollable {
+   overflow: auto;
+}
+
+.fc-time-grid-event {
+  overflow: auto !important;
+}
+
+.fc-time-grid-event> .fc-content {
+white-space: inherit;
+text-overflow: ellipsis;
+}

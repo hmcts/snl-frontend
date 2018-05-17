@@ -8,6 +8,7 @@ export enum SessionActionTypes {
   Search = '[Session] Search',
   SearchForDates = '[Session] Search for given dates',
   SearchForJudge = '[Session] Search for judge',
+  SearchForJudgeWithHearings = '[Session] Search for judge with hearings',
   SearchComplete = '[Session] Search Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
@@ -49,6 +50,12 @@ export class SearchForDates implements Action {
 
 export class SearchForJudge implements Action {
     readonly type = SessionActionTypes.SearchForJudge;
+
+    constructor(public payload: DiaryLoadParameters) {}
+}
+
+export class SearchForJudgeWithHearings implements Action {
+    readonly type = SessionActionTypes.SearchForJudgeWithHearings;
 
     constructor(public payload: DiaryLoadParameters) {}
 }

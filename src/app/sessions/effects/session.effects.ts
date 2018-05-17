@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as judgeActions from '../../judges/actions/judge.action';
+import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchComplete, SearchFailed, SearchForDates, SessionActionTypes } from '../actions/session.action';
 import { Notify } from '../../core/notification/actions/notification.action';
 import { SESSION_CREATED } from '../models/sessions-notifications';
+import { SearchForJudgeWithHearings } from '../actions/session.action';
 
 @Injectable()
 export class SessionEffects {
@@ -69,6 +71,24 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons)
+                ]),
+                // If request fails, dispatch failed action
+                catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+            )
+        )
+    );
+
+    @Effect()
+    loadSessionsWithHearings$: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.SearchForJudgeWithHearings>(SessionActionTypes.SearchForJudgeWithHearings),
+        mergeMap(action =>
+            this.sessionsService.searchSessionsForJudgeWithHearings(action.payload).pipe(
+                // If successful, dispatch success action with result
+                mergeMap(data => [
+                    new sessionActions.SearchComplete(data.entities.sessions),
+                    new roomActions.GetComplete(data.entities.rooms),
+                    new judgeActions.GetComplete(data.entities.persons),
+                    new hearingPartsActions.SearchComplete(data.entities.hearingParts)
                 ]),
                 // If request fails, dispatch failed action
                 catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
