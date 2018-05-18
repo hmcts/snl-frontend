@@ -17,6 +17,7 @@ export class CallendarComponent implements OnInit {
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     errors: string;
     references = [];
+    calHeight = 'auto';
 
     constructor() {
     }
@@ -45,10 +46,12 @@ export class CallendarComponent implements OnInit {
 
     ngOnInit() {
         this.calendarOptions = {
+            height: this.calHeight,
+            contentHeight: this.calHeight,
             defaultDate: '2018-05-17T08:00:00',
             defaultView: 'agendaDay',
             minTime: moment.duration('09:00:00'),
-            maxTime: moment.duration('17:00:00'),
+            maxTime: moment.duration('17:30:00'),
             editable: false,
             eventLimit: false,
             header: {
@@ -76,6 +79,7 @@ export class CallendarComponent implements OnInit {
 
     public eventRender(event) {
         let el = event.detail.element;
+        let el = event.detail.element.css('overflow-y', 'auto');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
             el.append(hearing.caseTitle);
@@ -85,5 +89,10 @@ export class CallendarComponent implements OnInit {
 
         el = el.get(0);
         this.references.push(el);
+    }
+
+    public viewRender(event) {
+        event.detail.element.find('div.fc-time-grid > div.fc-slats > table > tbody > tr > td').css('height', '50px');
+        event.detail.element.find('div.fc-scroller').css('overflow-y', 'hidden !important');
     }
 }
