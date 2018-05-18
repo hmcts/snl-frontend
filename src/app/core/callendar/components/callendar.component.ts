@@ -47,6 +47,8 @@ export class CallendarComponent implements OnInit {
         this.calendarOptions = {
             defaultDate: '2018-05-17T08:00:00',
             defaultView: 'agendaDay',
+            minTime: moment.duration('09:00:00'),
+            maxTime: moment.duration('17:00:00'),
             editable: false,
             eventLimit: false,
             header: {
@@ -73,10 +75,12 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventRender(event) {
-        let el = event.detail.element
+        let el = event.detail.element;
         event.detail.event.hearingParts.forEach(hearing => {
-            el.append('</br>')
+            el.append('</br>');
             el.append(hearing.caseTitle);
+            el.append('  -  ' + hearing.hearingType);
+            el.append('  -  ' + moment.duration(hearing.duration).asMinutes() + ' minutes');
         });
 
         el = el.get(0);
