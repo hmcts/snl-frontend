@@ -1,17 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../../sessions/reducers/index';
 import {
-    SearchForDates,
-    SearchForJudge, SearchForJudgeWithHearings, SessionActionTypes,
+    SearchForDates, SearchForJudgeWithHearings,
 } from '../../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../../sessions/models/session-query.model';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { ActivatedRoute } from '@angular/router';
-import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.action';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { SecurityService } from '../../../security/services/security.service';
 import { DiaryLoadParameters } from '../../../sessions/models/diary-load-parameters.model';
 
@@ -37,7 +35,6 @@ export class CalendarContainerComponent implements OnInit {
 
     private loadDataForAllJudges(query: SessionQueryForDates) {
         this.store.dispatch(new SearchForDates(query));
-        this.store.dispatch(new hearingPartActions.Search());
     }
 
     private loadDataForJudge(query: DiaryLoadParameters) {

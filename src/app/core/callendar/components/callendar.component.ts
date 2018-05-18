@@ -1,6 +1,6 @@
-import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { CalendarComponent } from 'ng-fullcalendar';
-import { Options, ViewObject } from 'fullcalendar';
+import { ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 
@@ -13,7 +13,7 @@ export class CallendarComponent implements OnInit {
 
     @Input() events: any[] = [];
     @Output() loadData = new EventEmitter();
-    calendarOptions: Options;
+    calendarOptions: any;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     errors: string;
     references = [];
@@ -27,7 +27,8 @@ export class CallendarComponent implements OnInit {
         this.references = [];
     }
 
-    lol() {
+    // A function for displaying ellipsis that can be used in further stories
+    applyEllipsis() {
         this.references.forEach(el => {
             let wordArray = el.innerHTML.split(' ');
             while (el.scrollHeight > el.offsetHeight) {
@@ -48,7 +49,7 @@ export class CallendarComponent implements OnInit {
         this.calendarOptions = {
             height: this.calHeight,
             contentHeight: this.calHeight,
-            defaultDate: '2018-05-17T08:00:00',
+            defaultDate: moment().toDate(),
             defaultView: 'agendaDay',
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
@@ -61,7 +62,8 @@ export class CallendarComponent implements OnInit {
             },
             eventDataTransform: this.dataTransformer,
         };
-
+        let today = moment().format('YYYY-MM-DD').toString();
+        this.loadData.emit({startDate: today, endDate: today});
     }
 
     private dataTransformer(session: SessionViewModel) {
@@ -78,7 +80,6 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventRender(event) {
-        let el = event.detail.element;
         let el = event.detail.element.css('overflow-y', 'auto');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
