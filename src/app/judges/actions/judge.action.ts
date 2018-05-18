@@ -17,24 +17,17 @@ export enum JudgeActionTypes {
 export class Get implements Action {
   readonly type = JudgeActionTypes.Get;
 
-  constructor() {
-      console.log(this.type);
-  }
+  constructor() {}
 }
 
 export class GetComplete implements Action {
     readonly type = JudgeActionTypes.GetComplete;
 
-    constructor(public payload: Judge[]) {
-        console.log(this.type);
-        console.log(payload);
-    }
+    constructor(public payload: Judge[]) {}
 }
 
 export class GetFailed implements Action {
     readonly type = JudgeActionTypes.GetFailed;
 
-    constructor(public payload: String) {
-        console.log(this.type);
-    }
+    constructor(public payload: String) {}
 }

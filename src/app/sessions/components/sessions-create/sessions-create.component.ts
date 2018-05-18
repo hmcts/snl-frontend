@@ -36,7 +36,6 @@ export class SessionsCreateComponent implements OnInit {
     this.store.pipe(select(fromJudges.getJudges)).subscribe(data => this.judges = Object.values(data));
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
-    this.store.pipe(select(fromRooms.getRooms)).subscribe(console.log);
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
@@ -55,8 +54,6 @@ export class SessionsCreateComponent implements OnInit {
     ngOnInit() {
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
-
-        this.store.pipe(select(fromJudges.getJudgesIds)).subscribe(console.log);
     }
 
   create() {

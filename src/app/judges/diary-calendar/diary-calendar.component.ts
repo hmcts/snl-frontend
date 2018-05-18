@@ -10,6 +10,8 @@ import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import { HearingPart } from '../../hearing-part/models/hearing-part';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -35,12 +37,9 @@ export class DiaryCalendarComponent implements OnInit {
     }
 
     clickButton(model: any) {
-        console.log('CurrentView: ');
         let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
         let startDate = view.intervalStart.format('YYYY-MM-DD');
         let endDate = view.intervalEnd.format('YYYY-MM-DD');
-        console.log(startDate);
-        console.log(endDate);
         this.loadData(new Date(startDate), new Date(endDate));
     }
 
@@ -60,6 +59,14 @@ export class DiaryCalendarComponent implements OnInit {
         this.loadData();
     }
 
+    public eventRender(event) {
+        console.log(event.detail);
+        event.detail.event.hearingParts.forEach((hearing: HearingPart)  => {
+            event.detail.element.append(`${hearing.caseNumber} - ${hearing.caseTitle} - ${hearing.caseNumber} - ${hearing.duration}`);
+            event.detail.element.append('</br>')
+        })
+    }
+
     private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
@@ -68,7 +75,8 @@ export class DiaryCalendarComponent implements OnInit {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: session.start,
             end: moment(session.start).add(moment.duration(session.duration)).toDate(),
-            description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>'
+            description: 'This is a BACKGROUND event test <br/> second line test <b> bolder test </b>',
+            hearingParts: session.hearingParts
         };
     }
 
@@ -81,5 +89,6 @@ export class DiaryCalendarComponent implements OnInit {
             endDate: endDate
         };
         this.store.dispatch(new fromSessionActions.SearchForJudge(params));
+        this.store.dispatch(new hearingPartsActions.Search());
     }
 }
