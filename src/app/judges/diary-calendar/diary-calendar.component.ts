@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Options, ViewObject } from 'fullcalendar';
-import { CalendarComponent } from 'ng-fullcalendar';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import * as fromSessions from '../../sessions/reducers/index';
@@ -10,6 +8,9 @@ import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters
 import { SecurityService } from '../../security/services/security.service';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import { CalendarComponent } from '../../common/ng-fullcalendar/calendar.component';
+import { OptionsInput } from 'fullcalendar/src/types/input-types';
+import Default from 'fullcalendar/View';
 
 @Component({
     selector: 'app-diary-calendar',
@@ -18,7 +19,7 @@ import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 })
 export class DiaryCalendarComponent implements OnInit {
 
-    calendarOptions: Options;
+    calendarOptions: OptionsInput;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     sessions$: Observable<SessionViewModel[]>;
     events: any[] = [];
@@ -36,7 +37,7 @@ export class DiaryCalendarComponent implements OnInit {
 
     clickButton(model: any) {
         console.log('CurrentView: ');
-        let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
         let startDate = view.intervalStart.format('YYYY-MM-DD');
         let endDate = view.intervalEnd.format('YYYY-MM-DD');
         console.log(startDate);

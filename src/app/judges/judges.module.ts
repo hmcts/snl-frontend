@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiaryCalendarComponent } from './diary-calendar/diary-calendar.component';
 import { RouterModule } from '@angular/router';
-import { FullCalendarModule } from 'ng-fullcalendar';
 import { SecurityModule } from '../security/security.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { MainComponent } from './components/main/main.component';
 import { reducers } from './reducers';
 import { JudgeEffects } from './effects/judge.effects';
+import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 
 @NgModule({
     imports: [

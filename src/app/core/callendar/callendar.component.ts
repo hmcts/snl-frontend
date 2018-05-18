@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CalendarComponent } from 'ng-fullcalendar';
-import { Options, ViewObject } from 'fullcalendar';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
@@ -9,6 +7,9 @@ import * as moment from 'moment';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import { CalendarComponent } from '../../common/ng-fullcalendar/calendar.component';
+import { OptionsInput } from 'fullcalendar/src/types/input-types';
+import Default from 'fullcalendar/View';
 
 @Component({
     selector: 'app-core-callendar',
@@ -17,7 +18,7 @@ import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 })
 export class CallendarComponent implements OnInit {
 
-    calendarOptions: Options;
+    calendarOptions: OptionsInput;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     sessions$: Observable<SessionViewModel[]>;
     events: any[] = [];
@@ -38,7 +39,7 @@ export class CallendarComponent implements OnInit {
 
     clickButton(model: any) {
         console.log('CurrentView: ');
-        let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
         let startDate = view.intervalStart.format('YYYY-MM-DD');
         let endDate = view.intervalEnd.format('YYYY-MM-DD');
         this.loadData(new Date(startDate), new Date(endDate));

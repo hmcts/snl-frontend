@@ -25,7 +25,6 @@ import { AngularMaterialModule } from '../angular-material/angular-material.modu
 import { isPlatformBrowser } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { FullCalendarModule } from 'ng-fullcalendar';
 import { CallendarComponent } from './core/callendar/callendar.component';
 import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
@@ -42,6 +41,9 @@ import { NotificationEffects } from './core/notification/effects/notification.ef
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
+import { PlannerModule } from './planner/planner.module';
+import { NgFullcalendarSchedulerModule } from './common/ng-fullcalendar-scheduler/ng-fullcalendar-scheduler.module';
+import { FullCalendarModule } from './common/ng-fullcalendar/module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -82,7 +84,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     AppComponent,
     CallendarComponent,
     HomeComponent,
-        PocComponent
+    PocComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -109,7 +111,9 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     SecurityModule,
     JudgesModule,
     HearingPartModule,
-    ProblemsModule
+    ProblemsModule,
+    PlannerModule,
+    NgFullcalendarSchedulerModule
   ],
   providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
       {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
