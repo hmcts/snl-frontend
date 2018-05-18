@@ -1,9 +1,6 @@
-<button (click)="sendFilter()">sendFilter</button>
-
-
 <mat-card class="sessions-create-container">
   <mat-card-header>
-    <mat-card-subtitle>Create session</mat-card-subtitle>
+    <mat-card-subtitle>Filter sessions</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
@@ -28,6 +25,6 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
+    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
   </mat-card-content>
 </mat-card>

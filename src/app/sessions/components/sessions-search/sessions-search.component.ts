@@ -10,8 +10,12 @@ import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-
 
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import * as moment from 'moment';
-import { schema } from 'normalizr';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import * as RoomActions from '../../../rooms/actions/room.action';
+import * as JudgeActions from '../../../judges/actions/judge.action';
+import { Room } from '../../../rooms/models/room.model';
+import { Judge } from '../../../judges/models/judge.model';
+import * as fromJudges from '../../../judges/reducers';
 
 @Component({
   selector: 'app-sessions-search',
@@ -24,6 +28,8 @@ export class SessionsSearchComponent implements OnInit {
     endDate;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
+    rooms$: Observable<Room[]>;
+    judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPartId;
     filters;
@@ -32,6 +38,13 @@ export class SessionsSearchComponent implements OnInit {
         this.store.pipe(select(fromHearingParts.getHearingPartsEntities)).subscribe(data => {
             this.hearingParts$ = Observable.of(data ? Object.values(data) : []);
         });
+        this.store.pipe(select(fromSessions.getRooms)).subscribe(data => {
+            this.rooms$ = Observable.of(data ? Object.values(data) : []);
+        });
+        this.store.pipe(select(fromJudges.getJudges)).subscribe(data => {
+            this.judges$ = Observable.of(data ? Object.values(data) : []);
+        });
+
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment().toDate();
         this.endDate = moment().add(5, 'years').toDate();
@@ -42,6 +55,8 @@ export class SessionsSearchComponent implements OnInit {
     ngOnInit() {
         this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
         this.store.dispatch(new fromHearingPartsActions.Search());
+        this.store.dispatch(new RoomActions.Get());
+        this.store.dispatch(new JudgeActions.Get());
     }
 
     getSessions(startDate, endDate) {
@@ -60,7 +75,7 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = id;
     }
 
-    selectFilters(filters) {
+    filter(filters) {
         this.filters = filters;
         console.log(this.filters);
     }
