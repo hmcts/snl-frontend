@@ -23,6 +23,7 @@ export class SessionTableComponent implements OnInit {
       'time',
       'duration',
       'room',
+      'casetype',
       'hearings',
       'allocated',
       'utilisation',
@@ -77,7 +78,7 @@ export class SessionTableComponent implements OnInit {
 
   toggleSession(session) {
     this.selectedSesssion.toggle(session);
-    this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : '')
+    this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
   }
 
   ngOnInit() {

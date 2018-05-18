@@ -32,7 +32,7 @@
   Actions:
 </div>
 
-<button mat-raised-button
+<button [disabled]="!assignButtonEnabled()" mat-raised-button
         color="accent"
         fxFlexAlign="center"
         (click)="assignToSession()"

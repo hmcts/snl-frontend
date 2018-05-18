@@ -22,12 +22,16 @@ export class SecurityService {
 
         this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
             this.parseAuthenticationRespone(response);
-            return callback && callback();
+              this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
+                this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
+                return callback && callback();
+              });
         });
     }
 
     isAuthenticated() {
-        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked && this.currentUser.credentialsNonExpired;
+        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked
+          && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
     }
 
     logout(callback) {
@@ -39,8 +43,11 @@ export class SecurityService {
 
     refreshAuthenticatedUser(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-            this.parseAuthenticationRespone(response);
-            callback(response);
+          this.parseAuthenticationRespone(response);
+          this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
+            this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
+            callback();
+          });
         });
     }
 

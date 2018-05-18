@@ -13,10 +13,16 @@
     <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
   </ng-container>
 
+
     <ng-container matColumnDef="room">
         <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.room?.name}} </mat-cell>
     </ng-container>
+
+  <ng-container matColumnDef="casetype">
+    <mat-header-cell *matHeaderCellDef> Case type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+  </ng-container>
 
     <ng-container matColumnDef="date">
         <mat-header-cell *matHeaderCellDef> Date </mat-header-cell>
