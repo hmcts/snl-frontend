@@ -26,6 +26,7 @@ export class SessionsSearchComponent implements OnInit {
     sessions$: Observable<SessionViewModel[]>;
     selectedSession: any;
     selectedHearingPartId;
+    filters;
 
     constructor(private store: Store<fromHearingParts.State>) {
         this.store.pipe(select(fromHearingParts.getHearingPartsEntities)).subscribe(data => {
@@ -57,6 +58,11 @@ export class SessionsSearchComponent implements OnInit {
 
     selectHearingPart(id: string) {
         this.selectedHearingPartId = id;
+    }
+
+    selectFilters(filters) {
+        this.filters = filters;
+        console.log(this.filters);
     }
 
     assignToSession() {

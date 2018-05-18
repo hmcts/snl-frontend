@@ -18,12 +18,14 @@ import { RoomEffects } from '../rooms/effects/room.effects';
 import { JudgeService } from '../judges/services/judge.service';
 import { RoomService } from '../rooms/services/room.service';
 import { HearingPartModule } from '../hearing-part/hearing-part.module';
+import { SessionsFilterComponent } from './components/sessions-filter/sessions-filter.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
     SessionsCreateComponent,
     SessionsSearchComponent,
-    SessionTableComponent
+    SessionTableComponent,
+    SessionsFilterComponent
 ];
 
 @NgModule({
