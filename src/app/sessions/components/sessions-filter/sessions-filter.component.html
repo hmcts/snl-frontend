@@ -6,20 +6,20 @@
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
 
     <mat-form-field>
-      <mat-select placeholder="Select the case type" multiple [(value)] = "filters.selectedCaseTypes">
+      <mat-select placeholder="Select the case type" multiple [(value)] = "filters.caseTypes">
         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{roomsPlaceholder}}" multiple [(value)] = "filters.selectedRooms">
+      <mat-select placeholder="{{roomsPlaceholder}}" multiple [(value)] = "filters.rooms">
         <mat-option value="">(No room)</mat-option>
         <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.selectedJudges">
+      <mat-select placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.judges">
         <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>

@@ -16,6 +16,7 @@ import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
+import { SessionFilter } from '../../models/session-filter.model';
 
 @Component({
   selector: 'app-sessions-search',
@@ -32,7 +33,8 @@ export class SessionsSearchComponent implements OnInit {
     judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPartId;
-    filters;
+    filters: SessionFilter;
+    filteredSessions;
 
     constructor(private store: Store<fromHearingParts.State>) {
         this.store.pipe(select(fromHearingParts.getHearingPartsEntities)).subscribe(data => {
@@ -50,6 +52,7 @@ export class SessionsSearchComponent implements OnInit {
         this.endDate = moment().add(5, 'years').toDate();
         this.selectedHearingPartId = '';
         this.selectedSession = {} ;
+        this.filteredSessions = this.sessions$;
     }
 
     ngOnInit() {
@@ -77,7 +80,15 @@ export class SessionsSearchComponent implements OnInit {
 
     filter(filters) {
         this.filters = filters;
-        console.log(this.filters);
+
+        console.log(this.filters)
+
+        this.sessions$.subscribe(data => {
+            this.filteredSessions = Observable.of(data.filter(s => this.filters.judges.includes(s.person.id))
+                .filter(s => this.filters.rooms.includes((s.room.id)))
+                .filter(s => this.filters.caseTypes.includes(s.caseType))
+            )
+        })
     }
 
     assignToSession() {

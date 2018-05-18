@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
+import { SessionFilter } from '../../models/session-filter.model';
 
 @Component({
   selector: 'app-sessions-filter',
@@ -15,13 +16,18 @@ export class SessionsFilterComponent implements OnInit {
   @Input() judges: Judge[];
   roomsPlaceholder: String;
   judgesPlaceholder: String;
-  filters = [];
+  filters: SessionFilter;
   caseTypes;
 
   constructor() {
       this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
       this.roomsPlaceholder = 'Select the room';
       this.judgesPlaceholder = 'Select the judge';
+      this.filters = {
+          caseTypes: [],
+          rooms: [],
+          judges: [],
+      } as SessionFilter;
   }
 
   ngOnInit() {

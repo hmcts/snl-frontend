@@ -34,7 +34,8 @@
 
     <div>
       <app-session-table
-              (selectSession)="selectSession($event)">
+              (selectSession)="selectSession($event)"
+              [sessions] = "filteredSessions | async">
       </app-session-table>
     </div>
 
