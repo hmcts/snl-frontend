@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FullCalendarModule } from 'ng-fullcalendar';
 import { CalendarContainerComponent } from './callendar/containers/calendar-container.component';
 import { CallendarComponent } from './callendar/components/callendar.component';
+import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -13,7 +13,6 @@ export const COMPONENTS = [
     imports: [
         CommonModule,
         FullCalendarModule,
-
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,

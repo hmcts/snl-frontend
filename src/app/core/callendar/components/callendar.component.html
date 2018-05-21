@@ -3,7 +3,7 @@
 <div *ngIf="calendarOptions" class="calendar-element">
   <ng-fullcalendar #ucCalendar [options]="calendarOptions"
                    (clickButton)="clickButton($event.detail)"
-                   [(eventsModel)]="events"
+                   [(eventsModel)]="_events"
                    (eventRender)="eventRender($event)"
                    (viewRender)="viewRender($event)"
   ></ng-fullcalendar>

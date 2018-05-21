@@ -9,6 +9,7 @@ import { reducers } from './reducers';
 import { JudgeEffects } from './effects/judge.effects';
 import { CalendarContainerComponent } from '../core/callendar/containers/calendar-container.component';
 import { CoreModule } from '../core/core.module';
+import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 
 @NgModule({
     imports: [

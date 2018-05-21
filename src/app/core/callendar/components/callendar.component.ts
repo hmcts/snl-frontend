@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CalendarComponent } from 'ng-fullcalendar';
-import { ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
+import { Default } from 'fullcalendar/View';
 
 @Component({
     selector: 'app-core-callendar',
@@ -10,14 +10,18 @@ import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
     styleUrls: ['./callendar.component.scss']
 })
 export class CallendarComponent implements OnInit {
-
-    @Input() events: any[] = [];
+    _events: any[];
     @Output() loadData = new EventEmitter();
     calendarOptions: any;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     errors: string;
     references = [];
     calHeight = 'auto';
+
+    @Input('events')
+    set events(value: any[]) {
+        this._events = this.transformSessions(value);
+    }
 
     constructor() {
     }
@@ -39,7 +43,7 @@ export class CallendarComponent implements OnInit {
     }
 
     parseDates() {
-        let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
         let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
         let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
         return {startDate: startDate, endDate: endDate};
@@ -47,6 +51,7 @@ export class CallendarComponent implements OnInit {
 
     ngOnInit() {
         this.calendarOptions = {
+            // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             height: this.calHeight,
             contentHeight: this.calHeight,
             defaultDate: moment().toDate(),
@@ -59,11 +64,20 @@ export class CallendarComponent implements OnInit {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listMonth'
-            },
-            eventDataTransform: this.dataTransformer,
+            }
         };
         let today = moment().format('YYYY-MM-DD').toString();
         this.loadData.emit({startDate: today, endDate: today});
+    }
+
+    private transformSessions(sessions: SessionViewModel[]) {
+      let svm = [];
+
+      sessions.forEach((session) => {
+        svm.push(this.dataTransformer(session));
+      });
+
+      return svm;
     }
 
     private dataTransformer(session: SessionViewModel) {
