@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
@@ -18,7 +18,7 @@ import Default from 'fullcalendar/View';
 })
 export class CallendarComponent implements OnInit {
 
-    calendarOptions: OptionsInput;
+  calendarOptions: OptionsInput;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     sessions$: Observable<SessionViewModel[]>;
     events: any[] = [];
@@ -28,8 +28,8 @@ export class CallendarComponent implements OnInit {
         this.sessions$ = this.store.select(fromReducer.getFullSessions);
 
         this.sessions$.subscribe(sessions => {
-            this.events = sessions;
-            console.log(sessions);
+          this.events = this.transformSessions(sessions);
+          console.log(sessions);
         }, error => {
             this.errors = error;
             console.log(error);
@@ -49,26 +49,37 @@ export class CallendarComponent implements OnInit {
         this.calendarOptions = {
             defaultDate: '2018-04-26T08:00:00',
             defaultView: 'agendaWeek',
-            editable: false,
+            editable: true,
             eventLimit: false,
             header: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay,listMonth'
             },
-            eventDataTransform: this.dataTransformer
         };
         this.loadData();
     }
 
-    private dataTransformer(session: SessionViewModel) {
+  private transformSessions(sessions: SessionViewModel[]) {
+    let svm = [];
+
+    sessions.forEach((session) => {
+      svm.push(this.dataTransformer(session));
+    });
+
+    return svm;
+  }
+
+  private dataTransformer(session: SessionViewModel) {
         let judgeName = (session.person) ? session.person.name : 'No Judge';
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = (session.caseType) ? session.caseType : 'No Case type';
         return {
-            title: roomName + ' - ' + judgeName + ' - ' + caseType,
-            start: session.start,
-            end: moment(session.start).add(moment.duration(session.duration)).toDate()
+          id: session.id,
+          duration: session.duration,
+          title: roomName + ' - ' + judgeName + ' - ' + caseType,
+          start: session.start,
+          end: moment(session.start).add(moment.duration(session.duration)).toDate()
         };
     }
 

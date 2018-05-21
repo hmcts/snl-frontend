@@ -6,20 +6,20 @@ import './lib/customEvent';
 import { ButtonClickModel } from './models/buttonClickModel';
 import { UpdateEventModel } from './models/updateEventModel';
 import { RenderEventModel } from './models/renderEventModel';
-import { OptionsInput } from 'fullcalendar/src/types/input-types';
+import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-types';
 @Component({
     selector: 'app-ng-fullcalendar',
     template: '',
 })
 export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChecked, AfterViewChecked {
-    private _eventsModel: any[];
+    private _eventsModel: EventObjectInput[];
     private _reRender = true;
-    get eventsModel(): any[] {
+    get eventsModel(): EventObjectInput[] {
         return this._eventsModel;
     }
 
     @Input('eventsModel')
-    set eventsModel(value: any[]) {
+    set eventsModel(value: EventObjectInput[]) {
         this._eventsModel = value;
         if (this._reRender) {
             setTimeout(() => {
@@ -58,20 +58,19 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
         setTimeout(() => {
             this.updaterOptions();
             this.zone.runOutsideAngular(() => {
-
                 $(this.element.nativeElement).fullCalendar(this.options);
-                this._eventsModel = this.options.events;
+                this._eventsModel = this.options.events as EventObjectInput[];
                 this.eventsModelChange.next(this.options.events);
                 this.initialized.emit(true);
                 // Click listeners
-                let elem = document.getElementsByTagName('ng-fullcalendar');
+                let elem = document.getElementsByTagName('app-ng-fullcalendar');
 
                 $('[class ^="fc"][class *="button"]').click(el => {
                     let classnames = el.currentTarget.className.split(' ');
                     classnames.forEach(name => {
-                        if (name.indexOf('button') == name.length - 6) {
+                        if (name.indexOf('button') === name.length - 6) {
                             name = name.replace(/fc|button|-/g, '');
-                            if (name != '') {
+                            if (name !== '') {
                                 // this.renderEvents(this._eventsModel);
                                 eventDispatch(name);
                             }
@@ -79,7 +78,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
                     });
                 });
                 function eventDispatch(buttonType: string) {
-                    let data = $('ng-fullcalendar').fullCalendar('getDate');
+                    let data = $('app-ng-fullcalendar').fullCalendar('getDate');
                     let currentDetail: ButtonClickModel = {
                         buttonType: buttonType,
                         data: data
@@ -107,7 +106,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
         this.eventsModelChange.next(events);
     }
     updaterOptions() {
-        let elem = document.getElementsByTagName('ng-fullcalendar');
+        let elem = document.getElementsByTagName('app-ng-fullcalendar');
         this.options.eventDrop = (event, duration) => {
             let detail: UpdateEventModel = { event: event, duration: duration };
             let widgetEvent = new CustomEvent('eventDrop', {
@@ -258,7 +257,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
     clientEvents(idOrFilter: any): any {
         return $(this.element.nativeElement).fullCalendar('clientEvents', idOrFilter);
     }
-    renderEvents(events: any[]) {
+
+    renderEvents(events: EventObjectInput[]) {
         $(this.element.nativeElement).fullCalendar('removeEvents');
         if (events && events.length > 0) {
             $(this.element.nativeElement).fullCalendar('renderEvents', events, true);
