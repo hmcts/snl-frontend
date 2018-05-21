@@ -5,6 +5,7 @@ import * as fromSessions from '../../reducers';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 
 @Component({
   selector: 'app-session-table',
@@ -33,7 +34,8 @@ export class SessionTableComponent implements OnInit {
   dataSource;
   tableVisible;
 
-  constructor(private store: Store<fromSessions.State>) {
+  constructor(private store: Store<fromSessions.State>,
+              private sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
@@ -59,21 +61,16 @@ export class SessionTableComponent implements OnInit {
       return moment.duration(duration).humanize();
   }
 
-  calculateAllocated(session) { // TODO: Use separate sessions-statiscits-service.ts
-    let allocated = moment.duration();
-    session.hearingParts.forEach(hearingPart => {
-        allocated.add(moment.duration(hearingPart.duration));
-    })
-    return allocated;
+  calculateAllocated(session) {
+    return this.sessionsStatsService.calculateAllocated(session);
   }
 
   calculateUtilized(duration: string, allocated: moment.Duration) {
-    return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
+    return this.sessionsStatsService.calculateUtilized(duration, allocated);
   }
 
   calculateAvailable(duration: string, allocated: moment.Duration) {
-    let available = moment.duration(duration).asMinutes() - allocated.asMinutes();
-    return available > 0 ? available : 0;
+    return this.sessionsStatsService.calculateAvailable(duration, allocated);
   }
 
   toggleSession(session) {

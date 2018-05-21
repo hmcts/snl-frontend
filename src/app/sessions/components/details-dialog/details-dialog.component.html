@@ -1,13 +1,13 @@
 <div draggable="true" class="container" fxLayout="column">
   <h1 fxFlex mat-dialog-title  unselectable="on">Session details</h1>
-  <div fxFlex mat-dialog-content>
+  <div fxFlex fxLayout="column" fxLayoutGap="5%" mat-dialog-content>
     <div fxFlex fxLayout="column" fxLayoutGap="10px">
-      <div fxLayout="row" fxLayoutAlign="center">
-        <span fxFlex>{{data.session.caseType}}</span>
-        <span fxFlex>{{data.session.person?.name}}</span>
-        <span fxFlex>{{data.session.room?.name}}</span>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <span fxFlex>{{data.session.caseType  || '(No case type)'}}</span>
+        <span fxFlex>{{data.session.person?.name || '(No judge)'}}</span>
+        <span fxFlex>{{data.session.room?.name  || '(No room)'}}</span>
       </div>
-      <div fxLayout="row" fxLayoutAlign="center">
+      <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="4%">
         <span fxFlex>{{parseDate(data.session.start)}}</span>
         <span fxFlex>{{getStartTime(data.session)}} - {{calculateEndTime(data.session)}}</span>
         <span fxFlex>{{durationAsMinutes(data.session.duration)}} minutes</span>
@@ -15,14 +15,12 @@
       <hr>
     </div>
     <div fxLayout="column">
-      <div>
-        <p>{{data.session?.hearingParts.length}} hearing(s) listed</p>
-        <p>Allocated: {{durationAsMinutes(calculateAllocated())}} minutes</p>
-        <p>Available: {{calculateAvailable()}} minutes</p>
-      </div>
+      <span fxFlex>{{data.session?.hearingParts.length}} hearing(s) listed</span>
+      <span fxFlex>Allocated: {{durationAsMinutes(calculateAllocated())}} minutes</span>
+      <span fxFlex>Available: {{calculateAvailable()}} minutes</span>
     </div>
     <div fxLayout="column" fxLayoutGap="3%">
-      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3%" *ngFor="let hearingPart of data.session.hearingParts">
+      <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="3%" *ngFor="let hearingPart of data.session.hearingParts">
         <span fxFlex>{{hearingPart.caseTitle}}</span>
         <span fxFlex="30%">{{hearingPart.hearingType}}</span>
         <span fxFlex="15%">{{durationAsMinutes(hearingPart.duration)}} mins</span>

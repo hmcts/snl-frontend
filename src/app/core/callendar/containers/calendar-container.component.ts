@@ -47,9 +47,9 @@ export class CalendarContainerComponent implements OnInit {
     }
 
     public eventClick(session) {
-        console.log(session)
-        let dialogRef = this.dialog.open(DetailsDialogComponent, {
+        this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
+            minWidth: 350,
             data: {session: session},
             hasBackdrop: false
         });

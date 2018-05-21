@@ -19,14 +19,10 @@ export class DetailsDialogComponent {
         this.dialogRef.close();
     }
 
-    @HostListener('dragstart', ['$event'])
-    dragStart(e) {
-        console.log(e);
-    }
-
+    @HostListener('drag', ['$event'])
     @HostListener('dragend', ['$event'])
-    dragEnd(e) {
-      this.dialogRef.updatePosition({left: `${e.x}px`, top: `${e.y}px`} as DialogPosition)
+    drag(e) {
+        this.dialogRef.updatePosition({left: `${e.x}px`, top: `${e.y}px`} as DialogPosition)
     }
 
     durationAsMinutes(duration) {
