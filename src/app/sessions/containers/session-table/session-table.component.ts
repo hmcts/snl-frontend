@@ -35,23 +35,12 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private store: Store<fromSessions.State>) {
+  constructor() {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
 
-    // this.store.pipe(select(fromSessions.getFullSessions)).subscribe(data => {
-    //   this.tableVisible = false;
-    //   if (data) {
-    //     data = Object.values(data);
-    //     this.tableVisible = data.length !== 0;
-    //     data.map(element => {
-    //       element.start = new Date(element.start);
-    //     });
-    //     this.dataSource = new MatTableDataSource(data);
-    //   }
-    // });
-      this.dataSource = new MatTableDataSource(this.sessions);
+    this.dataSource = new MatTableDataSource(this.sessions);
   }
 
   parseDate(date) {
@@ -88,20 +77,6 @@ export class SessionTableComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-      // this.store.pipe(select(fromSessions.getFullSessions)).subscribe(data => {
-      //   this.tableVisible = false;
-      //   if (data) {
-      //     data = Object.values(data);
-      //     this.tableVisible = data.length !== 0;
-      //     data.map(element => {
-      //       element.start = new Date(element.start);
-      //     });
-      //     this.dataSource = new MatTableDataSource(data);
-      //   }
-      // });
-
-      console.log(this.sessions);
-
       if (this.sessions) {
           this.tableVisible = true;
       }
@@ -110,8 +85,6 @@ export class SessionTableComponent implements OnInit, OnChanges {
           element.start = new Date(element.start);
       });
       this.dataSource = new MatTableDataSource(this.sessions);
-
-
   }
 
 }

@@ -33,7 +33,6 @@ export class SessionsSearchComponent implements OnInit {
     judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPartId;
-    filters: SessionFilter;
     filteredSessions;
 
     constructor(private store: Store<fromHearingParts.State>) {
@@ -78,17 +77,26 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = id;
     }
 
-    filter(filters) {
-        this.filters = filters;
-
-        console.log(this.filters)
-
+    filter(filters: SessionFilter) {
         this.sessions$.subscribe(data => {
-            this.filteredSessions = Observable.of(data.filter(s => this.filters.judges.includes(s.person.id))
-                .filter(s => this.filters.rooms.includes((s.room.id)))
-                .filter(s => this.filters.caseTypes.includes(s.caseType))
+            this.filteredSessions = Observable.of(
+                data.filter(s => this.filterByProperty(s.person, filters.judges))
+                .filter(s => this.filterByProperty(s.room, filters.rooms))
+                .filter(s => filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType))
             )
         })
+    }
+
+    filterByProperty(property, filters) {
+        if (filters.length === 0) {
+            return true;
+        }
+
+        if (property) {
+           return filters.includes(property.id)
+        }
+
+        return filters.includes('');
     }
 
     assignToSession() {

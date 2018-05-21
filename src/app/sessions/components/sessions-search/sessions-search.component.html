@@ -32,11 +32,16 @@
 
     <mat-divider></mat-divider>
 
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Listing Requests:
+    </div>
+
     <div>
-      <app-session-table
-              (selectSession)="selectSession($event)"
-              [sessions] = "filteredSessions | async">
-      </app-session-table>
+      <app-hearing-parts-preview
+              [hearingParts]="hearingParts$ | async"
+              [sessions]="sessions$ | async"
+              (selectHearingPart)="selectHearingPart($event)">
+      </app-hearing-parts-preview>
     </div>
 
     <div style="margin-top: 30px; margin-bottom: 10px">
@@ -49,17 +54,11 @@
             (click)="assignToSession()"
             class="get-sessions-button">Assign</button>
 
-
-    <div style="margin-top: 30px; margin-bottom: 10px">
-      Listing Requests:
-    </div>
-
     <div>
-      <app-hearing-parts-preview
-              [hearingParts]="hearingParts$ | async"
-              [sessions]="sessions$ | async"
-              (selectHearingPart)="selectHearingPart($event)">
-      </app-hearing-parts-preview>
+      <app-session-table
+              (selectSession)="selectSession($event)"
+              [sessions] = "filteredSessions | async">
+      </app-session-table>
     </div>
   </div>
 </div>
