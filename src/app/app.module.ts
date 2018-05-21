@@ -26,7 +26,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FullCalendarModule } from 'ng-fullcalendar';
-import { CallendarComponent } from './core/callendar/callendar.component';
+import { CallendarComponent } from './core/callendar/components/callendar.component';
 import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
@@ -42,6 +42,8 @@ import { NotificationEffects } from './core/notification/effects/notification.ef
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
+import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
+import { CoreModule } from './core/core.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -80,9 +82,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
 @NgModule({
   declarations: [
     AppComponent,
-    CallendarComponent,
     HomeComponent,
-        PocComponent
+    PocComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -95,6 +96,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     EffectsModule.forRoot([NotificationEffects]),
     HttpClientModule,
     FormsModule,
+    CoreModule,
     AppRoutingModule,
     AngularMaterialModule,
     FullCalendarModule,

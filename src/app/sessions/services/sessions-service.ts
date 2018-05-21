@@ -7,7 +7,7 @@ import { SessionQuery, SessionQueryForDates } from '../models/session-query.mode
 import { AppConfig } from '../../app.config';
 import { SessionCreate } from '../models/session-create.model';
 import { DatePipe } from '@angular/common';
-import { sessions } from '../schemas/session.schema';
+import { sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
@@ -37,6 +37,15 @@ export class SessionsService {
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
             .pipe(map(data => {return normalize(data, sessions)}));
+    }
+
+    searchSessionsForJudgeWithHearings(parameters: DiaryLoadParameters): Observable<any> {
+        let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
+        let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
+        let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
+        return this.http
+            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
+            .pipe(map(data => { console.log(normalize(data, sessionsWithHearings)); return normalize(data, sessionsWithHearings); }));
     }
 
     createSession(session: SessionCreate): Observable<String> {

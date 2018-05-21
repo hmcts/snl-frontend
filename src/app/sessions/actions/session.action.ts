@@ -8,6 +8,7 @@ export enum SessionActionTypes {
   Search = '[Session] Search',
   SearchForDates = '[Session] Search for given dates',
   SearchForJudge = '[Session] Search for judge',
+  SearchForJudgeWithHearings = '[Session] Search for judge with hearings',
   SearchComplete = '[Session] Search Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
@@ -26,25 +27,19 @@ export enum SessionActionTypes {
 export class Search implements Action {
   readonly type = SessionActionTypes.Search;
 
-  constructor(public payload: SessionQuery) {
-      console.log(this.type);
-  }
+  constructor(public payload: SessionQuery) {}
 }
 
 export class SearchComplete implements Action {
   readonly type = SessionActionTypes.SearchComplete;
 
-  constructor(public payload: Session[]) {
-    console.log(this.type);
-  }
+  constructor(public payload: Session[]) {}
 }
 
 export class SearchFailed implements Action {
   readonly type = SessionActionTypes.SearchFailed;
 
-  constructor(public payload: any) {
-      console.log(this.payload);
-  }
+  constructor(public payload: any) {}
 }
 
 export class SearchForDates implements Action {
@@ -59,34 +54,32 @@ export class SearchForJudge implements Action {
     constructor(public payload: DiaryLoadParameters) {}
 }
 
+export class SearchForJudgeWithHearings implements Action {
+    readonly type = SessionActionTypes.SearchForJudgeWithHearings;
+
+    constructor(public payload: DiaryLoadParameters) {}
+}
+
 export class Create implements Action {
     readonly type = SessionActionTypes.Create;
 
-    constructor(public payload: SessionCreate) {
-        console.log(this.type);
-    }
+    constructor(public payload: SessionCreate) {}
 }
 
 export class CreateComplete implements Action {
     readonly type = SessionActionTypes.CreateComplete;
 
-    constructor() {
-        console.log(this.type);
-    }
+    constructor() {}
 }
 
 export class CreateFailed implements Action {
     readonly type = SessionActionTypes.CreateFailed;
 
-    constructor(public payload: string) {
-        console.log(payload);
-    }
+    constructor(public payload: string) {}
 }
 
 export class UpsertMany implements Action {
     readonly type = SessionActionTypes.UpsertMany;
 
-    constructor(public payload: Session[]) {
-        console.log(this.type);
-    }
+    constructor(public payload: Session[]) {}
 }

@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
 import { MatTableDataSource } from '@angular/material';
-import { SessionAssignment } from '../../models/session-assignment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
