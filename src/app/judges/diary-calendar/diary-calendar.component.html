@@ -1,8 +1,8 @@
 <p *ngIf="errors">{{errors}}</p>
 
 <div *ngIf="calendarOptions" class="calendar-element">
-  <app-ng-fullcalendar #ucCalendar [options]="calendarOptions"
+  <ng-fullcalendar #ucCalendar [options]="calendarOptions"
                    [(eventsModel)]="events"
                    (clickButton)="clickButton($event.detail)"
-  ></app-ng-fullcalendar>
+  ></ng-fullcalendar>
 </div>

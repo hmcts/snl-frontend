@@ -8,7 +8,8 @@ import { UpdateEventModel } from './models/updateEventModel';
 import { RenderEventModel } from './models/renderEventModel';
 import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-types';
 @Component({
-    selector: 'app-ng-fullcalendar',
+    // tslint:disable-next-line
+    selector: 'ng-fullcalendar',
     template: '',
 })
 export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChecked, AfterViewChecked {
@@ -63,7 +64,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
                 this.eventsModelChange.next(this.options.events);
                 this.initialized.emit(true);
                 // Click listeners
-                let elem = document.getElementsByTagName('app-ng-fullcalendar');
+                let elem = document.getElementsByTagName('ng-fullcalendar');
 
                 $('[class ^="fc"][class *="button"]').click(el => {
                     let classnames = el.currentTarget.className.split(' ');
@@ -71,14 +72,14 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
                         if (name.indexOf('button') === name.length - 6) {
                             name = name.replace(/fc|button|-/g, '');
                             if (name !== '') {
-                                // this.renderEvents(this._eventsModel);
+                                this.renderEvents(this._eventsModel);
                                 eventDispatch(name);
                             }
                         }
                     });
                 });
                 function eventDispatch(buttonType: string) {
-                    let data = $('app-ng-fullcalendar').fullCalendar('getDate');
+                    let data = $('ng-fullcalendar').fullCalendar('getDate');
                     let currentDetail: ButtonClickModel = {
                         buttonType: buttonType,
                         data: data
@@ -106,7 +107,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
         this.eventsModelChange.next(events);
     }
     updaterOptions() {
-        let elem = document.getElementsByTagName('app-ng-fullcalendar');
+        let elem = document.getElementsByTagName('ng-fullcalendar');
         this.options.eventDrop = (event, duration) => {
             let detail: UpdateEventModel = { event: event, duration: duration };
             let widgetEvent = new CustomEvent('eventDrop', {
