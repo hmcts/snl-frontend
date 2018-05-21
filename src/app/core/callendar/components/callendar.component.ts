@@ -13,6 +13,7 @@ export class CallendarComponent implements OnInit {
 
     @Input() events: any[] = [];
     @Output() loadData = new EventEmitter();
+    @Output() eventClickCallback = new EventEmitter();
     calendarOptions: any;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     errors: string;
@@ -95,5 +96,9 @@ export class CallendarComponent implements OnInit {
     public viewRender(event) {
         event.detail.element.find('div.fc-time-grid > div.fc-slats > table > tbody > tr > td').css('height', '50px');
         event.detail.element.find('div.fc-scroller').css('overflow-y', 'hidden !important');
+    }
+
+    public eventClick(event) {
+        this.eventClickCallback.emit(this.events.find(element => element.id === event.detail.event.id));
     }
 }

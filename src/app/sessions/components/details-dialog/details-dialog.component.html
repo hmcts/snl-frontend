@@ -1,0 +1,35 @@
+<div draggable="true" class="container" fxLayout="column">
+  <h1 fxFlex mat-dialog-title  unselectable="on">Session details</h1>
+  <div fxFlex mat-dialog-content>
+    <div fxFlex fxLayout="column" fxLayoutGap="10px">
+      <div fxLayout="row" fxLayoutAlign="center">
+        <span fxFlex>{{data.session.caseType}}</span>
+        <span fxFlex>{{data.session.person?.name}}</span>
+        <span fxFlex>{{data.session.room?.name}}</span>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center">
+        <span fxFlex>{{parseDate(data.session.start)}}</span>
+        <span fxFlex>{{getStartTime(data.session)}} - {{calculateEndTime(data.session)}}</span>
+        <span fxFlex>{{durationAsMinutes(data.session.duration)}} minutes</span>
+      </div>
+      <hr>
+    </div>
+    <div fxLayout="column">
+      <div>
+        <p>{{data.session?.hearingParts.length}} hearing(s) listed</p>
+        <p>Allocated: {{durationAsMinutes(calculateAllocated())}} minutes</p>
+        <p>Available: {{calculateAvailable()}} minutes</p>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutGap="3%">
+      <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="3%" *ngFor="let hearingPart of data.session.hearingParts">
+        <span fxFlex>{{hearingPart.caseTitle}}</span>
+        <span fxFlex="30%">{{hearingPart.hearingType}}</span>
+        <span fxFlex="15%">{{durationAsMinutes(hearingPart.duration)}} mins</span>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>
+    <button mat-button (click)="onCloseClick()">Close</button>
+  </div>
+</div>

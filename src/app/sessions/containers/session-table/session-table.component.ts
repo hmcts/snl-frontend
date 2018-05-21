@@ -59,7 +59,7 @@ export class SessionTableComponent implements OnInit {
       return moment.duration(duration).humanize();
   }
 
-  calculateAllocated(session) {
+  calculateAllocated(session) { // TODO: Use separate sessions-statiscits-service.ts
     let allocated = moment.duration();
     session.hearingParts.forEach(hearingPart => {
         allocated.add(moment.duration(hearingPart.duration));

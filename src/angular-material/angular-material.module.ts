@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
     MatButtonModule,
     MatCardModule, MatCheckboxModule,
-    MatDatepickerModule, MatFormFieldModule,
+    MatDatepickerModule, MatDialogModule, MatFormFieldModule,
     MatGridListModule,
     MatIconModule, MatInputModule, MatListModule,
     MatNativeDateModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatSnackBarModule, MatTableModule, MatToolbarModule
@@ -27,7 +27,8 @@ import {
     MatSelectModule,
     MatSnackBarModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDialogModule
   ],
   exports: [
     MatCardModule,
@@ -45,7 +46,8 @@ import {
     MatSelectModule,
     MatSnackBarModule,
     MatCheckboxModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDialogModule
   ],
   declarations: []
 })
