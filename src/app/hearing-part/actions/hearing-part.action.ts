@@ -26,79 +26,59 @@ export enum HearingPartActionTypes {
 export class Search implements Action {
   readonly type = HearingPartActionTypes.Search;
 
-  constructor() {
-      console.log(this.type);
-  }
+  constructor() {}
 }
 
 export class SearchComplete implements Action {
   readonly type = HearingPartActionTypes.SearchComplete;
 
-  constructor(public payload: HearingPart[]) {
-    console.log('Action: searchComplete');
-  }
+  constructor(public payload: HearingPart[]) {}
 }
 
 export class SearchFailed implements Action {
   readonly type = HearingPartActionTypes.SearchFailed;
 
-  constructor(public payload: string) {
-      console.log(this.type);
-  }
+  constructor(public payload: string) {}
 }
 
 export class Create implements Action {
     readonly type = HearingPartActionTypes.Create;
 
-    constructor(public payload: HearingPart) {
-        console.log(this.type);
-    }
+    constructor(public payload: HearingPart) {}
 }
 
 export class CreateListingRequest implements Action {
     readonly type = HearingPartActionTypes.CreateListingRequest;
 
-    constructor(public payload: ListingCreate) {
-        console.log(this.type);
-    }
+    constructor(public payload: ListingCreate) {}
 }
 
 export class CreateComplete implements Action {
     readonly type = HearingPartActionTypes.CreateComplete;
 
-    constructor() {
-        console.log(this.type);
-    }
+    constructor() {}
 }
 
 export class CreateFailed implements Action {
     readonly type = HearingPartActionTypes.CreateFailed;
 
-    constructor(public payload: string) {
-        console.log(payload);
-    }
+    constructor(public payload: string) {}
 }
 
 export class AssignToSession implements Action {
     readonly type = HearingPartActionTypes.AssignToSession;
 
-    constructor(public payload: SessionAssignment) {
-        console.log(payload);
-    }
+    constructor(public payload: SessionAssignment) {}
 }
 
 export class AssignComplete implements Action {
     readonly type = HearingPartActionTypes.AssignComplete;
 
-    constructor(public payload: any) {
-        console.log(this.type);
-    }
+    constructor(public payload: any) {}
 }
 
 export class AssignFailed implements Action {
     readonly type = HearingPartActionTypes.AssignFailed;
 
-    constructor(public payload: string) {
-        console.log(payload);
-    }
+    constructor(public payload: string) {}
 }
