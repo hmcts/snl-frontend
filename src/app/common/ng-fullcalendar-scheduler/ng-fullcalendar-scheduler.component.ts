@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import * as $ from 'jquery';
 // import 'fullcalendar';
- import 'fullcalendar-scheduler';
+// import 'fullcalendar-scheduler';
 
 @Component({
   // tslint:disable-next-line
