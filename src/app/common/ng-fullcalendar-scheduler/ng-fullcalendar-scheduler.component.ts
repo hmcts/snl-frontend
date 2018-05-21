@@ -9,10 +9,11 @@ import {
 } from '@angular/core';
 import * as $ from 'jquery';
 // import 'fullcalendar';
-// import 'fullcalendar-scheduler';
+ import 'fullcalendar-scheduler';
 
 @Component({
-  selector: 'app-ng-fullcalendar-scheduler',
+  // tslint:disable-next-line
+  selector: 'ng-fullcalendar-scheduler',
   template: '',
   // styleUrls: ['./ng-scheduler.component.scss']
 })
