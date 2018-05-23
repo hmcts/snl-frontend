@@ -1,8 +1,6 @@
 import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { DialogPosition, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
-import * as moment from 'moment';
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionDialogDetails } from '../../models/session-dialog-details.model';
 
 @Component({
   selector: 'app-details-dialog',
@@ -13,8 +11,7 @@ export class DetailsDialogComponent {
 
   constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any,
-      private sessionsStatsService: SessionsStatisticsService) { }
+      @Inject(MAT_DIALOG_DATA) public sessionDetails: SessionDialogDetails) { }
 
     onCloseClick(): void {
         this.dialogRef.close();
@@ -24,26 +21,5 @@ export class DetailsDialogComponent {
     @HostListener('dragend', ['$event'])
     drag(e: DragEvent) {
         this.dialogRef.updatePosition({left: `${e.x}px`, top: `${e.y}px`} as DialogPosition)
-    }
-
-    durationAsMinutes(duration: moment.Duration) {
-      return moment.duration(duration).asMinutes();
-    }
-
-    calculateEndTime(session: SessionViewModel) {
-      return moment(session.start).add(moment.duration(session.duration)).format('HH:mm');
-    }
-
-    getStartTime(session: SessionViewModel) {
-      return moment(session.start).format('HH:mm');
-    }
-
-    calculateAllocatedHearingsDuration() {
-       return this.sessionsStatsService.calculateAllocatedHearingsDuration(this.data.session);
-    }
-
-    calculateAvailableDuration(reservedDuration: string) {
-       return this.sessionsStatsService.calculateAvailableDuration(moment.duration(reservedDuration),
-           this.calculateAllocatedHearingsDuration());
     }
 }

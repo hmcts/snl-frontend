@@ -14,6 +14,7 @@ import { SecurityService } from '../../../security/services/security.service';
 import { DiaryLoadParameters } from '../../../sessions/models/diary-load-parameters.model';
 import { DetailsDialogComponent } from '../../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
+import { SessionDialogDetails } from '../../../sessions/models/session-dialog-details.model';
 
 @Component({
     selector: 'app-core-callendar-container',
@@ -50,7 +51,7 @@ export class CalendarContainerComponent implements OnInit {
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: {session: session},
+            data: new SessionDialogDetails(session),
             hasBackdrop: false
         });
     }
