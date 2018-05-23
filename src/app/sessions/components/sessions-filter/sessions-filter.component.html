@@ -5,6 +5,18 @@
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
 
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="filters.startDate" placeholder="Choose date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+      <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="filters.endDate" placeholder="Choose end date">
+      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd></mat-datepicker>
+    </mat-form-field>
+
     <mat-form-field>
       <mat-select placeholder="Select the case type" multiple [(value)] = "filters.caseTypes">
         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
@@ -25,6 +37,27 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
   </mat-card-content>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>Listing details</mat-card-subtitle>
+    </mat-card-header>
+    <mat-checkbox [(ngModel)]="filters.utilization.unlisted.active">Unlisted</mat-checkbox>
+    <mat-checkbox [(ngModel)]="filters.utilization.partListed.active">Part Listed</mat-checkbox>
+    <mat-checkbox [(ngModel)]= "filters.utilization.fullyListed.active">Fully Listed</mat-checkbox>
+    <mat-checkbox [(ngModel)]="filters.utilization.overListed.active">Over Listed</mat-checkbox>
+    <mat-checkbox [(ngModel)]="filters.utilization.custom.active">Custom</mat-checkbox>
+    <div fxLayout="row" fxLayoutGap="10%">
+        <mat-form-field fxFlex="25%">
+          <input matInput placeholder="from" type="number" [(ngModel)]="filters.utilization.custom.from">
+        </mat-form-field>
+        <p fxFlex="10%">-</p>
+        <mat-form-field fxFlex="25%">
+          <input matInput placeholder="to" type="number" [(ngModel)]="filters.utilization.custom.to">
+        </mat-form-field>
+        <p fxFlex="10%">%</p>
+    </div>
+  </mat-card>
+
+  <button mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
 </mat-card>

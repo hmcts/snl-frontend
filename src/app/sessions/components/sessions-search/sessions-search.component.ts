@@ -16,7 +16,7 @@ import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import { SessionFilter } from '../../models/session-filter.model';
+import { SessionFilter, UtilizationFilter } from '../../models/session-filter.model';
 
 @Component({
   selector: 'app-sessions-search',
@@ -78,13 +78,50 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     filter(filters: SessionFilter) {
+        console.log(filters);
+        if (filters.startDate !== this.startDate) {
+            this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
+            this.startDate = filters.startDate;
+            this.endDate = filters.endDate;
+        }
+
         this.sessions$.subscribe(data => {
             this.filteredSessions = Observable.of(
                 data.filter(s => this.filterByProperty(s.person, filters.judges))
                 .filter(s => this.filterByProperty(s.room, filters.rooms))
                 .filter(s => filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType))
+                .filter(s => this.filterByUtilization(s, filters.utilization))
             )
         })
+    }
+
+    filterByUtilization(session: SessionViewModel, filters) {
+        let matches = false;
+        let anyFilterActive = false;
+        Object.values(filters).forEach((filter: UtilizationFilter) => {
+            if (filter.active) {
+                anyFilterActive = true;
+                let allocated = this.calculateAllocated(session);
+                let sessionUtilization = this.calculateUtilized(session.duration, allocated);
+                if (sessionUtilization >= filter.from && sessionUtilization <= filter.to) {
+                    matches = true;
+                }
+            }
+        });
+
+        return !anyFilterActive ? true : matches;
+    }
+
+    calculateAllocated(session) {
+        let allocated = moment.duration();
+        session.hearingParts.forEach(hearingPart => {
+            allocated.add(moment.duration(hearingPart.duration));
+        });
+        return allocated;
+    }
+
+    calculateUtilized(duration, allocated: moment.Duration) {
+        return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
     }
 
     filterByProperty(property, filters) {
