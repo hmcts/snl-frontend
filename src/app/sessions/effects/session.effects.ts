@@ -23,7 +23,7 @@ export class SessionEffects {
             this.sessionsService.searchSessions(action.payload).pipe(
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
-                    new roomActions.GetComplete(data.entities.rooms),
+                    new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
@@ -50,7 +50,7 @@ export class SessionEffects {
                 // If successful, dispatch success action with result
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
-                    new roomActions.GetComplete(data.entities.rooms),
+                    new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
