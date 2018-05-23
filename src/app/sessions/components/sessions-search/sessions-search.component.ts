@@ -78,7 +78,6 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     filter(filters: SessionFilter) {
-        console.log(filters);
         if (filters.startDate !== this.startDate) {
             this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
             this.startDate = filters.startDate;
