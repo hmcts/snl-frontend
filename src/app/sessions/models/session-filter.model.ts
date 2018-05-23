@@ -1,5 +1,5 @@
 
-export interface SessionFilter {
+export interface SessionFilters {
     caseTypes: String[];
     rooms: String[];
     judges: String[];

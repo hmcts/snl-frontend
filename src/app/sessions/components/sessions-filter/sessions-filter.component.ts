@@ -1,8 +1,7 @@
 import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
-import { SessionFilter } from '../../models/session-filter.model';
-import * as moment from 'moment';
+import { SessionFilters } from '../../models/session-filter.model';
 
 @Component({
   selector: 'app-sessions-filter',
@@ -19,7 +18,7 @@ export class SessionsFilterComponent implements OnInit {
   @Input() endDate;
   roomsPlaceholder: String;
   judgesPlaceholder: String;
-  filters: SessionFilter;
+  filters: SessionFilters;
   caseTypes;
 
   constructor() {
@@ -62,7 +61,7 @@ export class SessionsFilterComponent implements OnInit {
                   to: 0
               }
           }
-      } as SessionFilter;
+      } as SessionFilters;
   }
 
   sendFilter() {

@@ -16,7 +16,7 @@ import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import { SessionFilter, UtilizationFilter } from '../../models/session-filter.model';
+import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -61,7 +61,7 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = id;
     }
 
-    filter(filters: SessionFilter) {
+    filter(filters: SessionFilters) {
         if (filters.startDate !== this.startDate) {
             this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
             this.startDate = filters.startDate;
@@ -78,7 +78,7 @@ export class SessionsSearchComponent implements OnInit {
         })
     }
 
-    private filterByCaseType(s, filters: SessionFilter) {
+    private filterByCaseType(s, filters: SessionFilters) {
         return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType);
     }
 
