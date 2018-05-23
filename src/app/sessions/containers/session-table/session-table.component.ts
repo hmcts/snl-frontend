@@ -58,7 +58,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
     })
     return allocated;
   }
-
+ 
   calculateUtilized(duration: string, allocated: moment.Duration) {
     return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
   }

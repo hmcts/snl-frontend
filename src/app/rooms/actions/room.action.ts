@@ -4,7 +4,8 @@ import { Room } from '../models/room.model';
 export enum RoomActionTypes {
   Get = '[Room] Get',
   GetComplete = '[Room] Get Complete',
-  GetFailed = '[Room] Get Failed'
+  GetFailed = '[Room] Get Failed',
+  UpsertMany = '[Room] Upsert many'
 }
 
 /**
@@ -34,6 +35,14 @@ export class GetFailed implements Action {
     readonly type = RoomActionTypes.GetFailed;
 
     constructor(public payload: String) {
+        console.log(this.type);
+    }
+}
+
+export class UpsertMany implements Action {
+    readonly type = RoomActionTypes.UpsertMany;
+
+    constructor(public payload: Room[]) {
         console.log(this.type);
     }
 }
