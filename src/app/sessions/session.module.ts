@@ -20,6 +20,7 @@ import { RoomService } from '../rooms/services/room.service';
 import { HearingPartModule } from '../hearing-part/hearing-part.module';
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
+import { CoreModule } from '../core/core.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -36,6 +37,7 @@ export const COMPONENTS = [
       FlexLayoutModule,
       FormsModule,
       HearingPartModule,
+      CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{

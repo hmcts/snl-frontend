@@ -62,15 +62,15 @@ export class SessionTableComponent implements OnInit {
   }
 
   calculateAllocated(session) {
-    return this.sessionsStatsService.calculateAllocated(session);
+    return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
   }
 
   calculateUtilized(duration: string, allocated: moment.Duration) {
-    return this.sessionsStatsService.calculateUtilized(duration, allocated);
+    return this.sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
   }
 
   calculateAvailable(duration: string, allocated: moment.Duration) {
-    return this.sessionsStatsService.calculateAvailable(duration, allocated);
+    return this.sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
   }
 
   toggleSession(session) {
