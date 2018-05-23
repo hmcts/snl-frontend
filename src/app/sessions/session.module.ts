@@ -18,12 +18,16 @@ import { RoomEffects } from '../rooms/effects/room.effects';
 import { JudgeService } from '../judges/services/judge.service';
 import { RoomService } from '../rooms/services/room.service';
 import { HearingPartModule } from '../hearing-part/hearing-part.module';
+import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
+import { SessionsStatisticsService } from './services/sessions-statistics-service';
+import { CoreModule } from '../core/core.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
     SessionsCreateComponent,
     SessionsSearchComponent,
-    SessionTableComponent
+    SessionTableComponent,
+    DetailsDialogComponent
 ];
 
 @NgModule({
@@ -33,6 +37,7 @@ export const COMPONENTS = [
       FlexLayoutModule,
       FormsModule,
       HearingPartModule,
+      CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
@@ -50,8 +55,9 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
+  entryComponents: [DetailsDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-    providers: [SessionsService, JudgeService, RoomService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService]
 })
 export class SessionModule { }
