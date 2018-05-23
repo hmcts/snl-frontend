@@ -17,6 +17,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
 import { SessionFilter, UtilizationFilter } from '../../models/session-filter.model';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sessions-search',
@@ -33,25 +34,20 @@ export class SessionsSearchComponent implements OnInit {
     judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPartId;
-    filteredSessions;
+    filteredSessions$;
 
     constructor(private store: Store<fromHearingParts.State>) {
-        this.store.pipe(select(fromHearingParts.getHearingPartsEntities)).subscribe(data => {
-            this.hearingParts$ = Observable.of(data ? Object.values(data) : []);
-        });
-        this.store.pipe(select(fromSessions.getRooms)).subscribe(data => {
-            this.rooms$ = Observable.of(data ? Object.values(data) : []);
-        });
-        this.store.pipe(select(fromJudges.getJudges)).subscribe(data => {
-            this.judges$ = Observable.of(data ? Object.values(data) : []);
-        });
+        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
+            map(this.asArray)) as Observable<HearingPart[]>;
+        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment().toDate();
         this.endDate = moment().add(5, 'years').toDate();
         this.selectedHearingPartId = '';
         this.selectedSession = {} ;
-        this.filteredSessions = this.sessions$;
+        this.filteredSessions$ = this.sessions$;
     }
 
     ngOnInit() {
@@ -59,18 +55,6 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new fromHearingPartsActions.Search());
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
-    }
-
-    getSessions(startDate, endDate) {
-        this.store.dispatch(new SearchForDates({startDate: startDate, endDate: endDate}));
-    }
-
-    deassign() {
-        this.store.dispatch(new AssignToSession({
-            hearingPartId: this.selectedHearingPartId,
-            sessionId: null,
-            start: null
-        }));
     }
 
     selectHearingPart(id: string) {
@@ -86,13 +70,17 @@ export class SessionsSearchComponent implements OnInit {
         }
 
         this.sessions$.subscribe(data => {
-            this.filteredSessions = Observable.of(
+            this.filteredSessions$ = Observable.of(
                 data.filter(s => this.filterByProperty(s.person, filters.judges))
                 .filter(s => this.filterByProperty(s.room, filters.rooms))
-                .filter(s => filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType))
+                .filter(s => this.filterByCaseType(s, filters))
                 .filter(s => this.filterByUtilization(s, filters.utilization))
             )
         })
+    }
+
+    private filterByCaseType(s, filters: SessionFilter) {
+        return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType);
     }
 
     filterByUtilization(session: SessionViewModel, filters) {
@@ -144,18 +132,15 @@ export class SessionsSearchComponent implements OnInit {
         }));
     }
 
-    calculateStartOfHearing(session: SessionViewModel) {
-        let duration = moment.duration();
-        session.hearingParts.forEach(hp => duration.add(hp.duration));
-
-        return moment(session.start).add(duration).toDate();
-    }
-
     selectSession(session: SessionViewModel) {
         this.selectedSession = session;
     }
 
     assignButtonEnabled() {
         return (this.selectedHearingPartId !== '') && (this.selectedSession.id);
+    }
+
+    asArray(data) {
+        return data ? Object.values(data) : [];
     }
 }
