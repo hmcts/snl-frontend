@@ -9,6 +9,7 @@ import { PocService } from '../../services/poc-service';
 export class PocComponent implements OnInit {
 
   loadRulesFromDbResult: string;
+  timeSet: string;
   yearRequestBody = {timeType: 'upsert-year', id: 'YEAR', value: 0} as TimeRequestBody;
   monthRequestBody = {timeType: 'upsert-month', id: 'MONTH', value: 0} as TimeRequestBody;
   dayRequestBody = {timeType: 'upsert-day', id: 'DAY', value: 0} as TimeRequestBody;
@@ -29,7 +30,8 @@ export class PocComponent implements OnInit {
 
   setTime(requestBody: TimeRequestBody) {
     this.pocService.inputTime(requestBody)
-        .subscribe(console.log);
+        .subscribe(data => this.timeSet = data,
+            error => this.timeSet = error.status);
   }
 }
 
