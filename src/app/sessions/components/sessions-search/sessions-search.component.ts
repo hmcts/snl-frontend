@@ -19,6 +19,8 @@ import * as fromJudges from '../../../judges/reducers';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'app-sessions-search',
@@ -37,6 +39,7 @@ export class SessionsSearchComponent implements OnInit {
     selectedHearingPartId;
     filteredSessions$: Observable<SessionViewModel[]>;
     sessionsStatsService: SessionsStatisticsService;
+    filters$ = new Subject<SessionFilters>();
 
     constructor(private store: Store<fromHearingParts.State>, sessionsStatisticsService: SessionsStatisticsService) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
@@ -58,27 +61,23 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new fromHearingPartsActions.Search());
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
+
+        this.filteredSessions$ = combineLatest(this.sessions$, this.filters$, (sessions, filters) => {
+            if (filters.startDate !== this.startDate) {
+                this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
+                this.startDate = filters.startDate;
+                this.endDate = filters.endDate;
+            }
+
+            return sessions.filter(s => this.filterByProperty(s.person, filters.judges))
+                .filter(s => this.filterByProperty(s.room, filters.rooms))
+                .filter(s => this.filterByCaseType(s, filters))
+                .filter(s => this.filterByUtilization(s, filters.utilization))
+        })
     }
 
     selectHearingPart(id: string) {
         this.selectedHearingPartId = id;
-    }
-
-    filter(filters: SessionFilters) {
-        if (filters.startDate !== this.startDate) {
-            this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
-            this.startDate = filters.startDate;
-            this.endDate = filters.endDate;
-        }
-
-        this.sessions$.subscribe(data => {
-            this.filteredSessions$ = Observable.of(
-                data.filter(s => this.filterByProperty(s.person, filters.judges))
-                .filter(s => this.filterByProperty(s.room, filters.rooms))
-                .filter(s => this.filterByCaseType(s, filters))
-                .filter(s => this.filterByUtilization(s, filters.utilization))
-            )
-        })
     }
 
     private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {

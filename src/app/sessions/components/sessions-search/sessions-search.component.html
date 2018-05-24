@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutGap="5%">
   <div fxFlex="20%">
     <app-sessions-filter
-            (filter)="filter($event)"
+            (filter)="filters$.next($event)"
             [rooms]="rooms$ | async"
             [judges]="judges$ | async"
             [startDate]="startDate"

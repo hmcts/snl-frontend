@@ -77,12 +77,13 @@ export class SessionTableComponent implements OnInit, OnChanges {
   ngOnChanges() {
       if (this.sessions) {
           this.tableVisible = true;
+
+          this.sessions.map(element => {
+              element.start = new Date(element.start);
+          });
+          this.dataSource = new MatTableDataSource(this.sessions);
       }
 
-      this.sessions.map(element => {
-          element.start = new Date(element.start);
-      });
-      this.dataSource = new MatTableDataSource(this.sessions);
   }
 
 }
