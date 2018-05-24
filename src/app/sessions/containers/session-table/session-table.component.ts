@@ -36,12 +36,9 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-<<<<<<< HEAD
-  constructor() {
-=======
+
   constructor(private store: Store<fromSessions.State>,
               private sessionsStatsService: SessionsStatisticsService) {
->>>>>>> master
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;

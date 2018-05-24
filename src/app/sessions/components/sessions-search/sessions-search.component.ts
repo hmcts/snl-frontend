@@ -18,6 +18,7 @@ import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
+import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 
 @Component({
   selector: 'app-sessions-search',
@@ -26,17 +27,18 @@ import { map } from 'rxjs/operators';
 })
 export class SessionsSearchComponent implements OnInit {
 
-    startDate;
-    endDate;
+    startDate: Date;
+    endDate: Date;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPartId;
-    filteredSessions$;
+    filteredSessions$: Observable<SessionViewModel[]>;
+    sessionsStatsService: SessionsStatisticsService;
 
-    constructor(private store: Store<fromHearingParts.State>) {
+    constructor(private store: Store<fromHearingParts.State>, sessionsStatisticsService: SessionsStatisticsService) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
             map(this.asArray)) as Observable<HearingPart[]>;
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
@@ -48,6 +50,7 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = '';
         this.selectedSession = {} ;
         this.filteredSessions$ = this.sessions$;
+        this.sessionsStatsService = sessionsStatisticsService;
     }
 
     ngOnInit() {
@@ -78,7 +81,7 @@ export class SessionsSearchComponent implements OnInit {
         })
     }
 
-    private filterByCaseType(s, filters: SessionFilters) {
+    private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {
         return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType);
     }
 
@@ -88,8 +91,9 @@ export class SessionsSearchComponent implements OnInit {
         Object.values(filters).forEach((filter: UtilizationFilter) => {
             if (filter.active) {
                 anyFilterActive = true;
-                let allocated = this.calculateAllocated(session);
-                let sessionUtilization = this.calculateUtilized(session.duration, allocated);
+                let allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
+                let sessionUtilization = this.sessionsStatsService
+                    .calculateUtilizedDuration(moment.duration(session.duration), allocated);
                 if (sessionUtilization >= filter.from && sessionUtilization <= filter.to) {
                     matches = true;
                 }
@@ -97,18 +101,6 @@ export class SessionsSearchComponent implements OnInit {
         });
 
         return !anyFilterActive ? true : matches;
-    }
-
-    calculateAllocated(session) {
-        let allocated = moment.duration();
-        session.hearingParts.forEach(hearingPart => {
-            allocated.add(moment.duration(hearingPart.duration));
-        });
-        return allocated;
-    }
-
-    calculateUtilized(duration, allocated: moment.Duration) {
-        return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
     }
 
     filterByProperty(property, filters) {
