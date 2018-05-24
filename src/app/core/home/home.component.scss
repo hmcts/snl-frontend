@@ -4,7 +4,7 @@
 
 .content-container {
   margin: auto;
-  max-width: 80%;
+  max-width: 100%;
 }
 
 .toolbar-container {
@@ -32,4 +32,12 @@
 
 .example-spacer {
   width: 15px;
+}
+
+/deep/ .mat-menu-content {
+  background-color: #673ab7;
+}
+
+button.mat-menu-item {
+  color: white;
 }

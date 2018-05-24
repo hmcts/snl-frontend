@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutGap="5%">
-  <div fxFlex="20%">
+  <div fxFlex="25%">
     <app-sessions-filter
             (filter)="filters$.next($event)"
             [rooms]="rooms$ | async"
@@ -9,7 +9,7 @@
 
     </app-sessions-filter>
   </div>
-  <div fxFlex="80%">
+  <div fxFlex="60%">
     <div style="margin-top: 30px; margin-bottom: 10px">
       Listing Requests:
     </div>

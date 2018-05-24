@@ -18,7 +18,7 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatTableModule,
-    MatToolbarModule
+    MatToolbarModule, MatMenuModule
 } from '@angular/material';
 
 @NgModule({
@@ -41,7 +41,8 @@ import {
     MatCheckboxModule,
     MatPaginatorModule,
     MatRadioModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   exports: [
     MatCardModule,
@@ -61,7 +62,8 @@ import {
     MatCheckboxModule,
     MatPaginatorModule,
     MatRadioModule,
-    MatDialogModule
+    MatDialogModule,
+    MatMenuModule
   ],
   declarations: []
 })
