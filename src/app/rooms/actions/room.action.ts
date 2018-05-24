@@ -18,25 +18,19 @@ export enum RoomActionTypes {
 export class Get implements Action {
   readonly type = RoomActionTypes.Get;
 
-  constructor() {
-      console.log(this.type);
-  }
+  constructor() {}
 }
 
 export class GetComplete implements Action {
     readonly type = RoomActionTypes.GetComplete;
 
-    constructor(public payload: Room[]) {
-        console.log(this.type);
-    }
+    constructor(public payload: Room[]) {}
 }
 
 export class GetFailed implements Action {
     readonly type = RoomActionTypes.GetFailed;
 
-    constructor(public payload: String) {
-        console.log(this.type);
-    }
+    constructor(public payload: String) {}
 }
 
 export class UpsertMany implements Action {

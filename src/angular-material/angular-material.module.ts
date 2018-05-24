@@ -2,10 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     MatButtonModule,
-    MatCardModule,
     MatCheckboxModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    MatCardModule,
+    MatDialogModule,
     MatGridListModule,
     MatIconModule,
     MatInputModule,
@@ -39,7 +40,8 @@ import {
     MatSnackBarModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    MatRadioModule
+    MatRadioModule,
+    MatDialogModule
   ],
   exports: [
     MatCardModule,
@@ -58,7 +60,8 @@ import {
     MatSnackBarModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    MatRadioModule
+    MatRadioModule,
+    MatDialogModule
   ],
   declarations: []
 })
