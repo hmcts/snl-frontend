@@ -17,4 +17,10 @@ export class ProblemsService {
             .pipe(map(problems => problems || []));
     }
 
+    getForSession(sessionId: string | number | String): Observable<Problem[]> {
+        return this.http
+            .get<Problem[]>(`${this.config.getApiUrl()}/problems?sessionId=${sessionId}`)
+            .pipe(map(problems => problems || []));
+    }
+
 }

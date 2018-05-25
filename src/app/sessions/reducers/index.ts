@@ -37,6 +37,16 @@ export const getSessionsEntitiesState = createSelector(
     state => state.sessions
 );
 
+export const getSessionsLoading = createSelector(
+    getSessionsEntitiesState,
+    state => state.loading
+);
+
+export const getSessionsError = createSelector(
+    getSessionsEntitiesState,
+    state => state.error
+);
+
 export const {
     selectIds: getSessionIds,
     selectEntities: getSessionEntities,

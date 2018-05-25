@@ -21,13 +21,15 @@ import { HearingPartModule } from '../hearing-part/hearing-part.module';
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
+import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
     SessionsCreateComponent,
     SessionsSearchComponent,
     SessionTableComponent,
-    DetailsDialogComponent
+    DetailsDialogComponent,
+    SessionsCreateDialogComponent
 ];
 
 @NgModule({
@@ -55,7 +57,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService]

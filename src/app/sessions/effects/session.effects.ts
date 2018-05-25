@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as roomActions from '../../rooms/actions/room.action';
+import * as problemActions from '../../problems/actions/problem.action';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import { Notify } from '../../core/notification/actions/notification.action';
-import { SESSION_CREATED } from '../models/sessions-notifications';
+import { SESSION_CREATED, SESSION_CREATION_IN_PROGRESS } from '../models/sessions-notifications';
 
 @Injectable()
 export class SessionEffects {
@@ -35,9 +36,11 @@ export class SessionEffects {
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
+        tap(() => new Notify(SESSION_CREATION_IN_PROGRESS)),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateComplete(), new Notify(SESSION_CREATED)]),
+                mergeMap(() => [new sessionActions.CreateComplete(),
+                    new Notify(SESSION_CREATED), new problemActions.GetForSession(action.payload.id)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
