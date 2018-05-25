@@ -7,13 +7,19 @@ import { SessionQuery, SessionQueryForDates } from '../models/session-query.mode
 import { AppConfig } from '../../app.config';
 import { SessionCreate } from '../models/session-create.model';
 import { DatePipe } from '@angular/common';
-import { sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
+import { session, sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 @Injectable()
 export class SessionsService {
     constructor(private http: HttpClient, private config: AppConfig) {
+    }
+
+    getSession(sessionId: string | String): Observable<any> {
+        return this.http
+            .get<Session>(`${this.config.getApiUrl()}/sessions/${sessionId}`)
+            .pipe(map(data => {return normalize(data, session)}));
     }
 
     searchSessions(query: SessionQuery): Observable<any> {

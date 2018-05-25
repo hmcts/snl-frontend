@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
@@ -13,7 +13,10 @@ import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import { Notify } from '../../core/notification/actions/notification.action';
-import { SESSION_CREATED, SESSION_CREATION_IN_PROGRESS } from '../models/sessions-notifications';
+import { SESSION_CREATED, SESSION_CREATION_IN_PROGRESS, SESSION_CREATING_ACKNOWDLEDGE } from '../models/sessions-notifications';
+import { CoreNotification } from '../../core/notification/model/core-notification';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/mergeMap';
 
 @Injectable()
 export class SessionEffects {
@@ -36,14 +39,31 @@ export class SessionEffects {
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
-        tap(() => new Notify(SESSION_CREATION_IN_PROGRESS)),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateComplete(),
-                    new Notify(SESSION_CREATED), new problemActions.GetForSession(action.payload.id)]),
+                mergeMap(() => [new sessionActions.CreateAcknowledged(action.payload.id),
+                    new Notify(SESSION_CREATING_ACKNOWDLEDGE)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
+    );
+
+    @Effect()
+    checkIfCreated: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.CreateAcknowledged>(sessionActions.SessionActionTypes.CreateAcknowledged),
+        mergeMap(action =>
+            this.sessionsService.getSession(action.payload).pipe(
+                map(data => {
+                    if (!data.length) {
+                        throw 'no data';
+                    }
+                    return data;
+                }),
+                retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
+                mergeMap((data) => [new problemActions.GetForSession(action.payload), new sessionActions.CreateComplete(data), new Notify(SESSION_CREATED)])
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );
 
     @Effect()

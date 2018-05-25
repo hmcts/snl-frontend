@@ -17,10 +17,12 @@ export class ProblemsService {
             .pipe(map(problems => problems || []));
     }
 
-    getForSession(sessionId: string | number | String): Observable<Problem[]> {
+    getForEntity(id: string | number | String): Observable<Problem[]> {
         return this.http
-            .get<Problem[]>(`${this.config.getApiUrl()}/problems?sessionId=${sessionId}`)
+            .get<Problem[]>(`${this.config.getApiUrl()}/problems/by-entity-id?id=${id}`)
             .pipe(map(problems => problems || []));
     }
+
+
 
 }

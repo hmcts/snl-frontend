@@ -7,6 +7,7 @@ import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProblemsService } from '../services/problems.service';
 import { Get, GetComplete, GetFailed, GetForSession, ProblemActionTypes, UpsertMany } from '../actions/problem.action';
+import { Notify } from '../../core/notification/actions/notification.action';
 
 @Injectable()
 export class ProblemEffects {
@@ -25,8 +26,8 @@ export class ProblemEffects {
     searchForSession$: Observable<Action> = this.actions$.pipe(
         ofType<GetForSession>(ProblemActionTypes.GetForSession),
         mergeMap(action =>
-            this.problemsService.getForSession(action.payload).pipe(
-                map(data => (new UpsertMany(data))),
+            this.problemsService.getForEntity(action.payload).pipe(
+                mergeMap(data => [new UpsertMany(data), new Notify({message: 'Problems list updated!', duration: 5000})]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
         )
