@@ -9,4 +9,45 @@
   <mat-card-content>
     <div>{{loadRulesFromDbResult}}</div>
   </mat-card-content>
+
+  <div fxLayout="column">
+    <div>
+      <mat-input-container>
+        <input matInput placeholder="year" type="number" [(ngModel)] = "yearRequestBody.value">
+      </mat-input-container>
+      <button mat-raised-button (click)="setTime(yearRequestBody)" color="accent">set year</button>
+    </div>
+    <div>
+      <mat-input-container>
+        <input matInput placeholder="month" type="number" [(ngModel)] = "monthRequestBody.value">
+      </mat-input-container>
+      <button mat-raised-button (click)="setTime(monthRequestBody)" color="accent">set month</button>
+    </div>
+    <div>
+      <mat-input-container>
+        <input matInput placeholder="day" type="number" [(ngModel)] = "dayRequestBody.value">
+      </mat-input-container>
+      <button mat-raised-button (click)="setTime(dayRequestBody)" color="accent">set day</button>
+    </div>
+    <div>
+      <mat-input-container>
+        <input matInput placeholder="hour" type="number" [(ngModel)] = "hourRequestBody.value">
+      </mat-input-container>
+      <button mat-raised-button (click)="setTime(hourRequestBody)" color="accent">set hour</button>
+    </div>
+    <div>
+      <mat-input-container>
+        <input matInput placeholder="minute" type="number" [(ngModel)] = "minuteRequestBody.value">
+      </mat-input-container>
+      <button mat-raised-button (click)="setTime(minuteRequestBody)" color="accent">set minute</button>
+    </div>
+  </div>
+
+  <mat-card-content>
+    <div>{{timeSet}}</div>
+  </mat-card-content>
+
 </mat-card>
+
+
+
