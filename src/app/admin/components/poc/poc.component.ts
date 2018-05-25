@@ -10,11 +10,11 @@ export class PocComponent implements OnInit {
 
   loadRulesFromDbResult: string;
   timeSet: string;
-  yearRequestBody = {timeType: 'upsert-year', id: 'YEAR', value: 0} as TimeRequestBody;
-  monthRequestBody = {timeType: 'upsert-month', id: 'MONTH', value: 0} as TimeRequestBody;
-  dayRequestBody = {timeType: 'upsert-day', id: 'DAY', value: 0} as TimeRequestBody;
-  hourRequestBody = {timeType: 'upsert-hour', id: 'HOUR', value: 0} as TimeRequestBody;
-  minuteRequestBody = {timeType: 'upsert-minute', id: 'MINUTE', value: 0} as TimeRequestBody;
+  yearRequestBody = {timeType: 'year', value: 0} as TimeRequestBody;
+  monthRequestBody = {timeType: 'month', value: 0} as TimeRequestBody;
+  dayRequestBody = {timeType: 'day', value: 0} as TimeRequestBody;
+  hourRequestBody = {timeType: 'hour', value: 0} as TimeRequestBody;
+  minuteRequestBody = {timeType: 'minute', value: 0} as TimeRequestBody;
 
   constructor(private pocService: PocService) {
   }
@@ -37,6 +37,5 @@ export class PocComponent implements OnInit {
 
 export interface TimeRequestBody {
     timeType: string,
-    id: string,
     value: number
 }
