@@ -36,7 +36,6 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-
   constructor(private store: Store<fromSessions.State>,
               private sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
@@ -54,12 +53,12 @@ export class SessionTableComponent implements OnInit, OnChanges {
       return moment.duration(duration).humanize();
   }
 
-  calculateAllocated(session) {
-    return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
-  }
- 
   calculateUtilized(duration: string, allocated: moment.Duration) {
     return this.sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
+  }
+
+  calculateAllocated(session) {
+    return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
   }
 
   calculateAvailable(duration: string, allocated: moment.Duration) {
