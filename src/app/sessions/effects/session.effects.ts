@@ -54,13 +54,15 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.getSession(action.payload).pipe(
                 map(data => {
-                    if (!data.length) {
+                    if (!data.entities.sessions) {
                         throw 'no data';
                     }
                     return data;
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
-                mergeMap((data) => [new problemActions.GetForSession(action.payload), new sessionActions.CreateComplete(data), new Notify(SESSION_CREATED)])
+                mergeMap((data) => [new problemActions.GetForSession(action.payload),
+                    new sessionActions.UpsertOne(data),
+                    new Notify(SESSION_CREATED)])
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))

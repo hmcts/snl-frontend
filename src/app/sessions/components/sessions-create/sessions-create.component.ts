@@ -17,7 +17,7 @@ import { SessionsCreateDialogComponent } from '../sessions-create-dialog/session
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
 import { Problem } from '../../../problems/models/problem.model';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import * as moment from 'moment';
 
@@ -84,7 +84,7 @@ export class SessionsCreateComponent implements OnInit {
           minWidth: 350,
           data: {
               sessionBeingCreated$: this.sessionsLoading$,
-              problems$: this.sessionProblems$,
+              problems$: this.sessionProblems$.pipe(tap(console.log), map(data => Object.values(data).filter(data => data.references.forEach(ref => ref.entity_id === this.session.id)))),
               error$: this.sessionsError$
           } as SessionCreationSummary,
           hasBackdrop: false

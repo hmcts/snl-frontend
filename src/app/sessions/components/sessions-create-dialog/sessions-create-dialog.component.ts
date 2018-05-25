@@ -9,6 +9,8 @@ import { SessionCreationSummary } from '../../models/session-creation-summary';
 })
 export class SessionsCreateDialogComponent implements OnInit {
 
+  filteredProblems$;
+
   constructor(
       public dialogRef: MatDialogRef<SessionsCreateDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary) {

@@ -19,7 +19,7 @@ export class SessionsService {
     getSession(sessionId: string | String): Observable<any> {
         return this.http
             .get<Session>(`${this.config.getApiUrl()}/sessions/${sessionId}`)
-            .pipe(map(data => {return normalize(data, session)}));
+            .pipe(map(data => {console.log(normalize(data, session)); return normalize(data, session)}));
     }
 
     searchSessions(query: SessionQuery): Observable<any> {
