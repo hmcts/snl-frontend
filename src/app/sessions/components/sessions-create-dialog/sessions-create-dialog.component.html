@@ -8,17 +8,17 @@
     </p>
   </div>
 
-  <div fxFlex *ngIf="!(data.sessionLoading | async)">
-    <div>
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="!(data.sessionLoading | async)">
+    <div fxFlex>
       Session created!
     </div>
-    <div *ngIf="data.problemsLoading$ | async">
+    <div fxFlex *ngIf="data.problemsLoading$ | async">
       Loading the problems...
     </div>
     <div *ngIf="(data.problems$ | async).length !== 0">
       Problems:
     </div>
-    <div *ngIf="!(data.problemsLoading$ | async) && ((data.problems$ | async).length === 0)">
+    <div fxFlex *ngIf="!(data.problemsLoading$ | async) && ((data.problems$ | async).length === 0)">
       No problems occurred!
     </div>
   </div>

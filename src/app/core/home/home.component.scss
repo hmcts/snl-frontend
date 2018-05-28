@@ -33,3 +33,11 @@
 .example-spacer {
   width: 15px;
 }
+
+/deep/ .mat-menu-content {
+  background-color: #673ab7;
+}
+
+button.mat-menu-item {
+  color: white;
+}

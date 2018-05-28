@@ -6,7 +6,7 @@
   </mat-card>
 </div>
 
-<mat-table *ngIf="dataSource && tableVisible" #table [dataSource]="dataSource">
+<mat-table id="sessions-table" *ngIf="dataSource && tableVisible" #table [dataSource]="dataSource">
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
