@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProblemsService } from '../services/problems.service';
 import { Get, GetComplete, GetFailed, GetForSession, ProblemActionTypes, UpsertMany } from '../actions/problem.action';
+import * as fromProblemReferences from '../actions/problem-reference.action';
 import { Notify } from '../../core/notification/actions/notification.action';
+import { PROBLEMS_LIST_UPDATED } from '../models/problems-notifications';
 
 @Injectable()
 export class ProblemEffects {
@@ -16,7 +18,7 @@ export class ProblemEffects {
         ofType<Get>(ProblemActionTypes.Get),
         mergeMap(action =>
             this.problemsService.get().pipe(
-                map(data => (new GetComplete(data))),
+                map(data => (new GetComplete(data.entities.problems))),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
         )
@@ -27,7 +29,10 @@ export class ProblemEffects {
         ofType<GetForSession>(ProblemActionTypes.GetForSession),
         mergeMap(action =>
             this.problemsService.getForEntity(action.payload).pipe(
-                mergeMap(data => [new UpsertMany(data), new Notify({message: 'Problems list updated!', duration: 5000})]),
+                concatMap(data => [
+                    new fromProblemReferences.UpsertMany(data.entities.problemReferences),
+                    new UpsertMany(data.entities.problems),
+                    new Notify(PROBLEMS_LIST_UPDATED)]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
         )

@@ -21,7 +21,7 @@
   </div>
 
   <div *ngFor="let problem of data.problems$ | async">
-    <div>1 - {{problem.message}}</div>
+    <div>{{problem.severity}} - {{problem.type}}</div>
   </div>
 
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>

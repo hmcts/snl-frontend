@@ -20,6 +20,7 @@ import { Problem } from '../../../problems/models/problem.model';
 import { map, tap } from 'rxjs/operators';
 import { Dictionary } from '@ngrx/entity/src/models';
 import * as moment from 'moment';
+import { ProblemViewmodel } from '../../../problems/models/problem.viewmodel';
 
 @Component({
   selector: 'app-sessions-create',
@@ -33,7 +34,7 @@ export class SessionsCreateComponent implements OnInit {
     judgesLoading$: Observable<boolean>;
     sessionsLoading$: Observable<boolean>;
     sessionsError$: Observable<string>;
-    sessionProblems$: Observable<Problem[]>;
+    sessionProblems$: Observable<ProblemViewmodel[]>;
     roomsPlaceholder: String;
     judgesPlaceholder: String;
     durationInMinutes: Number;
@@ -49,7 +50,7 @@ export class SessionsCreateComponent implements OnInit {
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.sessionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsLoading));
     this.sessionsError$ = this.store.pipe(select(fromSessionIndex.getSessionsError));
-    this.sessionProblems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(data => Object.values(data)));
+    this.sessionProblems$ = this.store.pipe(select(fromProblems.getProblemsWithReferences), map(data => Object.values(data) || []), tap(console.log));
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
@@ -84,7 +85,9 @@ export class SessionsCreateComponent implements OnInit {
           minWidth: 350,
           data: {
               sessionBeingCreated$: this.sessionsLoading$,
-              problems$: this.sessionProblems$.pipe(tap(console.log), map(data => Object.values(data).filter(data => data.references.forEach(ref => ref.entity_id === this.session.id)))),
+              problems$: this.sessionProblems$.pipe(map(probs => {
+                  return Object.values(probs).filter(data => data.references.find(ref => ref.entity_id === this.session.id))
+              }), tap(console.log)),
               error$: this.sessionsError$
           } as SessionCreationSummary,
           hasBackdrop: false

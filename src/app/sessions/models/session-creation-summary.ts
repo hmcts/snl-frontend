@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs/Observable';
 import { Problem } from '../../problems/models/problem.model';
+import { ProblemViewmodel } from '../../problems/models/problem.viewmodel';
 
 export interface SessionCreationSummary {
     sessionBeingCreated$: Observable<boolean>,
-    problems$: Observable<Problem[]>,
+    problems$: Observable<ProblemViewmodel[]>,
     error$: Observable<string>
 }
