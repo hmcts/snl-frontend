@@ -8,8 +8,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProblemsService } from '../services/problems.service';
 import { Get, GetComplete, GetFailed, GetForSession, ProblemActionTypes, UpsertMany } from '../actions/problem.action';
 import * as fromProblemReferences from '../actions/problem-reference.action';
-import { Notify } from '../../core/notification/actions/notification.action';
-import { PROBLEMS_LIST_UPDATED } from '../models/problems-notifications';
 
 @Injectable()
 export class ProblemEffects {
@@ -31,8 +29,7 @@ export class ProblemEffects {
             this.problemsService.getForEntity(action.payload).pipe(
                 concatMap(data => [
                     new fromProblemReferences.UpsertMany(data.entities.problemReferences),
-                    new UpsertMany(data.entities.problems),
-                    new Notify(PROBLEMS_LIST_UPDATED)]),
+                    new UpsertMany(data.entities.problems)]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
         )

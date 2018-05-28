@@ -12,9 +12,6 @@ import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.ac
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
-import { Notify } from '../../core/notification/actions/notification.action';
-import { SESSION_CREATED, SESSION_CREATION_IN_PROGRESS, SESSION_CREATING_ACKNOWDLEDGE } from '../models/sessions-notifications';
-import { CoreNotification } from '../../core/notification/model/core-notification';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 
@@ -41,8 +38,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         switchMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateAcknowledged(action.payload.id),
-                    new Notify(SESSION_CREATING_ACKNOWDLEDGE)]),
+                mergeMap(() => [new sessionActions.CreateAcknowledged(action.payload.id)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -61,8 +57,7 @@ export class SessionEffects {
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
                 mergeMap((data) => [new problemActions.GetForSession(action.payload),
-                    new sessionActions.UpsertOne(data),
-                    new Notify(SESSION_CREATED)])
+                    new sessionActions.UpsertOne(data)])
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
