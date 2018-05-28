@@ -12,8 +12,8 @@ import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../models/session-create.model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
-import * as fromSessionIndex from '../../reducers';
-import { SessionsCreateDialogComponent } from '../sessions-create-dialog/sessions-create-dialog.component';
+import * as fromSessionIndex from '../../reducers/index';
+import { SessionsCreateDialogComponent } from '../../components/sessions-create-dialog/sessions-create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
 import { Problem } from '../../../problems/models/problem.model';
@@ -28,13 +28,13 @@ import { ProblemViewmodel } from '../../../problems/models/problem.viewmodel';
   styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
-    rooms: Room[];
-    judges: Judge[];
+    rooms$: Observable<Room[]>;
+    judges$: Observable<Judge[]>;
+    sessionProblems$: Observable<ProblemViewmodel[]>;
     roomsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
     sessionsLoading$: Observable<boolean>;
-    sessionsError$: Observable<string>;
-    sessionProblems$: Observable<ProblemViewmodel[]>;
+    problemsLoading$: Observable<boolean>;
     roomsPlaceholder: String;
     judgesPlaceholder: String;
     durationInMinutes: Number;
@@ -44,13 +44,13 @@ export class SessionsCreateComponent implements OnInit {
     session: SessionCreate;
 
     constructor(private store: Store<State>, public dialog: MatDialog) {
-    this.store.pipe(select(fromSessionIndex.getRooms)).subscribe(data => this.rooms = Object.values(data));
-    this.store.pipe(select(fromJudges.getJudges)).subscribe(data => this.judges = Object.values(data));
+    this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
+    this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     this.sessionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsLoading));
-    this.sessionsError$ = this.store.pipe(select(fromSessionIndex.getSessionsError));
-    this.sessionProblems$ = this.store.pipe(select(fromProblems.getProblemsWithReferences), map(data => Object.values(data) || []), tap(console.log));
+    this.problemsLoading$ = this.store.pipe(select(fromProblems.getProblemsLoading));
+    this.sessionProblems$ = this.store.pipe(select(fromProblems.getProblemsWithReferences), map(this.asArray)) as Observable<ProblemViewmodel[]>;
     this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     this.durationInMinutes = 30;
     this.roomsLoading$.subscribe(isLoading => { this.roomsPlaceholder = isLoading ? 'Loading the rooms...' : 'Select the room'; });
@@ -80,19 +80,28 @@ export class SessionsCreateComponent implements OnInit {
         this.session.duration = this.durationInMinutes.valueOf() * 60;
         this.store.dispatch(new SessionActions.Create(this.session));
 
-        let dialogRef = this.dialog.open(SessionsCreateDialogComponent, {
+        this.dialog.open(SessionsCreateDialogComponent, {
           width: 'auto',
           minWidth: 350,
           data: {
-              sessionBeingCreated$: this.sessionsLoading$,
-              problems$: this.sessionProblems$.pipe(map(probs => {
-                  return Object.values(probs).filter(data => data.references.find(ref => ref.entity_id === this.session.id))
-              }), tap(console.log)),
-              error$: this.sessionsError$
+              sessionLoading: this.sessionsLoading$,
+              problemsLoading$: this.problemsLoading$,
+              problems$: this.sessionProblems$.pipe(map((data) => this.filterProblemsForSession(data, this.session.id)))
           } as SessionCreationSummary,
-          hasBackdrop: false
+          hasBackdrop: true
         });
+    }
 
+    private asArray(data) {
+        return Object.values(data) || [];
+    }
+
+    private filterProblemsForSession(problems: ProblemViewmodel[], sessionId: string | String) {
+        return Object.values(problems).filter(problem => {
+            return problem.references ? problem.references.find(ref => {
+                return ref ? ref.entity_id === sessionId : false
+            }) : false
+        })
     }
 
 }

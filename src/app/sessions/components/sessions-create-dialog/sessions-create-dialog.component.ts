@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-sessions-create-dialog',
@@ -9,11 +11,16 @@ import { SessionCreationSummary } from '../../models/session-creation-summary';
 })
 export class SessionsCreateDialogComponent implements OnInit {
 
-  filteredProblems$;
+  dataLoading$: Observable<boolean>;
+  buttonText$: Observable<string>;
 
   constructor(
       public dialogRef: MatDialogRef<SessionsCreateDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary) {
+      this.dataLoading$ = combineLatest(this.data.sessionLoading, this.data.problemsLoading$, (sessions, problems) => {
+          return sessions || problems;
+      });
+      this.buttonText$ = this.dataLoading$.map(loading => loading ? 'Leave' : 'Ok');
   }
 
     onCloseClick(): void {

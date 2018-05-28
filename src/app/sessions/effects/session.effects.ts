@@ -39,7 +39,7 @@ export class SessionEffects {
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
-        mergeMap(action =>
+        switchMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
                 mergeMap(() => [new sessionActions.CreateAcknowledged(action.payload.id),
                     new Notify(SESSION_CREATING_ACKNOWDLEDGE)]),
@@ -51,7 +51,7 @@ export class SessionEffects {
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.CreateAcknowledged>(sessionActions.SessionActionTypes.CreateAcknowledged),
-        mergeMap(action =>
+        switchMap(action =>
             this.sessionsService.getSession(action.payload).pipe(
                 map(data => {
                     if (!data.entities.sessions) {

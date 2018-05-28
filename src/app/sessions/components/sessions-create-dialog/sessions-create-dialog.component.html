@@ -1,31 +1,36 @@
-<div class="container" fxLayout="column" fxLayoutAlign="center center">
-  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="data.sessionBeingCreated$ | async">
+<div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
+  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="data.sessionLoading | async">
     <p fxFlex>
       Your session is being created...
     </p>
     <p fxFlex>
       Potential problems will be displayed below when computation finishes.
     </p>
-
-    <mat-spinner fxFlex></mat-spinner>
   </div>
 
-
-  <div *ngIf="!(data.sessionBeingCreated$ | async)">
+  <div fxFlex *ngIf="!(data.sessionLoading | async)">
     <div>
       Session created!
     </div>
-    <div>
+    <div *ngIf="data.problemsLoading$ | async">
+      Loading the problems...
+    </div>
+    <div *ngIf="(data.problems$ | async).length !== 0">
       Problems:
+    </div>
+    <div *ngIf="!(data.problemsLoading$ | async) && ((data.problems$ | async).length === 0)">
+      No problems occurred!
     </div>
   </div>
 
-  <div *ngFor="let problem of data.problems$ | async">
-    <div>{{problem.severity}} - {{problem.type}}</div>
+  <mat-spinner *ngIf="dataLoading$ | async" fxFlex></mat-spinner>
+
+  <div style="margin-top: 20px" fxFlex *ngFor="let problem of data.problems$ | async; let i = index">
+    <div>{{i + 1}}. {{problem.type.split('_').join(' ')}} - {{problem.severity}} </div>
   </div>
 
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-    <button mat-button (click)="onCloseClick()">Leave</button>
+    <button mat-button (click)="onCloseClick()">{{buttonText$ | async}}</button>
   </div>
 
 </div>

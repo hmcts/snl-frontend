@@ -52,7 +52,7 @@ export const getProblemsWithReferences = createSelector(getProblems, getProblems
             let problemRefs: ProblemReference[];
             problemRefs = problem.references.map(ref => {
                 return problemReferences[ref];
-            });
+            }) || [];
             return {
                 id: problem.id,
                 severity: problem.severity,
