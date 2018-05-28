@@ -1,43 +1,8 @@
-<mat-card class="sessions-create-container">
-  <mat-card-header>
-    <mat-card-subtitle>Create session</mat-card-subtitle>
-  </mat-card-header>
-
-  <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="session.start" placeholder="Choose date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field>
-      <input [(ngModel)]="time" matInput placeholder="Start time" type="time">
-    </mat-form-field>
-
-    <mat-form-field>
-      <input [(ngModel)]="durationInMinutes" type="number" matInput placeholder="Duration">
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-select placeholder="Select the case type" [(value)]="session.caseType">
-        <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-select placeholder="{{roomsPlaceholder}}" [(value)]="session.roomId">
-        <mat-option value="">(No room)</mat-option>
-        <mat-option *ngFor="let room of rooms$ | async" value="{{room.id}}">{{room.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-select placeholder="{{judgesPlaceholder}}" [(value)]="session.personId">
-        <mat-option value="">(No judge)</mat-option>
-        <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
-  </mat-card-content>
-</mat-card>
+<div class="sessions-create-container">
+    <app-sessions-create-form [judges]="judges$ | async"
+                              [rooms]="rooms$ | async"
+                              [judgesLoading]="judgesLoading$ | async"
+                              [roomsLoading]="roomsLoading$ | async"
+                              (createSession)="create($event)">
+    </app-sessions-create-form>
+</div>

@@ -23,6 +23,7 @@ import { DetailsDialogComponent } from './components/details-dialog/details-dial
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
 import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
+import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -31,7 +32,8 @@ export const COMPONENTS = [
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
-    SessionsCreateDialogComponent
+    SessionsCreateDialogComponent,
+    SessionsCreateFormComponent
 ];
 
 @NgModule({
