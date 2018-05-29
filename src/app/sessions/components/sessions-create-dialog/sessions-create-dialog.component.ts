@@ -20,7 +20,7 @@ export class SessionsCreateDialogComponent implements OnInit {
       this.dataLoading$ = combineLatest(this.data.sessionLoading, this.data.problemsLoading$, (sessions, problems) => {
           return sessions || problems;
       });
-      this.buttonText$ = this.dataLoading$.map(loading => loading ? 'Leave' : 'Ok');
+      this.buttonText$ = this.dataLoading$.map(loading => loading ? 'Hide the dialog' : 'Ok');
   }
 
   onCloseClick(): void {
