@@ -12,12 +12,12 @@ import { v4 as uuid } from 'uuid';
 })
 export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
-  session;
+  session: SessionCreate;
   durationInMinutes: Number;
-  caseTypes;
-  time;
-  roomsPlaceholder;
-  judgesPlaceholder;
+  caseTypes: string[];
+  time: string;
+  roomsPlaceholder: string;
+  judgesPlaceholder: string;
 
   @Input() judges: Judge[];
   @Input() rooms: Room[];
@@ -52,8 +52,8 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
   create() {
       this.session.id = uuid();
       let time_arr = this.time.split(':');
-      this.session.start.setUTCHours(time_arr[0]);
-      this.session.start.setUTCMinutes(time_arr[1]);
+      this.session.start.setUTCHours(+time_arr[0]);
+      this.session.start.setUTCMinutes(+time_arr[1]);
       this.session.duration = this.durationInMinutes.valueOf() * 60;
 
       this.createSession.emit(this.session);

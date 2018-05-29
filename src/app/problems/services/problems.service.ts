@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, tap} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Problem } from '../models/problem.model';
 import { AppConfig } from '../../app.config';
 import { HttpClient } from '@angular/common/http';
@@ -22,7 +22,7 @@ export class ProblemsService {
     getForEntity(id: string | number | String): Observable<any> {
         return this.http
             .get<Problem[]>(`${this.config.getApiUrl()}/problems/by-entity-id?id=${id}`)
-            .pipe(map(this.normalizeProblems), tap(console.log));
+            .pipe(map(this.normalizeProblems));
     }
 
     private normalizeProblems(problemsData) {

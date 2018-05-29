@@ -20,7 +20,6 @@ export const getProblemsEntitiesState = createSelector(
     state => state.problems
 );
 
-
 export const getProblems = createSelector(
     getProblemsEntitiesState,
     state => state.entities
