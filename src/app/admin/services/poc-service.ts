@@ -13,4 +13,10 @@ export class PocService {
             .post<String>(`${this.config.getApiUrl()}/poc/loaddb`, null, {
               headers: {'Content-Type': 'application/json'}});
     }
+
+    inputTime(body): Observable<any> {
+        return this.http
+            .put<String>(`${this.config.getApiUrl()}/time`, body, {
+                headers: {'Content-Type': 'application/json'}});
+    }
 }

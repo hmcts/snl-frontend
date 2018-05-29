@@ -1,52 +1,46 @@
-<mat-card >
-  <mat-card-header>
-    <mat-card-subtitle>Search sessions</mat-card-subtitle>
-  </mat-card-header>
+<div fxLayout="row" fxLayoutGap="5%">
+  <div fxFlex="25%">
+    <app-sessions-filter
+            (filter)="filters$.next($event)"
+            [rooms]="rooms$ | async"
+            [judges]="judges$ | async"
+            [startDate]="startDate"
+            [endDate]="endDate">
 
-  <mat-card-content fxLayout="row" fxLayoutGap="3%">
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="startDate" placeholder="Choose date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
+    </app-sessions-filter>
+  </div>
+  <div fxFlex="60%">
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Listing Requests:
+    </div>
 
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="endDate" placeholder="Choose end date">
-      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-      <mat-datepicker #pickerEnd></mat-datepicker>
-    </mat-form-field>
+    <div>
+      <app-hearing-parts-preview id="hearing-part-preview"
+              [hearingParts]="hearingParts$ | async"
+              [sessions]="sessions$ | async"
+              (selectHearingPart)="selectHearingPart($event)">
+      </app-hearing-parts-preview>
+    </div>
 
-    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="getSessions(startDate, endDate)" class="get-sessions-button">Get Sessions</button>
-  </mat-card-content>
-</mat-card>
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Actions:
+    </div>
 
-<mat-divider></mat-divider>
+    <button [disabled]="!assignButtonEnabled()" mat-raised-button
+            color="accent"
+            fxFlexAlign="center"
+            (click)="assignToSession()"
+            class="get-sessions-button">Assign</button>
 
-<div>
-  <app-session-table
-          (selectSession)="selectSession($event)">
-  </app-session-table>
-</div>
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Sessions:
+    </div>
 
-<div style="margin-top: 30px; margin-bottom: 10px">
-  Actions:
-</div>
-
-<button [disabled]="!assignButtonEnabled()" mat-raised-button
-        color="accent"
-        fxFlexAlign="center"
-        (click)="assignToSession()"
-        class="get-sessions-button">Assign</button>
-
-
-<div style="margin-top: 30px; margin-bottom: 10px">
-  Listing Requests:
-</div>
-
-<div>
-  <app-hearing-parts-preview
-          [hearingParts]="hearingParts$ | async"
-          [sessions]="sessions$ | async"
-          (selectHearingPart)="selectHearingPart($event)">
-  </app-hearing-parts-preview>
+    <div>
+      <app-session-table
+              (selectSession)="selectSession($event)"
+              [sessions] = "filteredSessions$ | async">
+      </app-session-table>
+    </div>
+  </div>
 </div>

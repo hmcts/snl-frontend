@@ -12,6 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Actions } from '@ngrx/effects';
 import { SecurityService } from '../../../security/services/security.service';
 import { DiaryLoadParameters } from '../../../sessions/models/diary-load-parameters.model';
+import { DetailsDialogComponent } from '../../../sessions/components/details-dialog/details-dialog.component';
+import { MatDialog } from '@angular/material';
+import { SessionDialogDetails } from '../../../sessions/models/session-dialog-details.model';
 
 @Component({
     selector: 'app-core-callendar-container',
@@ -23,7 +26,8 @@ export class CalendarContainerComponent implements OnInit {
     sessions$: Observable<SessionViewModel[]>;
     loadData;
 
-    constructor(private store: Store<State>, private route: ActivatedRoute, private actions$: Actions, private security: SecurityService) {
+    constructor(private store: Store<State>, private route: ActivatedRoute, private security: SecurityService,
+                public dialog: MatDialog) {
         this.sessions$ = this.store.select(fromReducer.getFullSessions);
     }
 
@@ -41,5 +45,14 @@ export class CalendarContainerComponent implements OnInit {
         query.judgeUsername = this.security.currentUser.username;
 
         this.store.dispatch(new SearchForJudgeWithHearings(query));
+    }
+
+    public eventClick(session) {
+        this.dialog.open(DetailsDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: new SessionDialogDetails(session),
+            hasBackdrop: false
+        });
     }
 }

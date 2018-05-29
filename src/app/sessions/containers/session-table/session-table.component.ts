@@ -1,20 +1,23 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MatTableDataSource } from '@angular/material';
 import * as fromSessions from '../../reducers';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
   styleUrls: ['./session-table.component.css']
 })
-export class SessionTableComponent implements OnInit {
+export class SessionTableComponent implements OnInit, OnChanges {
 
   @Output()
   selectSession = new EventEmitter();
+
+  @Input() sessions: SessionViewModel[];
 
   selectedSesssion;
   displayedColumns = [
@@ -30,25 +33,16 @@ export class SessionTableComponent implements OnInit {
       'available',
       'select session'
   ];
-  dataSource;
+  dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private store: Store<fromSessions.State>) {
+  constructor(private store: Store<fromSessions.State>,
+              private sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
 
-    this.store.pipe(select(fromSessions.getFullSessions)).subscribe(data => {
-      this.tableVisible = false;
-      if (data) {
-        data = Object.values(data);
-        this.tableVisible = data.length !== 0;
-        data.map(element => {
-          element.start = new Date(element.start);
-        });
-        this.dataSource = new MatTableDataSource(data);
-      }
-    });
+    this.dataSource = new MatTableDataSource(this.sessions);
   }
 
   parseDate(date) {
@@ -59,21 +53,16 @@ export class SessionTableComponent implements OnInit {
       return moment.duration(duration).humanize();
   }
 
-  calculateAllocated(session) {
-    let allocated = moment.duration();
-    session.hearingParts.forEach(hearingPart => {
-        allocated.add(moment.duration(hearingPart.duration));
-    })
-    return allocated;
+  calculateUtilized(duration: string, allocated: moment.Duration) {
+    return this.sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
   }
 
-  calculateUtilized(duration: string, allocated: moment.Duration) {
-    return Math.round((allocated.asMinutes() / moment.duration(duration).asMinutes()) * 100);
+  calculateAllocated(session) {
+    return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
   }
 
   calculateAvailable(duration: string, allocated: moment.Duration) {
-    let available = moment.duration(duration).asMinutes() - allocated.asMinutes();
-    return available > 0 ? available : 0;
+    return this.sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
   }
 
   toggleSession(session) {
@@ -82,6 +71,18 @@ export class SessionTableComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  ngOnChanges() {
+      if (this.sessions) {
+          this.tableVisible = true;
+
+          this.sessions.map(element => {
+              element.start = new Date(element.start);
+          });
+          this.dataSource = new MatTableDataSource(this.sessions);
+      }
+
   }
 
 }
