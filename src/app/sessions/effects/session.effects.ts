@@ -5,6 +5,7 @@ import { catchError, map, mergeMap, retryWhen, switchMap, tap } from 'rxjs/opera
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
+import * as sessionCreationActions from '../actions/session-creation.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
 import * as judgeActions from '../../judges/actions/judge.action';
@@ -38,7 +39,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                switchMap(() => [new sessionActions.CreateAcknowledged(action.payload.id)]),
+                switchMap(() => [new sessionCreationActions.CreateAcknowledged(action.payload.id)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -46,8 +47,8 @@ export class SessionEffects {
 
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionActions.CreateAcknowledged>(sessionActions.SessionActionTypes.CreateAcknowledged),
-        switchMap(action =>
+        ofType<sessionCreationActions.CreateAcknowledged>(sessionCreationActions.SessionCreationActionTypes.CreateAcknowledged),
+        mergeMap(action =>
             this.sessionsService.getSession(action.payload).pipe(
                 map(data => {
                     if (!data.entities.sessions) {
@@ -57,6 +58,7 @@ export class SessionEffects {
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
                 switchMap((data) => [new problemActions.GetForSession(action.payload),
+                    new sessionCreationActions.CreateComplete(action.payload),
                     new sessionActions.UpsertOne(data)])
             )
         ),

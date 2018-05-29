@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
-  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="data.sessionLoading | async">
+  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(sessionCreated$ | async)">
     <p fxFlex>
       Your session is being created...
     </p>
@@ -8,22 +8,22 @@
     </p>
   </div>
 
-  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="!(data.sessionLoading | async)">
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionCreated$ | async">
     <div fxFlex>
       Session created!
     </div>
-    <div fxFlex *ngIf="data.problemsLoading$ | async">
+    <div fxFlex *ngIf="inProgress$ | async">
       Loading the problems...
     </div>
     <div *ngIf="(data.problems$ | async).length !== 0">
       Problems:
     </div>
-    <div fxFlex *ngIf="!(data.problemsLoading$ | async) && ((data.problems$ | async).length === 0)">
+    <div fxFlex *ngIf="!(inProgress$ | async) && ((data.problems$ | async).length === 0)">
       No problems occurred!
     </div>
   </div>
 
-  <mat-spinner *ngIf="dataLoading$ | async" fxFlex></mat-spinner>
+  <mat-spinner *ngIf="inProgress$ | async" fxFlex></mat-spinner>
 
   <div fxFlex>
     <div style="margin-top: 20px" *ngFor="let problem of data.problems$ | async; let i = index">
@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <div *ngIf="dataLoading$ | async">
+  <div *ngIf="inProgress$ | async">
       You are allowed to hide this dialog, the session processing will continue in the background.
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>

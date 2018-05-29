@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as SessionActions from '../../actions/session.action';
+import * as SessionCreationActions from '../../actions/session-creation.action';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
@@ -14,8 +15,11 @@ import * as fromSessionIndex from '../../reducers/index';
 import { SessionsCreateDialogComponent } from '../../components/sessions-create-dialog/sessions-create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Problem } from '../../../problems/models/problem.model';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { SessionCreationStatus } from '../../models/session-creation-status.model';
 
 @Component({
   selector: 'app-sessions-create',
@@ -25,21 +29,24 @@ import { Problem } from '../../../problems/models/problem.model';
 export class SessionsCreateComponent implements OnInit {
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
-    problems$: Observable<Problem[]>;
-    sessionsLoading$: Observable<boolean>;
-    problemsLoading$: Observable<boolean>;
+    problems$: Observable<Dictionary<Problem>>;
+    recenlyCreatedSessionProblems$: Observable<Problem[]>;
+    recenlyCreatedSessionStatus$: Observable<SessionCreationStatus>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
+    recentlyCreatedSessionId$: Observable<string>;
     dialogRef: any;
 
     constructor(private store: Store<State>, public dialog: MatDialog) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-        this.problems$ = this.store.pipe(select(fromProblems.getProblems), map(this.asArray)) as Observable<Problem[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
+        this.problems$ = this.store.pipe(select(fromProblems.getProblems));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
-        this.sessionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsLoading));
-        this.problemsLoading$ = this.store.pipe(select(fromProblems.getProblemsLoading));
+        this.recentlyCreatedSessionId$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId));
+        this.recenlyCreatedSessionProblems$ = combineLatest(this.problems$, this.recentlyCreatedSessionId$,
+            (problems, id) => {return this.filterProblemsForSession(problems, id)});
+        this.recenlyCreatedSessionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus))
     }
 
     ngOnInit() {
@@ -48,6 +55,7 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
+        this.store.dispatch(new SessionCreationActions.Create(session.id));
         this.store.dispatch(new SessionActions.Create(session));
         this.dialogRef = this.openDialog(session);
     }
@@ -57,9 +65,8 @@ export class SessionsCreateComponent implements OnInit {
             width: 'auto',
             minWidth: 350,
             data: {
-                sessionLoading: this.sessionsLoading$,
-                problemsLoading$: this.problemsLoading$,
-                problems$: this.problems$.pipe(switchMap((data) => Observable.of(this.filterProblemsForSession(data, session.id))))
+                createdSessionStatus$: this.recenlyCreatedSessionStatus$,
+                problems$: this.recenlyCreatedSessionProblems$
             } as SessionCreationSummary,
             hasBackdrop: true
         });
@@ -69,7 +76,7 @@ export class SessionsCreateComponent implements OnInit {
         return Object.values(data) || [];
     }
 
-    private filterProblemsForSession(problems: Problem[], sessionId: string | String) {
+    private filterProblemsForSession(problems: Dictionary<Problem>, sessionId: string | String) {
         return Object.values(problems).filter(problem => {
             return problem.references ? problem.references.find(ref => {
                 return ref ? ref.entity_id === sessionId : false

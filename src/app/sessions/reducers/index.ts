@@ -3,6 +3,7 @@ import * as fromJudges from '../../judges/reducers/judge.reducer';
 import * as fromJudgesIndex from '../../judges/reducers/index';
 import * as fromHearingPartIndex from '../../hearing-part/reducers/index';
 import * as fromSessions from './session.reducer'
+import * as fromSessionCreate from './session-creation.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
@@ -10,6 +11,7 @@ import { SessionViewModel } from '../models/session.viewmodel';
 export interface SessionsState {
     readonly sessions: fromSessions.State;
     readonly rooms: fromRooms.State;
+    readonly sessionCreation: fromSessionCreate.State;
 }
 
 export interface State extends fromRoot.State {
@@ -19,6 +21,7 @@ export interface State extends fromRoot.State {
 export const reducers: ActionReducerMap<SessionsState> = {
     sessions: fromSessions.reducer,
     rooms: fromRooms.reducer,
+    sessionCreation: fromSessionCreate.reducer
 };
 
 export const getSessionsState = createFeatureSelector<SessionsState>('sessions');
@@ -35,6 +38,30 @@ export const getRooms = createSelector(
 export const getSessionsEntitiesState = createSelector(
     getSessionsState,
     state => state.sessions
+);
+
+export const getSessionCreationState = createSelector(
+    getSessionsState,
+    state => state.sessionCreation
+);
+
+export const getSessionCreationEntitiesState = createSelector(
+    getSessionCreationState,
+    state => state.entities
+);
+
+export const getRecentlyCreatedSessionId = createSelector(
+    getSessionCreationState,
+    fromSessionCreate.getRecent
+);
+
+export const getRecentlyCreatedSessionStatus = createSelector(
+    getSessionCreationEntitiesState,
+    getRecentlyCreatedSessionId,
+    (sessionCreationEntities, recentlyCreatedSessionId) => {
+        console.log(sessionCreationEntities[recentlyCreatedSessionId]);
+        return sessionCreationEntities[recentlyCreatedSessionId];
+    }
 );
 
 export const getSessionsLoading = createSelector(
@@ -72,3 +99,11 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
         });
         return Object.values(finalSessions);
     });
+
+export const getRecentlyCreatedSession = createSelector(
+    getAllSessions,
+    fromSessionCreate.getRecent,
+    (sessions, recentlyCreatedSessionId) => {
+        return sessions[recentlyCreatedSessionId];
+    }
+);
