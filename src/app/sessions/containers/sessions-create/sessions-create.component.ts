@@ -14,7 +14,7 @@ import * as fromSessionIndex from '../../reducers/index';
 import { SessionsCreateDialogComponent } from '../../components/sessions-create-dialog/sessions-create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Problem } from '../../../problems/models/problem.model';
 
 @Component({
@@ -30,6 +30,7 @@ export class SessionsCreateComponent implements OnInit {
     problemsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
+    dialogRef: any;
 
     constructor(private store: Store<State>, public dialog: MatDialog) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
@@ -48,18 +49,17 @@ export class SessionsCreateComponent implements OnInit {
 
     create(session) {
         this.store.dispatch(new SessionActions.Create(session));
-
-        this.openDialog(session);
+        this.dialogRef = this.openDialog(session);
     }
 
     private openDialog(session) {
-        this.dialog.open(SessionsCreateDialogComponent, {
+        return this.dialog.open(SessionsCreateDialogComponent, {
             width: 'auto',
             minWidth: 350,
             data: {
                 sessionLoading: this.sessionsLoading$,
                 problemsLoading$: this.problemsLoading$,
-                problems$: this.problems$.pipe(map((data) => this.filterProblemsForSession(data, session.id)))
+                problems$: this.problems$.pipe(switchMap((data) => Observable.of(this.filterProblemsForSession(data, session.id))))
             } as SessionCreationSummary,
             hasBackdrop: true
         });

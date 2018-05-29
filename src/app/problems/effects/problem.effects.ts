@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, concatMap, map, mergeMap } from 'rxjs/operators';
+import { catchError, concatMap, map, mergeMap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,7 +26,7 @@ export class ProblemEffects {
         ofType<GetForSession>(ProblemActionTypes.GetForSession),
         mergeMap(action =>
             this.problemsService.getForEntity(action.payload).pipe(
-                concatMap(data => [
+                switchMap(data => [
                     new UpsertMany(data.entities.problems)]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )

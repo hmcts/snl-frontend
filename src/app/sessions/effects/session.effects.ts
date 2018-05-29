@@ -36,9 +36,9 @@ export class SessionEffects {
     @Effect()
     create$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
-        switchMap(action =>
+        mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateAcknowledged(action.payload.id)]),
+                switchMap(() => [new sessionActions.CreateAcknowledged(action.payload.id)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -56,7 +56,7 @@ export class SessionEffects {
                     return data;
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
-                mergeMap((data) => [new problemActions.GetForSession(action.payload),
+                switchMap((data) => [new problemActions.GetForSession(action.payload),
                     new sessionActions.UpsertOne(data)])
             )
         ),

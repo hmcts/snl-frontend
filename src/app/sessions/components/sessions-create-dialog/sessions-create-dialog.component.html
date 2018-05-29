@@ -26,7 +26,10 @@
   <mat-spinner *ngIf="dataLoading$ | async" fxFlex></mat-spinner>
 
   <div style="margin-top: 20px" fxFlex *ngFor="let problem of data.problems$ | async; let i = index">
-    <div>{{i + 1}}. {{problem.type.split('_').join(' ')}} - {{problem.severity}} </div>
+    <p>{{i + 1}}. {{problem.type.split('_').join(' ')}} - {{problem.severity}}</p>
+      <ul>
+        <li *ngFor="let reference of problem.references">{{reference.description}}</li>
+      </ul>
   </div>
 
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
