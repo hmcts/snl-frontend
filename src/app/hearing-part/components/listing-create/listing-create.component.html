@@ -48,6 +48,15 @@
             <div fxLayoutAlign="center center" fxFlex="10">*</div>
         </div>
 
+        <div>
+            <div>Created at:</div>
+            <mat-form-field>
+                <input matInput [matDatepicker]="createdAt" [(ngModel)]="listing.createdAt" placeholder="M/D/YYYY">
+                <mat-datepicker-toggle matSuffix [for]="createdAt"></mat-datepicker-toggle>
+                <mat-datepicker #createdAt></mat-datepicker>
+            </mat-form-field>
+        </div>
+
         <div fxLayout="row">
             <div fxFlex="50%" fxLayoutAlign="start start">Target Schedule</div>
             <div fxFlex="50%">
