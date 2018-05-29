@@ -62,6 +62,7 @@ export class ListingCreateComponent implements OnInit {
             duration: moment.duration(0, DURATION_UNIT),
             scheduleStart: null,
             scheduleEnd: null,
+            createdAt: new Date(moment.now())
         } as ListingCreate;
         this.duration = 0;
         this.errors = '';
