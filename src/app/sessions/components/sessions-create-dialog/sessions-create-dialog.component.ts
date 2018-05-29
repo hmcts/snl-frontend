@@ -23,9 +23,9 @@ export class SessionsCreateDialogComponent implements OnInit {
       this.buttonText$ = this.dataLoading$.map(loading => loading ? 'Leave' : 'Ok');
   }
 
-    onCloseClick(): void {
-        this.dialogRef.close();
-    }
+  onCloseClick(): void {
+    this.dialogRef.close();
+  }
 
   ngOnInit() {
   }

@@ -5,7 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './effects/session.effects';
 import { SessionsPageComponent } from './containers/sessions-page/sessions-page.component';
 import { SessionsCreateComponent } from './containers/sessions-create/sessions-create.component';
-import { SessionsSearchComponent } from './components/sessions-search/sessions-search.component';
+import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
 import { SessionTableComponent } from './components/session-table/session-table.component';
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
