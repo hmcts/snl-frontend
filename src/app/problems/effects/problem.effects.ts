@@ -7,7 +7,6 @@ import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProblemsService } from '../services/problems.service';
 import { Get, GetComplete, GetFailed, GetForSession, ProblemActionTypes, UpsertMany } from '../actions/problem.action';
-import * as fromProblemReferences from '../actions/problem-reference.action';
 
 @Injectable()
 export class ProblemEffects {
@@ -28,7 +27,6 @@ export class ProblemEffects {
         mergeMap(action =>
             this.problemsService.getForEntity(action.payload).pipe(
                 concatMap(data => [
-                    new fromProblemReferences.UpsertMany(data.entities.problemReferences),
                     new UpsertMany(data.entities.problems)]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )
