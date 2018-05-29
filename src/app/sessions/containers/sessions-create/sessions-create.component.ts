@@ -15,7 +15,7 @@ import { SessionsCreateDialogComponent } from '../../components/sessions-create-
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
 import { map, tap } from 'rxjs/operators';
-import { ProblemViewmodel } from '../../../problems/models/problem.viewmodel';
+import { Problem } from '../../../problems/models/problem.model';
 
 @Component({
   selector: 'app-sessions-create',
@@ -25,7 +25,7 @@ import { ProblemViewmodel } from '../../../problems/models/problem.viewmodel';
 export class SessionsCreateComponent implements OnInit {
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
-    problems$: Observable<ProblemViewmodel[]>;
+    problems$: Observable<Problem[]>;
     sessionsLoading$: Observable<boolean>;
     problemsLoading$: Observable<boolean>;
     judgesLoading$: Observable<boolean>;
@@ -34,7 +34,7 @@ export class SessionsCreateComponent implements OnInit {
     constructor(private store: Store<State>, public dialog: MatDialog) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-        this.problems$ = this.store.pipe(select(fromProblems.getProblemsWithReferences), map(this.asArray)) as Observable<ProblemViewmodel[]>;
+        this.problems$ = this.store.pipe(select(fromProblems.getProblems), map(this.asArray)) as Observable<Problem[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
         this.sessionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsLoading));
@@ -69,7 +69,7 @@ export class SessionsCreateComponent implements OnInit {
         return Object.values(data) || [];
     }
 
-    private filterProblemsForSession(problems: ProblemViewmodel[], sessionId: string | String) {
+    private filterProblemsForSession(problems: Problem[], sessionId: string | String) {
         return Object.values(problems).filter(problem => {
             return problem.references ? problem.references.find(ref => {
                 return ref ? ref.entity_id === sessionId : false

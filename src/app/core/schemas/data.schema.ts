@@ -18,11 +18,7 @@ hearingPart.define({session: session} as Schema);
 export const sessions = new schema.Array(session);
 export const sessionsWithHearings = new schema.Entity('sessionsWithHearings', {sessions, hearingParts}  as Schema);
 
-export const problemReference = new schema.Entity('problemReferences');
-export const problemReferences = new schema.Array(problemReference);
-
 export const problem = new schema.Entity('problems', {
-    references: problemReferences
 } as Schema);
 
 export const problems = new schema.Array(problem);
