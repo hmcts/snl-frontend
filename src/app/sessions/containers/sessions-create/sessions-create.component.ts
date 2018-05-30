@@ -55,7 +55,7 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
-        this.store.dispatch(new SessionCreationActions.Create(session.id));
+        this.store.dispatch(new SessionCreationActions.Create(session));
         this.store.dispatch(new SessionActions.Create(session));
         this.dialogRef = this.openDialog(session);
     }

@@ -11,7 +11,16 @@ export const initialState: State = adapter.getInitialState({recent: ''});
 export function reducer(state: State = initialState, action) {
   switch (action.type) {
     case SessionCreationActionTypes.Create: {
-        return upsertSession({...state, recent: action.payload}, action, true, 'Session creation started', false);
+        let updatedSession = {
+            id: action.payload.id,
+            changes: {
+                status: 'Session creation started',
+                problemsLoaded: true,
+                sessionCreated: false,
+                transactionId: action.payload.userTransactionId
+            }
+        } as Update<SessionCreationStatus>;
+        return {...state, ...adapter.upsertOne(updatedSession, {...state, recent: action.payload.id})};
     }
     case SessionCreationActionTypes.CreateAcknowledged: {
         return upsertSession(state, action, true, 'Session creation acknowledged', false);
@@ -34,12 +43,14 @@ export function reducer(state: State = initialState, action) {
 }
 
 function upsertSession(state, action, problemsLoaded: boolean, status: string, sessionCreated: boolean) {
+    console.log('================');
+    console.log(action);
     let updatedSession = {
         id: action.payload,
         changes: {
             status: status,
             problemsLoaded: problemsLoaded,
-            sessionCreated: sessionCreated
+            sessionCreated: sessionCreated,
         }
     } as Update<SessionCreationStatus>;
     return {...state, ...adapter.upsertOne(updatedSession, state)};

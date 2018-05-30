@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, retryWhen, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, concatMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
@@ -52,17 +52,18 @@ export class SessionEffects {
     checkIfCreated: Observable<Action> = this.actions$.pipe(
         ofType<sessionCreationActions.CreateAcknowledged>(sessionCreationActions.SessionCreationActionTypes.CreateAcknowledged),
         mergeMap(action =>
-            this.sessionsService.getSession(action.payload).pipe(
+            this.sessionsService.getUserTransaction(action.payload).pipe(
                 map(data => {
-                    if (!data.entities.sessions) {
+                    if ((data.rulesProcessingStatus !== 'COMPLETE') && (data.status !== 'STARTED')) {
                         throw 'no data';
                     }
-                    return data;
+                    console.log('------');
+                    console.log(data);
+                    return data.id;
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
-                mergeMap((data) => [new sessionCreationActions.GetProblemsForSession(action.payload),
-                    new sessionCreationActions.CreateComplete(action.payload),
-                    new sessionActions.UpsertOne(Object.values(data.entities.sessions)[0] as Session)]),
+                concatMap((data) => [new sessionCreationActions.GetProblemsForSession(data),
+                    new sessionCreationActions.CreateComplete(data)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -72,7 +73,7 @@ export class SessionEffects {
     getProblemsForCreatedSession: Observable<Action> = this.actions$.pipe(
         ofType<sessionCreationActions.GetProblemsForSession>(sessionCreationActions.SessionCreationActionTypes.GetProblemsForSession),
         mergeMap(action =>
-            this.problemsService.getForEntity(action.payload).pipe(
+            this.problemsService.getForTransaction(action.payload).pipe(
                 mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
                     new sessionCreationActions.ProblemsLoaded(action.payload)]),
             )

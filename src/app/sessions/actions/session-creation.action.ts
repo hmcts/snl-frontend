@@ -28,13 +28,14 @@ export enum SessionCreationActionTypes {
 export class Create implements Action {
     readonly type = SessionCreationActionTypes.Create;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: SessionCreate) {}
 }
 
 export class GetProblemsForSession implements Action {
     readonly type = SessionCreationActionTypes.GetProblemsForSession;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: string | String) {
+    }
 }
 
 export class CreateAcknowledged implements Action {

@@ -25,7 +25,7 @@ export class ProblemEffects {
     searchForSession$: Observable<Action> = this.actions$.pipe(
         ofType<GetForSession>(ProblemActionTypes.GetForSession),
         mergeMap(action =>
-            this.problemsService.getForEntity(action.payload).pipe(
+            this.problemsService.getForTransaction(action.payload).pipe(
                 switchMap(data => [
                     new UpsertMany(data.entities.problems)]),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
