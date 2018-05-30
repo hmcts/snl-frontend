@@ -17,6 +17,7 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { GetProblemsForSession } from '../actions/session-creation.action';
 import { ProblemsService } from '../../problems/services/problems.service';
+import { Session } from '../models/session.model';
 
 @Injectable()
 export class SessionEffects {
@@ -61,7 +62,7 @@ export class SessionEffects {
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
                 mergeMap((data) => [new sessionCreationActions.GetProblemsForSession(action.payload),
                     new sessionCreationActions.CreateComplete(action.payload),
-                    new sessionActions.UpsertOne(data)]),
+                    new sessionActions.UpsertOne(Object.values(data.entities.sessions)[0] as Session)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
