@@ -9,6 +9,8 @@ export enum SessionCreationActionTypes {
   CreateComplete = '[SessionCreation] Create Complete',
   Create = '[SessionCreation] Create',
   CreateAcknowledged = '[SessionCreation] Create Acknowledged',
+  ProblemsLoaded = '[SessionCreation] Problems Loaded',
+  GetProblemsForSession = '[SessionCreation] Get problems for session',
   CreateFailed = '[SessionCreation] Create Failed',
   UpsertOne = '[SessionCreation] Upsert One',
   GetRecent = '[SessionCreation] Get Recent',
@@ -29,8 +31,20 @@ export class Create implements Action {
     constructor(public payload: string | String) {}
 }
 
+export class GetProblemsForSession implements Action {
+    readonly type = SessionCreationActionTypes.GetProblemsForSession;
+
+    constructor(public payload: string | String) {}
+}
+
 export class CreateAcknowledged implements Action {
     readonly type = SessionCreationActionTypes.CreateAcknowledged;
+
+    constructor(public payload: string | String) {}
+}
+
+export class ProblemsLoaded implements Action {
+    readonly type = SessionCreationActionTypes.ProblemsLoaded;
 
     constructor(public payload: string | String) {}
 }

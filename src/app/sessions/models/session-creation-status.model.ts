@@ -1,6 +1,6 @@
 export interface SessionCreationStatus {
   sessionId: string,
   status: string,
-  inProgress: boolean,
+  problemsLoaded: boolean,
   sessionCreated: boolean,
 }

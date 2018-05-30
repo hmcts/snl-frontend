@@ -12,29 +12,29 @@
     <div fxFlex>
       Session created!
     </div>
-    <div fxFlex *ngIf="inProgress$ | async">
+    <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...
     </div>
     <div *ngIf="(data.problems$ | async).length !== 0">
       Problems:
     </div>
-    <div fxFlex *ngIf="!(inProgress$ | async) && ((data.problems$ | async).length === 0)">
+    <div fxFlex *ngIf="(problemsLoaded$ | async) && ((data.problems$ | async).length === 0)">
       No problems occurred!
     </div>
   </div>
 
-  <mat-spinner *ngIf="inProgress$ | async" fxFlex></mat-spinner>
+  <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
 
   <div fxFlex>
     <div style="margin-top: 20px" *ngFor="let problem of data.problems$ | async; let i = index">
-      <p>{{i + 1}}. {{problem.type.split('_').join(' ')}} - {{problem.severity}}</p>
+      <p>{{i + 1}}. {{problem.message}} - {{problem.severity}}</p>
       <ul>
-        <li *ngFor="let reference of problem.references">{{reference.description}}</li>
+        <li *ngFor="let reference of problem.references">{{reference.entity}} - {{reference.description}}</li>
       </ul>
     </div>
   </div>
 
-  <div *ngIf="inProgress$ | async">
+  <div *ngIf="!(finished$ | async)">
       You are allowed to hide this dialog, the session processing will continue in the background.
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>

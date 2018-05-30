@@ -15,6 +15,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
+import { GetProblemsForSession } from '../actions/session-creation.action';
+import { ProblemsService } from '../../problems/services/problems.service';
 
 @Injectable()
 export class SessionEffects {
@@ -39,7 +41,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                switchMap(() => [new sessionCreationActions.CreateAcknowledged(action.payload.id)]),
+                mergeMap((data) => [new sessionCreationActions.CreateAcknowledged(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -57,9 +59,21 @@ export class SessionEffects {
                     return data;
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
-                switchMap((data) => [new problemActions.GetForSession(action.payload),
+                mergeMap((data) => [new sessionCreationActions.GetProblemsForSession(action.payload),
                     new sessionCreationActions.CreateComplete(action.payload),
-                    new sessionActions.UpsertOne(data)])
+                    new sessionActions.UpsertOne(data)]),
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+    );
+
+    @Effect()
+    getProblemsForCreatedSession: Observable<Action> = this.actions$.pipe(
+        ofType<sessionCreationActions.GetProblemsForSession>(sessionCreationActions.SessionCreationActionTypes.GetProblemsForSession),
+        mergeMap(action =>
+            this.problemsService.getForEntity(action.payload).pipe(
+                mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
+                    new sessionCreationActions.ProblemsLoaded(action.payload)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -117,6 +131,6 @@ export class SessionEffects {
         )
     );
 
-    constructor(private sessionsService: SessionsService, private actions$: Actions) {
+    constructor(private sessionsService: SessionsService, private problemsService: ProblemsService, private actions$: Actions) {
     }
 }

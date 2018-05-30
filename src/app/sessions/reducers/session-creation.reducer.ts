@@ -22,6 +22,9 @@ export function reducer(state: State = initialState, action) {
     case SessionCreationActionTypes.CreateComplete: {
         return upsertSession(state, action, false, 'Session creation complete', true);
     }
+    case SessionCreationActionTypes.ProblemsLoaded: {
+        return upsertSession(state, action, true, 'Problems loaded', true);
+    }
     case SessionCreationActionTypes.RemoveOne: {
       return adapter.removeOne(action.payload.id, state);
     }
@@ -30,12 +33,12 @@ export function reducer(state: State = initialState, action) {
   }
 }
 
-function upsertSession(state, action, inProgress: boolean, status: string, sessionCreated: boolean) {
+function upsertSession(state, action, problemsLoaded: boolean, status: string, sessionCreated: boolean) {
     let updatedSession = {
         id: action.payload,
         changes: {
             status: status,
-            inProgress: inProgress,
+            problemsLoaded: problemsLoaded,
             sessionCreated: sessionCreated
         }
     } as Update<SessionCreationStatus>;
