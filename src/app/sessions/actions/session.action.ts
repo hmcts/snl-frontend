@@ -13,8 +13,10 @@ export enum SessionActionTypes {
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   CreateComplete = '[Session] Create Complete',
+  CreateAcknowledged = '[Session] Create Acknowledged',
   CreateFailed = '[Session] Create Failed',
-  UpsertMany = '[Session] Upsert Many'
+  UpsertMany = '[Session] Upsert Many',
+  UpsertOne = '[Session] Upsert One'
 }
 
 /**
@@ -66,10 +68,16 @@ export class Create implements Action {
     constructor(public payload: SessionCreate) {}
 }
 
+export class CreateAcknowledged implements Action {
+    readonly type = SessionActionTypes.CreateAcknowledged;
+
+    constructor(public payload: string | String) {}
+}
+
 export class CreateComplete implements Action {
     readonly type = SessionActionTypes.CreateComplete;
 
-    constructor() {}
+    constructor(public payload: string | String) {}
 }
 
 export class CreateFailed implements Action {
@@ -82,4 +90,10 @@ export class UpsertMany implements Action {
     readonly type = SessionActionTypes.UpsertMany;
 
     constructor(public payload: Session[]) {}
+}
+
+export class UpsertOne implements Action {
+    readonly type = SessionActionTypes.UpsertOne;
+
+    constructor(public payload: Session) {}
 }

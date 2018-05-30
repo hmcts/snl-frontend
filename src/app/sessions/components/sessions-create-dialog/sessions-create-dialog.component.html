@@ -1,0 +1,44 @@
+<div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
+  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(sessionCreated$ | async)">
+    <p fxFlex>
+      Your session is being created...
+    </p>
+    <p fxFlex>
+      Potential problems will be displayed below when computation finishes.
+    </p>
+  </div>
+
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionCreated$ | async">
+    <div fxFlex>
+      Session created!
+    </div>
+    <div fxFlex *ngIf="!(problemsLoaded$ | async)">
+      Loading the problems...
+    </div>
+    <div *ngIf="(data.problems$ | async).length !== 0">
+      Problems:
+    </div>
+    <div fxFlex *ngIf="(problemsLoaded$ | async) && ((data.problems$ | async).length === 0)">
+      No problems occurred!
+    </div>
+  </div>
+
+  <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
+
+  <div fxFlex>
+    <div style="margin-top: 20px" *ngFor="let problem of data.problems$ | async; let i = index">
+      <p>{{i + 1}}. {{problem.message}} - {{problem.severity}}</p>
+      <ul>
+        <li *ngFor="let reference of problem.references">{{reference.entity}} - {{reference.description}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div *ngIf="!(finished$ | async)">
+      You are allowed to hide this dialog, the session processing will continue in the background.
+  </div>
+  <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
+    <button mat-button (click)="onCloseClick()">{{buttonText$ | async}}</button>
+  </div>
+
+</div>
