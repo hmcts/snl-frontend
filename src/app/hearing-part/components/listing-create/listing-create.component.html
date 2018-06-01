@@ -51,7 +51,7 @@
         <div>
             <div>Created at:</div>
             <mat-form-field>
-                <input matInput [matDatepicker]="createdAt" [(ngModel)]="listing.createdAt" placeholder="M/D/YYYY">
+                <input matInput [matDatepicker]="createdAt" [(ngModel)]="listing.createdAt" placeholder="DD/MM/YYYY">
                 <mat-datepicker-toggle matSuffix [for]="createdAt"></mat-datepicker-toggle>
                 <mat-datepicker #createdAt></mat-datepicker>
             </mat-form-field>
@@ -65,7 +65,7 @@
                     <div>
                         <mat-form-field class="date-picker-element">
                             <input matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart"
-                                   placeholder="M/D/YYYY">
+                                   placeholder="DD/MM/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                             <mat-datepicker #pickerStart></mat-datepicker>
                         </mat-form-field>
@@ -76,7 +76,7 @@
                     <div>
                         <mat-form-field class="date-picker-element">
                             <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd"
-                                   placeholder="M/D/YYYY">
+                                   placeholder="DD/MM/YYYY">
                             <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                             <mat-datepicker #pickerEnd></mat-datepicker>
                         </mat-form-field>
