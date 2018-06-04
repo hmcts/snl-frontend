@@ -19,7 +19,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Problem } from '../../../problems/models/problem.model';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { SessionCreationStatus } from '../../models/session-creation-status.model';
+import { SessionTransaction } from '../../models/session-creation-status.model';
 
 @Component({
   selector: 'app-sessions-create',
@@ -31,7 +31,7 @@ export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     problems$: Observable<Dictionary<Problem>>;
     recenlyCreatedSessionProblems$: Observable<Problem[]>;
-    recenlyCreatedSessionStatus$: Observable<SessionCreationStatus>;
+    recenlyCreatedSessionStatus$: Observable<SessionTransaction>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
     recentlyCreatedSessionId$: Observable<string>;
@@ -55,7 +55,11 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
-        this.store.dispatch(new SessionCreationActions.Create(session));
+        let transaction = {
+            sessionId: session.id,
+            id: session.userTransactionId
+        } as SessionTransaction;
+        this.store.dispatch(new SessionCreationActions.Create(transaction));
         this.store.dispatch(new SessionActions.Create(session));
         this.dialogRef = this.openDialog(session);
     }
