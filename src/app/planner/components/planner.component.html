@@ -3,5 +3,15 @@
 </p>
 
 <div>
-  <ng-fullcalendar-scheduler></ng-fullcalendar-scheduler>
+  <app-core-callendar [events]="sessions$ | async"
+                      (loadData)="loadData($event)"
+                      (eventClickCallback)="eventClick($event)"
+                      [resourceColumns]="columns"
+                      [resources]="resources"
+                      [dataTransformer]="dataTransformer"
+                      [defaultView]="timelineDay"
+                      [header]="header"
+                      [views]="views"
+  ></app-core-callendar>
+
 </div>
