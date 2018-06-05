@@ -18,7 +18,7 @@ export class SessionsService {
 
     getUserTransaction(id: string | String): Observable<any> {
         return this.http
-            .get<Session>(`${this.config.getApiUrl()}/user-transaction/${id}`)
+            .get<any>(`${this.config.getApiUrl()}/user-transaction/${id}`)
             .pipe(map(data =>  data || []));
     }
 
