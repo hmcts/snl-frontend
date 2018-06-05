@@ -2,6 +2,7 @@ import { Component, Input, Output, OnInit, NgZone, AfterViewInit, AfterContentCh
   AfterViewChecked, ElementRef, EventEmitter } from '@angular/core';
 import * as $ from 'jquery';
 import 'fullcalendar';
+import 'fullcalendar-scheduler';
 import './lib/customEvent';
 import { ButtonClickModel } from './models/buttonClickModel';
 import { UpdateEventModel } from './models/updateEventModel';

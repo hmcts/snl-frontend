@@ -3,11 +3,9 @@ import { select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../sessions/reducers/index';
-import { SearchForDates, SearchForJudgeWithHearings, } from '../../sessions/actions/session.action';
+import { SearchForDates, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { ActivatedRoute } from '@angular/router';
-import { SecurityService } from '../../security/services/security.service';
-import { DiaryLoadParameters } from '../../sessions/models/diary-load-parameters.model';
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
@@ -20,11 +18,11 @@ import { DataWithSimpleResourceTransformer } from '../../core/callendar/transfor
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 
 @Component({
-  selector: 'app-planner',
-  templateUrl: './planner.component.html',
-  styleUrls: ['./planner.component.scss']
+    selector: 'app-planner',
+    templateUrl: './planner.component.html',
+    styleUrls: ['./planner.component.scss']
 })
-export class PlannerComponent  implements OnInit {
+export class PlannerComponent implements OnInit {
 
     header: any;
     views: any;
@@ -33,14 +31,11 @@ export class PlannerComponent  implements OnInit {
     dataTransformer: IcalendarTransformer<SessionViewModel>;
     loadData;
     sessions$: Observable<any[]>;
+    defaultView: string;
 
     constructor(private store: Store<State>, private route: ActivatedRoute,
                 public dialog: MatDialog) {
-        this.sessions$ = this.store.select(fromReducer.getFullSessions);
-    }
-
-    ngOnInit() {
-        // configure
+        this.defaultView = 'timelineWeek';
         this.dataTransformer = new DataWithSimpleResourceTransformer('room');
         this.columns = [
             {
@@ -56,16 +51,22 @@ export class PlannerComponent  implements OnInit {
             this.resources = newResourceList.get();
         });
         this.header = {
-            center: 'month,timelineFourDays'
+            left: 'prev,next today',
+            center: 'title',
+            right: 'timelineDay,timelineWeek,timelineMonth'
         };
         this.views = {
-            timelineFourDays: {
-                type: 'timeline',
-                    duration: {days: 4}
+            timelineDay: {
+                slotDuration: '00:10'
+            },
+            timelineWeek: {
+                slotDuration: '00:30'
             }
         };
+    }
 
-        // ask for data
+    ngOnInit() {
+        this.sessions$ = this.store.select(fromReducer.getFullSessions);
         this.store.dispatch(new fromRoomActions.Get());
         this.route.data.subscribe((data) => {
             this.loadData = this.loadDataForAllJudges;
