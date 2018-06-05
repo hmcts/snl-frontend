@@ -5,7 +5,7 @@ import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers/index';
-import * as fromSessions from '../../reducers';
+import * as fromSessions from '../../reducers/index';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
@@ -15,7 +15,7 @@ import * as RoomActions from '../../../rooms/actions/room.action';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
-import * as fromJudges from '../../../judges/reducers';
+import * as fromJudges from '../../../judges/reducers/index';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';

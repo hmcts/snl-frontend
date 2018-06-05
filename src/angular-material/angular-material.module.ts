@@ -18,7 +18,7 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatTableModule,
-    MatToolbarModule, MatMenuModule
+    MatToolbarModule, MatMenuModule, MatProgressSpinnerModule
 } from '@angular/material';
 
 @NgModule({
@@ -42,7 +42,9 @@ import {
     MatPaginatorModule,
     MatRadioModule,
     MatDialogModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatCardModule,
@@ -62,8 +64,9 @@ import {
     MatCheckboxModule,
     MatPaginatorModule,
     MatRadioModule,
+    MatMenuModule,
     MatDialogModule,
-    MatMenuModule
+    MatProgressSpinnerModule
   ],
   declarations: []
 })

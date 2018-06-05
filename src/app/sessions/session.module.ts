@@ -4,9 +4,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './effects/session.effects';
 import { SessionsPageComponent } from './containers/sessions-page/sessions-page.component';
-import { SessionsCreateComponent } from './components/sessions-create/sessions-create.component';
-import { SessionsSearchComponent } from './components/sessions-search/sessions-search.component';
-import { SessionTableComponent } from './containers/session-table/session-table.component';
+import { SessionsCreateComponent } from './containers/sessions-create/sessions-create.component';
+import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
+import { SessionTableComponent } from './components/session-table/session-table.component';
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -22,6 +22,8 @@ import { SessionsFilterComponent } from './components/sessions-filter/sessions-f
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
+import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
+import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -29,7 +31,9 @@ export const COMPONENTS = [
     SessionsSearchComponent,
     SessionTableComponent,
     SessionsFilterComponent,
-    DetailsDialogComponent
+    DetailsDialogComponent,
+    SessionsCreateDialogComponent,
+    SessionsCreateFormComponent
 ];
 
 @NgModule({
@@ -57,7 +61,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService]
