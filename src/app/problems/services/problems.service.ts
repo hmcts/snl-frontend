@@ -19,9 +19,9 @@ export class ProblemsService {
             .pipe(map(this.normalizeProblems));
     }
 
-    getForEntity(id: string | number | String): Observable<any> {
+    getForTransaction(id: string | number | String): Observable<any> {
         return this.http
-            .get<Problem[]>(`${this.config.getApiUrl()}/problems/by-entity-id?id=${id}`)
+            .get<Problem[]>(`${this.config.getApiUrl()}/problems/by-user-transaction-id?id=${id}`)
             .pipe(map(this.normalizeProblems));
     }
 

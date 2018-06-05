@@ -1,20 +1,24 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
-import { SessionCreationStatus } from '../models/session-creation-status.model';
+import { SessionTransaction } from '../models/session-creation-status.model';
 import { SessionCreationActionTypes } from '../actions/session-creation.action';
 
-export interface State extends EntityState<SessionCreationStatus> {
+export interface State extends EntityState<SessionTransaction> {
     recent: string
 }
-export const adapter: EntityAdapter<SessionCreationStatus> = createEntityAdapter<SessionCreationStatus>();
+export const adapter: EntityAdapter<SessionTransaction> = createEntityAdapter<SessionTransaction>();
 export const initialState: State = adapter.getInitialState({recent: ''});
 
 export function reducer(state: State = initialState, action) {
   switch (action.type) {
     case SessionCreationActionTypes.Create: {
-        return upsertSession({...state, recent: action.payload}, action, true, 'Session creation started', false);
+        action.payload.problemsLoaded = false;
+        action.payload.sessionCreated = false;
+        console.log(action.payload);
+
+        return {...state, ...adapter.addOne(action.payload, {...state, recent: action.payload.id})}
     }
     case SessionCreationActionTypes.CreateAcknowledged: {
-        return upsertSession(state, action, true, 'Session creation acknowledged', false);
+        return upsertSession(state, action, false, 'Session creation acknowledged', false);
     }
     case SessionCreationActionTypes.CreateFailed: {
         return upsertSession(state, action, false, 'Session creation failed', true);
@@ -34,14 +38,16 @@ export function reducer(state: State = initialState, action) {
 }
 
 function upsertSession(state, action, problemsLoaded: boolean, status: string, sessionCreated: boolean) {
+    console.log('================');
+    console.log(action);
     let updatedSession = {
         id: action.payload,
         changes: {
             status: status,
             problemsLoaded: problemsLoaded,
-            sessionCreated: sessionCreated
+            sessionCreated: sessionCreated,
         }
-    } as Update<SessionCreationStatus>;
+    } as Update<SessionTransaction>;
     return {...state, ...adapter.upsertOne(updatedSession, state)};
 }
 

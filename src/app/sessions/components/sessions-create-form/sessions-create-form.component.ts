@@ -28,6 +28,7 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
   constructor() {
       this.session = {
+          userTransactionId: undefined,
           id: undefined,
           start: moment().toDate(),
           duration: 0,
@@ -43,7 +44,7 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
   ngOnInit() {
   }
- 
+
   ngOnChanges() {
       this.roomsPlaceholder = this.roomsLoading ? 'Loading the rooms...' : 'Select the room';
       this.judgesPlaceholder = this.judgesLoading ? 'Loading the judges...' : 'Select the judge';
@@ -51,6 +52,7 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
   create() {
       this.session.id = uuid();
+      this.session.userTransactionId = uuid();
       let time_arr = this.time.split(':');
       this.session.start.setHours(+time_arr[0]);
       this.session.start.setMinutes(+time_arr[1]);

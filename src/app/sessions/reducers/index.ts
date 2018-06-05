@@ -50,14 +50,22 @@ export const getSessionCreationEntitiesState = createSelector(
     state => state.entities
 );
 
-export const getRecentlyCreatedSessionId = createSelector(
+export const getRecentlyCreatedTransactionId = createSelector(
     getSessionCreationState,
-    fromSessionCreate.getRecent
+    fromSessionCreate.getRecent,
+);
+
+export const getRecentlyCreatedSessionId = createSelector(
+    getRecentlyCreatedTransactionId,
+    getSessionCreationEntitiesState,
+    (transactionId, transactions) => {
+        return transactions[transactionId].sessionId;
+    }
 );
 
 export const getRecentlyCreatedSessionStatus = createSelector(
     getSessionCreationEntitiesState,
-    getRecentlyCreatedSessionId,
+    getRecentlyCreatedTransactionId,
     (sessionCreationEntities, recentlyCreatedSessionId) => {
         console.log(sessionCreationEntities[recentlyCreatedSessionId]);
         return sessionCreationEntities[recentlyCreatedSessionId];

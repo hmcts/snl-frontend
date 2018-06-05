@@ -3,7 +3,7 @@ import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { SessionCreate } from '../models/session-create.model';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
-import { SessionCreationStatus } from '../models/session-creation-status.model';
+import { SessionTransaction } from '../models/session-creation-status.model';
 
 export enum SessionCreationActionTypes {
   CreateComplete = '[SessionCreation] Create Complete',
@@ -28,13 +28,14 @@ export enum SessionCreationActionTypes {
 export class Create implements Action {
     readonly type = SessionCreationActionTypes.Create;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: SessionTransaction) {}
 }
 
 export class GetProblemsForSession implements Action {
     readonly type = SessionCreationActionTypes.GetProblemsForSession;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: string | String) {
+    }
 }
 
 export class CreateAcknowledged implements Action {
@@ -64,7 +65,7 @@ export class CreateFailed implements Action {
 export class UpsertOne implements Action {
     readonly type = SessionCreationActionTypes.UpsertOne;
 
-    constructor(public payload: SessionCreationStatus) {}
+    constructor(public payload: SessionTransaction) {}
 }
 
 export class GetRecent implements Action {
