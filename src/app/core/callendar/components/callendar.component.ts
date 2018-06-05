@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
 import { Default } from 'fullcalendar/View';
+import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 
 @Component({
     selector: 'app-core-callendar',
@@ -10,21 +10,61 @@ import { Default } from 'fullcalendar/View';
     styleUrls: ['./callendar.component.scss']
 })
 export class CallendarComponent implements OnInit {
-    _events: any[];
+
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
-    calendarOptions: any;
     @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
+    calendarOptions: any;
     errors: string;
     references = [];
     calHeight = 'auto';
 
-    @Input('events')
-    set events(value: any[]) {
-        this._events = this.transformSessions(value);
+    private _events: any[];
+    @Input('events') set events(value: any[]) {
+        if (value === undefined) {
+            return;
+        }
+        let events = [];
+        value.forEach((element) => {
+            events.push(this.dataTransformer.transform(element));
+        });
+        this._events = events;
     }
 
+    get events(): any[] {
+        return this._events;
+    }
+
+    private _resources: any[] = [];
+    @Input('resources')
+    public set resources(value: any[]) {
+        if (value === undefined) {
+            return;
+        }
+        this._resources = value; // for initial load
+
+        if (this.ucCalendar === undefined) {
+            return;
+        }
+        value.forEach(element => { // in case something is set or added later / after subscription
+            this.ucCalendar.fullCalendar('addResource', element, false);
+        });
+    }
+
+    @Input() resourceColumns: any[] = [];
+    @Input() dataTransformer: IcalendarTransformer<any>;
+    @Input() defaultView: string;
+    @Input() header: any;
+    @Input() views: any;
+
     constructor() {
+        this.header = {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay,listMonth'
+        };
+        this.views = {};
+        this.defaultView = 'agendaDay';
     }
 
     clickButton(model: any) {
@@ -40,7 +80,7 @@ export class CallendarComponent implements OnInit {
                 wordArray.pop();
                 el.innerHTML = wordArray.join(' ') + '...';
             }
-        })
+        });
     }
 
     parseDates() {
@@ -55,46 +95,23 @@ export class CallendarComponent implements OnInit {
             // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             height: this.calHeight,
             contentHeight: this.calHeight,
-            defaultDate: moment().toDate(),
-            defaultView: 'agendaDay',
+            defaultDate: moment.now(),
+            defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
             editable: false,
             eventLimit: false,
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay,listMonth'
-            }
+            header: this.header,
+            views: this.views,
+            resourceColumns: this.resourceColumns,
+            resources: this._resources
         };
         let today = moment().format('YYYY-MM-DD').toString();
         this.loadData.emit({startDate: today, endDate: today});
     }
 
-    private transformSessions(sessions: SessionViewModel[]) {
-      let svm = [];
-
-      sessions.forEach((session) => {
-        svm.push(this.dataTransformer(session));
-      });
-
-      return svm;
-    }
-
-    private dataTransformer(session: SessionViewModel) {
-        let judgeName = (session.person) ? session.person.name : 'No Judge';
-        let roomName = (session.room) ? session.room.name : 'No Room';
-        let caseType = (session.caseType) ? session.caseType : 'No Case type';
-        return {
-            title: roomName + ' - ' + judgeName + ' - ' + caseType,
-            start: session.start,
-            end: moment(session.start).add(moment.duration(session.duration)).toDate(),
-            id: session.id,
-            hearingParts: session.hearingParts
-        };
-    }
-
     public eventRender(event) {
+        // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element.css('overflow-y', 'auto');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
