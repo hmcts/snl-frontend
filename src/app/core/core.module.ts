@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CalendarContainerComponent } from './callendar/containers/calendar-container.component';
 import { CallendarComponent } from './callendar/components/callendar.component';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
+import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
-    CallendarComponent
+    CallendarComponent,
+    DurationAsMinutesPipe
 ];
 
 @NgModule({

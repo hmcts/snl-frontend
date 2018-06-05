@@ -48,6 +48,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
     @Output() dayClick = new EventEmitter<any>();
     @Output() navLinkDayClick = new EventEmitter<any>();
     @Output() navLinkWeekClick = new EventEmitter<any>();
+    @Output() drop = new EventEmitter<any>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
     }
@@ -233,6 +234,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
+
+        this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
+           let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
+           const widgetEvent = new CustomEvent('drop', {
+                    bubbles: true,
+                   detail: detail
+            });
+            // probably need to add an event - not handled!
+               elem[0].dispatchEvent(widgetEvent);
+        };
     }
 
     fullCalendar(...args: any[]): any {
@@ -266,5 +277,4 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
             $(this.element.nativeElement).fullCalendar('rerenderEvents');
         }
     }
-
 }

@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, concatMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
+import * as sessionCreationActions from '../actions/session-creation.action';
 import * as roomActions from '../../rooms/actions/room.action';
+import * as problemActions from '../../problems/actions/problem.action';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
-import { Notify } from '../../core/notification/actions/notification.action';
-import { SESSION_CREATED } from '../models/sessions-notifications';
+import 'rxjs/add/observable/timer';
+import 'rxjs/add/operator/mergeMap';
+import { GetProblemsForSession } from '../actions/session-creation.action';
+import { ProblemsService } from '../../problems/services/problems.service';
+import { Session } from '../models/session.model';
 
 @Injectable()
 export class SessionEffects {
@@ -24,7 +29,7 @@ export class SessionEffects {
             this.sessionsService.searchSessions(action.payload).pipe(
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
-                    new roomActions.GetComplete(data.entities.rooms),
+                    new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
@@ -37,10 +42,43 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap(() => [new sessionActions.CreateComplete(), new Notify(SESSION_CREATED)]),
+                mergeMap((data) => [new sessionCreationActions.CreateAcknowledged(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
+    );
+
+    @Effect()
+    checkIfCreated: Observable<Action> = this.actions$.pipe(
+        ofType<sessionCreationActions.CreateAcknowledged>(sessionCreationActions.SessionCreationActionTypes.CreateAcknowledged),
+        mergeMap(action =>
+            this.sessionsService.getUserTransaction(action.payload).pipe(
+                map(data => {
+                    if ((data.rulesProcessingStatus !== 'COMPLETE') && (data.status !== 'STARTED')) {
+                        throw 'no data';
+                    }
+                    console.log('------');
+                    console.log(data);
+                    return data.id;
+                }),
+                retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
+                concatMap((data) => [new sessionCreationActions.GetProblemsForSession(data),
+                    new sessionCreationActions.CreateComplete(data)]),
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+    );
+
+    @Effect()
+    getProblemsForCreatedSession: Observable<Action> = this.actions$.pipe(
+        ofType<sessionCreationActions.GetProblemsForSession>(sessionCreationActions.SessionCreationActionTypes.GetProblemsForSession),
+        mergeMap(action =>
+            this.problemsService.getForTransaction(action.payload).pipe(
+                mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
+                    new sessionCreationActions.ProblemsLoaded(action.payload)]),
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );
 
     @Effect()
@@ -51,7 +89,7 @@ export class SessionEffects {
                 // If successful, dispatch success action with result
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
-                    new roomActions.GetComplete(data.entities.rooms),
+                    new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
@@ -95,6 +133,6 @@ export class SessionEffects {
         )
     );
 
-    constructor(private sessionsService: SessionsService, private actions$: Actions) {
+    constructor(private sessionsService: SessionsService, private problemsService: ProblemsService, private actions$: Actions) {
     }
 }

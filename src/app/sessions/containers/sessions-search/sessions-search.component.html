@@ -1,0 +1,46 @@
+<div fxLayout="row" fxLayoutGap="5%">
+  <div fxFlex="25%">
+    <app-sessions-filter
+            (filter)="filters$.next($event)"
+            [rooms]="rooms$ | async"
+            [judges]="judges$ | async"
+            [startDate]="startDate"
+            [endDate]="endDate">
+
+    </app-sessions-filter>
+  </div>
+  <div fxFlex="60%">
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Listing Requests:
+    </div>
+
+    <div>
+      <app-hearing-parts-preview id="hearing-part-preview"
+              [hearingParts]="hearingParts$ | async"
+              [sessions]="sessions$ | async"
+              (selectHearingPart)="selectHearingPart($event)">
+      </app-hearing-parts-preview>
+    </div>
+
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Actions:
+    </div>
+
+    <button [disabled]="!assignButtonEnabled()" mat-raised-button
+            color="accent"
+            fxFlexAlign="center"
+            (click)="assignToSession()"
+            class="get-sessions-button">Assign</button>
+
+    <div style="margin-top: 30px; margin-bottom: 10px">
+      Sessions:
+    </div>
+
+    <div>
+      <app-session-table
+              (selectSession)="selectSession($event)"
+              [sessions] = "filteredSessions$ | async">
+      </app-session-table>
+    </div>
+  </div>
+</div>

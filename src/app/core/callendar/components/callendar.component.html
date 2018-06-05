@@ -1,11 +1,23 @@
 <p *ngIf="errors">{{errors}}</p>
 
-<div *ngIf="calendarOptions" class="calendar-element">
-  <ng-fullcalendar #ucCalendar [options]="calendarOptions"
-                   (clickButton)="clickButton($event.detail)"
-                   [(eventsModel)]="_events"
-                   (eventRender)="eventRender($event)"
-                   (viewRender)="viewRender($event)"
-  ></ng-fullcalendar>
+<div fxLayout="row" >
+  <div *ngIf="calendarOptions" class="calendar-element">
+    <ng-fullcalendar #ucCalendar [options]="calendarOptions"
+                     (clickButton)="clickButton($event.detail)"
+                     [(eventsModel)]="_events"
+                     (eventRender)="eventRender($event)"
+                     (viewRender)="viewRender($event)"
+                     (eventClick)="eventClick($event)"
+                     (eventDrop)="eventDrop($event)"
+                     (eventResize)="eventResize($event)"
+                     (drop)="drop($event)"
+    ></ng-fullcalendar>
+  </div>
+  <div>
+    <div id="TO" data-duration="01:00" data-hearingID="cf3a7605-5d27-45ef-a1a3-6424fe0a7376" class='fc-event'>My Event 1</div>
+  </div>
+  <button (click)="clickME()">click me</button>
+  <button (click)="print()">click you</button>
+
 </div>
 

@@ -29,6 +29,13 @@ export function reducer(state: State = initialState, action) {
     case SessionActionTypes.SearchComplete: {
         return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
     }
+    case SessionActionTypes.UpsertOne: {
+        let updatedSession = {
+            id: action.payload.id,
+            changes: action.payload
+        } as Update<Session>;
+    return {...state, ...adapter.upsertOne(updatedSession, {...state, loading: false})};
+    }
     case SessionActionTypes.UpsertMany: {
         let updatedCollection = Object.values(action.payload || []).map((session: Session) => {
         return {

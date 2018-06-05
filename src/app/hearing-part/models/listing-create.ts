@@ -9,4 +9,5 @@ export interface ListingCreate {
     duration: moment.Duration
     scheduleStart: Date;
     scheduleEnd: Date;
+    createdAt: Date;
 }
