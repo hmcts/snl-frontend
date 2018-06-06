@@ -1,22 +1,24 @@
-import { schema } from 'normalizr';
-// Define a users schema
+import { Schema, schema } from 'normalizr';
+
 export const person = new schema.Entity('persons');
 
-// Define your comments schema
 export const room = new schema.Entity('rooms');
 
-export const hearingPart = new schema.Entity('hearingParts', {
-});
-
+export const hearingPart = new schema.Entity('hearingParts', {});
 export const hearingParts = new schema.Array(hearingPart);
 
 export const session = new schema.Entity('sessions', {
     person: person,
     room: room,
     hearingParts: hearingParts
-});
+} as Schema);
 
-hearingPart.define({session: session});
+hearingPart.define({session: session} as Schema);
 
 export const sessions = new schema.Array(session);
-export const sessionsWithHearings = new schema.Entity('sessionsWithHearings', {sessions, hearingParts});
+export const sessionsWithHearings = new schema.Entity('sessionsWithHearings', {sessions, hearingParts}  as Schema);
+
+export const problem = new schema.Entity('problems', {
+} as Schema);
+
+export const problems = new schema.Array(problem);

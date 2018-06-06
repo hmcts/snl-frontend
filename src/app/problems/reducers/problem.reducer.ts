@@ -2,7 +2,8 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import { Problem } from '../models/problem.model';
-import { ProblemActionTypes } from '../actions/problem.action';
+import { GetForSession, ProblemActionTypes } from '../actions/problem.action';
+import { Session } from '../../sessions/models/session.model';
 
 export interface State extends EntityState<Problem> {
     loading: boolean | false;
@@ -21,12 +22,23 @@ export function reducer(state: State = initialState, action) {
         case ProblemActionTypes.Get: {
             return {...state, loading: true};
         }
+        case ProblemActionTypes.GetForSession: {
+            return {...state, loading: true};
+        }
         case ProblemActionTypes.GetFailed: {
             return {...state, loading: false, error: action.payload};
         }
         case ProblemActionTypes.GetComplete: {
             return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
         }
+        case ProblemActionTypes.UpsertMany: {
+            let updatedCollection = Object.values(action.payload || []).map((problem: Problem) => {
+                return {
+                    id: problem.id,
+                    changes: problem
+                } as Update<Problem>;
+            });
+            return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};        }
         default:
             return state;
     }

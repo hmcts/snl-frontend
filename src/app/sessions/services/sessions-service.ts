@@ -1,19 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { AppConfig } from '../../app.config';
 import { SessionCreate } from '../models/session-create.model';
 import { DatePipe } from '@angular/common';
-import { sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
+import { session, sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 @Injectable()
 export class SessionsService {
     constructor(private http: HttpClient, private config: AppConfig) {
+    }
+
+    getUserTransaction(id: string | String): Observable<any> {
+        return this.http
+            .get<any>(`${this.config.getApiUrl()}/user-transaction/${id}`)
+            .pipe(map(data =>  data || []));
+    }
+
+    getSession(sessionId: string | String): Observable<any> {
+        return this.http
+            .get<Session>(`${this.config.getApiUrl()}/sessions/${sessionId}`)
+            .pipe(map(data => {return normalize(data, session)}));
     }
 
     searchSessions(query: SessionQuery): Observable<any> {
@@ -45,11 +57,11 @@ export class SessionsService {
         let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
-            .pipe(map(data => { console.log(normalize(data, sessionsWithHearings)); return normalize(data, sessionsWithHearings); }));
+            .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
-    createSession(session: SessionCreate): Observable<String> {
+    createSession(sessionCreate: SessionCreate): Observable<String> {
       return this.http
-        .put<String>(`${this.config.getApiUrl()}/sessions`, session)
+        .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
     }
 }

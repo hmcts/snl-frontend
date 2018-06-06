@@ -1,0 +1,8 @@
+<div class="sessions-create-container">
+    <app-sessions-create-form [judges]="judges$ | async"
+                              [rooms]="rooms$ | async"
+                              [judgesLoading]="judgesLoading$ | async"
+                              [roomsLoading]="roomsLoading$ | async"
+                              (createSession)="create($event)">
+    </app-sessions-create-form>
+</div>

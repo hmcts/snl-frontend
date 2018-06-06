@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MatTableDataSource } from '@angular/material';
-import * as fromSessions from '../../reducers';
+import * as fromSessions from '../../reducers/index';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
