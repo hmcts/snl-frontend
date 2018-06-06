@@ -16,11 +16,6 @@ export class SessionsService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 
-    getUserTransaction(id: string | String): Observable<any> {
-        return this.http
-            .get<any>(`${this.config.getApiUrl()}/user-transaction/${id}`)
-            .pipe(map(data =>  data || []));
-    }
 
     getSession(sessionId: string | String): Observable<any> {
         return this.http
@@ -63,5 +58,10 @@ export class SessionsService {
     createSession(sessionCreate: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+    }
+
+    deleteSession(id: string): Observable<string> {
+      return this.http
+        .put<string>(`${this.config.getApiUrl()}/sessions/${id}`, {})
     }
 }

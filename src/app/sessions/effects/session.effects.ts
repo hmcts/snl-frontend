@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, retryWhen, concatMap, tap } from 'rxjs/opera
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import * as sessionCreationActions from '../actions/session-creation.action';
+import * as sessionTransactionActions from '../actions/session-creation.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
 import * as judgeActions from '../../judges/actions/judge.action';
@@ -15,9 +15,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
-import { GetProblemsForSession } from '../actions/session-creation.action';
 import { ProblemsService } from '../../problems/services/problems.service';
-import { Session } from '../models/session.model';
+import { TransactionService } from '../../core/services/transaction.service';
 
 @Injectable()
 export class SessionEffects {
@@ -42,7 +41,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap((data) => [new sessionCreationActions.CreateAcknowledged(data)]),
+                mergeMap((data) => [new sessionTransactionActions.CreateAcknowledged(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -50,9 +49,9 @@ export class SessionEffects {
 
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionCreationActions.CreateAcknowledged>(sessionCreationActions.SessionCreationActionTypes.CreateAcknowledged),
+        ofType<sessionTransactionActions.CreateAcknowledged>(sessionTransactionActions.SessionTransactionActionTypes.CreateAcknowledged),
         mergeMap(action =>
-            this.sessionsService.getUserTransaction(action.payload).pipe(
+            this.transactionService.getUserTransaction(action.payload).pipe(
                 map(data => {
                     if ((data.rulesProcessingStatus !== 'COMPLETE') && (data.status !== 'STARTED')) {
                         throw 'no data';
@@ -62,8 +61,8 @@ export class SessionEffects {
                     return data.id;
                 }),
                 retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
-                concatMap((data) => [new sessionCreationActions.GetProblemsForSession(data),
-                    new sessionCreationActions.CreateComplete(data)]),
+                concatMap((data) => [new sessionTransactionActions.GetProblemsForSession(data),
+                    new sessionTransactionActions.CreateComplete(data)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -71,11 +70,33 @@ export class SessionEffects {
 
     @Effect()
     getProblemsForCreatedSession: Observable<Action> = this.actions$.pipe(
-        ofType<sessionCreationActions.GetProblemsForSession>(sessionCreationActions.SessionCreationActionTypes.GetProblemsForSession),
+        ofType<sessionTransactionActions.GetProblemsForSession>(sessionTransactionActions.SessionTransactionActionTypes.GetProblemsForSession),
         mergeMap(action =>
             this.problemsService.getForTransaction(action.payload).pipe(
                 mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
-                    new sessionCreationActions.ProblemsLoaded(action.payload)]),
+                    new sessionTransactionActions.ProblemsLoaded(action.payload)]),
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+    );
+
+    @Effect()
+    rollbackTransaction: Observable<Action> = this.actions$.pipe(
+        ofType<sessionTransactionActions.RollbackTransaction>(sessionTransactionActions.SessionTransactionActionTypes.RollbackTransaction),
+        mergeMap(action =>
+            this.transactionService.rollbackTransaction(action.payload).pipe(
+                mergeMap((data) => [new sessionActions.DeleteOne(data)]),
+            )
+        ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+    );
+
+    @Effect()
+    commitTransaction: Observable<Action> = this.actions$.pipe(
+        ofType<sessionTransactionActions.CommitTransaction>(sessionTransactionActions.SessionTransactionActionTypes.CommitTransaction),
+        mergeMap(action =>
+            this.transactionService.commitTransaction(action.payload).pipe(
+                mergeMap((data) => []),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -91,6 +112,7 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
+                    new hearingPartsActions.SearchComplete(data.entities.hearingParts)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )
@@ -133,6 +155,9 @@ export class SessionEffects {
         )
     );
 
-    constructor(private sessionsService: SessionsService, private problemsService: ProblemsService, private actions$: Actions) {
+    constructor(private sessionsService: SessionsService,
+                private transactionService: TransactionService,
+                private problemsService: ProblemsService,
+                private actions$: Actions) {
     }
 }

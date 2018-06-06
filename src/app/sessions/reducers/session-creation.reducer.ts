@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { SessionTransaction } from '../models/session-creation-status.model';
-import { SessionCreationActionTypes } from '../actions/session-creation.action';
+import { SessionTransactionActionTypes } from '../actions/session-creation.action';
 
 export interface State extends EntityState<SessionTransaction> {
     recent: string
@@ -10,27 +10,31 @@ export const initialState: State = adapter.getInitialState({recent: ''});
 
 export function reducer(state: State = initialState, action) {
   switch (action.type) {
-    case SessionCreationActionTypes.Create: {
+    case SessionTransactionActionTypes.Create: {
         action.payload.problemsLoaded = false;
         action.payload.sessionCreated = false;
         console.log(action.payload);
 
         return {...state, ...adapter.addOne(action.payload, {...state, recent: action.payload.id})}
     }
-    case SessionCreationActionTypes.CreateAcknowledged: {
+    case SessionTransactionActionTypes.CreateAcknowledged: {
         return upsertSession(state, action, false, 'Session creation acknowledged', false);
     }
-    case SessionCreationActionTypes.CreateFailed: {
+    case SessionTransactionActionTypes.CreateFailed: {
         return upsertSession(state, action, false, 'Session creation failed', true);
     }
-    case SessionCreationActionTypes.CreateComplete: {
+    case SessionTransactionActionTypes.CreateComplete: {
         return upsertSession(state, action, false, 'Session creation complete', true);
     }
-    case SessionCreationActionTypes.ProblemsLoaded: {
+    case SessionTransactionActionTypes.ProblemsLoaded: {
         return upsertSession(state, action, true, 'Problems loaded', true);
     }
-    case SessionCreationActionTypes.RemoveOne: {
+    case SessionTransactionActionTypes.RemoveOne: {
       return adapter.removeOne(action.payload.id, state);
+    }
+    case SessionTransactionActionTypes.CommitTransaction:
+    case SessionTransactionActionTypes.RollbackTransaction: {
+      return {...state, loading: true};
     }
     default:
         return state;
@@ -38,8 +42,6 @@ export function reducer(state: State = initialState, action) {
 }
 
 function upsertSession(state, action, problemsLoaded: boolean, status: string, sessionCreated: boolean) {
-    console.log('================');
-    console.log(action);
     let updatedSession = {
         id: action.payload,
         changes: {

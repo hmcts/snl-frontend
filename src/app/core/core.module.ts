@@ -4,6 +4,7 @@ import { FullCalendarModule } from 'ng-fullcalendar';
 import { CalendarContainerComponent } from './callendar/containers/calendar-container.component';
 import { CallendarComponent } from './callendar/components/callendar.component';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
+import { TransactionService } from './services/transaction.service';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -19,7 +20,7 @@ export const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: []
+    providers: [TransactionService]
 })
 export class CoreModule {
 }

@@ -37,8 +37,12 @@
   <div *ngIf="!(finished$ | async)">
       You are allowed to hide this dialog, the session processing will continue in the background.
   </div>
+  <div *ngIf="(finished$ | async) && (data.problems$ | async).length !== 0">
+    Please confirm what action you’d like to take
+  </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-    <button mat-button (click)="onCloseClick()">{{buttonText$ | async}}</button>
+    <button mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
+    <button *ngIf="(finished$ | async) && (data.problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Delete session</button>
   </div>
 
 </div>
