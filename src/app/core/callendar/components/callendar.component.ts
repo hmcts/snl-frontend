@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
@@ -14,7 +14,7 @@ import * as fromHearingParts from '../../../hearing-part/reducers';
     templateUrl: './callendar.component.html',
     styleUrls: ['./callendar.component.scss']
 })
-export class CallendarComponent implements OnInit {
+export class CallendarComponent implements OnInit, AfterViewInit {
     _events: any[];
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
@@ -23,6 +23,8 @@ export class CallendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
+    isSelected = false;
+    selectedSessionId;
 
     @Input('events')
     set events(value: any[]) {
@@ -76,6 +78,12 @@ export class CallendarComponent implements OnInit {
         };
         let today = moment().format('YYYY-MM-DD').toString();
         this.loadData.emit({startDate: today, endDate: today});
+    }
+
+    ngAfterViewInit() {
+        ($('#TO') as any).draggable({
+            revert: true
+        });
     }
 
     private transformSessions(sessions: SessionViewModel[]) {
@@ -132,31 +140,23 @@ export class CallendarComponent implements OnInit {
     }
 
     public drop(event) {
-        let droppedDate = event.detail.date.format();
+        if (this.isSelected) {
+            this.store.dispatch(new AssignToSession({
+                hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                sessionId: this.selectedSessionId,
+                start: null // this.calculateStartOfHearing(this.selectedSession)
+            }));
+            event.detail.ui.helper[0].remove();
+        }
+        }
 
-        console.log(event)
-
-        this._events.forEach(eventos => {
-            if (droppedDate >= moment(eventos.start).format() && droppedDate <= moment(eventos.end).format()) {
-                // eventos.hearingParts.push(event.detail.ui.helper[0].dataset.hearingid);
-                this.store.dispatch(new AssignToSession({
-                    hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
-                    sessionId: eventos.id,
-                    start: null // this.calculateStartOfHearing(this.selectedSession)
-                }));
-            }
-        })
-        event.detail.ui.helper[0].remove();
+    public eventMouseOver(event) {
+        this.isSelected = true;
+        this.selectedSessionId = event.detail.event.id;
     }
 
-    print() {
-        console.log(this._events);
-    }
-
-    clickME() {
-        ($('#TO') as any).draggable();
-        $('#TO').data( {caseTitle: 'case Title nr 1'});
-
+    public eventMouseOut(event) {
+        this.isSelected = false;
     }
 
     @HostListener('dragend', ['$event'])
