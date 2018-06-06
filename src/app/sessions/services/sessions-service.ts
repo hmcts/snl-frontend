@@ -16,7 +16,6 @@ export class SessionsService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 
-
     getSession(sessionId: string | String): Observable<any> {
         return this.http
             .get<Session>(`${this.config.getApiUrl()}/sessions/${sessionId}`)

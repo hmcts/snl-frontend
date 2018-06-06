@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, retryWhen, concatMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, concatMap, tap, withLatestFrom, distinctUntilChanged } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as sessionTransactionActions from '../actions/session-creation.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
+import * as fromSessionTransaction from '../reducers/session-creation.reducer';
+import * as fromSessionIndex from '../reducers/index';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
@@ -17,6 +19,7 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
 import { TransactionService } from '../../core/services/transaction.service';
+import { State } from '../../app.state';
 
 @Injectable()
 export class SessionEffects {
@@ -85,9 +88,20 @@ export class SessionEffects {
         ofType<sessionTransactionActions.RollbackTransaction>(sessionTransactionActions.SessionTransactionActionTypes.RollbackTransaction),
         mergeMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
-                mergeMap((data) => [new sessionActions.DeleteOne(data)]),
+                mergeMap((data) => [new sessionTransactionActions.TransactionRolledBack(data.id)]),
             )
         ),
+        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+    );
+
+    @Effect()
+    getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
+        ofType<sessionTransactionActions.TransactionCommitted>(sessionTransactionActions.SessionTransactionActionTypes.TransactionCommitted),
+        withLatestFrom(this.store, (action, state) => state.sessions.sessionCreation.entities[action.payload].sessionId),
+        distinctUntilChanged(),
+        mergeMap(action => this.sessionsService.getSession(action).pipe(
+            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action])])),
+        )),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );
 
@@ -96,7 +110,7 @@ export class SessionEffects {
         ofType<sessionTransactionActions.CommitTransaction>(sessionTransactionActions.SessionTransactionActionTypes.CommitTransaction),
         mergeMap(action =>
             this.transactionService.commitTransaction(action.payload).pipe(
-                mergeMap((data) => []),
+                mergeMap((data) => [new sessionTransactionActions.TransactionCommitted(data.id)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -158,6 +172,7 @@ export class SessionEffects {
     constructor(private sessionsService: SessionsService,
                 private transactionService: TransactionService,
                 private problemsService: ProblemsService,
+                private store: Store<fromSessionIndex.State>,
                 private actions$: Actions) {
     }
 }

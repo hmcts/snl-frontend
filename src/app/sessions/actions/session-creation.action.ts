@@ -17,7 +17,9 @@ export enum SessionTransactionActionTypes {
   GetRecent = '[SessionCreation] Get Recent',
   RemoveOne = '[SessionCreation] Remove One',
   RollbackTransaction = '[SessionCreation] Rollback Transaction',
-  CommitTransaction = '[SessionCreation] Commit Transaction'
+  TransactionRolledBack = '[SessionCreation] Transaction Rolledback',
+  CommitTransaction = '[SessionCreation] Commit Transaction',
+  TransactionCommitted = '[SessionCreation] Transaction comitted'
 }
 
 /**
@@ -91,6 +93,18 @@ export class RollbackTransaction implements Action {
 
 export class CommitTransaction implements Action {
     readonly type = SessionTransactionActionTypes.CommitTransaction;
+
+    constructor(public payload: string) {}
+}
+
+export class TransactionRolledBack implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionRolledBack;
+
+    constructor(public payload: string) {}
+}
+
+export class TransactionCommitted implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionCommitted;
 
     constructor(public payload: string) {}
 }
