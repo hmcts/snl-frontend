@@ -1,5 +1,5 @@
 <app-core-callendar
-        [events]="sessions$ | async"
+        [preTransformedData]="sessions$ | async"
         (loadData)="loadData($event)"
         (eventClickCallback)="eventClick($event)"
         [dataTransformer]="dataTransformer"

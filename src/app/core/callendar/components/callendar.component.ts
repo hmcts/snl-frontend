@@ -20,8 +20,11 @@ export class CallendarComponent implements OnInit {
     calHeight = 'auto';
 
     private _events: any[];
-    @Input('events') set events(value: any[]) {
-        if (value === undefined) {
+    get events(): any[] {
+        return this._events;
+    }
+    @Input('preTransformedData') set preTransformedData(value: any[]) {
+        if (value === undefined || this.dataTransformer === undefined) {
             return;
         }
         let events = [];
@@ -29,10 +32,6 @@ export class CallendarComponent implements OnInit {
             events.push(this.dataTransformer.transform(element));
         });
         this._events = events;
-    }
-
-    get events(): any[] {
-        return this._events;
     }
 
     private _resources: any[] = [];
@@ -99,7 +98,7 @@ export class CallendarComponent implements OnInit {
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
-            editable: false,
+            editable: true,
             eventLimit: false,
             header: this.header,
             views: this.views,

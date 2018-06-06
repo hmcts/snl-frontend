@@ -3,7 +3,7 @@
 </p>
 
 <div>
-  <app-core-callendar [events]="sessions$ | async"
+  <app-core-callendar [preTransformedData]="sessions$ | async"
                       (loadData)="loadData($event)"
                       (eventClickCallback)="eventClick($event)"
                       [resourceColumns]="columns"
@@ -12,5 +12,4 @@
                       [header]="header"
                       [defaultView]="defaultView"
   ></app-core-callendar>
-
 </div>
