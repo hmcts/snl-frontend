@@ -1,24 +1,28 @@
-import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
+import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
+import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable.js';
+import { IcalendarTransformer } from '../transformers/icalendar-transformer';
+import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../../../hearing-part/reducers';
-import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, AfterViewInit {
 
     @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
     calHeight = 'auto';
+    isSelected = false;
+    selectedSessionId;
 
     private _events: any[];
     get events(): any[] {
@@ -81,6 +85,12 @@ export class CalendarComponent implements OnInit {
         }
 
         this.loadData.emit(dateRange);
+    }
+
+    ngAfterViewInit() {
+        ($('.draggable-hearing') as any).draggable({
+            revert: true
+        })
     }
 
     clickButton(model: any) {
@@ -177,5 +187,28 @@ export class CalendarComponent implements OnInit {
         event.detail.event.end = moment(event.detail.event.end.format());
 
         eventCallback.emit(event);
+    }
+
+    public drop(event) {
+        console.log(event)
+        if (this.isSelected) {
+            this.store.dispatch(new AssignToSession({
+                   hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                   sessionId: this.selectedSessionId,
+                    start: null // this.calculateStartOfHearing(this.selectedSession)
+            }));
+            event.detail.ui.helper[0].remove();
+        }
+    }
+
+    public eventMouseOver(event) {
+        console.log('OVER')
+        this.isSelected = true;
+        this.selectedSessionId = event.detail.event.id;
+    }
+
+    public eventMouseOut(event) {
+        console.log('OUT')
+        this.isSelected = false;
     }
 }

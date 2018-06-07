@@ -48,6 +48,9 @@ export class NgFullCalendarComponent implements AfterViewInit {
     @Output() dayClick = new EventEmitter<any>();
     @Output() navLinkDayClick = new EventEmitter<any>();
     @Output() navLinkWeekClick = new EventEmitter<any>();
+    @Output() drop = new EventEmitter<any>();
+    @Output() eventMouseOver = new EventEmitter<any>();
+    @Output() eventMouseOut = new EventEmitter<any>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
     }
@@ -226,6 +229,32 @@ export class NgFullCalendarComponent implements AfterViewInit {
             for (let i = 0; i < elem.length; i++) {
                 elem[i].dispatchEvent(widgetEvent);
             }
+        };
+        this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
+           let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
+           const widgetEvent = new CustomEvent('drop', {
+                        bubbles: true,
+                       detail: detail
+            });
+            // probably need to add an event - not handled!
+           elem[0].dispatchEvent(widgetEvent);
+        };
+
+        this.options.eventMouseover = (event: any, jsEvent: Event, view: any) => {
+            let detail = { event: event, jsEvent: jsEvent, view: view };
+            const widgetEvent = new CustomEvent('eventMouseOver', {
+                bubbles: true,
+                detail: detail
+            });
+            elem[0].dispatchEvent(widgetEvent);
+        };
+        this.options.eventMouseout = (event: any, jsEvent: Event, view: any) => {
+            let detail = { event: event, jsEvent: jsEvent, view: view };
+            const widgetEvent = new CustomEvent('eventMouseOut', {
+                bubbles: true,
+                detail: detail
+            });
+            elem[0].dispatchEvent(widgetEvent);
         };
     }
 
