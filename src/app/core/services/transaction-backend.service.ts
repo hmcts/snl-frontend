@@ -40,6 +40,19 @@ export enum TransactionActions {
 
 export interface Transaction {
     id: string,
-    rulesProcessingStatus: string,
-    status: string
+    rulesProcessingStatus: RulesProcessingStatuses,
+    status: TransactionStatuses
+}
+
+export enum TransactionStatuses {
+    STARTED = 'STARTED',
+    INPROGRESS = 'INPROGRESS', // PESSIMISTICLY_LOCKED,
+    COMMITTED = 'COMMITTED',
+    ROLLEDBACK = 'ROLLEDBACK',
+}
+
+export enum RulesProcessingStatuses {
+    NOT_STARTED = 'NOT_STARTED',
+    IN_PROGRESS = 'IN_PROGRESS',
+    COMPLETE = 'COMPLETE'
 }

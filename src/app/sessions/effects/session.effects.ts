@@ -17,7 +17,7 @@ import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
-import { TransactionBackendService } from '../../core/services/transaction-backend.service';
+import { RulesProcessingStatuses, TransactionBackendService, TransactionStatuses } from '../../core/services/transaction-backend.service';
 
 @Injectable()
 export class SessionEffects {
@@ -53,11 +53,12 @@ export class SessionEffects {
         ofType<sessionTransactionActions.CreateAcknowledged>(sessionTransactionActions.SessionTransactionActionTypes.CreateAcknowledged),
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload).pipe(
-                map(data => {
-                    if ((data.rulesProcessingStatus !== 'COMPLETE') && (data.status !== 'STARTED')) {
-                        throw 'no data';
+                map(transcation => {
+                    if ((transcation.rulesProcessingStatus !== RulesProcessingStatuses.COMPLETE) &&
+                        (transcation.status !== TransactionStatuses.STARTED)) {
+                        throw 'Transaction in progress...';
                     }
-                    return data.id;
+                    return transcation.id;
                 }),
                 retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
                 concatMap((data) => [new sessionTransactionActions.GetProblemsForSession(data),
