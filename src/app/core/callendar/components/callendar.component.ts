@@ -1,15 +1,20 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
 import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
 import { Default } from 'fullcalendar/View';
+import * as $ from 'jquery';
+import 'jquery-ui/ui/widgets/draggable.js';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
+import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
+import { Store } from '@ngrx/store';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 
 @Component({
     selector: 'app-core-callendar',
     templateUrl: './callendar.component.html',
     styleUrls: ['./callendar.component.scss']
 })
-export class CallendarComponent implements OnInit {
+export class CallendarComponent implements OnInit, AfterViewInit {
 
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
@@ -18,6 +23,8 @@ export class CallendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
+    isSelected = false;
+    selectedSessionId;
 
     private _events: any[];
     get events(): any[] {
@@ -56,7 +63,7 @@ export class CallendarComponent implements OnInit {
     @Input() header: any;
     @Input() views: any;
 
-    constructor() {
+    constructor(private store: Store<fromHearingParts.State>) {
         this.header = {
             left: 'prev,next today',
             center: 'title',
@@ -64,6 +71,12 @@ export class CallendarComponent implements OnInit {
         };
         this.views = {};
         this.defaultView = 'agendaDay';
+    }
+
+    ngAfterViewInit() {
+        ($('.draggable-hearing') as any).draggable({
+            revert: true
+        })
     }
 
     clickButton(model: any) {
@@ -99,6 +112,7 @@ export class CallendarComponent implements OnInit {
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
             editable: true,
+            droppable: true,
             eventLimit: false,
             header: this.header,
             views: this.views,
@@ -148,5 +162,28 @@ export class CallendarComponent implements OnInit {
         event.detail.event.end = moment(event.detail.event.end.format());
 
         console.log(event)
+    }
+
+    public drop(event) {
+        console.log(event)
+        if (this.isSelected) {
+            this.store.dispatch(new AssignToSession({
+                   hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                   sessionId: this.selectedSessionId,
+                    start: null // this.calculateStartOfHearing(this.selectedSession)
+            }));
+            event.detail.ui.helper[0].remove();
+        }
+    }
+
+    public eventMouseOver(event) {
+        console.log('OVER')
+        this.isSelected = true;
+        this.selectedSessionId = event.detail.event.id;
+    }
+
+    public eventMouseOut(event) {
+        console.log('OUT')
+        this.isSelected = false;
     }
 }
