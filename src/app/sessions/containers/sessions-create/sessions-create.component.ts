@@ -20,6 +20,7 @@ import { Problem } from '../../../problems/models/problem.model';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionTransaction } from '../../models/session-creation-status.model';
+import { SessionsCreationService } from '../../services/sessions-creation.service';
 
 @Component({
   selector: 'app-sessions-create',
@@ -37,7 +38,7 @@ export class SessionsCreateComponent implements OnInit {
     recentlyCreatedSessionId$: Observable<string>;
     dialogRef: any;
 
-    constructor(private store: Store<State>, public dialog: MatDialog) {
+    constructor(private store: Store<State>, public dialog: MatDialog, public sessionCreationService: SessionsCreationService) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
@@ -55,12 +56,7 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
-        let transaction = {
-            sessionId: session.id,
-            id: session.userTransactionId
-        } as SessionTransaction;
-        this.store.dispatch(new SessionCreationActions.Create(transaction));
-        this.store.dispatch(new SessionActions.Create(session));
+        this.sessionCreationService.create(session);
         this.dialogRef = this.openDialog(session);
     }
 

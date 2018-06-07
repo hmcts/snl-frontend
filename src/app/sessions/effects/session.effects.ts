@@ -8,7 +8,6 @@ import * as sessionActions from '../actions/session.action';
 import * as sessionTransactionActions from '../actions/session-transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
-import * as fromSessionTransaction from '../reducers/session-transaction.reducer';
 import * as fromSessionIndex from '../reducers/index';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
@@ -18,8 +17,7 @@ import { SearchFailed, SessionActionTypes } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
-import { TransactionService } from '../../core/services/transaction.service';
-import { State } from '../../app.state';
+import { TransactionBackendService } from '../../core/services/transaction-backend.service';
 
 @Injectable()
 export class SessionEffects {
@@ -59,11 +57,9 @@ export class SessionEffects {
                     if ((data.rulesProcessingStatus !== 'COMPLETE') && (data.status !== 'STARTED')) {
                         throw 'no data';
                     }
-                    console.log('------');
-                    console.log(data);
                     return data.id;
                 }),
-                retryWhen(errors => errors.mergeMap(error => Observable.timer(5000))),
+                retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
                 concatMap((data) => [new sessionTransactionActions.GetProblemsForSession(data),
                     new sessionTransactionActions.CreateComplete(data)]),
             )
@@ -170,7 +166,7 @@ export class SessionEffects {
     );
 
     constructor(private sessionsService: SessionsService,
-                private transactionService: TransactionService,
+                private transactionService: TransactionBackendService,
                 private problemsService: ProblemsService,
                 private store: Store<fromSessionIndex.State>,
                 private actions$: Actions) {

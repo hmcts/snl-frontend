@@ -1,10 +1,5 @@
 import { Action } from '@ngrx/store';
-import { Session } from '../models/session.model';
-import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
-import { SessionCreate } from '../models/session-create.model';
-import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { SessionTransaction } from '../models/session-creation-status.model';
-import { SessionActionTypes } from './session.action';
 
 export enum SessionTransactionActionTypes {
   CreateComplete = '[SessionTransaction] Create Complete',

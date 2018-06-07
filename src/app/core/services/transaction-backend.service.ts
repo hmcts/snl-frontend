@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class TransactionService {
+export class TransactionBackendService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 

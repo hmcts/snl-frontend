@@ -13,7 +13,6 @@ export function reducer(state: State = initialState, action) {
     case SessionTransactionActionTypes.Create: {
         action.payload.problemsLoaded = false;
         action.payload.sessionCreated = false;
-        console.log(action.payload);
 
         return {...state, ...adapter.addOne(action.payload, {...state, recent: action.payload.id})}
     }

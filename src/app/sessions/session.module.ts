@@ -24,6 +24,7 @@ import { SessionsStatisticsService } from './services/sessions-statistics-servic
 import { CoreModule } from '../core/core.module';
 import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
 import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
+import { SessionsCreationService } from './services/sessions-creation.service';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -64,6 +65,6 @@ export const COMPONENTS = [
   entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]
 })
 export class SessionModule { }
