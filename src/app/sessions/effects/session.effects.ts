@@ -5,10 +5,10 @@ import { catchError, map, mergeMap, retryWhen, concatMap, tap, withLatestFrom, d
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import * as sessionTransactionActions from '../actions/session-creation.action';
+import * as sessionTransactionActions from '../actions/session-transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
-import * as fromSessionTransaction from '../reducers/session-creation.reducer';
+import * as fromSessionTransaction from '../reducers/session-transaction.reducer';
 import * as fromSessionIndex from '../reducers/index';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
@@ -97,7 +97,7 @@ export class SessionEffects {
     @Effect()
     getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
         ofType<sessionTransactionActions.TransactionCommitted>(sessionTransactionActions.SessionTransactionActionTypes.TransactionCommitted),
-        withLatestFrom(this.store, (action, state) => state.sessions.sessionCreation.entities[action.payload].sessionId),
+        withLatestFrom(this.store, (action, state) => state.sessions.sessionTransaction.entities[action.payload].sessionId),
         distinctUntilChanged(),
         mergeMap(action => this.sessionsService.getSession(action).pipe(
             mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action])])),
@@ -126,7 +126,7 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.GetComplete(data.entities.persons),
-                    new hearingPartsActions.SearchComplete(data.entities.hearingParts)
+                    new hearingPartsActions.UpsertMany(data.entities.hearingParts)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
             )

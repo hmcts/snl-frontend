@@ -10,7 +10,7 @@
 
   <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionCreated$ | async">
     <div fxFlex>
-      Session created!
+      Session creation summary
     </div>
     <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...

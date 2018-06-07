@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { SessionTransaction } from '../models/session-creation-status.model';
-import { SessionTransactionActionTypes } from '../actions/session-creation.action';
+import { SessionTransactionActionTypes } from '../actions/session-transaction.action';
 
 export interface State extends EntityState<SessionTransaction> {
     recent: string

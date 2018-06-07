@@ -7,19 +7,19 @@ import { SessionTransaction } from '../models/session-creation-status.model';
 import { SessionActionTypes } from './session.action';
 
 export enum SessionTransactionActionTypes {
-  CreateComplete = '[SessionCreation] Create Complete',
-  Create = '[SessionCreation] Create',
-  CreateAcknowledged = '[SessionCreation] Create Acknowledged',
-  ProblemsLoaded = '[SessionCreation] Problems Loaded',
-  GetProblemsForSession = '[SessionCreation] Get problems for session',
-  CreateFailed = '[SessionCreation] Create Failed',
-  UpsertOne = '[SessionCreation] Upsert One',
-  GetRecent = '[SessionCreation] Get Recent',
-  RemoveOne = '[SessionCreation] Remove One',
-  RollbackTransaction = '[SessionCreation] Rollback Transaction',
-  TransactionRolledBack = '[SessionCreation] Transaction Rolledback',
-  CommitTransaction = '[SessionCreation] Commit Transaction',
-  TransactionCommitted = '[SessionCreation] Transaction comitted'
+  CreateComplete = '[SessionTransaction] Create Complete',
+  Create = '[SessionTransaction] Create',
+  CreateAcknowledged = '[SessionTransaction] Create Acknowledged',
+  ProblemsLoaded = '[SessionTransaction] Problems Loaded',
+  GetProblemsForSession = '[SessionTransaction] Get problems for session',
+  CreateFailed = '[SessionTransaction] Create Failed',
+  UpsertOne = '[SessionTransaction] Upsert One',
+  GetRecent = '[SessionTransaction] Get Recent',
+  RemoveOne = '[SessionTransaction] Remove One',
+  RollbackTransaction = '[SessionTransaction] Rollback Transaction',
+  TransactionRolledBack = '[SessionTransaction] Transaction Rolledback',
+  CommitTransaction = '[SessionTransaction] Commit Transaction',
+  TransactionCommitted = '[SessionTransaction] Transaction comitted'
 }
 
 /**

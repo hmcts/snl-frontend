@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import * as SessionActions from '../../actions/session.action';
-import * as SessionCreationActions from '../../actions/session-creation.action';
+import * as SessionCreationActions from '../../actions/session-transaction.action';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';

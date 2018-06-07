@@ -6,7 +6,7 @@ import { switchMap, map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { CommitTransaction, RollbackTransaction } from '../../actions/session-creation.action';
+import { CommitTransaction, RollbackTransaction } from '../../actions/session-transaction.action';
 
 @Component({
   selector: 'app-sessions-create-dialog',
