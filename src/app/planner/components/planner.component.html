@@ -1,10 +1,11 @@
-<p>
-  planner works!
-</p>
-
+<div>
+    <button mat-raised-button (click)="configureRoomView()">Rooms</button>
+    <button mat-raised-button (click)="configureJudgeView()">Judges</button>
+</div>
+<br />
 <div>
   <app-core-callendar [preTransformedData]="sessions$ | async"
-                      (loadData)="loadData($event)"
+                      (loadData)="loadDataAction($event)"
                       (eventClickCallback)="eventClick($event)"
                       [resourceColumns]="columns"
                       [resources]="resources"

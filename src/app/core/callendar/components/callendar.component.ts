@@ -13,7 +13,7 @@ export class CallendarComponent implements OnInit {
 
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
-    @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
+    @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
@@ -34,7 +34,7 @@ export class CallendarComponent implements OnInit {
         this._events = events;
     }
 
-    private _resources: any[] = [];
+    public _resources: any[] = [];
     @Input('resources')
     public set resources(value: any[]) {
         if (value === undefined) {
@@ -45,9 +45,10 @@ export class CallendarComponent implements OnInit {
         if (this.ucCalendar === undefined) {
             return;
         }
-        value.forEach(element => { // in case something is set or added later / after subscription
-            this.ucCalendar.fullCalendar('addResource', element, false);
-        });
+        this.ucCalendar.fullCalendar('refetchResources');
+        // value.forEach(element => { // in case something is set or added later / after subscription
+        //     this.ucCalendar.fullCalendar('addResource', element, false);
+        // });
     }
 
     @Input() resourceColumns: any[] = [];
@@ -66,8 +67,15 @@ export class CallendarComponent implements OnInit {
         this.defaultView = 'agendaDay';
     }
 
+    public refreshViewData() {
+        if ( this.loadData === undefined ) { return; }
+        let dateRange = this.parseDates();
+        if (dateRange === undefined) { return; }
+        this.loadData.emit(dateRange);
+    }
+
     clickButton(model: any) {
-        this.loadData.emit(this.parseDates());
+        this.refreshViewData();
         this.references = [];
     }
 
@@ -83,6 +91,7 @@ export class CallendarComponent implements OnInit {
     }
 
     parseDates() {
+        if ( this.ucCalendar === undefined ) { return undefined; }
         let view = this.ucCalendar.fullCalendar('getView') as Default;
         let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
         let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
@@ -103,7 +112,9 @@ export class CallendarComponent implements OnInit {
             header: this.header,
             views: this.views,
             resourceColumns: this.resourceColumns,
-            resources: this._resources
+            resources: (callback) => {
+                    callback(this._resources);
+            }
         };
         let today = moment().format('YYYY-MM-DD').toString();
         this.loadData.emit({startDate: today, endDate: today});
@@ -130,5 +141,9 @@ export class CallendarComponent implements OnInit {
 
     public eventClick(event) {
         this.eventClickCallback.emit(this.events.find(element => element.id === event.detail.event.id));
+    }
+
+    private resourcesMethod() {
+
     }
 }
