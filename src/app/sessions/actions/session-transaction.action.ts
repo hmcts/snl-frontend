@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { SessionTransaction } from '../models/session-creation-status.model';
+import { SessionTransaction } from '../models/session-transaction-status.model';
 
 export enum SessionTransactionActionTypes {
   CreateComplete = '[SessionTransaction] Create Complete',

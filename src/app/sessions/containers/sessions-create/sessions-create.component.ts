@@ -19,7 +19,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { Problem } from '../../../problems/models/problem.model';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Dictionary } from '@ngrx/entity/src/models';
-import { SessionTransaction } from '../../models/session-creation-status.model';
+import { SessionTransaction } from '../../models/session-transaction-status.model';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 
 @Component({

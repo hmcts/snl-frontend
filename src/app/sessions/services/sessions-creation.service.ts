@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SessionCreate } from '../models/session-create.model';
 import * as SessionCreationActions from '../actions/session-transaction.action';
-import { SessionTransaction } from '../models/session-creation-status.model';
+import { SessionTransaction } from '../models/session-transaction-status.model';
 import * as SessionActions from '../actions/session.action';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
