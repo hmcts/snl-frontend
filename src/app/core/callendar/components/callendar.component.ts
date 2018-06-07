@@ -131,4 +131,22 @@ export class CallendarComponent implements OnInit {
     public eventClick(event) {
         this.eventClickCallback.emit(this.events.find(element => element.id === event.detail.event.id));
     }
+
+    public eventDrop(event) {
+        // event.detail.revertFunc();
+
+        event.detail.event.start = moment(event.detail.event.start.format());
+        event.detail.event.end = moment(event.detail.event.end.format());
+
+        console.log(event);
+    }
+
+    public eventResize(event) {
+        // event.detail.revertFunc();
+
+        event.detail.event.start = moment(event.detail.event.start.format());
+        event.detail.event.end = moment(event.detail.event.end.format());
+
+        console.log(event)
+    }
 }
