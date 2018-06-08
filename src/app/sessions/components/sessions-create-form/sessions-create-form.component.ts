@@ -52,7 +52,6 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
   create() {
       this.session.id = uuid();
-      this.session.userTransactionId = uuid();
       let time_arr = this.time.split(':');
       this.session.start.setHours(+time_arr[0]);
       this.session.start.setMinutes(+time_arr[1]);
