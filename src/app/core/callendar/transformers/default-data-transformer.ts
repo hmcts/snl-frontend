@@ -14,7 +14,6 @@ export class DefaultDataTransformer  implements IcalendarTransformer<SessionView
         let roomName = (session.room) ? session.room.name : 'No Room';
         let caseType = (session.caseType) ? session.caseType : 'No Case type';
 
-
         return {
             title: roomName + ' - ' + judgeName + ' - ' + caseType,
             start: moment(session.start),
