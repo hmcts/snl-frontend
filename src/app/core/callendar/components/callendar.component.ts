@@ -11,8 +11,6 @@ import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 })
 export class CallendarComponent implements OnInit {
 
-    @Output() loadData = new EventEmitter();
-    @Output() eventClickCallback = new EventEmitter();
     @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
     calendarOptions: any;
     errors: string;
@@ -23,6 +21,7 @@ export class CallendarComponent implements OnInit {
     get events(): any[] {
         return this._events;
     }
+
     @Input('preTransformedData') set preTransformedData(value: any[]) {
         if (value === undefined || this.dataTransformer === undefined) {
             return;
@@ -40,22 +39,21 @@ export class CallendarComponent implements OnInit {
         if (value === undefined) {
             return;
         }
-        this._resources = value; // for initial load
+        this._resources = value;
 
         if (this.ucCalendar === undefined) {
             return;
         }
         this.ucCalendar.fullCalendar('refetchResources');
-        // value.forEach(element => { // in case something is set or added later / after subscription
-        //     this.ucCalendar.fullCalendar('addResource', element, false);
-        // });
     }
-
     @Input() resourceColumns: any[] = [];
     @Input() dataTransformer: IcalendarTransformer<any>;
     @Input() defaultView: string;
     @Input() header: any;
     @Input() views: any;
+    @Input() initialStartDate: Date = moment().toDate();
+    @Output() loadData = new EventEmitter();
+    @Output() eventClickCallback = new EventEmitter();
 
     constructor() {
         this.header = {
@@ -68,9 +66,13 @@ export class CallendarComponent implements OnInit {
     }
 
     public refreshViewData() {
-        if ( this.loadData === undefined ) { return; }
+        if (this.loadData === undefined) {
+            return;
+        }
         let dateRange = this.parseDates();
-        if (dateRange === undefined) { return; }
+        if (dateRange === undefined) {
+            return;
+        }
         this.loadData.emit(dateRange);
     }
 
@@ -91,7 +93,9 @@ export class CallendarComponent implements OnInit {
     }
 
     parseDates() {
-        if ( this.ucCalendar === undefined ) { return undefined; }
+        if (this.ucCalendar === undefined) {
+            return undefined;
+        }
         let view = this.ucCalendar.fullCalendar('getView') as Default;
         let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
         let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
@@ -102,8 +106,8 @@ export class CallendarComponent implements OnInit {
         this.calendarOptions = {
             // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             height: this.calHeight,
+            defaultDate: this.initialStartDate,
             contentHeight: this.calHeight,
-            defaultDate: moment.now(),
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
@@ -113,11 +117,10 @@ export class CallendarComponent implements OnInit {
             views: this.views,
             resourceColumns: this.resourceColumns,
             resources: (callback) => {
-                    callback(this._resources);
+                callback(this._resources);
             }
         };
-        let today = moment().format('YYYY-MM-DD').toString();
-        this.loadData.emit({startDate: today, endDate: today});
+        this.refreshViewData();
     }
 
     public eventRender(event) {
@@ -141,9 +144,5 @@ export class CallendarComponent implements OnInit {
 
     public eventClick(event) {
         this.eventClickCallback.emit(this.events.find(element => element.id === event.detail.event.id));
-    }
-
-    private resourcesMethod() {
-
     }
 }

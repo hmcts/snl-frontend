@@ -1,16 +1,21 @@
 export class ResourceList {
 
-    private _list: { 'id', 'title' }[] = [];
+    private _list: ResourceColumn[] = [];
 
     constructor() {
         this.add('empty', 'Not allocated');
     }
 
     add(id: string, title: string) {
-        this._list.push({ 'id': id, 'title': title });
+        this._list.push({ id, title });
     }
 
-    get(): { 'id', 'title' }[] {
+    get(): ResourceColumn[] {
         return Object.assign([], this._list);
     }
+}
+
+interface ResourceColumn {
+    id: string,
+    title: string
 }

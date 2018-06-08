@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SecurityModule } from '../security/security.module';
-import { PlannerComponent } from './components/planner.component';
+import { PlannerComponent } from './containers/planner.component';
 import { NgFullcalendarSchedulerModule } from '../common/ng-fullcalendar-scheduler/ng-fullcalendar-scheduler.module';
 import { CoreModule } from '../core/core.module';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatButtonToggleModule } from '@angular/material';
+import { RoomPlannerComponent } from './components/room-planner/room-planner.component';
+import { JudgePlannerComponent } from './components/judge-planner/judge-planner.component';
 
 @NgModule({
     imports: [
@@ -14,9 +16,10 @@ import { MatButtonModule } from '@angular/material';
         NgFullcalendarSchedulerModule,
         CoreModule,
         AngularMaterialModule,
-        MatButtonModule
+        MatButtonModule,
+        MatButtonToggleModule
     ],
-    declarations: [PlannerComponent],
+    declarations: [PlannerComponent, RoomPlannerComponent, JudgePlannerComponent],
     providers: []
 })
 export class PlannerModule {

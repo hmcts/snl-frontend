@@ -7,7 +7,7 @@ import { ListingCreateComponent } from './hearing-part/components/listing-create
 import { PocComponent } from './admin/components/poc/poc.component';
 import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
-import { PlannerComponent } from './planner/components/planner.component';
+import { PlannerComponent } from './planner/containers/planner.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
