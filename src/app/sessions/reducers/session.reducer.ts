@@ -1,4 +1,4 @@
-import { SessionActionTypes } from '../actions/session.action';
+import { DeleteOne, SessionActionTypes } from '../actions/session.action';
 import { Session } from '../models/session.model';
 
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
@@ -28,6 +28,9 @@ export function reducer(state: State = initialState, action) {
     }
     case SessionActionTypes.SearchComplete: {
         return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
+    }
+    case SessionActionTypes.DeleteOne: {
+        return {...state, ...adapter.removeOne(action.payload , {...state, loading: false})};
     }
     case SessionActionTypes.UpsertOne: {
         let updatedSession = {
