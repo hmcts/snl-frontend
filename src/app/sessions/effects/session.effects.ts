@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, retryWhen, concatMap, tap, withLatestFrom, d
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import * as sessionTransactionActions from '../actions/session-transaction.action';
+import * as sessionTransactionActs from '../actions/session-transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
 import * as fromSessionIndex from '../reducers/index';
@@ -42,7 +42,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActions.CreateAcknowledged(data)]),
+                mergeMap((data) => [new sessionTransactionActs.CreateAcknowledged(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -50,7 +50,7 @@ export class SessionEffects {
 
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActions.CreateAcknowledged>(sessionTransactionActions.SessionTransactionActionTypes.CreateAcknowledged),
+        ofType<sessionTransactionActs.CreateAcknowledged>(sessionTransactionActs.SessionTransactionActionTypes.CreateAcknowledged),
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload).pipe(
                 map(transcation => {
@@ -61,8 +61,8 @@ export class SessionEffects {
                     return transcation.id;
                 }),
                 retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
-                concatMap((data) => [new sessionTransactionActions.GetProblemsForSession(data),
-                    new sessionTransactionActions.CreateComplete(data)]),
+                concatMap((data) => [new sessionTransactionActs.GetProblemsForSession(data),
+                    new sessionTransactionActs.CreateComplete(data)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -70,11 +70,11 @@ export class SessionEffects {
 
     @Effect()
     getProblemsForCreatedSession: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActions.GetProblemsForSession>(sessionTransactionActions.SessionTransactionActionTypes.GetProblemsForSession),
+        ofType<sessionTransactionActs.GetProblemsForSession>(sessionTransactionActs.SessionTransactionActionTypes.GetProblemsForSession),
         mergeMap(action =>
             this.problemsService.getForTransaction(action.payload).pipe(
                 mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
-                    new sessionTransactionActions.ProblemsLoaded(action.payload)]),
+                    new sessionTransactionActs.ProblemsLoaded(action.payload)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -82,10 +82,10 @@ export class SessionEffects {
 
     @Effect()
     rollbackTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActions.RollbackTransaction>(sessionTransactionActions.SessionTransactionActionTypes.RollbackTransaction),
+        ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.SessionTransactionActionTypes.RollbackTransaction),
         mergeMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActions.TransactionRolledBack(data.id)]),
+                mergeMap((data) => [new sessionTransactionActs.TransactionRolledBack(data.id)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -93,10 +93,10 @@ export class SessionEffects {
 
     @Effect()
     commitTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActions.CommitTransaction>(sessionTransactionActions.SessionTransactionActionTypes.CommitTransaction),
+        ofType<sessionTransactionActs.CommitTransaction>(sessionTransactionActs.SessionTransactionActionTypes.CommitTransaction),
         mergeMap(action =>
             this.transactionService.commitTransaction(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActions.TransactionCommitted(data.id)]),
+                mergeMap((data) => [new sessionTransactionActs.TransactionCommitted(data.id)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
@@ -104,7 +104,7 @@ export class SessionEffects {
 
     @Effect()
     getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActions.TransactionCommitted>(sessionTransactionActions.SessionTransactionActionTypes.TransactionCommitted),
+        ofType<sessionTransactionActs.TransactionCommitted>(sessionTransactionActs.SessionTransactionActionTypes.TransactionCommitted),
         withLatestFrom(this.store, (action, state) => state.sessions.sessionTransaction.entities[action.payload].sessionId),
         distinctUntilChanged(),
         mergeMap(action => this.sessionsService.getSession(action).pipe(
