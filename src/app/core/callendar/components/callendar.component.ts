@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CalendarComponent } from 'ng-fullcalendar';
-import { ViewObject } from 'fullcalendar';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
+import { Default } from 'fullcalendar/View';
+import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 
 @Component({
     selector: 'app-core-callendar',
@@ -11,20 +11,73 @@ import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 })
 export class CallendarComponent implements OnInit {
 
-    @Input() events: any[] = [];
-    @Output() loadData = new EventEmitter();
-    @Output() eventClickCallback = new EventEmitter();
+    @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
     calendarOptions: any;
-    @ViewChild(CalendarComponent) ucCalendar: CalendarComponent;
     errors: string;
     references = [];
     calHeight = 'auto';
 
+    private _events: any[];
+    get events(): any[] {
+        return this._events;
+    }
+
+    @Input('preTransformedData') set preTransformedData(value: any[]) {
+        if (value === undefined || this.dataTransformer === undefined) {
+            return;
+        }
+        let events = [];
+        value.forEach((element) => {
+            events.push(this.dataTransformer.transform(element));
+        });
+        this._events = events;
+    }
+
+    public _resources: any[];
+    @Input('resources')
+    public set resources(value: any[]) {
+        if (value === undefined) {
+            return;
+        }
+        this._resources = value;
+
+        if (this.ucCalendar === undefined) {
+            return;
+        }
+        this.ucCalendar.fullCalendar('refetchResources');
+    }
+    @Input() resourceColumns: any[] = undefined;
+    @Input() dataTransformer: IcalendarTransformer<any>;
+    @Input() defaultView: string;
+    @Input() header: any;
+    @Input() views: any;
+    @Input() initialStartDate: Date = moment().toDate();
+    @Output() loadData = new EventEmitter();
+    @Output() eventClickCallback = new EventEmitter();
+
     constructor() {
+        this.header = {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay,listMonth'
+        };
+        this.views = {};
+        this.defaultView = 'agendaDay';
+    }
+
+    public refreshViewData() {
+        if (this.loadData === undefined) {
+            return;
+        }
+        let dateRange = this.parseDates();
+        if (dateRange === undefined) {
+            return;
+        }
+        this.loadData.emit(dateRange);
     }
 
     clickButton(model: any) {
-        this.loadData.emit(this.parseDates());
+        this.refreshViewData();
         this.references = [];
     }
 
@@ -36,11 +89,14 @@ export class CallendarComponent implements OnInit {
                 wordArray.pop();
                 el.innerHTML = wordArray.join(' ') + '...';
             }
-        })
+        });
     }
 
     parseDates() {
-        let view = this.ucCalendar.fullCalendar('getView') as ViewObject;
+        if (this.ucCalendar === undefined) {
+            return undefined;
+        }
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
         let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
         let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
         return {startDate: startDate, endDate: endDate};
@@ -48,39 +104,32 @@ export class CallendarComponent implements OnInit {
 
     ngOnInit() {
         this.calendarOptions = {
+            // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             height: this.calHeight,
+            defaultDate: this.initialStartDate,
             contentHeight: this.calHeight,
-            defaultDate: moment().toDate(),
-            defaultView: 'agendaDay',
+            defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
             editable: false,
             eventLimit: false,
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay,listMonth'
-            },
-            eventDataTransform: this.dataTransformer,
+            header: this.header,
+            views: this.views
         };
-        let today = moment().format('YYYY-MM-DD').toString();
-        this.loadData.emit({startDate: today, endDate: today});
-    }
-
-    private dataTransformer(session: SessionViewModel) {
-        let judgeName = (session.person) ? session.person.name : 'No Judge';
-        let roomName = (session.room) ? session.room.name : 'No Room';
-        let caseType = (session.caseType) ? session.caseType : 'No Case type';
-        return {
-            title: roomName + ' - ' + judgeName + ' - ' + caseType,
-            start: session.start,
-            end: moment(session.start).add(moment.duration(session.duration)).toDate(),
-            id: session.id,
-            hearingParts: session.hearingParts
-        };
+        // fix bellow is related to a serios of issues on fullcalendar github,
+        // when there are defined resources, agendaDay view for a simple calendar may not work
+        // another approach would be to create separate component for scheduler
+        if (this.resourceColumns !== undefined) {
+            this.calendarOptions.resourceColumns = [];
+            this.calendarOptions.resources = (callback) => {
+                callback(this._resources);
+            }
+        }
+        this.refreshViewData();
     }
 
     public eventRender(event) {
+        // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element.css('overflow-y', 'auto');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
