@@ -27,9 +27,9 @@ export class HearingPartEffects {
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                mergeMap(data => [new AssignComplete(data.entities.hearingParts),
+                mergeMap(data => [new AssignComplete({id: action.payload.hearingPartId, session: action.payload.sessionId}),
                     new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
-                catchError((err: HttpErrorResponse) => of(new AssignFailed(err.error)))
+                catchError((err) => of(new AssignFailed(err)))
             )
         )
     );

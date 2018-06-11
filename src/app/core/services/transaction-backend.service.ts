@@ -20,6 +20,7 @@ export enum TransactionStatuses {
     INPROGRESS = 'INPROGRESS', // PESSIMISTICLY_LOCKED,
     COMMITTED = 'COMMITTED',
     ROLLEDBACK = 'ROLLEDBACK',
+    CANCELLED = 'CANCELLED',
 }
 
 export interface Transaction {
