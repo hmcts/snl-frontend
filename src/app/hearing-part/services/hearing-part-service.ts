@@ -27,7 +27,7 @@ export class HearingPartService {
                 {sessionId: query.sessionId, start: query.start, userTransactionId: query.userTransactionId})
             .pipe(map((data: any) => {
                 if (data.status === TransactionStatuses.CANCELLED) {
-                    throw 'Transaction Cancelled';
+                    throw TransactionStatuses.CANCELLED;
                 }
             }));
     }

@@ -44,6 +44,8 @@ import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
 import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { CoreModule } from './core/core.module';
+import { DialogWithActionsComponent } from './core/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { DialogInfoComponent } from './core/notification/components/dialog-info/dialog-info.component';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -83,7 +85,9 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   declarations: [
     AppComponent,
     HomeComponent,
-    PocComponent
+    PocComponent,
+    DialogInfoComponent,
+    DialogWithActionsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
@@ -118,7 +122,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
       {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
       {provide: LOCALE_ID, useValue: 'en-GB'},
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [DialogWithActionsComponent, DialogInfoComponent]
 })
 export class AppModule {
     constructor(
