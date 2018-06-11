@@ -33,7 +33,7 @@ export class CallendarComponent implements OnInit {
         this._events = events;
     }
 
-    public _resources: any[] = [];
+    public _resources: any[];
     @Input('resources')
     public set resources(value: any[]) {
         if (value === undefined) {
@@ -46,7 +46,7 @@ export class CallendarComponent implements OnInit {
         }
         this.ucCalendar.fullCalendar('refetchResources');
     }
-    @Input() resourceColumns: any[] = [];
+    @Input() resourceColumns: any[] = undefined;
     @Input() dataTransformer: IcalendarTransformer<any>;
     @Input() defaultView: string;
     @Input() header: any;
@@ -114,12 +114,17 @@ export class CallendarComponent implements OnInit {
             editable: false,
             eventLimit: false,
             header: this.header,
-            views: this.views,
-            resourceColumns: this.resourceColumns,
-            resources: (callback) => {
+            views: this.views
+        };
+        // fix bellow is related to a serios of issues on fullcalendar github,
+        // when there are defined resources, agendaDay view for a simple calendar may not work
+        // another approach would be to create separate component for scheduler
+        if (this.resourceColumns !== undefined) {
+            this.calendarOptions.resourceColumns = [];
+            this.calendarOptions.resources = (callback) => {
                 callback(this._resources);
             }
-        };
+        }
         this.refreshViewData();
     }
 
