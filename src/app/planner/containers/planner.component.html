@@ -1,7 +1,7 @@
 <div>
-    <mat-button-toggle-group>
-        <mat-button-toggle (click)="setRoomView()" checked="true" >Rooms</mat-button-toggle>
-        <mat-button-toggle (click)="setJudgeView()" >Judges</mat-button-toggle>
+    <mat-button-toggle-group name="viewType" value="rooms">
+        <mat-button-toggle (click)="setRoomView()" value="rooms">Rooms</mat-button-toggle>
+        <mat-button-toggle (click)="setJudgeView()" value="judges">Judges</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
 <br />

@@ -69,10 +69,10 @@ export class RoomPlannerComponent implements OnInit {
     }
 
     childLoadDataAction(event) {
-        this.loadDataAction.emit(event)
+        this.loadDataAction.emit(event);
     }
 
     childEventClick(event) {
-        this.eventClick.emit(event)
+        this.eventClick.emit(event);
     }
 }
