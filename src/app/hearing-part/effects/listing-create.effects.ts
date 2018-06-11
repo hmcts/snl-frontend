@@ -8,7 +8,7 @@ import { Create, CreateComplete, CreateFailed, CreateListingRequest, HearingPart
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import { LISTING_REQUEST_CREATED } from '../models/hearing-part-notifications';
-import { Notify } from '../../core/notification/actions/notification.action';
+import { Notify } from '../../features/notification/actions/notification.action';
 
 @Injectable()
 export class ListingCreateEffects {

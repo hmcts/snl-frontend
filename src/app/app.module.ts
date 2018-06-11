@@ -26,7 +26,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FullCalendarModule } from 'ng-fullcalendar';
-import { CallendarComponent } from './core/callendar/components/callendar.component';
 import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
@@ -37,15 +36,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { PocComponent } from './admin/components/poc/poc.component';
-import { reducer } from './core/notification/reducers/notification.reducer';
-import { NotificationEffects } from './core/notification/effects/notification.effects';
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
-import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { CoreModule } from './core/core.module';
-import { DialogWithActionsComponent } from './core/notification/components/dialog-with-actions/dialog-with-actions.component';
-import { DialogInfoComponent } from './core/notification/components/dialog-info/dialog-info.component';
+import { NotificationModule } from './features/notification/notification.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -85,20 +80,19 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
   declarations: [
     AppComponent,
     HomeComponent,
-    PocComponent,
-    DialogInfoComponent,
-    DialogWithActionsComponent
+    PocComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
     BrowserAnimationsModule,
-    StoreModule.forRoot({core: reducer}),
+    StoreModule.forRoot({}),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
-    EffectsModule.forRoot([NotificationEffects]),
+    EffectsModule.forRoot([]),
     HttpClientModule,
+    NotificationModule,
     FormsModule,
     CoreModule,
     AppRoutingModule,
@@ -122,8 +116,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
       {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
       {provide: LOCALE_ID, useValue: 'en-GB'},
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [DialogWithActionsComponent, DialogInfoComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
     constructor(
