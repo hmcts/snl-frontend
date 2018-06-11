@@ -111,7 +111,7 @@ export class CallendarComponent implements OnInit {
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
-            editable: true,
+            editable: false,
             eventLimit: false,
             header: this.header,
             views: this.views,
