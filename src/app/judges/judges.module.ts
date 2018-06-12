@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FullCalendarModule } from 'ng-fullcalendar';
 import { SecurityModule } from '../security/security.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -10,6 +9,7 @@ import { reducers } from './reducers';
 import { JudgeEffects } from './effects/judge.effects';
 import { CalendarContainerComponent } from '../core/callendar/containers/calendar-container.component';
 import { CoreModule } from '../core/core.module';
+import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 
 @NgModule({
     imports: [
