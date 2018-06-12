@@ -33,7 +33,7 @@ export class ListingCreateComponent {
         });
     }
 
-    create(form) {
+    create() {
         this.listing.id = uuid();
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
