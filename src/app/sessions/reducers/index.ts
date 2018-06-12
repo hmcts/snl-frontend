@@ -108,6 +108,10 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
         return Object.values(finalSessions);
     });
 
+export const getSessionById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {
+    return svm.find(s => s.id === id);
+});
+
 export const getRecentlyCreatedSession = createSelector(
     getAllSessions,
     fromSessionTransaction.getRecent,
