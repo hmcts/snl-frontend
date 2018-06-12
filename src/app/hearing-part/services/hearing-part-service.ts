@@ -26,7 +26,7 @@ export class HearingPartService {
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
                 {sessionId: query.sessionId, start: query.start, userTransactionId: query.userTransactionId})
             .pipe(map((data: any) => {
-                if (data.status === TransactionStatuses.CANCELLED) {
+                if (data.status === TransactionStatuses.CONFLICT) {
                     throw 'Transaction Cancelled';
                 }
             }));
