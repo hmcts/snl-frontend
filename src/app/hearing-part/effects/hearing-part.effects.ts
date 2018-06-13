@@ -15,9 +15,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as sessionActions from '../../sessions/actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
-import { Notify } from '../../features/notification/actions/notification.action';
 import { HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
+import { Notify } from '../../features/notification/actions/notification.action';
 
 @Injectable()
 export class HearingPartEffects {
