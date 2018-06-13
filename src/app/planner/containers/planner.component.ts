@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { SearchForDates, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
+import * as fromSessions from '../../sessions/reducers/index';
 
 @Component({
     selector: 'app-planner',
@@ -34,18 +35,25 @@ export class PlannerComponent implements OnInit {
     }
 
     private loadDataForAllJudges(query: SessionQueryForDates) {
-        if (query === undefined) { return; }
+        if (query === undefined) {
+            return;
+        }
         this.store.dispatch(new SearchForDates(query));
         this.lastSearchDateRange = query;
     }
 
-    public eventClick(session) {
-        console.log(session);
-        this.dialog.open(DetailsDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            data: new SessionDialogDetails(session),
-            hasBackdrop: false
-        });
+    public eventClick(eventId) {
+        if (eventId instanceof CustomEvent) {
+            return;
+        }
+        const session$ = this.store.pipe(select(fromSessions.getSessionById(eventId)))
+            .subscribe(session => {
+                this.dialog.open(DetailsDialogComponent, {
+                    width: 'auto',
+                    minWidth: 350,
+                    data: new SessionDialogDetails(session),
+                    hasBackdrop: false
+                });
+            });
     }
 }

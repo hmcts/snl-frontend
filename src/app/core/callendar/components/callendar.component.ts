@@ -116,11 +116,11 @@ export class CallendarComponent implements OnInit {
             header: this.header,
             views: this.views
         };
-        // fix bellow is related to a serios of issues on fullcalendar github,
         // when there are defined resources, agendaDay view for a simple calendar may not work
         // another approach would be to create separate component for scheduler
+        // fix bellow is related to a serios of issues on fullcalendar github,
         if (this.resourceColumns !== undefined) {
-            this.calendarOptions.resourceColumns = [];
+            this.calendarOptions.resourceColumns = this.resourceColumns;
             this.calendarOptions.resources = (callback) => {
                 callback(this._resources);
             }
@@ -148,6 +148,6 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventClick(event) {
-        this.eventClickCallback.emit(this.events.find(element => element.id === event.detail.event.id));
+        this.eventClickCallback.emit(event.id);
     }
 }
