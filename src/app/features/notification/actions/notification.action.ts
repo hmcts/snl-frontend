@@ -4,6 +4,7 @@ import { CoreNotification } from '../model/core-notification';
 export enum NotificationActionTypes {
   Create = '[CoreNotification] Notify',
   Dismiss = '[CoreNotification] Dismiss',
+  OpenDialog = '[CoreNotification] Open Dialog',
 }
 
 /**
@@ -19,8 +20,14 @@ export class Notify implements Action {
   constructor(public payload: CoreNotification) {}
 }
 
+export class OpenDialog implements Action {
+  readonly type = NotificationActionTypes.OpenDialog;
+
+  constructor(public payload: string) {}
+}
+
 export class Dismiss implements Action {
     readonly type = NotificationActionTypes.Dismiss;
 
-    constructor() {}
+    constructor(public payload: string = null) {}
 }

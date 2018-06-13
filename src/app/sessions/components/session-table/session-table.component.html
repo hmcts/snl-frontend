@@ -41,7 +41,7 @@
 
   <ng-container matColumnDef="hearings">
     <mat-header-cell *matHeaderCellDef> Hearings </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.hearingParts.length}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingParts?.length}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="allocated">

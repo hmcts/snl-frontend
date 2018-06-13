@@ -1,0 +1,19 @@
+<div>
+    <mat-button-toggle-group name="viewType" value="room">
+        <mat-button-toggle (click)="setRoomView()" value="room">Rooms</mat-button-toggle>
+        <mat-button-toggle (click)="setJudgeView()" value="judge">Judges</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+<br />
+<div>
+    <app-room-planner *ngIf="view==='room'"
+                      (eventClick)="eventClick($event)"
+                      (loadDataAction)="loadDataForAllJudges($event)"
+                      [initialStartDate]="lastSearchDateRange?.startDate"
+    ></app-room-planner>
+    <app-judge-planner *ngIf="view==='judge'"
+                       (eventClick)="eventClick($event)"
+                       (loadDataAction)="loadDataForAllJudges($event)"
+                       [initialStartDate]="lastSearchDateRange?.startDate"
+    ></app-judge-planner>
+</div>

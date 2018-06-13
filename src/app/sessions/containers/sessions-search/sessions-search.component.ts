@@ -7,6 +7,7 @@ import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers/index';
 import * as fromSessions from '../../reducers/index';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
+import { v4 as uuid } from 'uuid';
 
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import * as moment from 'moment';
@@ -117,6 +118,7 @@ export class SessionsSearchComponent implements OnInit {
     assignToSession() {
         this.store.dispatch(new AssignToSession({
             hearingPartId: this.selectedHearingPartId,
+            userTransactionId: uuid(),
             sessionId: this.selectedSession.id,
             start: null // this.calculateStartOfHearing(this.selectedSession)
         }));

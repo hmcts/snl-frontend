@@ -1,7 +1,8 @@
-import { HearingPartActionTypes } from '../actions/hearing-part.action';
+import { HearingPartActionTypes, UpsertMany } from '../actions/hearing-part.action';
 
 import { HearingPart } from '../models/hearing-part';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
+import { Session } from '../../sessions/models/session.model';
 
 export interface State extends EntityState<HearingPart> {
     loading: boolean | false;
@@ -37,8 +38,17 @@ export function reducer(state: State = initialState, action) {
         return {...state, loading: false};
     }
     case HearingPartActionTypes.AssignComplete: {
-      return {...state, ...adapter.upsertOne({id: Object.keys(action.payload)[0], changes: Object.values(action.payload)[0]},
+      return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
               {...state, loading: false} )};
+    }
+    case HearingPartActionTypes.UpsertMany: {
+        let updatedCollection = Object.values(action.payload || []).map((hearingPart: HearingPart) => {
+            return {
+                id: hearingPart.id,
+                changes: hearingPart
+            } as Update<HearingPart>;
+        });
+        return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};
     }
     default:
         return state;
