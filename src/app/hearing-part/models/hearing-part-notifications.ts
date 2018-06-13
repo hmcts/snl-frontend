@@ -1,4 +1,4 @@
-import { CoreNotification } from '../../core/notification/model/core-notification';
+import { CoreNotification } from '../../features/notification/model/core-notification';
 
 export const HEARING_PART_ASSIGN_SUCCESS = {
     message: 'Hearing part assigned!',

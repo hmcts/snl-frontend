@@ -34,14 +34,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { PocComponent } from './admin/components/poc/poc.component';
-import { reducer } from './core/notification/reducers/notification.reducer';
-import { NotificationEffects } from './core/notification/effects/notification.effects';
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
 import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
+import { NotificationModule } from './features/notification/notification.module';
+import { NotificationEffects } from './features/notification/effects/notification.effects';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -86,12 +86,12 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     imports: [
         BrowserModule.withServerTransition({appId: 'snl-frontend'}),
         BrowserAnimationsModule,
-        StoreModule.forRoot({core: reducer}),
+        StoreModule.forRoot({}),
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
             logOnly: environment.production, // Restrict extension to log-only mode
         }),
-        EffectsModule.forRoot([NotificationEffects]),
+        EffectsModule.forRoot([]),
         HttpClientModule,
         FormsModule,
         CoreModule,
@@ -102,6 +102,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         SessionModule,
         SecurityModule,
         AdminModule,
+        NotificationModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'XSRF-TOKEN', // this is optional
             headerName: 'X-XSRF-TOKEN' // this is optional

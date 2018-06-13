@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { tap } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
-import { Notify, NotificationActionTypes } from '../actions/notification.action';
-import { MatSnackBar } from '@angular/material';
-import * as sessionActions from '../../../sessions/actions/session.action';
+import { Notify, NotificationActionTypes, OpenDialog } from '../actions/notification.action';
+import { MatDialog, MatSnackBar } from '@angular/material';
+import { DialogWithActionsComponent } from '../components/dialog-with-actions/dialog-with-actions.component';
+import { DialogInfoComponent } from '../components/dialog-info/dialog-info.component';
 
 @Injectable()
 export class NotificationEffects {
@@ -31,7 +31,15 @@ export class NotificationEffects {
         })
     );
 
-    constructor(private actions$: Actions, public snackBar: MatSnackBar) {
+    @Effect({ dispatch: false })
+    openDialog$: Observable<Action> = this.actions$.pipe(
+        ofType<OpenDialog>(NotificationActionTypes.OpenDialog),
+        tap((action: OpenDialog) => {
+            this.openDialog(action.payload);
+        })
+    );
+
+    constructor(private actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
     }
 
     createNotification(action) {
@@ -40,5 +48,14 @@ export class NotificationEffects {
 
     dismissNotification() {
         this.notificationHandle.dismiss();
+    }
+
+    openDialog(message) {
+        return this.dialog.open(DialogInfoComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: message,
+            hasBackdrop: true
+        });
     }
 }
