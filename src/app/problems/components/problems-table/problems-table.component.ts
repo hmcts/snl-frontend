@@ -25,11 +25,8 @@ export class ProblemsTableComponent implements OnInit, OnChanges {
     this.dataSource.paginator = this.paginator;
   }
 
-  extractRefDescriptions(element: Problem): string {
-    const descriptionReferences = element.references
-      .map((reference: ProblemReference) => `<li>${reference.entity}: ${reference.description}</li>`)
-      .join(' ');
-
-    return `<ul>${descriptionReferences}</ul>`;
+  extractRefDescriptions(element: Problem): string[] {
+    return element.references
+      .map((reference: ProblemReference) => `${reference.entity}: ${reference.description}`);
   }
 }

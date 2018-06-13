@@ -15,7 +15,11 @@
   <!-- Ref description Column -->
   <ng-container matColumnDef="references description">
     <mat-header-cell *matHeaderCellDef> References description </mat-header-cell>
-    <mat-cell *matCellDef="let element" [innerHTML]="extractRefDescriptions(element)"></mat-cell>
+    <mat-cell *matCellDef="let element">
+      <ul>
+        <li *ngFor="let refDescription of extractRefDescriptions(element)"> {{refDescription}}</li>
+      </ul>
+  </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
