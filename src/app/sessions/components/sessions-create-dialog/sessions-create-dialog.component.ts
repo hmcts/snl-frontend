@@ -26,7 +26,6 @@ export class SessionsCreateDialogComponent implements OnInit {
       public dialogRef: MatDialogRef<SessionsCreateDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary,
       private store: Store<State>) {
-      this.data.problems$.subscribe(console.warn);
       this.sessionCreated$ = this.data.createdSessionStatus$.pipe(map(status => status.sessionCreated));
       this.data.createdSessionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.problemsLoaded$ = this.data.createdSessionStatus$.pipe(map(status => status.problemsLoaded));

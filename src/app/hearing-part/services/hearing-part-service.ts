@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { ListingCreate } from '../models/listing-create';
+import { Transaction, TransactionStatuses } from '../../core/services/transaction-backend.service';
 
 @Injectable()
 export class HearingPartService {
@@ -23,8 +24,12 @@ export class HearingPartService {
     assignToSession(query: SessionAssignment): Observable<any> {
         return this.http
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
-                {sessionId: query.sessionId, start: query.start})
-            .pipe(map(data => normalize(data, hearingPart)));
+                {sessionId: query.sessionId, start: query.start, userTransactionId: query.userTransactionId})
+            .pipe(map((data: any) => {
+                if (data.status === TransactionStatuses.CONFLICT) {
+                    throw 'Transaction Cancelled';
+                }
+            }));
     }
 
     createListing(query: ListingCreate): Observable<String> {
