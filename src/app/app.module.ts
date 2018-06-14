@@ -41,7 +41,7 @@ import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
-import { NotificationEffects } from './features/notification/effects/notification.effects';
+import { AuthorizationHeaderName } from './security/models/access-token';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -57,14 +57,23 @@ export class XhrInterceptor implements HttpInterceptor {
 
 @Injectable()
 export class HttpXsrfInterceptor implements HttpInterceptor {
+    storage: Storage;
 
-    constructor(private tokenExtractor: HttpXsrfTokenExtractor, private injector: Injector) {
+    constructor(private tokenExtractor: HttpXsrfTokenExtractor, private injector: Injector, storage: Storage) {
+        this.storage = (storage === undefined || storage === null) ? sessionStorage : storage;
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const headerName = 'X-XSRF-TOKEN';
-        let token = null;
         let securityService = this.injector.get<SecurityService>(SecurityService);
+        // let storage = this.injector.get<Storage>(Storage);
+        req = this.addAuthenticationHeader(req);
+        req = this.addXsrfToken(securityService, req);
+        return next.handle(req);
+    }
+
+    private addXsrfToken(securityService, req: HttpRequest<any>) {
+        let headerName = 'X-XSRF-TOKEN';
+        let token = null;
         if (securityService && securityService.currentUser && securityService.currentUser.xsrftoken) {
             token = securityService.currentUser.xsrftoken as string;
             console.log('Token: ' + token);
@@ -73,7 +82,16 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         if (token !== null && !req.headers.has(headerName)) {
             req = req.clone({headers: req.headers.set(headerName, token)});
         }
-        return next.handle(req);
+        return req;
+    }
+
+    private addAuthenticationHeader(req: HttpRequest<any>) {
+        let headerToken = this.storage.getItem(AuthorizationHeaderName);
+        let headerName = AuthorizationHeaderName;
+        if (headerToken !== null && !req.headers.has(headerName)) {
+            req = req.clone({headers: req.headers.set(headerName, headerToken)});
+        }
+        return req;
     }
 }
 
@@ -117,6 +135,7 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: 'en-GB'},
+        {provide: Storage, useValue: sessionStorage}
     ],
     bootstrap: [AppComponent]
 })

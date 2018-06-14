@@ -3,29 +3,25 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user.model';
+import { AccessToken, AuthorizationHeaderName } from '../models/access-token';
 
 @Injectable()
 export class SecurityService {
 
     userSubject$: Subject<User> = new Subject();
     currentUser: User = User.emptyUser();
+    storage: Storage;
 
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private http: HttpClient, private config: AppConfig, storage: Storage) {
+        this.storage = (storage === undefined || storage === null) ? sessionStorage : storage;
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
     authenticate(credentials, callback) {
-
-        const headers = new HttpHeaders(credentials ? {
-            authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-        } : {});
-
-        this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
-            this.parseAuthenticationRespone(response);
-              this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
-                this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
-                return callback && callback();
-              });
+        this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe( sigininResponse => {
+            let accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
+            sessionStorage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
+            return this.refreshAuthenticatedUserData(callback);
         });
     }
 
@@ -35,13 +31,12 @@ export class SecurityService {
     }
 
     logout(callback) {
-        this.http.post(this.config.createApiUrl('/logout'), {}).subscribe(success => {
-            this.userSubject$.next(User.emptyUser());
-            callback(success);
-        });
+        this.storage.removeItem(AuthorizationHeaderName);
+        this.userSubject$.next(User.emptyUser());
+        callback();
     }
 
-    refreshAuthenticatedUser(callback) {
+    refreshAuthenticatedUserData(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
           this.parseAuthenticationRespone(response);
           this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
