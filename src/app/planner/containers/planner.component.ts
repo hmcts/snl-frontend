@@ -7,6 +7,7 @@ import { DetailsDialogComponent } from '../../sessions/components/details-dialog
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
+import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 
 @Component({
     selector: 'app-planner',
@@ -16,8 +17,11 @@ export class PlannerComponent implements OnInit {
 
     public view: string;
     private lastSearchDateRange: SessionQueryForDates;
+    private confirmationDialogRef;
+    private confirmationDialogOpen;
 
     constructor(private store: Store<State>, public dialog: MatDialog) {
+        this.confirmationDialogOpen = false;
     }
 
     ngOnInit() {
@@ -55,5 +59,29 @@ export class PlannerComponent implements OnInit {
                     hasBackdrop: false
                 });
             });
+    }
+
+    public eventModify(event) {
+        if (!this.confirmationDialogOpen) {
+            this.confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+                width: 'auto',
+                minWidth: 350,
+                data: {
+                    message: 'Are you sure you want to modify this session?'
+                },
+                hasBackdrop: true
+            });
+
+            this.confirmationDialogOpen = true;
+
+            this.confirmationDialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.confirmationDialogOpen = false;
+                } else {
+                    event.detail.revertFunc();
+                    this.confirmationDialogOpen = false;
+                }
+            });
+        }
     }
 }

@@ -1,8 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import * as moment from 'moment';
 import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
-import { Default } from 'fullcalendar/View';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
+import * as moment from 'moment';
+import { Default } from 'fullcalendar/View';
+import 'jquery-ui/ui/widgets/draggable.js';
+import { Store } from '@ngrx/store';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 
 @Component({
     selector: 'app-core-callendar',
@@ -54,8 +57,10 @@ export class CallendarComponent implements OnInit {
     @Input() initialStartDate: Date = moment().toDate();
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
+    @Output() eventResizeCallback = new EventEmitter();
+    @Output() eventDropCallback = new EventEmitter();
 
-    constructor() {
+    constructor(private store: Store<fromHearingParts.State>) {
         this.header = {
             left: 'prev,next today',
             center: 'title',
@@ -111,7 +116,8 @@ export class CallendarComponent implements OnInit {
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
-            editable: false,
+            editable: true,
+            droppable: true,
             eventLimit: false,
             header: this.header,
             views: this.views
@@ -148,6 +154,20 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventClick(event) {
-        this.eventClickCallback.emit(event.id);
+        this.eventClickCallback.emit(event);
+    }
+
+    public eventDrop(event) {
+        event.detail.event.start = moment(event.detail.event.start.format());
+        event.detail.event.end = moment(event.detail.event.end.format());
+
+        this.eventDropCallback.emit(event);
+    }
+
+    public eventResize(event) {
+   //     event.detail.event.start = moment(event.detail.event.start.format());
+     //   event.detail.event.end = moment(event.detail.event.end.format());
+
+        this.eventResizeCallback.emit(event);
     }
 }

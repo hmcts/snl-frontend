@@ -3,7 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { tap } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
-import { Notify, NotificationActionTypes, OpenDialog } from '../actions/notification.action';
+import { Notify, NotificationActionTypes, OpenDialog, OpenDialogWithAction } from '../actions/notification.action';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogWithActionsComponent } from '../components/dialog-with-actions/dialog-with-actions.component';
 import { DialogInfoComponent } from '../components/dialog-info/dialog-info.component';
@@ -39,6 +39,14 @@ export class NotificationEffects {
         })
     );
 
+    @Effect({ dispatch: false })
+    OpenDialogWithAction$: Observable<Action> = this.actions$.pipe(
+        ofType<OpenDialogWithAction>(NotificationActionTypes.OpenDialogWithAction),
+        tap((action: OpenDialogWithAction) => {
+            this.openDialog(action.payload);
+        })
+    );
+
     constructor(private actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
     }
 
@@ -52,6 +60,15 @@ export class NotificationEffects {
 
     openDialog(message) {
         return this.dialog.open(DialogInfoComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: message,
+            hasBackdrop: true
+        });
+    }
+
+    openDialogWithActions(message) {
+        return this.dialog.open(DialogWithActionsComponent, {
             width: 'auto',
             minWidth: 350,
             data: message,

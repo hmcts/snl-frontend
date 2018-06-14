@@ -1,6 +1,8 @@
 <app-core-callendar [preTransformedData]="sessions$ | async"
                     (loadData)="childLoadDataAction($event)"
                     (eventClickCallback)="childEventClick($event)"
+                    (eventDropCallback)="childEventDrop($event)"
+                    (eventResizeCallback)="childEventResize($event)"
                     [resourceColumns]="columns"
                     [resources]="resources"
                     [dataTransformer]="dataTransformer"
