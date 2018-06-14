@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user.model';
@@ -18,7 +18,7 @@ export class SecurityService {
     }
 
     authenticate(credentials, callback) {
-        this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe( sigininResponse => {
+        this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe(sigininResponse => {
             let accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
             sessionStorage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
             return this.refreshAuthenticatedUserData(callback);
@@ -27,7 +27,7 @@ export class SecurityService {
 
     isAuthenticated() {
         return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked
-          && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
+            && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
     }
 
     logout(callback) {
@@ -38,11 +38,8 @@ export class SecurityService {
 
     refreshAuthenticatedUserData(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-          this.parseAuthenticationRespone(response);
-          this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
-            this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
+            this.parseAuthenticationRespone(response);
             callback();
-          });
         });
     }
 
