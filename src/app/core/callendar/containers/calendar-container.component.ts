@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../../sessions/reducers/index';
@@ -13,6 +13,7 @@ import { DetailsDialogComponent } from '../../../sessions/components/details-dia
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../../sessions/models/session-dialog-details.model';
 import { DefaultDataTransformer } from '../transformers/default-data-transformer';
+import * as fromSessions from '../../../sessions/reducers';
 
 @Component({
     selector: 'app-core-callendar-container',
@@ -47,12 +48,18 @@ export class CalendarContainerComponent implements OnInit {
         this.store.dispatch(new SearchForJudgeWithHearings(query));
     }
 
-    public eventClick(session) {
-        this.dialog.open(DetailsDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            data: new SessionDialogDetails(session),
-            hasBackdrop: false
-        });
+    public eventClick(eventId) {
+        if (eventId instanceof CustomEvent) {
+            return;
+        }
+        this.store.pipe(select(fromSessions.getSessionById(eventId)))
+            .subscribe(session => {
+                this.dialog.open(DetailsDialogComponent, {
+                    width: 'auto',
+                    minWidth: 350,
+                    data: new SessionDialogDetails(session),
+                    hasBackdrop: false
+                });
+            }).unsubscribe();
     }
 }
