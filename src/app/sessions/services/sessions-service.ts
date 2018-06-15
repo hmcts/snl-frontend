@@ -33,7 +33,7 @@ export class SessionsService {
 
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
-            .pipe(map(data => {return normalize(data, sessions)}));
+            .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
     searchSessionsForJudge(parameters: DiaryLoadParameters): Observable<any> {
