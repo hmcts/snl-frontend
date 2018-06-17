@@ -7,7 +7,7 @@
       <div *ngIf="isInRole('officer')">
         <button mat-button routerLink='/' routerLinkActive="active">Main</button>
         <button mat-button [matMenuTriggerFor]="sessions">Sessions</button>
-          <mat-menu #sessions="matMenu" color="primary">
+          <mat-menu #sessions="matMenu" color="primary" [overlapTrigger]="false">
               <a routerLink="sessions/search" routerLinkActive="active">
                   <button mat-menu-item color="primary">Search</button>
               </a>
@@ -16,6 +16,7 @@
               </a>
           </mat-menu>
         <button mat-button routerLink='calendar' routerLinkActive="active">Calendar</button>
+        <button mat-button routerLink='planner' routerLinkActive="active">Planner</button>
         <button mat-button routerLink='listing' routerLinkActive="active">Listing (new)</button>
         <button mat-button routerLink='problems' routerLinkActive="active">Problems</button>
       </div>

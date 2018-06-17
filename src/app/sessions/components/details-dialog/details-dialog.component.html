@@ -15,7 +15,7 @@
       <hr>
     </div>
     <div fxLayout="column">
-      <span fxFlex>{{sessionDetails.session?.hearingParts.length}} hearing(s) listed</span>
+      <span fxFlex>{{sessionDetails.session?.hearingParts?.length}} hearing(s) listed</span>
       <span fxFlex>Allocated: {{sessionDetails.getAllocatedHearingsDuration() | appDurationAsMinutes}} minutes</span>
       <span fxFlex>Available: {{sessionDetails.getAvailableDuration()}} minutes</span>
     </div>

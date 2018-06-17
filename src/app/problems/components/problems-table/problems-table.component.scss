@@ -2,3 +2,14 @@
   flex: 0 0 300px;
   margin-right: 20px;
 }
+.mat-column-message {
+  flex: 1;
+  max-width: 400px;
+  margin-right: 20px;
+}
+/deep/.mat-column-references-description ul {
+  margin-left: -20px; // ul has default margin between left edge and dot, setting it to 0 makes dot invisible
+  li:first-letter {
+    text-transform:capitalize;
+  }
+}

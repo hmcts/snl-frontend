@@ -7,6 +7,7 @@ import { ListingCreateComponent } from './hearing-part/components/listing-create
 import { PocComponent } from './admin/components/poc/poc.component';
 import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
+import { PlannerComponent } from './planner/containers/planner.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -15,6 +16,7 @@ const routes: Routes = [
         children: [
             {path: '', redirectTo: 'calendar', pathMatch: 'full'},
             {path: 'calendar', component: CalendarContainerComponent, canActivate: [AppConfigGuard], data: { forSpecificJudge: false }},
+            {path: 'planner', component: PlannerComponent, canActivate: [AppConfigGuard]},
             {path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
             {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
             {path: 'listing', component: ListingCreateComponent, canActivate: [AppConfigGuard]},

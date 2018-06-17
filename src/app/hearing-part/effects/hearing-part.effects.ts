@@ -6,7 +6,6 @@ import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
     AssignComplete,
-    AssignFailed,
     AssignToSession,
     HearingPartActionTypes,
     Search,
@@ -15,9 +14,10 @@ import {
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as sessionActions from '../../sessions/actions/session.action';
-import { UpsertMany } from '../../sessions/actions/session.action';
-import { Notify } from '../../core/notification/actions/notification.action';
-import { ASSIGN_HEARING_PART, HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
+import * as notificationActions from '../../features/notification/actions/notification.action';
+import { HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
+import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
+import { Notify } from '../../features/notification/actions/notification.action';
 
 @Injectable()
 export class HearingPartEffects {
@@ -27,9 +27,9 @@ export class HearingPartEffects {
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                mergeMap(data => [new AssignComplete(data.entities.hearingParts),
+                mergeMap(data => [new AssignComplete({id: action.payload.hearingPartId, session: action.payload.sessionId}),
                     new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
-                catchError((err: HttpErrorResponse) => of(new AssignFailed(err.error)))
+                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err])))
             )
         )
     );

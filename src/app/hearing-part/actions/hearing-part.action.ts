@@ -13,6 +13,7 @@ export enum HearingPartActionTypes {
   CreateFailed = '[HearingPart] Create Failed',
   AssignToSession = '[HearingPart] Assign to session',
   AssignComplete = '[HearingPart] Assign Complete',
+  UpsertMany = '[HearingPart] Upsert Many',
   AssignFailed = '[HearingPart] Assign Failed'
 }
 
@@ -79,6 +80,12 @@ export class AssignComplete implements Action {
 
 export class AssignFailed implements Action {
     readonly type = HearingPartActionTypes.AssignFailed;
+
+    constructor(public payload: string) {}
+}
+
+export class UpsertMany implements Action {
+    readonly type = HearingPartActionTypes.UpsertMany;
 
     constructor(public payload: string) {}
 }

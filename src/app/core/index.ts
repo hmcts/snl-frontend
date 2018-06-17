@@ -1,4 +1,4 @@
-import * as fromNotification from './notification/reducers/notification.reducer'
+import * as fromNotification from '../features/notification/reducers/notification.reducer'
 import * as fromRoot from '../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 

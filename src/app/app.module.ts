@@ -24,9 +24,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { isPlatformBrowser } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-import { FullCalendarModule } from 'ng-fullcalendar';
-import { CallendarComponent } from './core/callendar/components/callendar.component';
 import { SessionModule } from './sessions/session.module';
 import { SecurityModule } from './security/security.module';
 import { HomeComponent } from './core/home/home.component';
@@ -37,13 +34,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { PocComponent } from './admin/components/poc/poc.component';
-import { reducer } from './core/notification/reducers/notification.reducer';
-import { NotificationEffects } from './core/notification/effects/notification.effects';
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
-import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { CoreModule } from './core/core.module';
+import { PlannerModule } from './planner/planner.module';
+import { FullCalendarModule } from './common/ng-fullcalendar/module';
+import { NotificationModule } from './features/notification/notification.module';
+import { NotificationEffects } from './features/notification/effects/notification.effects';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -68,8 +66,8 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         let token = null;
         let securityService = this.injector.get<SecurityService>(SecurityService);
         if (securityService && securityService.currentUser && securityService.currentUser.xsrftoken) {
-          token = securityService.currentUser.xsrftoken as string;
-          console.log('Token: ' + token);
+            token = securityService.currentUser.xsrftoken as string;
+            console.log('Token: ' + token);
         }
 
         if (token !== null && !req.headers.has(headerName)) {
@@ -80,45 +78,47 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PocComponent
-  ],
-  imports: [
-    BrowserModule.withServerTransition({ appId: 'snl-frontend' }),
-    BrowserAnimationsModule,
-    StoreModule.forRoot({core: reducer}),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: environment.production, // Restrict extension to log-only mode
-    }),
-    EffectsModule.forRoot([NotificationEffects]),
-    HttpClientModule,
-    FormsModule,
-    CoreModule,
-    AppRoutingModule,
-    AngularMaterialModule,
-    FullCalendarModule,
-    FlexLayoutModule,
-    SessionModule,
-    SecurityModule,
-    AdminModule,
-      HttpClientXsrfModule.withOptions({
-          cookieName: 'XSRF-TOKEN', // this is optional
-          headerName: 'X-XSRF-TOKEN' // this is optional
-      }),
-    SecurityModule,
-    JudgesModule,
-    HearingPartModule,
-    ProblemsModule
-  ],
-  providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
-      {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-      {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
-      {provide: LOCALE_ID, useValue: 'en-GB'},
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        PocComponent
+    ],
+    imports: [
+        BrowserModule.withServerTransition({appId: 'snl-frontend'}),
+        BrowserAnimationsModule,
+        StoreModule.forRoot({}),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+            logOnly: environment.production, // Restrict extension to log-only mode
+        }),
+        EffectsModule.forRoot([]),
+        HttpClientModule,
+        FormsModule,
+        CoreModule,
+        AppRoutingModule,
+        AngularMaterialModule,
+        FullCalendarModule,
+        FlexLayoutModule,
+        SessionModule,
+        SecurityModule,
+        AdminModule,
+        NotificationModule,
+        HttpClientXsrfModule.withOptions({
+            cookieName: 'XSRF-TOKEN', // this is optional
+            headerName: 'X-XSRF-TOKEN' // this is optional
+        }),
+        SecurityModule,
+        JudgesModule,
+        HearingPartModule,
+        ProblemsModule,
+        PlannerModule
+    ],
+    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
+        {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
+        {provide: LOCALE_ID, useValue: 'en-GB'},
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
     constructor(

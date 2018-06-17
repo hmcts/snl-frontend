@@ -16,7 +16,8 @@ export enum SessionActionTypes {
   CreateAcknowledged = '[Session] Create Acknowledged',
   CreateFailed = '[Session] Create Failed',
   UpsertMany = '[Session] Upsert Many',
-  UpsertOne = '[Session] Upsert One'
+  UpsertOne = '[Session] Upsert One',
+  DeleteOne = '[Session] Delete One',
 }
 
 /**
@@ -96,4 +97,10 @@ export class UpsertOne implements Action {
     readonly type = SessionActionTypes.UpsertOne;
 
     constructor(public payload: Session) {}
+}
+
+export class DeleteOne implements Action {
+    readonly type = SessionActionTypes.DeleteOne;
+
+    constructor(public payload: string) {}
 }

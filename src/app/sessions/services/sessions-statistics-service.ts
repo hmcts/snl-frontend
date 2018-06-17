@@ -7,9 +7,11 @@ export class SessionsStatisticsService {
 
     calculateAllocatedHearingsDuration(session) {
         let allocated = moment.duration();
-        session.hearingParts.forEach(hearingPart => {
-            allocated.add(moment.duration(hearingPart.duration));
-        });
+        if (session.hearingParts !== undefined) {
+            session.hearingParts.forEach(hearingPart => {
+                allocated.add(moment.duration(hearingPart.duration));
+            });
+        }
         return allocated;
     }
 

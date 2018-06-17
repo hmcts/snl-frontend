@@ -1,26 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { AppConfig } from '../../app.config';
 import { SessionCreate } from '../models/session-create.model';
-import { DatePipe } from '@angular/common';
 import { session, sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
+import { getHttpFriendly } from '../../utils/date-utils';
 
 @Injectable()
 export class SessionsService {
-    constructor(private http: HttpClient, private config: AppConfig) {
-    }
-
-    getUserTransaction(id: string | String): Observable<any> {
-        return this.http
-            .get<any>(`${this.config.getApiUrl()}/user-transaction/${id}`)
-            .pipe(map(data =>  data || []));
-    }
+    constructor(private http: HttpClient, private config: AppConfig) {}
 
     getSession(sessionId: string | String): Observable<any> {
         return this.http
@@ -35,33 +28,36 @@ export class SessionsService {
     }
 
     searchSessionsForDates(query: SessionQueryForDates): Observable<any> {
-        let fromDate = new DatePipe('en-UK').transform(query.startDate, 'dd-MM-yyyy');
-        let toDate = new DatePipe('en-UK').transform(query.endDate, 'dd-MM-yyyy');
+        let fromDate = getHttpFriendly(query.startDate);
+        let toDate = getHttpFriendly(query.endDate);
+
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
-            .pipe(map(data => {return normalize(data, sessions)}));
+            .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
     searchSessionsForJudge(parameters: DiaryLoadParameters): Observable<any> {
-        let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
-        let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
-        let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
         return this.http
-            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
+            .get<Session[]>(this.createJudgeDiaryUrl(parameters))
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
     searchSessionsForJudgeWithHearings(parameters: DiaryLoadParameters): Observable<any> {
-        let fromDate = new DatePipe('en-UK').transform(parameters.startDate, 'dd-MM-yyyy');
-        let toDate = new DatePipe('en-UK').transform(parameters.endDate, 'dd-MM-yyyy');
-        let username = parameters.judgeUsername; // TODO or maybe use: this.security.currentUser.username;
         return this.http
-            .get<Session[]>(`${this.config.getApiUrl()}/sessions/judge-diary?judge=${username}&startDate=${fromDate}&endDate=${toDate}`)
+            .get<Session[]>(this.createJudgeDiaryUrl(parameters))
             .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
     createSession(sessionCreate: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+    }
+
+    private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {
+        return `${this.config.getApiUrl()}` +
+                `/sessions/judge-diary` +
+                `?judge=${parameters.judgeUsername}` +
+                `&startDate=${getHttpFriendly(parameters.startDate)}` +
+                `&endDate=${getHttpFriendly(parameters.endDate)}`;
     }
 }
