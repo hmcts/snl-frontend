@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
 import { Subject } from 'rxjs/Subject';
@@ -10,10 +10,10 @@ export class SecurityService {
 
     userSubject$: Subject<User> = new Subject();
     currentUser: User = User.emptyUser();
-    storage: Storage;
 
-    constructor(private http: HttpClient, private config: AppConfig, storage: Storage) {
-        this.storage = (storage === undefined || storage === null) ? sessionStorage : storage;
+    constructor(private http: HttpClient,
+                private config: AppConfig,
+                @Inject('STORAGE') private storage: Storage) {
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
