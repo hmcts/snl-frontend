@@ -16,7 +16,7 @@ export class SessionsStatisticsService {
     }
 
     calculateUtilizedDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
-        return Math.round((allocatedDuration.asMinutes() / reservedDuration.asMinutes()) * 100);
+        return Math.ceil((allocatedDuration.asMinutes() / reservedDuration.asMinutes()) * 100);
     }
 
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
