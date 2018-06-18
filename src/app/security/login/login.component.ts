@@ -36,7 +36,6 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // check, cookies might be still valid
         this.security.refreshAuthenticatedUserData(response => {
             if (this.security.isAuthenticated() && this.returnUrl) {
                 this.router.navigateByUrl(this.returnUrl);

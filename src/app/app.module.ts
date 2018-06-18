@@ -105,7 +105,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: 'en-GB'},
-        {provide: Storage, useValue: sessionStorage}
+        {provide: Storage, useValue: localStorage}
     ],
     bootstrap: [AppComponent]
 })

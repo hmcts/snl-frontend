@@ -20,7 +20,7 @@ export class SecurityService {
     authenticate(credentials, callback) {
         this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe(sigininResponse => {
             let accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
-            sessionStorage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
+            this.storage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
             return this.refreshAuthenticatedUserData(callback);
         });
     }
