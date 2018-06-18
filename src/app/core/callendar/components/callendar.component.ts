@@ -70,7 +70,7 @@ export class CallendarComponent implements OnInit {
             return;
         }
 
-        let dateRange = this.parseDates(startDate, endDate);
+        let dateRange = this.parseDates();
         if (dateRange === undefined) {
             return;
         }
@@ -94,24 +94,16 @@ export class CallendarComponent implements OnInit {
         });
     }
 
-    parseDates(start?: Date, end?: Date) {
-        let startDate;
-        let endDate;
-
-        if (start && end) {
-            startDate = start;
-            endDate = end;
-        } else {
-            if (this.ucCalendar === undefined) {
-                return undefined;
-            }
-
-            let view = this.ucCalendar.fullCalendar('getView') as Default;
-            endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
-            startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+    parseDates() {
+        if (this.ucCalendar === undefined) {
+            return undefined;
         }
 
-        return {startDate, endDate};
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
+        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+
+        return {startDate: startDate, endDate: endDate};
     }
 
     ngOnInit() {
@@ -137,9 +129,11 @@ export class CallendarComponent implements OnInit {
                 callback(this._resources);
             }
         }
+    }
 
-        const tomorrow = moment(this.initialStartDate).add(1, 'day').toDate()
-        this.refreshViewData(this.initialStartDate, tomorrow)
+    public calendarInitialized() {
+        console.log('calendar init');
+        this.refreshViewData();
     }
 
     public eventRender(event) {
