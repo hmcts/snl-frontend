@@ -52,7 +52,7 @@ export class SessionsFilterComponent implements OnInit {
               },
               overListed: {
                   active: false,
-                  from: 100,
+                  from: 101,
                   to: Infinity
               },
               custom: {
