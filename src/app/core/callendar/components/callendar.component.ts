@@ -65,7 +65,7 @@ export class CallendarComponent implements OnInit {
         this.defaultView = 'agendaDay';
     }
 
-    public refreshViewData(startDate?: Date, endDate?: Date) {
+    public refreshViewData() {
         if (this.loadData === undefined) {
             return;
         }
@@ -132,7 +132,6 @@ export class CallendarComponent implements OnInit {
     }
 
     public calendarInitialized() {
-        console.log('calendar init');
         this.refreshViewData();
     }
 
