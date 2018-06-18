@@ -33,6 +33,7 @@ import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
 import { AuthorizationHeaderName } from './security/models/access-token';
+import { getLocalStorage } from './utils/storage';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -48,10 +49,8 @@ export class XhrInterceptor implements HttpInterceptor {
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
-    storage: Storage;
 
-    constructor() {
-        this.storage = localStorage;
+    constructor(@Inject('STORAGE') private storage: Storage) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -104,7 +103,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-        {provide: LOCALE_ID, useValue: 'en-GB'}
+        {provide: LOCALE_ID, useValue: 'en-GB'},
+        {provide: 'STORAGE', useFactory: getLocalStorage}
     ],
     bootstrap: [AppComponent]
 })
