@@ -10,6 +10,7 @@ import { session, sessions, sessionsWithHearings } from '../../core/schemas/data
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
+import { TransactionStatuses } from '../../core/services/transaction-backend.service';
 
 @Injectable()
 export class SessionsService {
@@ -51,6 +52,15 @@ export class SessionsService {
     createSession(sessionCreate: SessionCreate): Observable<String> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+    }
+
+    updateSession(update: any): Observable<any> {
+      return this.http
+        .put<String>(`${this.config.getApiUrl()}/sessions/update`, update).pipe(map((data: any) => {
+              if (data.status === TransactionStatuses.CONFLICT) {
+                  throw TransactionStatuses.CONFLICT;
+              }
+          }))
     }
 
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {

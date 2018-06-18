@@ -6,6 +6,7 @@ import * as SessionActions from '../actions/session.action';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
+import { Session } from '../models/session.model';
 
 @Injectable()
 export class SessionsCreationService {
@@ -23,5 +24,15 @@ export class SessionsCreationService {
 
         this.store.dispatch(new SessionCreationActions.Create(transaction));
         this.store.dispatch(new SessionActions.Create(session));
+    }
+
+    retrieveSessionFromEvent(event: any): Session {
+        return {
+            id: event.id,
+            start: event.start,
+            duration: event.duration,
+            room: event.room,
+
+        } as Session;
     }
 }

@@ -8,6 +8,11 @@ import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
+import * as SessionActions from '../../sessions/actions/session.action';
+import { v4 as uuid } from 'uuid';
+import { SessionCreate } from '../../sessions/models/session-create.model';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-planner',
@@ -74,8 +79,16 @@ export class PlannerComponent implements OnInit {
 
             this.confirmationDialogOpen = true;
 
-            this.confirmationDialogRef.afterClosed().subscribe(result => {
-                if (result) {
+            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+                if (confirmed) {
+                    let sessionUpdate = {
+                        userTransactionId: uuid(),
+                        id: event.detail.event.id,
+                        start: event.detail.event.start.toDate(),
+                        duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
+                    };
+
+                    this.store.dispatch(new SessionActions.Update(sessionUpdate));
                     this.confirmationDialogOpen = false;
                 } else {
                     event.detail.revertFunc();

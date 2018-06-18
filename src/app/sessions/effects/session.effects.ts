@@ -18,7 +18,11 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
 import { RulesProcessingStatuses, TransactionBackendService, TransactionStatuses } from '../../core/services/transaction-backend.service';
-
+import * as notificationActions from '../../features/notification/actions/notification.action';
+import { HEARING_PART_DIALOGS } from '../../hearing-part/models/hearing-part-dialog-contents';
+import { SESSION_DIALOGS } from '../models/session-dialog-contents';
+import { UpdateComplete } from '../actions/session.action';
+import { SESSION_UPDATED } from '../models/sessions-notifications';
 @Injectable()
 export class SessionEffects {
 
@@ -44,6 +48,17 @@ export class SessionEffects {
             this.sessionsService.createSession(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.CreateAcknowledged(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+            )
+        )
+    );
+
+    @Effect()
+    update$: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
+        mergeMap(action =>
+            this.sessionsService.updateSession(action.payload).pipe(
+                mergeMap((data) => [new notificationActions.Notify(SESSION_UPDATED)]),
+                catchError((err) => of(new notificationActions.OpenDialog(SESSION_DIALOGS[err])))
             )
         )
     );
