@@ -15,7 +15,7 @@ const DURATION_UNIT = 'minute';
     templateUrl: './listing-create.component.html',
     styleUrls: ['./listing-create.component.scss']
 })
-export class ListingCreateComponent implements OnInit {
+export class ListingCreateComponent {
     hearings: string[];
     caseTypes: string[];
     duration = 0;
@@ -36,20 +36,13 @@ export class ListingCreateComponent implements OnInit {
     create() {
         this.listing.id = uuid();
         this.listing.duration.add(this.duration, DURATION_UNIT);
-        if (this.checkRequiredFields(this.listing)) {
-            if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
-                this.errors = 'Start date should be before End date';
-            } else {
-                this.store.dispatch(new CreateListingRequest(this.listing));
-                this.initiateListing();
-                this.success = true;
-            }
+        if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
+            this.errors = 'Start date should be before End date';
         } else {
-            this.errors = 'Required (*) field is missing value';
+            this.store.dispatch(new CreateListingRequest(this.listing));
+            this.initiateListing();
+            this.success = true;
         }
-    }
-
-    ngOnInit() {
     }
 
     private initiateListing() {
@@ -67,24 +60,5 @@ export class ListingCreateComponent implements OnInit {
         this.duration = 0;
         this.errors = '';
         this.success = false;
-    }
-
-    private checkRequiredFields(listing: ListingCreate) {
-        if (listing.caseNumber === undefined || listing.caseNumber.trim() === '') {
-            return false;
-        }
-        if (listing.caseTitle === undefined || listing.caseTitle.trim() === '') {
-            return false;
-        }
-        if (listing.caseType === undefined || listing.caseType.trim() === '') {
-            return false;
-        }
-        if (listing.hearingType === undefined || listing.hearingType.trim() === '') {
-            return false;
-        }
-        if (listing.duration === undefined || listing.duration <= moment.duration(0)) {
-            return false;
-        }
-        return true;
     }
 }
