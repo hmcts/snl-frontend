@@ -36,7 +36,9 @@ export const COMPONENTS = [
     ],
     exports: COMPONENTS,
     declarations: COMPONENTS,
-    providers: [AuthGuard]
+    providers: [
+        AuthGuard
+    ]
 })
 export class SecurityModule {
 }

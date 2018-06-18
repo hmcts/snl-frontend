@@ -50,8 +50,8 @@ export class XhrInterceptor implements HttpInterceptor {
 export class AuthHttpInterceptor implements HttpInterceptor {
     storage: Storage;
 
-    constructor(storage: Storage) {
-        this.storage = (storage === undefined || storage === null) ? sessionStorage : storage;
+    constructor() {
+        this.storage = localStorage;
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -104,8 +104,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-        {provide: LOCALE_ID, useValue: 'en-GB'},
-        {provide: Storage, useValue: localStorage}
+        {provide: LOCALE_ID, useValue: 'en-GB'}
     ],
     bootstrap: [AppComponent]
 })

@@ -12,8 +12,8 @@ export class SecurityService {
     currentUser: User = User.emptyUser();
     storage: Storage;
 
-    constructor(private http: HttpClient, private config: AppConfig, storage: Storage) {
-        this.storage = (storage === undefined || storage === null) ? sessionStorage : storage;
+    constructor(private http: HttpClient, private config: AppConfig) {
+        this.storage = localStorage;
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
