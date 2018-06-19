@@ -26,10 +26,6 @@ export class SessionsPropositionsTableComponent implements OnInit, OnChanges {
   ngOnInit() {
   }
 
-  click() {
-    console.log(this.sessionPropositions);
-  }
-
   ngOnChanges() {
       if (this.sessionPropositions) {
           this.tableVisible = true;

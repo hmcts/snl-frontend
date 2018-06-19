@@ -8,8 +8,7 @@ import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
 import { SessionProposition } from '../models/session-proposition.model';
-import { Judge } from '../../judges/models/judge.model';
-import { Room } from '../../rooms/models/room.model';
+import { SessionPropositionView } from '../models/session-proposition-view.model';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -86,22 +85,8 @@ export const getSessionsError = createSelector(
 );
 
 export const getSessionsPropositions = createSelector(
-    getSessionsEntitiesState, getRooms, fromJudgesIndex.getJudges,
-    (state, rooms, judges) => {
-        let finalSessionPropositions: SessionProposition[];
-        finalSessionPropositions = Object.keys(state).map(stateKey => {
-            let sessionPropData = state[stateKey];
-            return {
-                start: sessionPropData.start,
-                end: sessionPropData.end,
-                judge: rooms[sessionPropData.judgeId],
-                room: judges[sessionPropData.roomId],
-                roomId: sessionPropData.roomId,
-                judgeId: sessionPropData.judgeId
-            } as SessionProposition
-        });
-        return Object.values(finalSessionPropositions);
-    }
+    getSessionsEntitiesState,
+    state => state.sessionPropositions
 );
 
 export const {
@@ -128,6 +113,21 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
             } as SessionViewModel;
         });
         return Object.values(finalSessions);
+    });
+
+export const getFullSessionPropositions = createSelector(getSessionsPropositions, getRooms, fromJudgesIndex.getJudges,
+    (sessions, rooms, judges) => {
+        let finalSessions: SessionPropositionView[];
+        if (sessions === undefined) {return []};
+        finalSessions = sessions.map((sessionProposition: SessionProposition) => {
+            return {
+                start: sessionProposition.start,
+                end: sessionProposition.end,
+                room: rooms[sessionProposition.roomId],
+                judge: judges[sessionProposition.judgeId],
+            } as SessionPropositionView;
+        });
+        return finalSessions;
     });
 
 export const getSessionById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {

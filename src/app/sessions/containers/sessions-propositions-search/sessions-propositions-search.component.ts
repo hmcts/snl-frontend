@@ -29,7 +29,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
   constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
     this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-    this.sessionPropositions$ = this.store.pipe(select(fromSessionIndex.getSessionsPropositions), map(this.asArray));
+    this.sessionPropositions$ = this.store.pipe(select(fromSessionIndex.getFullSessionPropositions), map(this.asArray));
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
   }

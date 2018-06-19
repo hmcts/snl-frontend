@@ -10,12 +10,12 @@
     <!-- Position Column -->
     <ng-container matColumnDef="judge">
         <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.judgeId}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.judge.name}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="room">
         <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.roomId}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.room.name}} </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="date">
@@ -32,25 +32,7 @@
         <mat-header-cell *matHeaderCellDef> End Time </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.endTime}} </mat-cell>
     </ng-container>
-
-    <!--<ng-container matColumnDef="time">-->
-        <!--<mat-header-cell *matHeaderCellDef> Time </mat-header-cell>-->
-        <!--<mat-cell *matCellDef="let element"> {{element.start.getHours()}}:{{(element.start.getMinutes()<10?'0':'') + element.start.getMinutes() }} </mat-cell>-->
-    <!--</ng-container>-->
-
-    <!--<ng-container matColumnDef="duration">-->
-        <!--<mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>-->
-        <!--<mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>-->
-    <!--</ng-container>-->
-
-    <!--<ng-container matColumnDef="hearings">-->
-        <!--<mat-header-cell *matHeaderCellDef> Hearings </mat-header-cell>-->
-        <!--<mat-cell *matCellDef="let element"> {{element.hearingParts?.length}} </mat-cell>-->
-    <!--</ng-container>-->
-
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
-
-<button (click)="click()">click me!</button>
 
