@@ -1,0 +1,9 @@
+<app-sessions-propositions-form [judges]="judges$ | async"
+                                [rooms]="rooms$ | async"
+                                [judgesLoading]="judgesLoading$ | async"
+                                [roomsLoading]="roomsLoading$ | async"
+                                (searchProposition)="search($event)">
+</app-sessions-propositions-form>
+<app-sessions-propositions-table [sessionPropositions]="sessionPropositions$ | async">
+
+</app-sessions-propositions-table>

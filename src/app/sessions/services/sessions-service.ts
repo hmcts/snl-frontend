@@ -10,6 +10,8 @@ import { session, sessions, sessionsWithHearings } from '../../core/schemas/data
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
+import { SessionPropositionQuery } from '../models/session-proposition-query.model';
+import * as moment from 'moment';
 
 @Injectable()
 export class SessionsService {
@@ -53,11 +55,32 @@ export class SessionsService {
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
     }
 
+    searchSessionPropositions(params: SessionPropositionQuery) {
+        return this.http.get( this.createSearchUrl(params) )
+    }
+
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {
         return `${this.config.getApiUrl()}` +
                 `/sessions/judge-diary` +
                 `?judge=${parameters.judgeUsername}` +
                 `&startDate=${getHttpFriendly(parameters.startDate)}` +
                 `&endDate=${getHttpFriendly(parameters.endDate)}`;
+    }
+
+    private createSearchUrl(params: SessionPropositionQuery) {
+        let from = moment(params.from.setHours(0, 0, 0, 0)).format('YYYY-MM-DD HH:mm');
+        let to = moment(params.to.setHours(23, 59, 59, 999)).format('YYYY-MM-DD HH:mm');
+        let durationInSeconds = params.durationInMinutes * 60;
+
+        let query = `${this.config.getApiUrl()}/search?from=${from}&to=${to}&durationInSeconds=${durationInSeconds}`;
+
+        if (params.roomId !== null && params.roomId !== '') {
+            query += `&room=${params.roomId}`;
+        }
+        if (params.judgeId !== null && params.judgeId !== '') {
+            query += `&judge=${params.judgeId}`;
+        }
+
+        return query;
     }
 }

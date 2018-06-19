@@ -7,6 +7,9 @@ import * as fromSessionTransaction from './session-transaction.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
+import { SessionProposition } from '../models/session-proposition.model';
+import { Judge } from '../../judges/models/judge.model';
+import { Room } from '../../rooms/models/room.model';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -80,6 +83,25 @@ export const getSessionsLoading = createSelector(
 export const getSessionsError = createSelector(
     getSessionsEntitiesState,
     state => state.error
+);
+
+export const getSessionsPropositions = createSelector(
+    getSessionsEntitiesState, getRooms, fromJudgesIndex.getJudges,
+    (state, rooms, judges) => {
+        let finalSessionPropositions: SessionProposition[];
+        finalSessionPropositions = Object.keys(state).map(stateKey => {
+            let sessionPropData = state[stateKey];
+            return {
+                start: sessionPropData.start,
+                end: sessionPropData.end,
+                judge: rooms[sessionPropData.judgeId],
+                room: judges[sessionPropData.roomId],
+                roomId: sessionPropData.roomId,
+                judgeId: sessionPropData.judgeId
+            } as SessionProposition
+        });
+        return Object.values(finalSessionPropositions);
+    }
 );
 
 export const {
