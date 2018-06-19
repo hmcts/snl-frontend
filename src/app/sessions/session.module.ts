@@ -25,6 +25,7 @@ import { CoreModule } from '../core/core.module';
 import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
 import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 import { SessionsCreationService } from './services/sessions-creation.service';
+import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -34,7 +35,8 @@ export const COMPONENTS = [
     SessionsFilterComponent,
     DetailsDialogComponent,
     SessionsCreateDialogComponent,
-    SessionsCreateFormComponent
+    SessionsCreateFormComponent,
+    SessionEditOrCreateDialogComponent
 ];
 
 @NgModule({
@@ -62,7 +64,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent, SessionEditOrCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]
