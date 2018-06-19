@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { select, Store, ActionsSubject } from '@ngrx/store';
 import { State } from '../../app.state';
 import { SearchForDates, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -11,6 +11,7 @@ import { DialogWithActionsComponent } from '../../features/notification/componen
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import * as moment from 'moment';
 import { SessionsCreateDialogComponent } from '../../sessions/components/sessions-create-dialog/sessions-create-dialog.component';
+import * as sessionTransactionActs from '../../sessions/actions/session-transaction.action';
 
 @Component({
     selector: 'app-planner',
@@ -23,8 +24,17 @@ export class PlannerComponent implements OnInit {
     private confirmationDialogRef;
     private confirmationDialogOpen;
 
-    constructor(private store: Store<State>, public dialog: MatDialog, public sessionCreationService: SessionsCreationService) {
+    constructor(private store: Store<State>,
+                public dialog: MatDialog,
+                public sessionCreationService: SessionsCreationService,
+                public updates$: ActionsSubject) {
         this.confirmationDialogOpen = false;
+
+        this.updates$.subscribe(data => {
+            if (data.type === sessionTransactionActs.SessionTransactionActionTypes.TransactionConflicted) {
+                this.loadDataForAllJudges(this.lastSearchDateRange)
+            }
+        });
     }
 
     ngOnInit() {

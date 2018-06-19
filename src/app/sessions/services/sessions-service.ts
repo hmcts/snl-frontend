@@ -49,7 +49,7 @@ export class SessionsService {
             .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
-    createSession(sessionCreate: SessionCreate): Observable<String> {
+    createSession(sessionCreate: SessionCreate): Observable<any> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
     }

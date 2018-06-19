@@ -49,7 +49,7 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionAcknowledged(data),
-                    new sessionTransactionActs.StatusAqcuired({id: data.valueOf(), status: TransactionStatuses.INPROGRESS, rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED})]),
+                    new sessionTransactionActs.StatusAqcuired(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
