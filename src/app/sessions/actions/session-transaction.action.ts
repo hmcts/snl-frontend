@@ -8,21 +8,13 @@ export enum SessionTransactionActionTypes {
   CommitTransaction = '[SessionTransaction] Commit Transaction',
   UpdateTransaction = '[SessionTransaction] Update Transaction',
 
-  RemoveOne = '[SessionTransaction] Remove One',
-  UpsertOne = '[SessionTransaction] Upsert One',
-
   TransactionComplete = '[SessionTransaction] Create Complete',
-  TransactionStarted = '[SessionTransaction] Transaction Started',
-  TransactionNotStarted = '[SessionTransaction] Transaction Not Started',
-  TransactionAcknowledged = '[SessionTransaction] Create Acknowledged',
   TransactionRolledBack = '[SessionTransaction] Transaction Rolledback',
   TransactionCommitted = '[SessionTransaction] Transaction comitted',
   TransactionConflicted = '[SessionTransaction] Transaction Conflicted',
-  TransactionFailed = '[SessionTransaction] Transaction Failed',
 
   GetTransactionUntilStartedOrConflict = '[SessionTransaction] Get Transaction until',
   GetProblemsForTransaction = '[SessionTransaction] Get problems for session',
-  StatusAcquired = '[SessionTransaction] Transaction status acquired',
   ProblemsLoaded = '[SessionTransaction] Problems Loaded',
 }
 
@@ -59,12 +51,6 @@ export class GetProblemsForTransaction implements Action {
     }
 }
 
-export class TransactionAcknowledged implements Action {
-    readonly type = SessionTransactionActionTypes.TransactionAcknowledged;
-
-    constructor(public payload: string | String) {}
-}
-
 export class ProblemsLoaded implements Action {
     readonly type = SessionTransactionActionTypes.ProblemsLoaded;
 
@@ -77,24 +63,6 @@ export class TransactionComplete implements Action {
     constructor(public payload: string | String) {}
 }
 
-export class TransactionFailed implements Action {
-    readonly type = SessionTransactionActionTypes.TransactionFailed;
-
-    constructor(public payload: string) {}
-}
-
-export class UpsertOne implements Action {
-    readonly type = SessionTransactionActionTypes.UpsertOne;
-
-    constructor(public payload: SessionTransaction) {}
-}
-
-export class RemoveOne implements Action {
-    readonly type = SessionTransactionActionTypes.RemoveOne;
-
-    constructor(public payload: string | String) {}
-}
-
 export class RollbackTransaction implements Action {
     readonly type = SessionTransactionActionTypes.RollbackTransaction;
 
@@ -103,24 +71,6 @@ export class RollbackTransaction implements Action {
 
 export class UpdateTransaction implements Action {
     readonly type = SessionTransactionActionTypes.UpdateTransaction;
-
-    constructor(public payload: Transaction) {}
-}
-
-export class StatusAqcuired implements Action {
-    readonly type = SessionTransactionActionTypes.StatusAcquired;
-
-    constructor(public payload: Transaction) {}
-}
-
-export class TransactionStarted implements Action {
-    readonly type = SessionTransactionActionTypes.TransactionStarted;
-
-    constructor(public payload: Transaction) {}
-}
-
-export class TransactionNotStarted implements Action {
-    readonly type = SessionTransactionActionTypes.TransactionNotStarted;
 
     constructor(public payload: Transaction) {}
 }

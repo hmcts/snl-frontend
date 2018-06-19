@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, retryWhen, concatMap, tap, withLatestFrom, distinctUntilChanged, filter } from 'rxjs/operators';
+import { catchError, map, mergeMap, retryWhen, concatMap, withLatestFrom, distinctUntilChanged, filter } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
@@ -18,12 +18,9 @@ import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
 import {
-    RulesProcessingStatuses,
     TransactionBackendService,
     TransactionStatuses
 } from '../../core/services/transaction-backend.service';
-import * as notificationActions from '../../features/notification/actions/notification.action';
-import { SESSION_DIALOGS } from '../models/session-dialog-contents';
 
 @Injectable()
 export class SessionEffects {
@@ -48,8 +45,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.TransactionAcknowledged(data),
-                    new sessionTransactionActs.StatusAqcuired(data)]),
+                mergeMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -60,31 +56,30 @@ export class SessionEffects {
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
         mergeMap(action =>
             this.sessionsService.updateSession(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.TransactionAcknowledged(data.id),
-                    new sessionTransactionActs.StatusAqcuired(data)]),
-                catchError((err) => of(new notificationActions.OpenDialog(SESSION_DIALOGS[err])))
+                mergeMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
+                catchError((err) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
     );
 
     @Effect()
     ifTransactionConflicted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.StatusAqcuired>(sessionTransactionActs.SessionTransactionActionTypes.StatusAcquired),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status === TransactionStatuses.CONFLICT),
         mergeMap(action => [new sessionTransactionActs.TransactionConflicted(action.payload.id)])
     );
 
     @Effect()
     ifTransactionStarted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.StatusAqcuired>(sessionTransactionActs.SessionTransactionActionTypes.StatusAcquired),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status === TransactionStatuses.STARTED),
-        mergeMap(action => [new sessionTransactionActs.GetProblemsForTransaction(action.payload.id),
+        concatMap(action => [new sessionTransactionActs.GetProblemsForTransaction(action.payload.id),
             new sessionTransactionActs.TransactionComplete(action.payload.id)])
     );
 
     @Effect()
     ifTransactionNotStartedOrConflict$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.StatusAqcuired>(sessionTransactionActs.SessionTransactionActionTypes.StatusAcquired),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status !== TransactionStatuses.STARTED && t.payload.status !== TransactionStatuses.CONFLICT),
         mergeMap(action => [new sessionTransactionActs.GetTransactionUntilStartedOrConflict(action.payload)])
 
@@ -97,15 +92,13 @@ export class SessionEffects {
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
                     if (transcation.status !== TransactionStatuses.STARTED && transcation.status !== TransactionStatuses.CONFLICT) {
-                        console.log('In progress')
-                        throw 'Transaction in progress...';
+                        throw 'Transaction not started...';
                     } else {
-                        console.log(transcation)
                         return transcation;
                     }
                 }),
                 retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
-                concatMap((data) => [new sessionTransactionActs.StatusAqcuired(data)]),
+                concatMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
             )
         ),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
