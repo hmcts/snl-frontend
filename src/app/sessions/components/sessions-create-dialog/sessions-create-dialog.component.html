@@ -1,5 +1,5 @@
 <div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
-  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(sessionCreated$ | async)">
+  <div fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(sessionTransacted$ | async)">
     <p fxFlex>
       Your session is being created...
     </p>
@@ -8,25 +8,29 @@
     </p>
   </div>
 
-  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionCreated$ | async">
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionTransacted$ | async">
     <div fxFlex>
       Session creation summary
     </div>
     <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...
     </div>
-    <div *ngIf="(data.problems$ | async).length !== 0">
+    <div *ngIf="(transactedSessionProblems$ | async).length !== 0">
       Problems:
     </div>
-    <div fxFlex *ngIf="(problemsLoaded$ | async) && ((data.problems$ | async).length === 0)">
+    <div fxFlex *ngIf="(problemsLoaded$ | async) && ((transactedSessionProblems$ | async).length === 0)">
       No problems occurred!
     </div>
+  </div>
+
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="conflicted$ | async">
+      Transaction Conflict!
   </div>
 
   <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
 
   <div fxFlex>
-    <div style="margin-top: 20px" *ngFor="let problem of data.problems$ | async; let i = index">
+    <div style="margin-top: 20px" *ngFor="let problem of transactedSessionProblems$ | async; let i = index">
       <p>{{i + 1}}. {{problem.message}} - {{problem.severity}}</p>
       <ul>
         <li *ngFor="let reference of problem.references">{{reference.entity}} - {{reference.description}}</li>
@@ -37,12 +41,12 @@
   <div *ngIf="!(finished$ | async)">
       You are allowed to hide this dialog, the session processing will continue in the background.
   </div>
-  <div *ngIf="(finished$ | async) && (data.problems$ | async).length !== 0">
+  <div *ngIf="(finished$ | async) && (transactedSessionProblems$ | async).length !== 0">
     Please confirm what action you’d like to take
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
     <button mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
-    <button *ngIf="(finished$ | async) && (data.problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Delete session</button>
+    <button *ngIf="(finished$ | async) && (transactedSessionProblems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Delete session</button>
   </div>
 
 </div>

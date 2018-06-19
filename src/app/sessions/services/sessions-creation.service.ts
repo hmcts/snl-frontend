@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
 import { Session } from '../models/session.model';
+import { InitializeTransaction } from '../actions/session-transaction.action';
 
 @Injectable()
 export class SessionsCreationService {
@@ -16,14 +17,27 @@ export class SessionsCreationService {
     create(session: SessionCreate) {
         let transactionId = uuid();
         let transaction = {
-            sessionId: session.id,
+            entityId: session.id,
             id: transactionId
         } as SessionTransaction;
 
         session.userTransactionId = transactionId;
 
-        this.store.dispatch(new SessionCreationActions.Create(transaction));
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Create(session));
+    }
+
+    update(session: any) {
+        let transactionId = uuid();
+        let transaction = {
+            entityId: session.id,
+            id: transactionId
+        } as SessionTransaction;
+
+        session.userTransactionId = transactionId;
+
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
+        this.store.dispatch(new SessionActions.Update(session));
     }
 
     retrieveSessionFromEvent(event: any): Session {

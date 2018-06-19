@@ -1,7 +1,8 @@
 export interface SessionTransaction {
-  sessionId: string,
+  entityId: string,
   id: string,
   status: string,
   problemsLoaded: boolean,
-  sessionCreated: boolean,
+  completed: boolean,
+  conflicted: boolean
 }

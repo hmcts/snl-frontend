@@ -13,6 +13,7 @@ import * as SessionActions from '../../sessions/actions/session.action';
 import { v4 as uuid } from 'uuid';
 import { SessionCreate } from '../../sessions/models/session-create.model';
 import * as moment from 'moment';
+import { SessionsCreateDialogComponent } from '../../sessions/components/sessions-create-dialog/sessions-create-dialog.component';
 
 @Component({
     selector: 'app-planner',
@@ -25,7 +26,7 @@ export class PlannerComponent implements OnInit {
     private confirmationDialogRef;
     private confirmationDialogOpen;
 
-    constructor(private store: Store<State>, public dialog: MatDialog) {
+    constructor(private store: Store<State>, public dialog: MatDialog, public sessionCreationService: SessionsCreationService) {
         this.confirmationDialogOpen = false;
     }
 
@@ -82,13 +83,17 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 if (confirmed) {
                     let sessionUpdate = {
-                        userTransactionId: uuid(),
                         id: event.detail.event.id,
                         start: event.detail.event.start.toDate(),
                         duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
                     };
 
-                    this.store.dispatch(new SessionActions.Update(sessionUpdate));
+                    this.sessionCreationService.update(sessionUpdate);
+                    this.dialog.open(SessionsCreateDialogComponent, {
+                        width: 'auto',
+                        minWidth: 350,
+                        hasBackdrop: true
+                    });
                     this.confirmationDialogOpen = false;
                 } else {
                     event.detail.revertFunc();

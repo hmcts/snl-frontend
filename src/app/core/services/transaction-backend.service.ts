@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
 import { Observable } from 'rxjs/Observable';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 export enum TransactionActions {
     ROLLBACK = 'rollback',
@@ -36,7 +36,7 @@ export class TransactionBackendService {
 
     getUserTransaction(id: string | String): Observable<Transaction> {
         return this.http
-            .get<Transaction>(`${this.getUrl()}/${id}`)
+            .get<Transaction>(`${this.getUrl()}/${id}`).pipe(tap(console.log))
     }
 
     rollbackTransaction(id: string | String): Observable<any> {

@@ -56,11 +56,7 @@ export class SessionsService {
 
     updateSession(update: any): Observable<any> {
       return this.http
-        .put<String>(`${this.config.getApiUrl()}/sessions/update`, update).pipe(map((data: any) => {
-              if (data.status === TransactionStatuses.CONFLICT) {
-                  throw TransactionStatuses.CONFLICT;
-              }
-          }))
+        .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
     }
 
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {

@@ -1,6 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { SessionTransaction } from '../models/session-transaction-status.model';
-import { SessionTransactionActionTypes } from '../actions/session-transaction.action';
+import { SessionTransactionActionTypes, UpdateTransaction } from '../actions/session-transaction.action';
+import { TransactionStatuses } from '../../core/services/transaction-backend.service';
 
 export interface State extends EntityState<SessionTransaction> {
     recent: string
@@ -10,23 +11,27 @@ export const initialState: State = adapter.getInitialState({recent: ''});
 
 export function reducer(state: State = initialState, action) {
   switch (action.type) {
-    case SessionTransactionActionTypes.Create: {
+    case SessionTransactionActionTypes.InitializeTransaction: {
         action.payload.problemsLoaded = false;
-        action.payload.sessionCreated = false;
+        action.payload.completed = false;
+        action.payload.conflicted = false;
 
         return {...state, ...adapter.addOne(action.payload, {...state, recent: action.payload.id})}
     }
-    case SessionTransactionActionTypes.CreateAcknowledged: {
-        return upsertSession(state, action, false, 'Session creation acknowledged', false);
+    case SessionTransactionActionTypes.TransactionAcknowledged: {
+        return upsertSession(state, action, false, 'Session acknowledged', false, false);
     }
-    case SessionTransactionActionTypes.CreateFailed: {
-        return upsertSession(state, action, false, 'Session creation failed', true);
+    case SessionTransactionActionTypes.TransactionFailed: {
+        return upsertSession(state, action, false, 'Session creation failed', true, false);
     }
-    case SessionTransactionActionTypes.CreateComplete: {
-        return upsertSession(state, action, false, 'Session creation complete', true);
+    case SessionTransactionActionTypes.TransactionComplete: {
+        return upsertSession(state, action, false, 'Session creation complete', true, false);
+    }
+    case SessionTransactionActionTypes.TransactionConflicted: {
+        return upsertSession(state, action, false, 'Session creation complete', true, true);
     }
     case SessionTransactionActionTypes.ProblemsLoaded: {
-        return upsertSession(state, action, true, 'Problems loaded', true);
+        return upsertSession(state, action, true, 'Problems loaded', true, false);
     }
     case SessionTransactionActionTypes.RemoveOne: {
       return adapter.removeOne(action.payload.id, state);
@@ -35,18 +40,28 @@ export function reducer(state: State = initialState, action) {
     case SessionTransactionActionTypes.RollbackTransaction: {
       return {...state, loading: true};
     }
+    case SessionTransactionActionTypes.UpdateTransaction: {
+        let updatedSession = {
+            id: action.payload.id,
+            changes: {
+                status: action.payload.status
+            }
+        } as Update<SessionTransaction>;
+        return {...state, ...adapter.upsertOne(updatedSession, state)};
+    }
     default:
         return state;
   }
 }
 
-function upsertSession(state, action, problemsLoaded: boolean, status: string, sessionCreated: boolean) {
+function upsertSession(state, action, problemsLoaded: boolean, status: string, completed: boolean, conflicted: boolean) {
     let updatedSession = {
         id: action.payload,
         changes: {
             status: status,
             problemsLoaded: problemsLoaded,
-            sessionCreated: sessionCreated,
+            completed: completed,
+            conflicted: conflicted
         }
     } as Update<SessionTransaction>;
     return {...state, ...adapter.upsertOne(updatedSession, state)};

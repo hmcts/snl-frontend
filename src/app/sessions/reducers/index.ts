@@ -59,7 +59,7 @@ export const getRecentlyCreatedSessionId = createSelector(
     getRecentlyCreatedTransactionId,
     getSessionTransactionEntitiesState,
     (transactionId, transactions) => {
-        return transactions[transactionId].sessionId;
+        return transactions[transactionId].entityId;
     }
 );
 

@@ -4,9 +4,14 @@ import { SessionCreationSummary } from '../../models/session-creation-summary';
 import { Observable } from 'rxjs/Observable';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { CommitTransaction, RollbackTransaction } from '../../actions/session-transaction.action';
+import * as fromSessionIndex from '../../reducers';
+import { Problem } from '../../../problems/models/problem.model';
+import { SessionTransaction } from '../../models/session-transaction-status.model';
+import { Dictionary } from '@ngrx/entity/src/models';
+import * as fromProblems from '../../../problems/reducers';
 
 @Component({
   selector: 'app-sessions-create-dialog',
@@ -15,9 +20,12 @@ import { CommitTransaction, RollbackTransaction } from '../../actions/session-tr
 })
 export class SessionsCreateDialogComponent implements OnInit {
 
-  sessionCreated$: Observable<boolean>;
+  transactedSessionProblems$: Observable<Problem[]>;
+  transactedSessionStatus$: Observable<SessionTransaction>;
+  sessionTransacted$: Observable<boolean>;
   problemsLoaded$: Observable<boolean>;
   finished$: Observable<boolean>;
+  conflicted$: Observable<boolean>;
   buttonText$: Observable<string>;
 
   transactionId: string;
@@ -26,10 +34,16 @@ export class SessionsCreateDialogComponent implements OnInit {
       public dialogRef: MatDialogRef<SessionsCreateDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary,
       private store: Store<State>) {
-      this.sessionCreated$ = this.data.createdSessionStatus$.pipe(map(status => status.sessionCreated));
-      this.data.createdSessionStatus$.subscribe((status) => {this.transactionId = status.id});
-      this.problemsLoaded$ = this.data.createdSessionStatus$.pipe(map(status => status.problemsLoaded));
-      this.finished$ = combineLatest(this.sessionCreated$, this.problemsLoaded$, (s, p) => { return s && p; });
+      this.transactedSessionProblems$ = combineLatest(this.store.pipe(select(fromProblems.getProblems)),
+          this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId)),
+          (problems, id) => {return this.filterProblemsForSession(problems, id)});
+      this.transactedSessionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
+      this.sessionTransacted$ = this.transactedSessionStatus$.pipe(map(status => status.completed));
+      this.conflicted$ = this.transactedSessionStatus$.pipe(map(status => status.conflicted));
+      this.problemsLoaded$ = this.transactedSessionStatus$.pipe(map(status => status.problemsLoaded));
+      this.transactedSessionStatus$.subscribe((status) => {this.transactionId = status.id});
+      this.finished$ = combineLatest(this.sessionTransacted$, this.problemsLoaded$, this.conflicted$,
+          (s, p, c) => { return (s && p) || c; });
       this.buttonText$ = this.finished$.pipe(map(finished => finished ? 'Accept' : 'Hide the dialog'));
   }
 
@@ -44,6 +58,14 @@ export class SessionsCreateDialogComponent implements OnInit {
   private dispatchAndClose(action) {
       this.store.dispatch(action);
       this.dialogRef.close();
+  }
+
+  private filterProblemsForSession(problems: Dictionary<Problem>, sessionId: string | String) {
+    return Object.values(problems).filter(problem => {
+        return problem.references ? problem.references.find(ref => {
+            return ref ? ref.entity_id === sessionId : false
+        }) : false
+    })
   }
 
   ngOnInit() {

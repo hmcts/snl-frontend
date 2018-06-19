@@ -1,20 +1,29 @@
 import { Action } from '@ngrx/store';
 import { SessionTransaction } from '../models/session-transaction-status.model';
+import { Transaction } from '../../core/services/transaction-backend.service';
 
 export enum SessionTransactionActionTypes {
-  CreateComplete = '[SessionTransaction] Create Complete',
-  Create = '[SessionTransaction] Create',
-  CreateAcknowledged = '[SessionTransaction] Create Acknowledged',
-  ProblemsLoaded = '[SessionTransaction] Problems Loaded',
-  GetProblemsForSession = '[SessionTransaction] Get problems for session',
-  CreateFailed = '[SessionTransaction] Create Failed',
-  UpsertOne = '[SessionTransaction] Upsert One',
-  GetRecent = '[SessionTransaction] Get Recent',
-  RemoveOne = '[SessionTransaction] Remove One',
+  InitializeTransaction = '[SessionTransaction] Initialize Transaction',
   RollbackTransaction = '[SessionTransaction] Rollback Transaction',
-  TransactionRolledBack = '[SessionTransaction] Transaction Rolledback',
   CommitTransaction = '[SessionTransaction] Commit Transaction',
-  TransactionCommitted = '[SessionTransaction] Transaction comitted'
+  UpdateTransaction = '[SessionTransaction] Update Transaction',
+
+  RemoveOne = '[SessionTransaction] Remove One',
+  UpsertOne = '[SessionTransaction] Upsert One',
+
+  TransactionComplete = '[SessionTransaction] Create Complete',
+  TransactionStarted = '[SessionTransaction] Transaction Started',
+  TransactionNotStarted = '[SessionTransaction] Transaction Not Started',
+  TransactionAcknowledged = '[SessionTransaction] Create Acknowledged',
+  TransactionRolledBack = '[SessionTransaction] Transaction Rolledback',
+  TransactionCommitted = '[SessionTransaction] Transaction comitted',
+  TransactionConflicted = '[SessionTransaction] Transaction Conflicted',
+  TransactionFailed = '[SessionTransaction] Transaction Failed',
+
+  GetTransactionUntilStartedOrConflict = '[SessionTransaction] Get Transaction until',
+  GetProblemsForTransaction = '[SessionTransaction] Get problems for session',
+  StatusAcquired = '[SessionTransaction] Transaction status acquired',
+  ProblemsLoaded = '[SessionTransaction] Problems Loaded',
 }
 
 /**
@@ -25,21 +34,33 @@ export enum SessionTransactionActionTypes {
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
 
-export class Create implements Action {
-    readonly type = SessionTransactionActionTypes.Create;
+export class InitializeTransaction implements Action {
+    readonly type = SessionTransactionActionTypes.InitializeTransaction;
 
     constructor(public payload: SessionTransaction) {}
 }
 
-export class GetProblemsForSession implements Action {
-    readonly type = SessionTransactionActionTypes.GetProblemsForSession;
+export class TransactionConflicted implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionConflicted;
+
+    constructor(public payload: SessionTransaction) {}
+}
+
+export class GetTransactionUntilStartedOrConflict implements Action {
+    readonly type = SessionTransactionActionTypes.GetTransactionUntilStartedOrConflict;
+
+    constructor(public payload: Transaction) {}
+}
+
+export class GetProblemsForTransaction implements Action {
+    readonly type = SessionTransactionActionTypes.GetProblemsForTransaction;
 
     constructor(public payload: string | String) {
     }
 }
 
-export class CreateAcknowledged implements Action {
-    readonly type = SessionTransactionActionTypes.CreateAcknowledged;
+export class TransactionAcknowledged implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionAcknowledged;
 
     constructor(public payload: string | String) {}
 }
@@ -50,14 +71,14 @@ export class ProblemsLoaded implements Action {
     constructor(public payload: string | String) {}
 }
 
-export class CreateComplete implements Action {
-    readonly type = SessionTransactionActionTypes.CreateComplete;
+export class TransactionComplete implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionComplete;
 
     constructor(public payload: string | String) {}
 }
 
-export class CreateFailed implements Action {
-    readonly type = SessionTransactionActionTypes.CreateFailed;
+export class TransactionFailed implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionFailed;
 
     constructor(public payload: string) {}
 }
@@ -66,12 +87,6 @@ export class UpsertOne implements Action {
     readonly type = SessionTransactionActionTypes.UpsertOne;
 
     constructor(public payload: SessionTransaction) {}
-}
-
-export class GetRecent implements Action {
-    readonly type = SessionTransactionActionTypes.GetRecent;
-
-    constructor() {}
 }
 
 export class RemoveOne implements Action {
@@ -84,6 +99,30 @@ export class RollbackTransaction implements Action {
     readonly type = SessionTransactionActionTypes.RollbackTransaction;
 
     constructor(public payload: string) {}
+}
+
+export class UpdateTransaction implements Action {
+    readonly type = SessionTransactionActionTypes.UpdateTransaction;
+
+    constructor(public payload: Transaction) {}
+}
+
+export class StatusAqcuired implements Action {
+    readonly type = SessionTransactionActionTypes.StatusAcquired;
+
+    constructor(public payload: Transaction) {}
+}
+
+export class TransactionStarted implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionStarted;
+
+    constructor(public payload: Transaction) {}
+}
+
+export class TransactionNotStarted implements Action {
+    readonly type = SessionTransactionActionTypes.TransactionNotStarted;
+
+    constructor(public payload: Transaction) {}
 }
 
 export class CommitTransaction implements Action {

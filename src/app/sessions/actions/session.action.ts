@@ -14,7 +14,6 @@ export enum SessionActionTypes {
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   Update = '[Session] Update',
-  Conflict = '[Session] Conflict',
   CreateComplete = '[Session] Create Complete',
   CreateAcknowledged = '[Session] Create Acknowledged',
   CreateFailed = '[Session] Create Failed',
@@ -48,12 +47,6 @@ export class SearchFailed implements Action {
   constructor(public payload: any) {}
 }
 
-export class Conflict implements Action {
-  readonly type = SessionActionTypes.Conflict;
-
-  constructor(public payload: any) {}
-}
-
 export class SearchForDates implements Action {
     readonly type = SessionActionTypes.SearchForDates;
 
@@ -82,12 +75,6 @@ export class Update implements Action {
     readonly type = SessionActionTypes.Update;
 
     constructor(public payload: any) {}
-}
-
-export class CreateAcknowledged implements Action {
-    readonly type = SessionActionTypes.CreateAcknowledged;
-
-    constructor(public payload: string | String) {}
 }
 
 export class CreateComplete implements Action {
