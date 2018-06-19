@@ -4,7 +4,7 @@ import { State } from '../../../../app.state';
 import { Store } from '@ngrx/store';
 
 @Component({
-    selector: 'app-home',
+    selector: 'app-dialog-actions',
     templateUrl: './dialog-with-actions.component.html',
     styleUrls: []
 })
