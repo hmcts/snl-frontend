@@ -9,9 +9,6 @@ import { SessionDialogDetails } from '../../sessions/models/session-dialog-detai
 import * as fromSessions from '../../sessions/reducers/index';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
-import * as SessionActions from '../../sessions/actions/session.action';
-import { v4 as uuid } from 'uuid';
-import { SessionCreate } from '../../sessions/models/session-create.model';
 import * as moment from 'moment';
 import { SessionsCreateDialogComponent } from '../../sessions/components/sessions-create-dialog/sessions-create-dialog.component';
 

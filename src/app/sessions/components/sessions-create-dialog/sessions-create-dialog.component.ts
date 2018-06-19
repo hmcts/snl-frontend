@@ -4,7 +4,7 @@ import { SessionCreationSummary } from '../../models/session-creation-summary';
 import { Observable } from 'rxjs/Observable';
 import { switchMap, map, tap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { select, Store } from '@ngrx/store';
+import { Action, select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { CommitTransaction, RollbackTransaction } from '../../actions/session-transaction.action';
 import * as fromSessionIndex from '../../reducers';
@@ -27,6 +27,7 @@ export class SessionsCreateDialogComponent implements OnInit {
   finished$: Observable<boolean>;
   conflicted$: Observable<boolean>;
   buttonText$: Observable<string>;
+  okAction: Action;
 
   transactionId: string;
 
@@ -40,6 +41,7 @@ export class SessionsCreateDialogComponent implements OnInit {
       this.transactedSessionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
       this.sessionTransacted$ = this.transactedSessionStatus$.pipe(map(status => status.completed));
       this.conflicted$ = this.transactedSessionStatus$.pipe(map(status => status.conflicted));
+      this.conflicted$.subscribe(conflicted => this.okAction = conflicted ? null : new CommitTransaction(this.transactionId));
       this.problemsLoaded$ = this.transactedSessionStatus$.pipe(map(status => status.problemsLoaded));
       this.transactedSessionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.finished$ = combineLatest(this.sessionTransacted$, this.problemsLoaded$, this.conflicted$,
@@ -48,7 +50,7 @@ export class SessionsCreateDialogComponent implements OnInit {
   }
 
   onOkClick(): void {
-    this.dispatchAndClose(new CommitTransaction(this.transactionId));
+    this.dispatchAndClose(this.okAction);
   }
 
   onDeleteClick(): void {
@@ -56,7 +58,9 @@ export class SessionsCreateDialogComponent implements OnInit {
   }
 
   private dispatchAndClose(action) {
-      this.store.dispatch(action);
+      if(action !== null) {
+          this.store.dispatch(action);
+      }
       this.dialogRef.close();
   }
 
