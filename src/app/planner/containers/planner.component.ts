@@ -56,7 +56,7 @@ export class PlannerComponent implements OnInit {
         if (eventId instanceof CustomEvent) {
             return;
         }
-        const session$ = this.store.pipe(select(fromSessions.getSessionById(eventId)))
+        this.store.pipe(select(fromSessions.getSessionById(eventId)))
             .subscribe(session => {
                 this.dialog.open(DetailsDialogComponent, {
                     width: 'auto',
@@ -64,7 +64,7 @@ export class PlannerComponent implements OnInit {
                     data: new SessionDialogDetails(session),
                     hasBackdrop: false
                 });
-            });
+            }).unsubscribe();
     }
 
     public eventModify(event) {

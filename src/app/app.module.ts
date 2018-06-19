@@ -1,19 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, Injectable, Injector, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
+import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
-import {
-    HTTP_INTERCEPTORS,
-    HttpClientModule,
-    HttpClientXsrfModule,
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest,
-    HttpXsrfTokenExtractor,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
@@ -41,7 +32,8 @@ import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
-import { NotificationEffects } from './features/notification/effects/notification.effects';
+import { AuthorizationHeaderName } from './security/models/access-token';
+import { getLocalStorage } from './utils/storage';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -56,24 +48,23 @@ export class XhrInterceptor implements HttpInterceptor {
 }
 
 @Injectable()
-export class HttpXsrfInterceptor implements HttpInterceptor {
+export class AuthHttpInterceptor implements HttpInterceptor {
 
-    constructor(private tokenExtractor: HttpXsrfTokenExtractor, private injector: Injector) {
+    constructor(@Inject('STORAGE') private storage: Storage) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const headerName = 'X-XSRF-TOKEN';
-        let token = null;
-        let securityService = this.injector.get<SecurityService>(SecurityService);
-        if (securityService && securityService.currentUser && securityService.currentUser.xsrftoken) {
-            token = securityService.currentUser.xsrftoken as string;
-            console.log('Token: ' + token);
-        }
-
-        if (token !== null && !req.headers.has(headerName)) {
-            req = req.clone({headers: req.headers.set(headerName, token)});
-        }
+        req = this.addAuthenticationHeader(req);
         return next.handle(req);
+    }
+
+    private addAuthenticationHeader(req: HttpRequest<any>) {
+        let headerToken = this.storage.getItem(AuthorizationHeaderName);
+        let headerName = AuthorizationHeaderName;
+        if (headerToken !== null && !req.headers.has(headerName)) {
+            req = req.clone({headers: req.headers.set(headerName, headerToken)});
+        }
+        return req;
     }
 }
 
@@ -103,10 +94,6 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
         SecurityModule,
         AdminModule,
         NotificationModule,
-        HttpClientXsrfModule.withOptions({
-            cookieName: 'XSRF-TOKEN', // this is optional
-            headerName: 'X-XSRF-TOKEN' // this is optional
-        }),
         SecurityModule,
         JudgesModule,
         HearingPartModule,
@@ -115,8 +102,9 @@ export class HttpXsrfInterceptor implements HttpInterceptor {
     ],
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
-        {provide: HTTP_INTERCEPTORS, useClass: HttpXsrfInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: 'en-GB'},
+        {provide: 'STORAGE', useFactory: getLocalStorage}
     ],
     bootstrap: [AppComponent]
 })

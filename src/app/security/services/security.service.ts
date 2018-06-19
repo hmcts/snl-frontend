@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user.model';
+import { AccessToken, AuthorizationHeaderName } from '../models/access-token';
 
 @Injectable()
 export class SecurityService {
@@ -10,44 +11,35 @@ export class SecurityService {
     userSubject$: Subject<User> = new Subject();
     currentUser: User = User.emptyUser();
 
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private http: HttpClient,
+                private config: AppConfig,
+                @Inject('STORAGE') private storage: Storage) {
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
     authenticate(credentials, callback) {
-
-        const headers = new HttpHeaders(credentials ? {
-            authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-        } : {});
-
-        this.http.get(this.config.createApiUrl('/security/user'), {headers: headers}).subscribe(response => {
-            this.parseAuthenticationRespone(response);
-              this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
-                this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
-                return callback && callback();
-              });
+        this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe(sigininResponse => {
+            let accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
+            this.storage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
+            return this.refreshAuthenticatedUserData(callback);
         });
     }
 
     isAuthenticated() {
         return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked
-          && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
+            && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
     }
 
     logout(callback) {
-        this.http.post(this.config.createApiUrl('/logout'), {}).subscribe(success => {
-            this.userSubject$.next(User.emptyUser());
-            callback(success);
-        });
+        this.storage.removeItem(AuthorizationHeaderName);
+        this.userSubject$.next(User.emptyUser());
+        callback();
     }
 
-    refreshAuthenticatedUser(callback) {
+    refreshAuthenticatedUserData(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-          this.parseAuthenticationRespone(response);
-          this.http.get(this.config.createApiUrl('/security/csrftoken')).subscribe(xsrftokenResponse => {
-            this.currentUser.xsrftoken = xsrftokenResponse[0] as string;
+            this.parseAuthenticationRespone(response);
             callback();
-          });
         });
     }
 

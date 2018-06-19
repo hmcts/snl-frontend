@@ -74,10 +74,12 @@ export class CallendarComponent implements OnInit {
         if (this.loadData === undefined) {
             return;
         }
+
         let dateRange = this.parseDates();
         if (dateRange === undefined) {
             return;
         }
+
         this.loadData.emit(dateRange);
     }
 
@@ -101,9 +103,11 @@ export class CallendarComponent implements OnInit {
         if (this.ucCalendar === undefined) {
             return undefined;
         }
+
         let view = this.ucCalendar.fullCalendar('getView') as Default;
-        let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
-        let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
+        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+
         return {startDate: startDate, endDate: endDate};
     }
 
@@ -131,6 +135,9 @@ export class CallendarComponent implements OnInit {
                 callback(this._resources);
             }
         }
+    }
+
+    public calendarInitialized() {
         this.refreshViewData();
     }
 
@@ -154,7 +161,7 @@ export class CallendarComponent implements OnInit {
     }
 
     public eventClick(event) {
-        this.eventClickCallback.emit(event);
+        this.eventClickCallback.emit(event.detail.event.id);
     }
 
     public eventDrop(event) {
