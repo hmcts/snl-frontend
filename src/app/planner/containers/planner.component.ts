@@ -10,8 +10,8 @@ import * as fromSessions from '../../sessions/reducers/index';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import * as moment from 'moment';
-import { SessionsCreateDialogComponent } from '../../sessions/components/sessions-create-dialog/sessions-create-dialog.component';
-import * as sessionTransactionActs from '../../sessions/actions/session-transaction.action';
+import { TransactionDialogComponent } from '../../sessions/components/transaction-dialog/transaction-dialog.component';
+import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
 
 @Component({
     selector: 'app-planner',
@@ -31,7 +31,7 @@ export class PlannerComponent implements OnInit {
         this.confirmationDialogOpen = false;
 
         this.updates$.subscribe(data => {
-            if (data.type === sessionTransactionActs.SessionTransactionActionTypes.TransactionConflicted) {
+            if (data.type === sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted) {
                 this.loadDataForAllJudges(this.lastSearchDateRange)
             }
         });
@@ -115,7 +115,7 @@ export class PlannerComponent implements OnInit {
     private openSummaryDialog() {
         this.confirmationDialogOpen = true;
 
-        this.dialog.open(SessionsCreateDialogComponent, {
+        this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

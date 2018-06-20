@@ -9,7 +9,7 @@ import * as fromJudges from '../../../judges/reducers/index';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
 import * as fromSessionIndex from '../../reducers/index';
-import { SessionsCreateDialogComponent } from '../../components/sessions-create-dialog/sessions-create-dialog.component';
+import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
@@ -44,7 +44,7 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     private openDialog(session) {
-        return this.dialog.open(SessionsCreateDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

@@ -22,7 +22,7 @@ import { SessionsFilterComponent } from './components/sessions-filter/sessions-f
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
-import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
+import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 import { SessionsCreationService } from './services/sessions-creation.service';
 
@@ -33,7 +33,7 @@ export const COMPONENTS = [
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
-    SessionsCreateDialogComponent,
+    TransactionDialogComponent,
     SessionsCreateFormComponent
 ];
 
@@ -62,7 +62,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, TransactionDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]

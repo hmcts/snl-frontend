@@ -1,7 +1,6 @@
-export interface SessionTransaction {
+export interface EntityTransaction {
   entityId: string,
   id: string,
-  status: string,
   problemsLoaded: boolean,
   completed: boolean,
   conflicted: boolean

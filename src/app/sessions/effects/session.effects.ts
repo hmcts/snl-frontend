@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, retryWhen, concatMap, withLatestFrom, distin
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import * as sessionTransactionActs from '../actions/session-transaction.action';
+import * as sessionTransactionActs from '../actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
 import * as fromSessionIndex from '../reducers/index';
@@ -64,14 +64,14 @@ export class SessionEffects {
 
     @Effect()
     ifTransactionConflicted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status === TransactionStatuses.CONFLICT),
         mergeMap(action => [new sessionTransactionActs.TransactionConflicted(action.payload.id)])
     );
 
     @Effect()
     ifTransactionStarted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status === TransactionStatuses.STARTED),
         concatMap(action => [new sessionTransactionActs.GetProblemsForTransaction(action.payload.id),
             new sessionTransactionActs.TransactionComplete(action.payload.id)])
@@ -79,7 +79,7 @@ export class SessionEffects {
 
     @Effect()
     ifTransactionNotStartedOrConflict$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.SessionTransactionActionTypes.UpdateTransaction),
+        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status !== TransactionStatuses.STARTED && t.payload.status !== TransactionStatuses.CONFLICT),
         mergeMap(action => [new sessionTransactionActs.GetTransactionUntilStartedOrConflict(action.payload)])
 
@@ -87,7 +87,7 @@ export class SessionEffects {
 
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetTransactionUntilStartedOrConflict>(sessionTransactionActs.SessionTransactionActionTypes.GetTransactionUntilStartedOrConflict),
+        ofType<sessionTransactionActs.GetTransactionUntilStartedOrConflict>(sessionTransactionActs.EntityTransactionActionTypes.GetTransactionUntilStartedOrConflict),
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
@@ -106,7 +106,7 @@ export class SessionEffects {
 
     @Effect()
     getProblemsForTransaction$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetProblemsForTransaction>(sessionTransactionActs.SessionTransactionActionTypes.GetProblemsForTransaction),
+        ofType<sessionTransactionActs.GetProblemsForTransaction>(sessionTransactionActs.EntityTransactionActionTypes.GetProblemsForTransaction),
         mergeMap(action =>
             this.problemsService.getForTransaction(action.payload).pipe(
                 mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
@@ -118,7 +118,7 @@ export class SessionEffects {
 
     @Effect()
     rollbackTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.SessionTransactionActionTypes.RollbackTransaction),
+        ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.EntityTransactionActionTypes.RollbackTransaction),
         mergeMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionRolledBack(data.id)]),
@@ -129,7 +129,7 @@ export class SessionEffects {
 
     @Effect()
     commitTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.CommitTransaction>(sessionTransactionActs.SessionTransactionActionTypes.CommitTransaction),
+        ofType<sessionTransactionActs.CommitTransaction>(sessionTransactionActs.EntityTransactionActionTypes.CommitTransaction),
         mergeMap(action =>
             this.transactionService.commitTransaction(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionCommitted(data.id)]),
@@ -140,7 +140,7 @@ export class SessionEffects {
 
     @Effect()
     getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.TransactionCommitted>(sessionTransactionActs.SessionTransactionActionTypes.TransactionCommitted),
+        ofType<sessionTransactionActs.TransactionCommitted>(sessionTransactionActs.EntityTransactionActionTypes.TransactionCommitted),
         withLatestFrom(this.store, (action, state) => state.sessions.sessionTransaction.entities[action.payload].entityId),
         distinctUntilChanged(),
         mergeMap(action => this.sessionsService.getSession(action).pipe(
