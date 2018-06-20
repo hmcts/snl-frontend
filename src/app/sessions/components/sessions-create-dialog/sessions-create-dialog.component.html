@@ -8,7 +8,7 @@
     </p>
   </div>
 
-  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="sessionTransacted$ | async">
+  <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="(sessionTransacted$ | async) && !(conflicted$ | async)">
     <div fxFlex>
       Session creation summary
     </div>
@@ -46,7 +46,7 @@
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
     <button mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
-    <button *ngIf="(finished$ | async) && (transactedSessionProblems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Delete session</button>
+    <button *ngIf="(finished$ | async) && (transactedSessionProblems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Rollback</button>
   </div>
 
 </div>

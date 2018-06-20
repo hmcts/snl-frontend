@@ -76,37 +76,49 @@ export class PlannerComponent implements OnInit {
 
     public eventModify(event) {
         if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
-                width: 'auto',
-                minWidth: 350,
-                data: {
-                    message: 'Are you sure you want to modify this session?'
-                },
-                hasBackdrop: true
-            });
-
-            this.confirmationDialogOpen = true;
+            this.confirmationDialogRef = this.openConfirmationDialog();
 
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 if (confirmed) {
-                    let sessionUpdate = {
-                        id: event.detail.event.id,
-                        start: event.detail.event.start.toDate(),
-                        duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
-                    };
+                    this.sessionCreationService.update(this.buildSessionUpdate(event));
 
-                    this.sessionCreationService.update(sessionUpdate);
-                    this.dialog.open(SessionsCreateDialogComponent, {
-                        width: 'auto',
-                        minWidth: 350,
-                        hasBackdrop: true
-                    });
-                    this.confirmationDialogOpen = false;
+                    this.openSummaryDialog();
                 } else {
                     event.detail.revertFunc();
-                    this.confirmationDialogOpen = false;
                 }
+                this.confirmationDialogOpen = false;
             });
         }
+    }
+
+    private buildSessionUpdate(event) {
+        return {
+            id: event.detail.event.id,
+            start: event.detail.event.start.toDate(),
+            duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
+        };
+    }
+
+    private openConfirmationDialog() {
+        this.confirmationDialogOpen = true;
+
+        return this.dialog.open(DialogWithActionsComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: {
+                message: 'Are you sure you want to modify this session?'
+            },
+            hasBackdrop: true
+        });
+    }
+
+    private openSummaryDialog() {
+        this.confirmationDialogOpen = true;
+
+        this.dialog.open(SessionsCreateDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }
