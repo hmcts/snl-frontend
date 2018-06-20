@@ -87,7 +87,8 @@ export class SessionEffects {
 
     @Effect()
     checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetTransactionUntilStartedOrConflict>(sessionTransactionActs.EntityTransactionActionTypes.GetTransactionUntilStartedOrConflict),
+        ofType<sessionTransactionActs.GetTransactionUntilStartedOrConflict>(
+            sessionTransactionActs.EntityTransactionActionTypes.GetTransactionUntilStartedOrConflict),
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
@@ -106,7 +107,8 @@ export class SessionEffects {
 
     @Effect()
     getProblemsForTransaction$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetProblemsForTransaction>(sessionTransactionActs.EntityTransactionActionTypes.GetProblemsForTransaction),
+        ofType<sessionTransactionActs.GetProblemsForTransaction>(
+            sessionTransactionActs.EntityTransactionActionTypes.GetProblemsForTransaction),
         mergeMap(action =>
             this.problemsService.getForTransaction(action.payload).pipe(
                 mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),

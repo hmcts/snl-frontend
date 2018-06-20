@@ -10,8 +10,6 @@ import { ResourceList } from '../../../core/callendar/model/resource-list';
 import { Judge } from '../../../judges/models/judge.model';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 import * as judgeActions from '../../../judges/actions/judge.action';
-import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
-import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'app-judge-planner',
@@ -32,7 +30,7 @@ export class JudgePlannerComponent implements OnInit {
     @Output() eventDrop = new EventEmitter();
     @Input() initialStartDate: Date;
 
-    constructor(private store: Store<State>, public dialog: MatDialog) {
+    constructor(private store: Store<State>) {
         this.defaultView = 'timelineWeek';
         this.header = {
             left: 'prev,next today',

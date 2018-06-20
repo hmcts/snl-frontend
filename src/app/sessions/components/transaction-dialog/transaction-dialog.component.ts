@@ -58,7 +58,7 @@ export class TransactionDialogComponent implements OnInit {
   }
 
   private dispatchAndClose(action) {
-      if(action !== null) {
+      if (action !== null) {
           this.store.dispatch(action);
       }
       this.dialogRef.close();
