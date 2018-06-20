@@ -2,7 +2,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
 import { Problem } from '../models/problem.model';
-import { GetForSession, ProblemActionTypes } from '../actions/problem.action';
+import { GetForSession, ProblemActionTypes, RemoveAll } from '../actions/problem.action';
 import { Session } from '../../sessions/models/session.model';
 
 export interface State extends EntityState<Problem> {
@@ -27,6 +27,9 @@ export function reducer(state: State = initialState, action) {
         }
         case ProblemActionTypes.GetFailed: {
             return {...state, loading: false, error: action.payload};
+        }
+        case ProblemActionTypes.RemoveAll: {
+            return {...state, ...adapter.removeAll(state)};
         }
         case ProblemActionTypes.GetComplete: {
             return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};

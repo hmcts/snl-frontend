@@ -1,9 +1,8 @@
 import * as fromRooms from '../../rooms/reducers/room.reducer'
-import * as fromJudges from '../../judges/reducers/judge.reducer';
 import * as fromJudgesIndex from '../../judges/reducers/index';
 import * as fromHearingPartIndex from '../../hearing-part/reducers/index';
 import * as fromSessions from './session.reducer'
-import * as fromSessionTransaction from './session-transaction.reducer'
+import * as fromSessionTransaction from './transaction.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
@@ -59,7 +58,7 @@ export const getRecentlyCreatedSessionId = createSelector(
     getRecentlyCreatedTransactionId,
     getSessionTransactionEntitiesState,
     (transactionId, transactions) => {
-        return transactions[transactionId].sessionId;
+        return transactions[transactionId].entityId;
     }
 );
 
