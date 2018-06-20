@@ -12,6 +12,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { Observable } from 'rxjs/Observable';
 import * as fromJudges from '../../../judges/reducers';
 import { SessionPropositionQuery } from '../../models/session-proposition-query.model';
+import { SessionPropositionView } from '../../models/session-proposition-view.model';
 
 @Component({
   selector: 'app-sessions-propositions-search',
@@ -45,6 +46,11 @@ export class SessionsPropositionsSearchComponent implements OnInit {
 
   search(searchRequest: SessionPropositionQuery) {
     this.store.dispatch(new SessionActions.SearchPropositions(searchRequest));
+  }
+
+  onSessionCreate(spv: SessionPropositionView) {
+    // TODO implement the create session dialog with populated fields
+    console.log(spv);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SessionPropositionView } from '../../models/session-proposition-view.model';
 
@@ -10,6 +10,7 @@ import { SessionPropositionView } from '../../models/session-proposition-view.mo
 export class SessionsPropositionsTableComponent implements OnChanges {
 
     @Input() sessionPropositions: SessionPropositionView[];
+    @Output() onSessionCreate = new EventEmitter<SessionPropositionView>();
 
     displayedColumns = [
         'date',
@@ -31,12 +32,12 @@ export class SessionsPropositionsTableComponent implements OnChanges {
             this.tableVisible = true;
             this.dataSource = new MatTableDataSource(this.sessionPropositions);
         }
-
     }
 
-    createSession(element: SessionPropositionView) {
-        // TODO implement this in another story
-        console.log(element);
+    createSessionClicked(element: SessionPropositionView) {
+        if (this.onSessionCreate !== undefined) {
+            this.onSessionCreate.emit(element);
+        }
     }
 
 }

@@ -8,7 +8,10 @@
         </app-sessions-propositions-form>
     </div>
     <div fxFlex>
-        <app-sessions-propositions-table [sessionPropositions]="sessionPropositions$ | async">
+        <app-sessions-propositions-table
+                [sessionPropositions]="sessionPropositions$ | async"
+                (onSessionCreate)="onSessionCreate($event)"
+        >
         </app-sessions-propositions-table>
     </div>
 </div>
