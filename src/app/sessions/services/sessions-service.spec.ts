@@ -35,6 +35,10 @@ const verifyIfSessionsAreNormalized = (data: any) => {
   expect(data).toEqual(normalizedGetSessionsResponse);
 };
 
+const verifyIfSessionsWithHearingsAreNormalized = (data: any) => {
+  expect(data).toEqual(normalizedGetSessionsWithHearings);
+};
+
 describe('SessionsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -106,11 +110,11 @@ describe('SessionsService', () => {
     it('should return normalized data', () => {
       sessionsService
         .searchSessionsForDates(sessionQueryForDates)
-        .subscribe(verifyIfSessionsAreNormalized);
+        .subscribe(verifyIfSessionsWithHearingsAreNormalized);
 
       httpMock
         .expectOne(expectedGetSessionsByDateURL)
-        .flush(getSessionsResponse);
+        .flush(getSessionsWithHearingsResponse);
     });
   });
 

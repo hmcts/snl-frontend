@@ -7,7 +7,8 @@ import 'jquery-ui/ui/widgets/draggable.js';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers';
+import { State } from '../../../app.state';
+import { v4 as uuid } from 'uuid';
 
 @Component({
     selector: 'app-calendar',
@@ -64,7 +65,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     @Output() eventResizeCallback = new EventEmitter();
     @Output() eventDropCallback = new EventEmitter();
 
-    constructor(private store: Store<fromHearingParts.State>) {
+    constructor(public store: Store<State>) {
         this.header = {
             left: 'prev,next today',
             center: 'title',
@@ -194,6 +195,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         if (this.isSelected) {
             this.store.dispatch(new AssignToSession({
                    hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                   userTransactionId: uuid(),
                    sessionId: this.selectedSessionId,
                     start: null // this.calculateStartOfHearing(this.selectedSession)
             }));
