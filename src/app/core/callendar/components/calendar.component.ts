@@ -3,8 +3,6 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewIni
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import 'jquery-ui/ui/widgets/draggable.js';
-import { Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 
 @Component({
@@ -60,7 +58,7 @@ export class CalendarComponent implements OnInit {
     @Output() eventResizeCallback = new EventEmitter();
     @Output() eventDropCallback = new EventEmitter();
 
-    constructor(private store: Store<fromHearingParts.State>) {
+    constructor() {
         this.header = {
             left: 'prev,next today',
             center: 'title',

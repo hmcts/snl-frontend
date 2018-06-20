@@ -18,7 +18,7 @@ describe('SessionsCreationService', () => {
     });
 
     it('should dispatch two actions', () => {
-      expect(storeSpy.dispatch).toHaveBeenCalledTimes(2);
+      expect(storeSpy.dispatch).toHaveBeenCalledTimes(3);
     });
 
     it('should set transaction.id to be the same as session.userTransactionId', () => {
