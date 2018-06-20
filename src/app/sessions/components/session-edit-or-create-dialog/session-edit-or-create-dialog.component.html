@@ -1,13 +1,5 @@
 <div class="sessions-create-container">
-  <div class="sessions-create-container">
-    <app-sessions-create-form [judges]="judges$ | async"
-                              [rooms]="rooms$ | async"
-                              [judgesLoading]="judgesLoading$ | async"
-                              [roomsLoading]="roomsLoading$ | async"
-                              (createSession)="create($event)"
-                              (onCancel)="cancel($event)"
-                              [session]="sessionDetails"
-    >
-    </app-sessions-create-form>
-  </div>
+  <app-sessions-create
+          [sessionEditData]="sessionEditData"
+  ></app-sessions-create>
 </div>

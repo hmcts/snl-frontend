@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import * as SessionActions from '../../actions/session.action';
-import * as SessionCreationActions from '../../actions/session-transaction.action';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
@@ -15,19 +13,23 @@ import * as fromSessionIndex from '../../reducers/index';
 import { SessionsCreateDialogComponent } from '../../components/sessions-create-dialog/sessions-create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionCreationSummary } from '../../models/session-creation-summary';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Problem } from '../../../problems/models/problem.model';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionTransaction } from '../../models/session-transaction-status.model';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
+import { SessionEditData } from '../../models/session-edit-data';
 
 @Component({
-  selector: 'app-sessions-create',
-  templateUrl: './sessions-create.component.html',
-  styleUrls: ['./sessions-create.component.scss']
+    selector: 'app-sessions-create',
+    templateUrl: './sessions-create.component.html',
+    styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
+
+    @Input() sessionEditData: SessionEditData;
+
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
     problems$: Observable<Dictionary<Problem>>;
@@ -46,8 +48,10 @@ export class SessionsCreateComponent implements OnInit {
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
         this.recentlyCreatedSessionId$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId));
         this.recenlyCreatedSessionProblems$ = combineLatest(this.problems$, this.recentlyCreatedSessionId$,
-            (problems, id) => {return this.filterProblemsForSession(problems, id)});
-        this.recenlyCreatedSessionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus))
+            (problems, id) => {
+                return this.filterProblemsForSession(problems, id);
+            });
+        this.recenlyCreatedSessionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
     }
 
     ngOnInit() {
@@ -79,9 +83,9 @@ export class SessionsCreateComponent implements OnInit {
     private filterProblemsForSession(problems: Dictionary<Problem>, sessionId: string | String) {
         return Object.values(problems).filter(problem => {
             return problem.references ? problem.references.find(ref => {
-                return ref ? ref.entity_id === sessionId : false
-            }) : false
-        })
+                return ref ? ref.entity_id === sessionId : false;
+            }) : false;
+        });
     }
 
 }

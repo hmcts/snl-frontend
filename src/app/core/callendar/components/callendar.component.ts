@@ -16,11 +16,7 @@ export class CallendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
-
-    private _events: any[];
-    get events(): any[] {
-        return this._events;
-    }
+    fullCalendarEventsModel: any[];
 
     @Input('preTransformedData') set preTransformedData(value: any[]) {
         if (value === undefined || this.dataTransformer === undefined) {
@@ -30,7 +26,7 @@ export class CallendarComponent implements OnInit {
         value.forEach((element) => {
             events.push(this.dataTransformer.transform(element));
         });
-        this._events = events;
+        this.fullCalendarEventsModel = events;
     }
 
     public _resources: any[];

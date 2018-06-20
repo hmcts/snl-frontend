@@ -40,7 +40,7 @@
 
     <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
       <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
-      <button *ngIf="onCancel !== undefined" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+      <button *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
     </div>
   </mat-card-content>
 </mat-card>

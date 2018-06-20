@@ -4,6 +4,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { SessionEditData } from '../../models/session-edit-data';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -12,19 +13,20 @@ import { v4 as uuid } from 'uuid';
 })
 export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
-    private _session: SessionCreate;
+    session: SessionCreate;
     durationInMinutes: number;
     caseTypes: string[];
     time: string;
     roomsPlaceholder: string;
     judgesPlaceholder: string;
 
-    get session(): SessionCreate {
-        return this._session;
-    }
-
-    @Input() set session(value: SessionCreate) {
-        this._session = value;
+    private _sessionEditData: SessionEditData;
+    @Input() set sessionEditData(value: SessionEditData) {
+        if (value === undefined || value == null) {
+            return;
+        }
+        this.session = value.editedSession;
+        this._sessionEditData = value;
         this.recalculateViewData();
     }
 
@@ -32,7 +34,6 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
     @Input() rooms: Room[];
     @Input() roomsLoading: boolean;
     @Input() judgesLoading: boolean;
-    @Output() onCancel = new EventEmitter();
     @Output() createSession = new EventEmitter();
 
     constructor() {
@@ -77,10 +78,13 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
     }
 
     cancel() {
-        this.onCancel.emit(this.session);
+        this._sessionEditData.onCancel({
+            details: this._sessionEditData,
+            session: this.session
+        });
     }
 
     showCancelButton(): boolean {
-        return this.cancel !== undefined;
+        return this._sessionEditData !== undefined;
     }
 }

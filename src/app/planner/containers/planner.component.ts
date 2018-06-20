@@ -7,7 +7,8 @@ import { DetailsDialogComponent } from '../../sessions/components/details-dialog
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
-import { SessionEditOrCreateDialogComponent } from '../../sessions/components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
+import { SessionEditOrCreateDialogComponent } from
+        '../../sessions/components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { SessionCreate } from '../../sessions/models/session-create.model';
 import * as moment from 'moment';
 
