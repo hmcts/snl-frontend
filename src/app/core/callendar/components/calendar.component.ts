@@ -1,17 +1,17 @@
+import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
-import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
 import { Default } from 'fullcalendar/View';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 
 @Component({
-    selector: 'app-core-callendar',
-    templateUrl: './callendar.component.html',
-    styleUrls: ['./callendar.component.scss']
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.scss']
 })
-export class CallendarComponent implements OnInit {
+export class CalendarComponent implements OnInit {
 
-    @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
+    @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
