@@ -165,16 +165,17 @@ export class CalendarComponent implements OnInit {
     }
 
     public eventDrop(event) {
-        event.detail.event.start = moment(event.detail.event.start.format());
-        event.detail.event.end = moment(event.detail.event.end.format());
-
-        this.eventDropCallback.emit(event);
+        this.emitWithUpdatedTime(this.eventDropCallback, event);
     }
 
     public eventResize(event) {
+        this.emitWithUpdatedTime(this.eventResizeCallback, event);
+    }
+
+    private emitWithUpdatedTime(eventCallback: any, event) {
         event.detail.event.start = moment(event.detail.event.start.format());
         event.detail.event.end = moment(event.detail.event.end.format());
 
-        this.eventResizeCallback.emit(event);
+        eventCallback.emit(event);
     }
 }

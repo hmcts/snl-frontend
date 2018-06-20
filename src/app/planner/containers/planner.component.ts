@@ -77,7 +77,6 @@ export class PlannerComponent implements OnInit {
     public eventModify(event) {
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();
-
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 if (confirmed) {
                     this.sessionCreationService.update(this.buildSessionUpdate(event));
