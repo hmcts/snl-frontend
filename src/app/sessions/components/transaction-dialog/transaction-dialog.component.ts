@@ -21,9 +21,9 @@ import * as fromProblems from '../../../problems/reducers';
 export class TransactionDialogComponent {
 
   problems$: Observable<Problem[]>;
-  problemsLoaded$: Observable<boolean>;
   transactionStatus$: Observable<EntityTransaction>;
   transacted$: Observable<boolean>;
+  problemsLoaded$: Observable<boolean>;
   finished$: Observable<boolean>;
   conflicted$: Observable<boolean>;
   buttonText$: Observable<string>;
@@ -35,20 +35,17 @@ export class TransactionDialogComponent {
       public dialogRef: MatDialogRef<TransactionDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary,
       private store: Store<State>) {
-
       this.problems$ = combineLatest(this.store.pipe(select(fromProblems.getProblems)),
           this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId)),
           (problems, id) => {return this.filterProblemsForSession(problems, id)});
-      this.problemsLoaded$ = this.transactionStatus$.pipe(map(status => status.problemsLoaded));
-
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
-      this.transactionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.transacted$ = this.transactionStatus$.pipe(map(status => status.completed));
       this.conflicted$ = this.transactionStatus$.pipe(map(status => status.conflicted));
       this.conflicted$.subscribe(conflicted => this.okAction = conflicted ? null : new CommitTransaction(this.transactionId));
+      this.problemsLoaded$ = this.transactionStatus$.pipe(map(status => status.problemsLoaded));
+      this.transactionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.finished$ = combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
           (s, p, c) => { return (s && p) || c; });
-
       this.buttonText$ = this.finished$.pipe(map(finished => finished ? 'Accept' : 'Hide the dialog'));
   }
 
