@@ -1,5 +1,4 @@
-import { Component, Input, Output, OnInit, NgZone, AfterViewInit, AfterContentChecked,
-  AfterViewChecked, ElementRef, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, NgZone, AfterViewInit, ElementRef, EventEmitter } from '@angular/core';
 import * as $ from 'jquery';
 import 'fullcalendar';
 import 'fullcalendar-scheduler';
@@ -13,7 +12,7 @@ import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-typ
     selector: 'ng-fullcalendar',
     template: '',
 })
-export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChecked, AfterViewChecked {
+export class NgFullCalendarComponent implements AfterViewInit {
     private _eventsModel: EventObjectInput[];
     private _reRender = true;
     get eventsModel(): EventObjectInput[] {
@@ -51,9 +50,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
     @Output() navLinkWeekClick = new EventEmitter<any>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
-    }
-
-    ngOnInit(): void {
     }
 
     ngAfterViewInit() {
@@ -97,10 +93,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
         }, );
 
     }
-    ngAfterContentChecked() {
-    }
-    ngAfterViewChecked() {
-    }
+
     updateEventsBeforeResize() {
         let events = this.fullCalendar('clientEvents');
         this._reRender = false;

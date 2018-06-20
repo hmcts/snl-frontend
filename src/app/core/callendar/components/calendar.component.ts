@@ -1,4 +1,3 @@
-import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
 import * as moment from 'moment';
@@ -6,15 +5,16 @@ import { Default } from 'fullcalendar/View';
 import 'jquery-ui/ui/widgets/draggable.js';
 import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../../../hearing-part/reducers';
+import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 
 @Component({
-    selector: 'app-core-callendar',
-    templateUrl: './callendar.component.html',
-    styleUrls: ['./callendar.component.scss']
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.scss']
 })
-export class CallendarComponent implements OnInit {
+export class CalendarComponent implements OnInit {
 
-    @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
+    @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
