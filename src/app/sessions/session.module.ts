@@ -39,8 +39,7 @@ export const COMPONENTS = [
     DetailsDialogComponent,
     TransactionDialogComponent,
     SessionsCreateFormComponent,
-    SessionEditOrCreateDialogComponent
-    SessionsCreateFormComponent,
+    SessionEditOrCreateDialogComponent,
     SessionsPropositionsSearchComponent,
     SessionsPropositionsTableComponent,
     SessionsPropositionsFormComponent

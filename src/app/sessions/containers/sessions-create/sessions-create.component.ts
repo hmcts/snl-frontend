@@ -23,6 +23,7 @@ import { SessionEditData } from '../../models/session-edit-data';
 export class SessionsCreateComponent implements OnInit {
 
     @Input() sessionEditData: SessionEditData;
+    @Input() reloadDataOnInit: boolean | true;
 
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
@@ -38,8 +39,10 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.store.dispatch(new RoomActions.Get());
-        this.store.dispatch(new JudgeActions.Get());
+        if (this.reloadDataOnInit) {
+            this.store.dispatch(new RoomActions.Get());
+            this.store.dispatch(new JudgeActions.Get());
+        }
     }
 
     create(session) {
