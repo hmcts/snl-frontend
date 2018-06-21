@@ -9,7 +9,7 @@ import * as moment from 'moment'
     templateUrl: './sessions-propositions-form.component.html',
     styleUrls: ['./sessions-propositions-form.component.scss']
 })
-export class SessionsPropositionsFormComponent implements OnInit {
+export class SessionsPropositionsFormComponent {
 
     searchParams = {
         from: new Date(),
@@ -38,9 +38,6 @@ export class SessionsPropositionsFormComponent implements OnInit {
     constructor() {
         this.roomsPlaceholder = 'No room';
         this.judgesPlaceholder = 'No judge';
-    }
-
-    ngOnInit() {
     }
 
     search() {
