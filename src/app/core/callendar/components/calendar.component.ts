@@ -9,6 +9,10 @@ import { AssignToSession } from '../../../hearing-part/actions/hearing-part.acti
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { v4 as uuid } from 'uuid';
+import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { TransactionDialogComponent } from '../../../sessions/components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'app-calendar',
@@ -65,7 +69,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     @Output() eventResizeCallback = new EventEmitter();
     @Output() eventDropCallback = new EventEmitter();
 
-    constructor(public store: Store<State>) {
+    constructor(public hearingModificationService: HearingPartModificationService, public dialog: MatDialog) {
         this.header = {
             left: 'prev,next today',
             center: 'title',
@@ -193,13 +197,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public drop(event) {
         console.log(event)
         if (this.isSelected) {
-            this.store.dispatch(new AssignToSession({
-                   hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
-                   userTransactionId: uuid(),
-                   sessionId: this.selectedSessionId,
-                    start: null // this.calculateStartOfHearing(this.selectedSession)
-            }));
+            this.hearingModificationService.assignHearingPartWithSession({
+                hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                userTransactionId: uuid(),
+                sessionId: this.selectedSessionId,
+                start: null // this.calculateStartOfHearing(this.selectedSession)
+            } as SessionAssignment);
             event.detail.ui.helper[0].remove();
+            this.openSummaryDialog();
         }
     }
 
@@ -212,5 +217,14 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     public eventMouseOut(event) {
         console.log('OUT')
         this.isSelected = false;
+    }
+
+    private openSummaryDialog() {
+
+        this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }

@@ -1,42 +1,25 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { AppConfig } from '../../app.config';
+import { Store } from '@ngrx/store';
+import * as fromHearingParts from '../reducers';
 import { SessionAssignment } from '../models/session-assignment';
-import { HearingPart } from '../models/hearing-part';
-import { map } from 'rxjs/operators';
-import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
-import { normalize } from 'normalizr';
-import { ListingCreate } from '../models/listing-create';
-import { Transaction, TransactionStatuses } from '../../core/services/transaction-backend.service';
+import { AssignToSession, UpsertOne } from '../actions/hearing-part.action';
+import { InitializeTransaction } from '../../sessions/actions/transaction.action';
+import { EntityTransaction } from '../../sessions/models/transaction-status.model';
 
 @Injectable()
-export class HearingPartService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+export class HearingPartModificationService {
+    constructor(private store: Store<fromHearingParts.State>) {
     }
 
-    searchHearingParts(): Observable<any> {
-        return this.http
-            .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`)
-            .pipe(map(data => {return normalize(data, hearingParts)}));
+    assignHearingPartWithSession(assignment: SessionAssignment) {
+        this.store.dispatch(new AssignToSession(assignment));
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(assignment.sessionId, assignment.userTransactionId)))
     }
 
-    assignToSession(query: SessionAssignment): Observable<any> {
-        return this.http
-            .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
-                {sessionId: query.sessionId, start: query.start, userTransactionId: query.userTransactionId})
-            .pipe(map((data: any) => {
-                if (data.status === TransactionStatuses.CONFLICT) {
-                    throw TransactionStatuses.CONFLICT;
-                }
-            }));
+    private createTransaction(id, transactionId): EntityTransaction {
+        return {
+            entityId: id,
+            id: transactionId
+        } as EntityTransaction;
     }
-
-    createListing(query: ListingCreate): Observable<String> {
-        return this.http
-            .put<String>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
-                headers: {'Content-Type': 'application/json'}
-            });
-    }
-
 }

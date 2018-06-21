@@ -11,6 +11,7 @@ import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
 import { ListingCreateEffects } from './effects/listing-create.effects';
+import { HearingPartModificationService } from './services/hearing-part-modification-service';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -28,6 +29,6 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService]
+  providers: [HearingPartService, HearingPartModificationService]
 })
 export class HearingPartModule { }
