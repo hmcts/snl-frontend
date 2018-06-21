@@ -21,7 +21,9 @@ export class DetailsDialogComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         ($('.draggable-hearing') as any).draggable({
-               revert: true
+            revert: false,
+            containment: 'window',
+            helper: 'clone'
         });
     }
 
