@@ -20,11 +20,7 @@
       <span fxFlex>Available: {{sessionDetails.availableDuration | async}} minutes</span>
     </div>
     <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
-      <div *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" class="draggable-hearing fc-event" [attr.data-hearingid]="hearingPart.id" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="3%">
-        <span fxFlex>{{hearingPart.caseTitle}}</span>
-        <span fxFlex="30%">{{hearingPart.hearingType}}</span>
-        <span fxFlex="15%">{{hearingPart.duration | appDurationAsMinutes}} mins</span>
-      </div>
+        <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>

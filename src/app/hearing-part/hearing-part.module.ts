@@ -12,10 +12,13 @@ import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
 import { ListingCreateEffects } from './effects/listing-create.effects';
 import { HearingPartModificationService } from './services/hearing-part-modification-service';
+import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
+import { CoreModule } from '../core/core.module';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
-    ListingCreateComponent
+    ListingCreateComponent,
+    DraggableHearingPartComponent
 ];
 
 @NgModule({
@@ -23,6 +26,7 @@ export const COMPONENTS = [
     CommonModule,
     AngularMaterialModule,
     FlexLayoutModule,
+    CoreModule,
     FormsModule,
     StoreModule.forFeature('hearingParts', reducers),
     EffectsModule.forFeature([HearingPartEffects, ListingCreateEffects]),
