@@ -20,6 +20,8 @@ export enum SessionActionTypes {
   UpsertMany = '[Session] Upsert Many',
   UpsertOne = '[Session] Upsert One',
   DeleteOne = '[Session] Delete One',
+  SearchPropositions = '[Session] Search Propositions',
+  AddPropositions = '[Session] Add Propositions',
 }
 
 /**
@@ -111,4 +113,16 @@ export class DeleteOne implements Action {
     readonly type = SessionActionTypes.DeleteOne;
 
     constructor(public payload: string) {}
+}
+
+export class SearchPropositions implements Action {
+    readonly type = SessionActionTypes.SearchPropositions;
+
+    constructor(public payload: any) {}
+}
+
+export class AddPropositions implements Action {
+    readonly type = SessionActionTypes.AddPropositions;
+
+    constructor(public payload: any) {}
 }
