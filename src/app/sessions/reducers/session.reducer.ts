@@ -60,8 +60,11 @@ export function reducer(state: State = initialState, action) {
         return {...state, loading: false};
     }
     case SessionActionTypes.AddPropositions: {
-        return {...state, sessionPropositions: action.payload};
+        return {...state, sessionPropositions: action.payload, loading: false};
     }
+      case SessionActionTypes.SearchPropositions: {
+          return {...state, loading: true};
+      }
     default:
         return state;
   }

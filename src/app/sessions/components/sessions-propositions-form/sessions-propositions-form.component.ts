@@ -32,8 +32,6 @@ export class SessionsPropositionsFormComponent implements OnInit {
 
     @Input() judges: Judge[];
     @Input() rooms: Room[];
-    @Input() roomsLoading: boolean;
-    @Input() judgesLoading: boolean;
 
     @Output() searchProposition = new EventEmitter();
 

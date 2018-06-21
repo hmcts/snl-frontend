@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import * as fromJudges from '../../../judges/reducers';
 import { SessionPropositionQuery } from '../../models/session-proposition-query.model';
 import { SessionPropositionView } from '../../models/session-proposition-view.model';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
   selector: 'app-sessions-propositions-search',
@@ -26,13 +27,18 @@ export class SessionsPropositionsSearchComponent implements OnInit {
   sessionPropositions$: Observable<any>;
   judgesLoading$: Observable<boolean>;
   roomsLoading$: Observable<boolean>;
+  filterDataLoading$: Observable<boolean | false>;
+  sessionPropositionsLoading$: Observable<boolean | false>;
 
   constructor(private store: Store<State>) {
     this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
     this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
     this.sessionPropositions$ = this.store.pipe(select(fromSessionIndex.getFullSessionPropositions), map(this.asArray));
+    this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsLoading));
     this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
     this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
+    this.filterDataLoading$ = combineLatest(this.roomsLoading$, this.judgesLoading$
+        , (r, j) => { return r || j ; });
   }
 
   ngOnInit() {
