@@ -5,14 +5,12 @@ import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full
 import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable.js';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
-import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
-import { Store } from '@ngrx/store';
-import { State } from '../../../app.state';
 import { v4 as uuid } from 'uuid';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { TransactionDialogComponent } from '../../../sessions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 
 @Component({
     selector: 'app-calendar',
@@ -28,6 +26,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     calHeight = 'auto';
     isSelected = false;
     selectedSessionId;
+    confirmationDialogOpen;
+    confirmationDialogRef;
 
     private _events: any[];
     get events(): any[] {
@@ -195,22 +195,28 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
 
     public drop(event) {
-        console.log(event)
-        if (this.isSelected) {
-            this.hearingModificationService.assignHearingPartWithSession({
-                hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
-                userTransactionId: uuid(),
-                sessionId: this.selectedSessionId,
-                start: null // this.calculateStartOfHearing(this.selectedSession)
-            } as SessionAssignment);
-            event.detail.ui.helper[0].remove();
-            this.openSummaryDialog();
+        if (!this.confirmationDialogOpen) {
+            this.confirmationDialogRef = this.openConfirmationDialog();
+            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+                this.confirmationDialogOpen = false;
+                if(confirmed) {
+                    this.hearingModificationService.assignHearingPartWithSession({
+                        hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                        userTransactionId: uuid(),
+                        sessionId: this.selectedSessionId,
+                        start: null // this.calculateStartOfHearing(this.selectedSession)
+                    } as SessionAssignment);
+                    event.detail.ui.helper[0].remove();
+                    this.openSummaryDialog();
+                }
+            });
         }
     }
 
     public eventMouseOver(event) {
         console.log('OVER')
         this.isSelected = true;
+        console.log(this.isSelected)
         this.selectedSessionId = event.detail.event.id;
     }
 
@@ -220,10 +226,22 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
 
     private openSummaryDialog() {
-
         this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
+            hasBackdrop: true
+        });
+    }
+
+    private openConfirmationDialog() {
+        this.confirmationDialogOpen = true;
+
+        return this.dialog.open(DialogWithActionsComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: {
+                message: 'Are you sure you want to modify this session?'
+            },
             hasBackdrop: true
         });
     }

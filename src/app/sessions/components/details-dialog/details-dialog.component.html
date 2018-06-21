@@ -19,8 +19,8 @@
       <span fxFlex>Allocated: {{sessionDetails.getAllocatedHearingsDuration() | appDurationAsMinutes}} minutes</span>
       <span fxFlex>Available: {{sessionDetails.getAvailableDuration()}} minutes</span>
     </div>
-    <div fxLayout="column" fxLayoutGap="3%">
-      <div class="draggable-hearing" data-hearingid="cf3a7605-5d27-45ef-a1a3-6424fe0a7376" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="3%" *ngFor="let hearingPart of sessionDetails.session.hearingParts">
+    <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
+      <div *ngFor="let hearingPart of sessionDetails.session.hearingParts" class="draggable-hearing fc-event" [attr.data-hearingid]="hearingPart.id" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="3%">
         <span fxFlex>{{hearingPart.caseTitle}}</span>
         <span fxFlex="30%">{{hearingPart.hearingType}}</span>
         <span fxFlex="15%">{{hearingPart.duration | appDurationAsMinutes}} mins</span>

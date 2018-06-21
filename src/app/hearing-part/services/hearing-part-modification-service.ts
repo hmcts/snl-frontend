@@ -5,6 +5,7 @@ import { SessionAssignment } from '../models/session-assignment';
 import { AssignToSession, UpsertOne } from '../actions/hearing-part.action';
 import { InitializeTransaction } from '../../sessions/actions/transaction.action';
 import { EntityTransaction } from '../../sessions/models/transaction-status.model';
+import * as ProblemsActions from '../../problems/actions/problem.action';
 
 @Injectable()
 export class HearingPartModificationService {
@@ -13,6 +14,7 @@ export class HearingPartModificationService {
 
     assignHearingPartWithSession(assignment: SessionAssignment) {
         this.store.dispatch(new AssignToSession(assignment));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new InitializeTransaction(this.createTransaction(assignment.sessionId, assignment.userTransactionId)))
     }
 
