@@ -63,15 +63,12 @@ export class PlannerComponent implements OnInit {
         if (eventId instanceof CustomEvent) {
             return;
         }
-        this.store.pipe(select(fromSessions.getSessionById(eventId)))
-            .subscribe(session => {
-                this.dialog.open(DetailsDialogComponent, {
-                    width: 'auto',
-                    minWidth: 350,
-                    data: new SessionDialogDetails(session),
-                    hasBackdrop: false
-                });
-            }).unsubscribe();
+        this.dialog.open(DetailsDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionById(eventId)))),
+            hasBackdrop: false
+        });
     }
 
     public eventModify(event) {
