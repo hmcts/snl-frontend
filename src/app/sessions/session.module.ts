@@ -28,6 +28,7 @@ import { SessionsCreationService } from './services/sessions-creation.service';
 import { SessionsPropositionsSearchComponent } from './containers/sessions-propositions-search/sessions-propositions-search.component';
 import { SessionsPropositionsTableComponent } from './components/sessions-propositions-table/sessions-propositions-table.component';
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
+import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -37,6 +38,8 @@ export const COMPONENTS = [
     SessionsFilterComponent,
     DetailsDialogComponent,
     TransactionDialogComponent,
+    SessionsCreateFormComponent,
+    SessionEditOrCreateDialogComponent
     SessionsCreateFormComponent,
     SessionsPropositionsSearchComponent,
     SessionsPropositionsTableComponent,
@@ -71,7 +74,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, TransactionDialogComponent],
+  entryComponents: [DetailsDialogComponent, TransactionDialogComponent, SessionEditOrCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]

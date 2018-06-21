@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
@@ -13,13 +13,17 @@ import { TransactionDialogComponent } from '../../components/transaction-dialog/
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
+import { SessionEditData } from '../../models/session-edit-data';
 
 @Component({
-  selector: 'app-sessions-create',
-  templateUrl: './sessions-create.component.html',
-  styleUrls: ['./sessions-create.component.scss']
+    selector: 'app-sessions-create',
+    templateUrl: './sessions-create.component.html',
+    styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
+
+    @Input() sessionEditData: SessionEditData;
+
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
     judgesLoading$: Observable<boolean>;
