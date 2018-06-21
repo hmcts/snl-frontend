@@ -93,6 +93,7 @@
     "phantomjs-prebuilt": "^2.1.16",
     "protractor": "^5.1.1",
     "protractor-beautiful-reporter": "^1.2.1",
+    "puppeteer": "^1.5.0",
     "sonar-scanner": "^3.0.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.0.0",
