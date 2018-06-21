@@ -5,29 +5,23 @@
       <span class="example-spacer"></span>
 
       <div *ngIf="isInRole('officer')">
-        <button mat-button routerLink='/' routerLinkActive="active">Main</button>
-        <button mat-button [matMenuTriggerFor]="sessions">Sessions</button>
-          <mat-menu #sessions="matMenu" color="primary" [overlapTrigger]="false">
-              <a routerLink="sessions/search" routerLinkActive="active">
-                  <button mat-menu-item color="primary">Search</button>
-              </a>
-              <a routerLink="sessions/create" routerLinkActive="active">
-                  <button mat-menu-item>Create</button>
-              </a>
-              <a routerLink="sessions/search-proposition" routerLinkActive="active">
-                  <button mat-menu-item>Search proposition</button>
-              </a>
+        <a mat-button routerLink='/' routerLinkActive="active">Main</a>
+        <a mat-button [matMenuTriggerFor]="sessions">Sessions</a>
+          <mat-menu #sessions="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
+            <a mat-menu-item routerLink="sessions/search" routerLinkActive="active" color="primary">Search</a>
+            <a mat-menu-item routerLink="sessions/create" routerLinkActive="active">Create</a>
+            <a mat-menu-item routerLink="sessions/search-proposition" routerLinkActive="active"> Search proposition</a>
           </mat-menu>
-        <button mat-button routerLink='calendar' routerLinkActive="active">Calendar</button>
-        <button mat-button routerLink='planner' routerLinkActive="active">Planner</button>
-        <button mat-button routerLink='listing' routerLinkActive="active">Listing (new)</button>
-        <button mat-button routerLink='problems' routerLinkActive="active">Problems</button>
+        <a mat-button routerLink='calendar' routerLinkActive="active">Calendar</a>
+        <a mat-button routerLink='planner' routerLinkActive="active">Planner</a>
+        <a mat-button routerLink='listing' routerLinkActive="active">Listing (new)</a>
+        <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
       </div>
 
       <div *ngIf="isInRole('judge')">
-        <button mat-button routerLink='/home/judge/main' routerLinkActive="active">Main</button>
-        <button mat-button routerLink='/home/judge/diary-calendar' routerLinkActive="active">Calendar</button>
-        <button mat-button routerLink='problems' routerLinkActive="active">Problems</button>
+        <a mat-button routerLink='/home/judge/main' routerLinkActive="active">Main</a>
+        <a mat-button routerLink='/home/judge/diary-calendar' routerLinkActive="active">Calendar</a>
+        <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
       </div>
 
     <span class="fill-space"></span>

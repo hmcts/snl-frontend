@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { select, Store, ActionsSubject } from '@ngrx/store';
 import { State } from '../../app.state';
 import { SearchForDates, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -7,6 +7,11 @@ import { DetailsDialogComponent } from '../../sessions/components/details-dialog
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
+import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
+import * as moment from 'moment';
+import { TransactionDialogComponent } from '../../sessions/components/transaction-dialog/transaction-dialog.component';
+import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
 
 @Component({
     selector: 'app-planner',
@@ -16,8 +21,20 @@ export class PlannerComponent implements OnInit {
 
     public view: string;
     private lastSearchDateRange: SessionQueryForDates;
+    private confirmationDialogRef;
+    private confirmationDialogOpen;
 
-    constructor(private store: Store<State>, public dialog: MatDialog) {
+    constructor(private store: Store<State>,
+                public dialog: MatDialog,
+                public sessionCreationService: SessionsCreationService,
+                public updates$: ActionsSubject) {
+        this.confirmationDialogOpen = false;
+
+        this.updates$.subscribe(data => {
+            if (data.type === sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted) {
+                this.loadDataForAllJudges(this.lastSearchDateRange)
+            }
+        });
     }
 
     ngOnInit() {
@@ -55,5 +72,52 @@ export class PlannerComponent implements OnInit {
                     hasBackdrop: false
                 });
             }).unsubscribe();
+    }
+
+    public eventModify(event) {
+        if (!this.confirmationDialogOpen) {
+            this.confirmationDialogRef = this.openConfirmationDialog();
+            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+                if (confirmed) {
+                    this.sessionCreationService.update(this.buildSessionUpdate(event));
+
+                    this.openSummaryDialog();
+                } else {
+                    event.detail.revertFunc();
+                }
+                this.confirmationDialogOpen = false;
+            });
+        }
+    }
+
+    private buildSessionUpdate(event) {
+        return {
+            id: event.detail.event.id,
+            start: event.detail.event.start.toDate(),
+            duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
+        };
+    }
+
+    private openConfirmationDialog() {
+        this.confirmationDialogOpen = true;
+
+        return this.dialog.open(DialogWithActionsComponent, {
+            width: 'auto',
+            minWidth: 350,
+            data: {
+                message: 'Are you sure you want to modify this session?'
+            },
+            hasBackdrop: true
+        });
+    }
+
+    private openSummaryDialog() {
+        this.confirmationDialogOpen = true;
+
+        this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }

@@ -5,6 +5,7 @@ export enum NotificationActionTypes {
   Create = '[CoreNotification] Notify',
   Dismiss = '[CoreNotification] Dismiss',
   OpenDialog = '[CoreNotification] Open Dialog',
+  OpenDialogWithAction = '[CoreNotification] Open Dialog with action',
 }
 
 /**
@@ -22,6 +23,12 @@ export class Notify implements Action {
 
 export class OpenDialog implements Action {
   readonly type = NotificationActionTypes.OpenDialog;
+
+  constructor(public payload: string) {}
+}
+
+export class OpenDialogWithAction implements Action {
+  readonly type = NotificationActionTypes.OpenDialogWithAction;
 
   constructor(public payload: string) {}
 }

@@ -26,7 +26,7 @@ export const COMPONENTS = [
             path: '',
             component: AuthPageComponent,
             children: [
-                { path: '', redirectTo: 'login', pathMatch: 'full' },
+                {path: '', redirectTo: 'login', pathMatch: 'full'},
                 {
                     path: 'login',
                     component: LoginComponent
