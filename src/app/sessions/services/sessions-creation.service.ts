@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SessionCreate } from '../models/session-create.model';
-import * as SessionCreationActions from '../actions/session-transaction.action';
-import { SessionTransaction } from '../models/session-transaction-status.model';
+import * as SessionCreationActions from '../actions/transaction.action';
+import { EntityTransaction } from '../models/transaction-status.model';
 import * as SessionActions from '../actions/session.action';
+import * as ProblemsActions from '../../problems/actions/problem.action';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
+import * as moment from 'moment';
 
 @Injectable()
 export class SessionsCreationService {
@@ -14,14 +16,31 @@ export class SessionsCreationService {
 
     create(session: SessionCreate) {
         let transactionId = uuid();
-        let transaction = {
-            sessionId: session.id,
-            id: transactionId
-        } as SessionTransaction;
 
         session.userTransactionId = transactionId;
+        let transaction = this.createTransaction(session.id, transactionId);
 
-        this.store.dispatch(new SessionCreationActions.Create(transaction));
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Create(session));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
+    }
+
+    update(session: any) {
+        let transactionId = uuid();
+
+        session.userTransactionId = transactionId;
+        let transaction = this.createTransaction(session.id, transactionId);
+
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
+        this.store.dispatch(new SessionActions.Update(session));
+        this.store.dispatch(new SessionActions.UpsertOne({...session, duration: moment.duration(session.duration * 1000)}));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
+    }
+
+    private createTransaction(sessionId, transactionId): EntityTransaction {
+        return {
+            entityId: sessionId,
+            id: transactionId
+        } as EntityTransaction;
     }
 }

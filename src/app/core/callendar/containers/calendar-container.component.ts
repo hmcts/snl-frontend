@@ -16,7 +16,7 @@ import { DefaultDataTransformer } from '../transformers/default-data-transformer
 import * as fromSessions from '../../../sessions/reducers';
 
 @Component({
-    selector: 'app-core-callendar-container',
+    selector: 'app-calendar-container',
     templateUrl: './calendar-container.component.html',
     styleUrls: []
 })

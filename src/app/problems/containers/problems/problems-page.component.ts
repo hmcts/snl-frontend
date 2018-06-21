@@ -7,7 +7,7 @@ import { select, Store } from '@ngrx/store';
 import { map, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-problems-table',
+  selector: 'app-problems-page',
   templateUrl: './problems-page.component.html',
   styleUrls: ['./problems-page.component.scss']
 })

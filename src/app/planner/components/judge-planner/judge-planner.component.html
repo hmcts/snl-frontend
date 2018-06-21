@@ -1,10 +1,12 @@
-<app-core-callendar [preTransformedData]="sessions$ | async"
+<app-calendar [preTransformedData]="sessions$ | async"
                     (loadData)="childLoadDataAction($event)"
                     (eventClickCallback)="childEventClick($event)"
+                    (eventDropCallback)="childEventDrop($event)"
+                    (eventResizeCallback)="childEventResize($event)"
                     [resourceColumns]="columns"
                     [resources]="resources"
                     [dataTransformer]="dataTransformer"
                     [header]="header"
                     [defaultView]="defaultView"
                     [initialStartDate]="initialStartDate"
-></app-core-callendar>
+></app-calendar>

@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import * as moment from 'moment';
-import { CalendarComponent } from '../../../common/ng-fullcalendar/calendar.component';
-import { Default } from 'fullcalendar/View';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
+import * as moment from 'moment';
+import { Default } from 'fullcalendar/View';
+import 'jquery-ui/ui/widgets/draggable.js';
+import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 
 @Component({
-    selector: 'app-core-callendar',
-    templateUrl: './callendar.component.html',
-    styleUrls: ['./callendar.component.scss']
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styleUrls: ['./calendar.component.scss']
 })
-export class CallendarComponent implements OnInit {
+export class CalendarComponent implements OnInit {
 
-    @ViewChild(CalendarComponent) public ucCalendar: CalendarComponent;
+    @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
@@ -50,6 +51,8 @@ export class CallendarComponent implements OnInit {
     @Input() initialStartDate: Date = moment().toDate();
     @Output() loadData = new EventEmitter();
     @Output() eventClickCallback = new EventEmitter();
+    @Output() eventResizeCallback = new EventEmitter();
+    @Output() eventDropCallback = new EventEmitter();
 
     constructor() {
         this.header = {
@@ -65,10 +68,12 @@ export class CallendarComponent implements OnInit {
         if (this.loadData === undefined) {
             return;
         }
+
         let dateRange = this.parseDates();
         if (dateRange === undefined) {
             return;
         }
+
         this.loadData.emit(dateRange);
     }
 
@@ -92,9 +97,11 @@ export class CallendarComponent implements OnInit {
         if (this.ucCalendar === undefined) {
             return undefined;
         }
+
         let view = this.ucCalendar.fullCalendar('getView') as Default;
-        let endDate = view.intervalEnd.format('YYYY-MM-DD') || new Date('2018-04-29');
-        let startDate = view.intervalStart.format('YYYY-MM-DD') || new Date('2018-04-23');
+        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+
         return {startDate: startDate, endDate: endDate};
     }
 
@@ -107,7 +114,8 @@ export class CallendarComponent implements OnInit {
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
-            editable: false,
+            editable: true,
+            droppable: true,
             eventLimit: false,
             header: this.header,
             views: this.views
@@ -121,6 +129,9 @@ export class CallendarComponent implements OnInit {
                 callback(this._resources);
             }
         }
+    }
+
+    public calendarInitialized() {
         this.refreshViewData();
     }
 
@@ -145,5 +156,20 @@ export class CallendarComponent implements OnInit {
 
     public eventClick(event) {
         this.eventClickCallback.emit(event.detail.event.id);
+    }
+
+    public eventDrop(event) {
+        this.emitWithUpdatedTime(this.eventDropCallback, event);
+    }
+
+    public eventResize(event) {
+        this.emitWithUpdatedTime(this.eventResizeCallback, event);
+    }
+
+    private emitWithUpdatedTime(eventCallback: any, event) {
+        event.detail.event.start = moment(event.detail.event.start.format());
+        event.detail.event.end = moment(event.detail.event.end.format());
+
+        eventCallback.emit(event);
     }
 }
