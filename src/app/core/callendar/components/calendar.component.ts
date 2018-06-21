@@ -24,7 +24,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     errors: string;
     references = [];
     calHeight = 'auto';
-    isSelected = false;
     selectedSessionId;
     confirmationDialogOpen;
     confirmationDialogRef;
@@ -194,7 +193,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         eventCallback.emit(event);
     }
 
-    public drop(event) {
+    public drop(event, jsEvent, ui, resourceId) {
+        let selectedSessionId = this.selectedSessionId;
+
+        console.log(`After drop: ${selectedSessionId}`);
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
@@ -203,7 +205,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                     this.hearingModificationService.assignHearingPartWithSession({
                         hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
                         userTransactionId: uuid(),
-                        sessionId: this.selectedSessionId,
+                        sessionId: selectedSessionId,
                         start: null // this.calculateStartOfHearing(this.selectedSession)
                     } as SessionAssignment);
                     event.detail.ui.helper[0].remove();
@@ -214,15 +216,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
 
     public eventMouseOver(event) {
-        console.log('OVER')
-        this.isSelected = true;
-        console.log(this.isSelected)
+        console.log(`Selected: ${event.detail.event.id}`);
         this.selectedSessionId = event.detail.event.id;
-    }
-
-    public eventMouseOut(event) {
-        console.log('OUT')
-        this.isSelected = false;
     }
 
     private openSummaryDialog() {

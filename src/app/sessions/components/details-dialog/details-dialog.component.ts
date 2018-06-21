@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit, AfterViewChecked } from '@angular/core';
 import { DialogPosition, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { SessionDialogDetails } from '../../models/session-dialog-details.model';
 import * as $ from 'jquery';
@@ -9,7 +9,7 @@ import 'jquery-ui/ui/widgets/draggable.js';
   templateUrl: './details-dialog.component.html',
   styleUrls: ['./details-dialog.component.scss']
 })
-export class DetailsDialogComponent implements AfterViewInit {
+export class DetailsDialogComponent implements AfterViewChecked {
 
   constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
@@ -19,12 +19,17 @@ export class DetailsDialogComponent implements AfterViewInit {
         this.dialogRef.close();
     }
 
-    ngAfterViewInit() {
-        ($('.draggable-hearing') as any).draggable({
-            revert: false,
-            containment: 'window',
-            helper: 'clone'
-        });
+    ngAfterViewChecked() {
+        let draggables = ($('.draggable-hearing') as any);
+        if (draggables !== null && draggables.length !== 0) {
+            draggables.draggable({
+                revert: false,
+                //containment: 'window',
+                //helper: 'clone'
+                helper: function (event, ui) {
+                    return $(this).clone().css("pointer-events", "none").appendTo(".container").show();
+            });
+        }
     }
 
     @HostListener('drag', ['$event'])
