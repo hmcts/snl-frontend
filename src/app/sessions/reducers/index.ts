@@ -7,6 +7,7 @@ import * as fromSessionTransaction from './session-transaction.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
+import { Session } from '../models/session.model';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -94,7 +95,7 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []};
         finalSessions = Object.keys(sessions).map(sessionKey => {
-            let sessionData = sessions[sessionKey];
+            let sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
                 start: sessionData.start,
@@ -102,7 +103,8 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
                 caseType: sessionData.caseType,
-                hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id)
+                hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id),
+                jurisdiction: sessionData.jurisdiction
             } as SessionViewModel;
         });
         return Object.values(finalSessions);
