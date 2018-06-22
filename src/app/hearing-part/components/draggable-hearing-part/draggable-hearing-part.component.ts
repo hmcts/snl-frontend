@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable.js';
@@ -20,7 +20,8 @@ export class DraggableHearingPartComponent implements AfterViewChecked {
             helper: function () { return $(this).clone()
                 .css('pointer-events', 'none')
                 .appendTo('.container')
-                .show()}
+                .show()
+            }
         });
     }
 }

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
-import 'jquery-ui/ui/widgets/draggable.js';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { v4 as uuid } from 'uuid';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
@@ -189,7 +188,6 @@ export class CalendarComponent implements OnInit {
     public drop(event) {
         let selectedSessionId = this.selectedSessionId;
 
-        console.log(`After drop: ${selectedSessionId}`);
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
@@ -208,7 +206,6 @@ export class CalendarComponent implements OnInit {
     }
 
     public eventMouseOver(event) {
-        console.log(`Selected: ${event.detail.event.id}`);
         this.selectedSessionId = event.detail.event.id;
     }
 

@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit, AfterViewChecked } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import { DialogPosition, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { SessionDialogDetails } from '../../models/session-dialog-details.model';
 
@@ -8,7 +8,7 @@ import { SessionDialogDetails } from '../../models/session-dialog-details.model'
   templateUrl: './details-dialog.component.html',
   styleUrls: ['./details-dialog.component.scss']
 })
-export class DetailsDialogComponent implements AfterViewChecked {
+export class DetailsDialogComponent{
 
   constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
@@ -16,10 +16,6 @@ export class DetailsDialogComponent implements AfterViewChecked {
 
     onCloseClick(): void {
         this.dialogRef.close();
-    }
-
-    ngAfterViewChecked() {
-
     }
 
     @HostListener('drag', ['$event'])

@@ -233,8 +233,8 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
            let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
            const widgetEvent = new CustomEvent('drop', {
-                        bubbles: true,
-                       detail: detail
+                bubbles: true,
+                detail: detail
             });
             // probably need to add an event - not handled!
            elem[0].dispatchEvent(widgetEvent);
