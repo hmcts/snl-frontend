@@ -99,7 +99,7 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef = this.openConfirmationDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
-                if(confirmed) {
+                if (confirmed) {
                     this.hearingModificationService.assignHearingPartWithSession({
                         hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
                         userTransactionId: uuid(),
