@@ -22,9 +22,12 @@ import { SessionsFilterComponent } from './components/sessions-filter/sessions-f
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
-import { SessionsCreateDialogComponent } from './components/sessions-create-dialog/sessions-create-dialog.component';
+import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 import { SessionsCreationService } from './services/sessions-creation.service';
+import { SessionsPropositionsSearchComponent } from './containers/sessions-propositions-search/sessions-propositions-search.component';
+import { SessionsPropositionsTableComponent } from './components/sessions-propositions-table/sessions-propositions-table.component';
+import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -33,8 +36,11 @@ export const COMPONENTS = [
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
-    SessionsCreateDialogComponent,
-    SessionsCreateFormComponent
+    TransactionDialogComponent,
+    SessionsCreateFormComponent,
+    SessionsPropositionsSearchComponent,
+    SessionsPropositionsTableComponent,
+    SessionsPropositionsFormComponent
 ];
 
 @NgModule({
@@ -58,11 +64,14 @@ export const COMPONENTS = [
             }, {
                 path: 'create',
                 component: SessionsCreateComponent
+            }, {
+                path: 'search-proposition',
+                component: SessionsPropositionsSearchComponent
             }
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionsCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, TransactionDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]

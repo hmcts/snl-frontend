@@ -10,6 +10,9 @@ import { session, sessions, sessionsWithHearings } from '../../core/schemas/data
 import { normalize, schema } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
+import { TransactionStatuses } from '../../core/services/transaction-backend.service';
+import { SessionPropositionQuery } from '../models/session-proposition-query.model';
+import * as moment from 'moment';
 
 @Injectable()
 export class SessionsService {
@@ -48,9 +51,18 @@ export class SessionsService {
             .pipe(map(data => { return normalize(data, sessionsWithHearings) }));
     }
 
-    createSession(sessionCreate: SessionCreate): Observable<String> {
+    createSession(sessionCreate: SessionCreate): Observable<any> {
       return this.http
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+    }
+
+    updateSession(update: any): Observable<any> {
+      return this.http
+        .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
+    }
+
+    searchSessionPropositions(params: SessionPropositionQuery) {
+        return this.http.get( this.createSearchUrl(params) )
     }
 
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {
@@ -59,5 +71,22 @@ export class SessionsService {
                 `?judge=${parameters.judgeUsername}` +
                 `&startDate=${getHttpFriendly(parameters.startDate)}` +
                 `&endDate=${getHttpFriendly(parameters.endDate)}`;
+    }
+
+    private createSearchUrl(params: SessionPropositionQuery) {
+        let from = moment(params.from.setHours(0, 0, 0, 0)).format('YYYY-MM-DD HH:mm');
+        let to = moment(params.to.setHours(23, 59, 59, 999)).format('YYYY-MM-DD HH:mm');
+        let durationInSeconds = params.durationInMinutes * 60;
+
+        let query = `${this.config.getApiUrl()}/search?from=${from}&to=${to}&durationInSeconds=${durationInSeconds}`;
+
+        if (params.roomId !== null && params.roomId !== '') {
+            query += `&room=${params.roomId}`;
+        }
+        if (params.judgeId !== null && params.judgeId !== '') {
+            query += `&judge=${params.judgeId}`;
+        }
+
+        return query;
     }
 }

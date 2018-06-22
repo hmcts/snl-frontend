@@ -26,6 +26,8 @@ export class RoomPlannerComponent implements OnInit {
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
+    @Output() eventResize = new EventEmitter();
+    @Output() eventDrop = new EventEmitter();
     @Input() initialStartDate: Date;
 
     constructor(private store: Store<State>) {
@@ -74,5 +76,13 @@ export class RoomPlannerComponent implements OnInit {
 
     childEventClick(event) {
         this.eventClick.emit(event);
+    }
+
+    childEventResize(event) {
+        this.eventResize.emit(event);
+    }
+
+    childEventDrop(event) {
+        this.eventDrop.emit(event);
     }
 }
