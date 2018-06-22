@@ -6,13 +6,15 @@ import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/e
 export interface State extends EntityState<Session> {
     loading: boolean | false;
     error: string | '';
+    sessionPropositions: any[];
 }
 
 export const adapter: EntityAdapter<Session> = createEntityAdapter<Session>();
 
 export const initialState: State = adapter.getInitialState({
     loading: false,
-    error: ''
+    error: '',
+    sessionPropositions: []
 });
 
 export function reducer(state: State = initialState, action) {
@@ -57,6 +59,12 @@ export function reducer(state: State = initialState, action) {
     case SessionActionTypes.CreateComplete: {
         return {...state, loading: false};
     }
+    case SessionActionTypes.AddPropositions: {
+        return {...state, sessionPropositions: action.payload, loading: false};
+    }
+      case SessionActionTypes.SearchPropositions: {
+          return {...state, loading: true};
+      }
     default:
         return state;
   }

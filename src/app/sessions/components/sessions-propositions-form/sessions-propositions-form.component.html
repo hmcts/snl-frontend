@@ -1,0 +1,39 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-subtitle>Search criteria</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+      <input matInput [min]="minStartDate" [matDatepicker]="picker" [(ngModel)]="searchParams.from" placeholder="From">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+      <input matInput [min]="minEndDate" [matDatepicker]="picker2" [(ngModel)]="searchParams.to" placeholder="To">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input [(ngModel)]="searchParams.durationInMinutes" type="number" matInput placeholder="Duration">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="{{roomsPlaceholder}}" [(value)]="searchParams.roomId">
+        <mat-option value="">(No room)</mat-option>
+        <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="{{judgesPlaceholder}}" [(value)]="searchParams.judgeId">
+        <mat-option value="">(No judge)</mat-option>
+        <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="search()">Search</button>
+  </mat-card-content>
+</mat-card>

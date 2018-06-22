@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutGap="3%">
+    <div class="propositions-search-container" fxFlex="20">
+        <mat-spinner *ngIf="(filterDataLoading$ | async)" fxFlex></mat-spinner>
+        <app-sessions-propositions-form
+                *ngIf="!(filterDataLoading$ | async)"
+                [judges]="judges$ | async"
+                [rooms]="rooms$ | async"
+                (searchProposition)="search($event)">
+        </app-sessions-propositions-form>
+    </div>
+    <div fxFlex>
+        <mat-spinner *ngIf="(sessionPropositionsLoading$ | async)" fxFlex></mat-spinner>
+        <app-sessions-propositions-table
+                *ngIf="!(sessionPropositionsLoading$ | async)"
+                [sessionPropositions]="sessionPropositions$ | async"
+                (onSessionCreate)="onSessionCreate($event)"
+        >
+        </app-sessions-propositions-table>
+    </div>
+</div>

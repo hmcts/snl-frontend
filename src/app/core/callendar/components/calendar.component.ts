@@ -1,8 +1,8 @@
+import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
-import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 
 @Component({
     selector: 'app-calendar',
@@ -16,11 +16,7 @@ export class CalendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
-
-    private _events: any[];
-    get events(): any[] {
-        return this._events;
-    }
+    fullcalendarEventsModel: any[];
 
     @Input('preTransformedData') set preTransformedData(value: any[]) {
         if (value === undefined || this.dataTransformer === undefined) {
@@ -30,7 +26,7 @@ export class CalendarComponent implements OnInit {
         value.forEach((element) => {
             events.push(this.dataTransformer.transform(element));
         });
-        this._events = events;
+        this.fullcalendarEventsModel = events;
     }
 
     public _resources: any[];
@@ -46,6 +42,7 @@ export class CalendarComponent implements OnInit {
         }
         this.ucCalendar.fullCalendar('refetchResources');
     }
+
     @Input() resourceColumns: any[] = undefined;
     @Input() dataTransformer: IcalendarTransformer<any>;
     @Input() defaultView: string;
@@ -132,7 +129,7 @@ export class CalendarComponent implements OnInit {
             this.calendarOptions.resourceColumns = this.resourceColumns;
             this.calendarOptions.resources = (callback) => {
                 callback(this._resources);
-            }
+            };
         }
     }
 
@@ -185,6 +182,4 @@ export class CalendarComponent implements OnInit {
 
         eventCallback.emit(event);
     }
-
-
 }
