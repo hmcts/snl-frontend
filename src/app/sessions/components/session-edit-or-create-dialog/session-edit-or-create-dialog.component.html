@@ -1,6 +1,8 @@
 <div class="sessions-create-container">
-  <app-sessions-create
-          [sessionEditData]="sessionEditData"
-          [reloadDataOnInit]="false"
-  ></app-sessions-create>
+  <app-sessions-create-form [judges]="data.judges$ | async"
+                            [rooms]="data.rooms$ | async"
+                            (createSessionAction)="data.onCreateSessionAction($event)"
+                            (cancelAction)="data.onCancelAction($event)"
+                            [sessionData]="data.sessionData"
+  ></app-sessions-create-form>
 </div>

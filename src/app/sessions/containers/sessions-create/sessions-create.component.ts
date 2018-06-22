@@ -13,7 +13,6 @@ import { TransactionDialogComponent } from '../../components/transaction-dialog/
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
-import { SessionEditData } from '../../models/session-edit-data';
 
 @Component({
     selector: 'app-sessions-create',
@@ -21,9 +20,6 @@ import { SessionEditData } from '../../models/session-edit-data';
     styleUrls: ['./sessions-create.component.scss']
 })
 export class SessionsCreateComponent implements OnInit {
-
-    @Input() sessionEditData: SessionEditData;
-    @Input() reloadDataOnInit: boolean | true;
 
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
@@ -39,10 +35,8 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.reloadDataOnInit) {
-            this.store.dispatch(new RoomActions.Get());
-            this.store.dispatch(new JudgeActions.Get());
-        }
+        this.store.dispatch(new RoomActions.Get());
+        this.store.dispatch(new JudgeActions.Get());
     }
 
     create(session) {

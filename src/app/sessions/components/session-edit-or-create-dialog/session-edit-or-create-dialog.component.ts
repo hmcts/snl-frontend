@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { SessionCreate } from '../../models/session-create.model';
-import { SessionEditData } from '../../models/session-edit-data';
+import { MAT_DIALOG_DATA } from '@angular/material';
+import { DialogCreateSessionData } from '../../models/dialog-create-session-data';
 
 @Component({
     selector: 'app-session-edit-or-create-dialog',
@@ -9,19 +8,7 @@ import { SessionEditData } from '../../models/session-edit-data';
 })
 export class SessionEditOrCreateDialogComponent {
 
-    sessionEditData: SessionEditData;
-
-    constructor(public thisDialogRef: MatDialogRef<SessionEditOrCreateDialogComponent>,
-                @Inject(MAT_DIALOG_DATA) public sessionDetails: SessionCreate
-    ) {
-        this.sessionEditData = {
-            editedSession: this.sessionDetails,
-            onCancel: this.cancel,
-            dialogReference: this.thisDialogRef
-        } as SessionEditData;
+    constructor(@Inject(MAT_DIALOG_DATA) public data: DialogCreateSessionData) {
     }
 
-    cancel(event) {
-        event.details.dialogReference.close();
-    }
 }
