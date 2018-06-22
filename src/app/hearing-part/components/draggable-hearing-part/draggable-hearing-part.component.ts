@@ -6,6 +6,7 @@ import { HearingPart } from '../../models/hearing-part';
 @Component({
   selector: 'app-draggable-hearing-part',
   templateUrl: './draggable-hearing-part.component.html',
+  styleUrls: ['./draggable-hearing-part.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DraggableHearingPartComponent implements AfterViewChecked {
