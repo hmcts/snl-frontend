@@ -6,10 +6,10 @@ import { Observable } from 'rxjs/Observable';
 export class SessionDialogDetails {
     private sessionsStatsService: SessionsStatisticsService;
 
-    public time: any;
-    public endTime: any;
-    public allocatedHearingsDuration: any;
-    public availableDuration: any;
+    public time: Observable<string>;
+    public endTime: Observable<string>;
+    public allocatedHearingsDuration: Observable<moment.Duration>;
+    public availableDuration: Observable<number>;
 
     constructor(public session: Observable<SessionViewModel>) {
         this.sessionsStatsService = new SessionsStatisticsService();
