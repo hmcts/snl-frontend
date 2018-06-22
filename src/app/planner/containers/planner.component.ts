@@ -7,9 +7,6 @@ import { DetailsDialogComponent } from '../../sessions/components/details-dialog
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
-import { SessionEditOrCreateDialogComponent } from
-        '../../sessions/components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
-import { SessionCreate } from '../../sessions/models/session-create.model';
 import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
@@ -35,7 +32,7 @@ export class PlannerComponent implements OnInit {
 
         this.updates$.subscribe(data => {
             if (data.type === sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted) {
-                this.loadDataForAllJudges(this.lastSearchDateRange)
+                this.loadDataForAllJudges(this.lastSearchDateRange);
             }
         });
     }
@@ -120,23 +117,6 @@ export class PlannerComponent implements OnInit {
         this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            hasBackdrop: true
-        });
-    }
-
-    public newSession() {
-        return this.dialog.open(SessionEditOrCreateDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            data: {
-                userTransactionId: undefined,
-                id: undefined,
-                start: moment().toDate(),
-                duration: 5000,
-                roomId: null,
-                personId: null,
-                caseType: 'FTRACK',
-            } as SessionCreate,
             hasBackdrop: true
         });
     }

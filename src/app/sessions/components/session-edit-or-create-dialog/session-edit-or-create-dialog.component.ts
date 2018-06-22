@@ -23,6 +23,5 @@ export class SessionEditOrCreateDialogComponent {
 
     cancel(event) {
         event.details.dialogReference.close();
-        console.log('cancel clicked', event);
     }
 }
