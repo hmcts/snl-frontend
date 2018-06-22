@@ -28,6 +28,8 @@ export class JudgePlannerComponent implements OnInit {
     @Output() eventClick = new EventEmitter();
     @Output() eventResize = new EventEmitter();
     @Output() eventDrop = new EventEmitter();
+    @Output() drop = new EventEmitter();
+    @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
 
     constructor(private store: Store<State>) {
@@ -86,4 +88,11 @@ export class JudgePlannerComponent implements OnInit {
         this.eventDrop.emit(event);
     }
 
+    childEventMouseOver(event) {
+        this.eventMouseOver.emit(event);
+    }
+
+    childDrop(event) {
+        this.drop.emit(event);
+    }
 }

@@ -2,7 +2,6 @@ import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
-import 'jquery-ui/ui/widgets/draggable.js';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 
 @Component({
@@ -54,6 +53,8 @@ export class CalendarComponent implements OnInit {
     @Output() eventClickCallback = new EventEmitter();
     @Output() eventResizeCallback = new EventEmitter();
     @Output() eventDropCallback = new EventEmitter();
+    @Output() dropCallback = new EventEmitter();
+    @Output() eventMouseOverCallback = new EventEmitter();
 
     constructor() {
         this.header = {
@@ -161,6 +162,14 @@ export class CalendarComponent implements OnInit {
 
     public eventDrop(event) {
         this.emitWithUpdatedTime(this.eventDropCallback, event);
+    }
+
+    public drop(event) {
+        this.dropCallback.emit(event);
+    }
+
+    public eventMouseOver(event) {
+        this.eventMouseOverCallback.emit(event);
     }
 
     public eventResize(event) {

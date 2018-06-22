@@ -37,7 +37,7 @@ export class TransactionDialogComponent {
       private store: Store<State>) {
       this.problems$ = combineLatest(this.store.pipe(select(fromProblems.getProblems)),
           this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId)),
-          (problems, id) => {return this.filterProblemsForSession(problems, id)});
+          (problems, id) => {return Object.values(problems)});
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
       this.transacted$ = this.transactionStatus$.pipe(map(status => status.completed));
       this.conflicted$ = this.transactionStatus$.pipe(map(status => status.conflicted));

@@ -146,9 +146,8 @@ export class SessionEffects {
     getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
         ofType<sessionTransactionActs.TransactionCommitted>(sessionTransactionActs.EntityTransactionActionTypes.TransactionCommitted),
         withLatestFrom(this.store, (action, state) => state.sessions.sessionTransaction.entities[action.payload].entityId),
-        distinctUntilChanged(),
         mergeMap(action => this.sessionsService.getSession(action).pipe(
-            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action])])),
+            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action]), new hearingPartsActions.Search()])),
         )),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );

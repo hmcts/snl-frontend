@@ -1,28 +1,39 @@
 import { SessionViewModel } from './session.viewmodel';
 import * as moment from 'moment';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
+import { Observable } from 'rxjs/Observable';
 
 export class SessionDialogDetails {
     private sessionsStatsService: SessionsStatisticsService;
 
-    constructor(public session: SessionViewModel) {
+    public time: Observable<string>;
+    public endTime: Observable<string>;
+    public allocatedHearingsDuration: Observable<moment.Duration>;
+    public availableDuration: Observable<number>;
+
+    constructor(public session: Observable<SessionViewModel>) {
         this.sessionsStatsService = new SessionsStatisticsService();
+
+        this.time = this.session.map(s => this.getTime(s.start));
+        this.endTime = this.session.map(s => this.getEndTime(s.start, s.duration));
+        this.allocatedHearingsDuration = this.session.map(s => this.getAllocatedHearingsDuration(s));
+        this.availableDuration = this.session.map(s => this.getAvailableDuration(s));
     }
 
-    public getTime() {
-        return moment(this.session.start).format('HH:mm');
+    private getTime(time) {
+        return moment(time).format('HH:mm');
     }
 
-    public getEndTime() {
-        return moment(this.session.start).add(moment.duration(this.session.duration)).format('HH:mm');
+    private getEndTime(start, duration) {
+        return moment(start).add(moment.duration(duration)).format('HH:mm');
     }
 
-    public getAllocatedHearingsDuration() {
-        return this.sessionsStatsService.calculateAllocatedHearingsDuration(this.session);
+    private getAllocatedHearingsDuration(session) {
+        return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
     }
 
-    public getAvailableDuration() {
-        return this.sessionsStatsService.calculateAvailableDuration(moment.duration(this.session.duration),
-            this.getAllocatedHearingsDuration());
+    private getAvailableDuration(session) {
+        return this.sessionsStatsService.calculateAvailableDuration(moment.duration(session.duration),
+            this.getAllocatedHearingsDuration(session));
     }
 }

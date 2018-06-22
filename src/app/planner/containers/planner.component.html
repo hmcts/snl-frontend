@@ -10,6 +10,8 @@
                       (eventClick)="eventClick($event)"
                       (eventResize)="eventModify($event)"
                       (eventDrop)="eventModify($event)"
+                      (eventMouseOver)="eventMouseOver($event)"
+                      (drop)="drop($event)"
                       (loadDataAction)="loadDataForAllJudges($event)"
                       [initialStartDate]="lastSearchDateRange?.startDate"
     ></app-room-planner>
@@ -17,6 +19,8 @@
                        (eventClick)="eventClick($event)"
                        (eventResize)="eventModify($event)"
                        (eventDrop)="eventModify($event)"
+                       (eventMouseOver)="eventMouseOver($event)"
+                       (drop)="drop($event)"
                        (loadDataAction)="loadDataForAllJudges($event)"
                        [initialStartDate]="lastSearchDateRange?.startDate"
     ></app-judge-planner>

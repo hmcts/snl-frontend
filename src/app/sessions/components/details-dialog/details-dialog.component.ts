@@ -1,4 +1,4 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import { DialogPosition, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { SessionDialogDetails } from '../../models/session-dialog-details.model';
 

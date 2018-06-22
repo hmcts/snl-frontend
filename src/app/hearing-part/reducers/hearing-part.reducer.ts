@@ -1,4 +1,4 @@
-import { HearingPartActionTypes, UpsertMany } from '../actions/hearing-part.action';
+import { HearingPartActionTypes, UpsertMany, UpsertOne } from '../actions/hearing-part.action';
 
 import { HearingPart } from '../models/hearing-part';
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
@@ -38,6 +38,10 @@ export function reducer(state: State = initialState, action) {
         return {...state, loading: false};
     }
     case HearingPartActionTypes.AssignComplete: {
+      return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
+              {...state, loading: false} )};
+    }
+    case HearingPartActionTypes.UpsertOne: {
       return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
               {...state, loading: false} )};
     }
