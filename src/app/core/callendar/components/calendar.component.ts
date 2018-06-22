@@ -3,12 +3,6 @@ import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
-import { v4 as uuid } from 'uuid';
-import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
-import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
-import { TransactionDialogComponent } from '../../../sessions/components/transaction-dialog/transaction-dialog.component';
-import { MatDialog } from '@angular/material';
-import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 
 @Component({
     selector: 'app-calendar',
@@ -22,9 +16,6 @@ export class CalendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
-    selectedSessionId;
-    confirmationDialogOpen;
-    confirmationDialogRef;
 
     private _events: any[];
     get events(): any[] {
@@ -65,8 +56,10 @@ export class CalendarComponent implements OnInit {
     @Output() eventClickCallback = new EventEmitter();
     @Output() eventResizeCallback = new EventEmitter();
     @Output() eventDropCallback = new EventEmitter();
+    @Output() dropCallback = new EventEmitter();
+    @Output() eventMouseOverCallback = new EventEmitter();
 
-    constructor(public hearingModificationService: HearingPartModificationService, public dialog: MatDialog) {
+    constructor() {
         this.header = {
             left: 'prev,next today',
             center: 'title',
@@ -174,6 +167,14 @@ export class CalendarComponent implements OnInit {
         this.emitWithUpdatedTime(this.eventDropCallback, event);
     }
 
+    public drop(event) {
+        this.dropCallback.emit(event);
+    }
+
+    public eventMouseOver(event) {
+        this.eventMouseOverCallback.emit(event);
+    }
+
     public eventResize(event) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
     }
@@ -185,48 +186,5 @@ export class CalendarComponent implements OnInit {
         eventCallback.emit(event);
     }
 
-    public drop(event) {
-        let selectedSessionId = this.selectedSessionId;
 
-        if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = this.openConfirmationDialog();
-            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
-                this.confirmationDialogOpen = false;
-                if(confirmed) {
-                    this.hearingModificationService.assignHearingPartWithSession({
-                        hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
-                        userTransactionId: uuid(),
-                        sessionId: selectedSessionId,
-                        start: null
-                    } as SessionAssignment);
-                    this.openSummaryDialog();
-                }
-            });
-        }
-    }
-
-    public eventMouseOver(event) {
-        this.selectedSessionId = event.detail.event.id;
-    }
-
-    private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
-        });
-    }
-
-    private openConfirmationDialog() {
-        this.confirmationDialogOpen = true;
-
-        return this.dialog.open(DialogWithActionsComponent, {
-            width: 'auto',
-            minWidth: 350,
-            data: {
-                message: 'Are you sure you want to modify this session?'
-            },
-            hasBackdrop: true
-        });
-    }
 }

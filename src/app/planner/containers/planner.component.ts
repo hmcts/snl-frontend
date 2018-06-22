@@ -12,6 +12,9 @@ import { SessionsCreationService } from '../../sessions/services/sessions-creati
 import * as moment from 'moment';
 import { TransactionDialogComponent } from '../../sessions/components/transaction-dialog/transaction-dialog.component';
 import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
+import { SessionAssignment } from '../../hearing-part/models/session-assignment';
+import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
+import { v4 as uuid } from 'uuid';
 
 @Component({
     selector: 'app-planner',
@@ -23,10 +26,12 @@ export class PlannerComponent implements OnInit {
     private lastSearchDateRange: SessionQueryForDates;
     private confirmationDialogRef;
     private confirmationDialogOpen;
+    private selectedSessionId;
 
     constructor(private store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
+                public hearingModificationService: HearingPartModificationService,
                 public updates$: ActionsSubject) {
         this.confirmationDialogOpen = false;
 
@@ -87,6 +92,30 @@ export class PlannerComponent implements OnInit {
         }
     }
 
+    public drop(event) {
+        let selectedSessionId = this.selectedSessionId;
+
+        if (!this.confirmationDialogOpen) {
+            this.confirmationDialogRef = this.openConfirmationDialog();
+            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+                this.confirmationDialogOpen = false;
+                if(confirmed) {
+                    this.hearingModificationService.assignHearingPartWithSession({
+                        hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
+                        userTransactionId: uuid(),
+                        sessionId: selectedSessionId,
+                        start: null
+                    } as SessionAssignment);
+                    this.openSummaryDialog();
+                }
+            });
+        }
+    }
+
+    public eventMouseOver(event) {
+        this.selectedSessionId = event.detail.event.id;
+    }
+
     private buildSessionUpdate(event) {
         return {
             id: event.detail.event.id,
@@ -109,12 +138,11 @@ export class PlannerComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.confirmationDialogOpen = true;
-
         this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
         });
     }
+
 }
