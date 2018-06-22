@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
-import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable.js';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { v4 as uuid } from 'uuid';
@@ -17,7 +16,7 @@ import { DialogWithActionsComponent } from '../../../features/notification/compo
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit, AfterViewInit {
+export class CalendarComponent implements OnInit {
 
     @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
@@ -89,12 +88,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         }
 
         this.loadData.emit(dateRange);
-    }
-
-    ngAfterViewInit() {
-        ($('.draggable-hearing') as any).draggable({
-            revert: true
-        })
     }
 
     clickButton(model: any) {
@@ -193,7 +186,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         eventCallback.emit(event);
     }
 
-    public drop(event, jsEvent, ui, resourceId) {
+    public drop(event) {
         let selectedSessionId = this.selectedSessionId;
 
         console.log(`After drop: ${selectedSessionId}`);
@@ -203,12 +196,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
                 this.confirmationDialogOpen = false;
                 if(confirmed) {
                     this.hearingModificationService.assignHearingPartWithSession({
-                        hearingPartId: event.detail.ui.helper[0].dataset.hearingid,
+                        hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
                         userTransactionId: uuid(),
                         sessionId: selectedSessionId,
-                        start: null // this.calculateStartOfHearing(this.selectedSession)
+                        start: null
                     } as SessionAssignment);
-                    event.detail.ui.helper[0].remove();
                     this.openSummaryDialog();
                 }
             });
