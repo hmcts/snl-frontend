@@ -6,6 +6,10 @@ import * as fromSessionTransaction from './transaction.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
+import { Session } from '../models/session.model';
+import { SessionProposition } from '../models/session-proposition.model';
+import { SessionPropositionView } from '../models/session-proposition-view.model';
+import * as moment from 'moment';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -81,6 +85,11 @@ export const getSessionsError = createSelector(
     state => state.error
 );
 
+export const getSessionsPropositions = createSelector(
+    getSessionsEntitiesState,
+    state => state.sessionPropositions
+);
+
 export const {
     selectIds: getSessionIds,
     selectEntities: getSessionEntities,
@@ -93,7 +102,7 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []};
         finalSessions = Object.keys(sessions).map(sessionKey => {
-            let sessionData = sessions[sessionKey];
+            let sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
                 start: sessionData.start,
@@ -101,10 +110,28 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
                 caseType: sessionData.caseType,
-                hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id)
+                hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id),
+                jurisdiction: sessionData.jurisdiction
             } as SessionViewModel;
         });
         return Object.values(finalSessions);
+    });
+
+export const getFullSessionPropositions = createSelector(getSessionsPropositions, getRooms, fromJudgesIndex.getJudges,
+    (sessions, rooms, judges) => {
+        let finalSessions: SessionPropositionView[];
+        if (sessions === undefined) { return []; }
+        finalSessions = sessions.map((sessionProposition: SessionProposition) => {
+            return {
+                startTime: moment(sessionProposition.start).format('HH:mm'),
+                endTime: moment(sessionProposition.end).format('HH:mm'),
+                date: moment(sessionProposition.start).format('DD MMM YYYY'),
+                availibility: moment.duration(moment(sessionProposition.end).diff(moment(sessionProposition.start))).humanize(),
+                room: rooms[sessionProposition.roomId],
+                judge: judges[sessionProposition.judgeId],
+            } as SessionPropositionView;
+        });
+        return finalSessions;
     });
 
 export const getSessionById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {

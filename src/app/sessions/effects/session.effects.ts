@@ -5,6 +5,7 @@ import { catchError, map, mergeMap, retryWhen, concatMap, withLatestFrom, distin
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
+import * as notificationActions from '../../features/notification/actions/notification.action';
 import * as sessionTransactionActs from '../actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
@@ -21,6 +22,7 @@ import {
     TransactionBackendService,
     TransactionStatuses
 } from '../../core/services/transaction-backend.service';
+import { CoreNotification } from '../../features/notification/model/core-notification';
 
 @Injectable()
 export class SessionEffects {
@@ -200,6 +202,23 @@ export class SessionEffects {
                 ]),
                 // If request fails, dispatch failed action
                 catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+            )
+        )
+    );
+
+    @Effect()
+    searchPropositions$: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.SearchPropositions>(sessionActions.SessionActionTypes.SearchPropositions),
+        mergeMap(action =>
+            this.sessionsService.searchSessionPropositions(action.payload).pipe(
+                mergeMap(data => [
+                    new sessionActions.AddPropositions(data),
+                    new notificationActions.Notify({
+                        message: 'Search propositions completed',
+                        duration: 3000
+                    } as CoreNotification)
+                ]),
+                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
         )
     );
