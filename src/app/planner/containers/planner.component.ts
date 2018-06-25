@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { select, Store, ActionsSubject } from '@ngrx/store';
+import { ActionsSubject, select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { SearchForDates, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -7,9 +7,9 @@ import { DetailsDialogComponent } from '../../sessions/components/details-dialog
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
 import * as fromSessions from '../../sessions/reducers/index';
+import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
-import * as moment from 'moment';
 import { TransactionDialogComponent } from '../../sessions/components/transaction-dialog/transaction-dialog.component';
 import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
@@ -37,7 +37,7 @@ export class PlannerComponent implements OnInit {
 
         this.updates$.subscribe(data => {
             if (data.type === sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted) {
-                this.loadDataForAllJudges(this.lastSearchDateRange)
+                this.loadDataForAllJudges(this.lastSearchDateRange);
             }
         });
     }

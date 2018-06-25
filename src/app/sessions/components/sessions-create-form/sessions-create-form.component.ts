@@ -6,58 +6,80 @@ import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 
 @Component({
-  selector: 'app-sessions-create-form',
-  templateUrl: './sessions-create-form.component.html',
-  styleUrls: ['./sessions-create-form.component.scss']
+    selector: 'app-sessions-create-form',
+    templateUrl: './sessions-create-form.component.html',
+    styleUrls: ['./sessions-create-form.component.scss']
 })
 export class SessionsCreateFormComponent implements OnInit, OnChanges {
 
-  session: SessionCreate;
-  durationInMinutes: Number;
-  caseTypes: string[];
-  time: string;
-  roomsPlaceholder: string;
-  judgesPlaceholder: string;
+    session: SessionCreate;
+    durationInMinutes: number;
+    caseTypes: string[];
+    time: string;
+    roomsPlaceholder: string;
+    judgesPlaceholder: string;
 
-  @Input() judges: Judge[];
-  @Input() rooms: Room[];
-  @Input() roomsLoading: boolean;
-  @Input() judgesLoading: boolean;
+    @Input() set sessionData(value: SessionCreate) {
+        if (value === undefined || value == null) {
+            return;
+        }
+        this.session = value;
+        this.recalculateViewData();
+    }
 
-  @Output() createSession = new EventEmitter();
+    @Input() judges: Judge[];
+    @Input() rooms: Room[];
+    @Input() roomsLoading: boolean;
+    @Input() judgesLoading: boolean;
+    @Output() createSessionAction = new EventEmitter();
+    @Output() cancelAction = new EventEmitter();
 
-  constructor() {
-      this.session = {
-          userTransactionId: undefined,
-          id: undefined,
-          start: moment().toDate(),
-          duration: 0,
-          roomId: null,
-          personId: null,
-          caseType: null,
-      } as SessionCreate;
+    constructor() {
+        this.session = {
+            userTransactionId: undefined,
+            id: undefined,
+            start: moment().toDate(),
+            duration: 30,
+            roomId: null,
+            personId: null,
+            caseType: null,
+        } as SessionCreate;
+        this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
+        this.recalculateViewData();
+    }
 
-      this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
-      this.durationInMinutes = 30;
-      this.time = moment().format('HH:mm');
-  }
+    private recalculateViewData() {
+        if (this.session.duration !== undefined) {
+            this.durationInMinutes = Math.floor(this.session.duration / 60);
+        } else {
+            this.durationInMinutes = 0;
+        }
+        this.time = moment(this.session.start).format('HH:mm');
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  ngOnChanges() {
-      this.roomsPlaceholder = this.roomsLoading ? 'Loading the rooms...' : 'Select the room';
-      this.judgesPlaceholder = this.judgesLoading ? 'Loading the judges...' : 'Select the judge';
-  }
+    ngOnChanges() {
+        this.roomsPlaceholder = this.roomsLoading ? 'Loading the rooms...' : 'Select the room';
+        this.judgesPlaceholder = this.judgesLoading ? 'Loading the judges...' : 'Select the judge';
+    }
 
-  create() {
-      this.session.id = uuid();
-      let time_arr = this.time.split(':');
-      this.session.start.setHours(+time_arr[0]);
-      this.session.start.setMinutes(+time_arr[1]);
-      this.session.duration = this.durationInMinutes.valueOf() * 60;
+    create() {
+        this.session.id = (this.session.id === undefined) ? uuid() : this.session.id;
+        let time_arr = this.time.split(':');
+        this.session.start.setHours(+time_arr[0]);
+        this.session.start.setMinutes(+time_arr[1]);
+        this.session.duration = this.durationInMinutes.valueOf() * 60;
 
-      this.createSession.emit(this.session);
-  }
+        this.createSessionAction.emit(this.session);
+    }
 
+    cancel() {
+        this.cancelAction.emit(null);
+    }
+
+    showCancelButton(): boolean {
+        return this.cancelAction.observers.length > 0;
+    }
 }
