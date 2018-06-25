@@ -4,7 +4,7 @@ export interface SessionCreate {
     userTransactionId: String,
     personId: String;
     roomId: String;
-    duration: Number;
+    duration: number;
     start: Date;
     caseType: String
 }

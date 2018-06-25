@@ -38,6 +38,9 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
+    <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
+      <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
+      <button *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+    </div>
   </mat-card-content>
 </mat-card>
