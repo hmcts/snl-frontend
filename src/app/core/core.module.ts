@@ -5,21 +5,28 @@ import { CalendarComponent } from './callendar/components/calendar.component';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 import { TransactionBackendService } from './services/transaction-backend.service';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
+import { ReportService } from '../features/reports/services/report-service';
+import { UnlistedHearingRequestsComponent } from '../features/reports/components/unlisted-hearings/unlisted-hearing-requests.component';
+import { ReportsContainerComponent } from '../features/reports/containers/reports-container.component';
+import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
     CalendarComponent,
-    DurationAsMinutesPipe
+    DurationAsMinutesPipe,
+    UnlistedHearingRequestsComponent,
+    ReportsContainerComponent
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         FullCalendarModule,
+        AngularMaterialModule
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [TransactionBackendService]
+    providers: [TransactionBackendService, ReportService]
 })
 export class CoreModule {
 }

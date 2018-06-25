@@ -9,7 +9,7 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
   styleUrls: ['./problems-table.component.scss']
 })
 export class ProblemsTableComponent implements OnInit, OnChanges {
-  displayedColumns = ['id', 'message', 'references description'];
+  displayedColumns = ['id', 'message', 'references title'];
   dataSource;
 
   @Input() problems: Problem[];
