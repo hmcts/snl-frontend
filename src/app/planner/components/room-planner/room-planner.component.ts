@@ -64,7 +64,7 @@ export class RoomPlannerComponent implements OnInit {
             }
         ];
         this.store.pipe(select(fromSessions.getRooms)).subscribe(elements => {
-            let newResourceList = new ResourceList();
+            let newResourceList = new ResourceList('room');
             Object.values(elements).forEach((room: Room) => {
                 newResourceList.add('room-' + room.id, room.name);
             });

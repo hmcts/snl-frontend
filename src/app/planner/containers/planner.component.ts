@@ -117,10 +117,14 @@ export class PlannerComponent implements OnInit {
     }
 
     private buildSessionUpdate(event) {
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(/-(.+)/);
+        resourceType += 'Id';
+
         return {
             id: event.detail.event.id,
             start: event.detail.event.start.toDate(),
             duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
+            [resourceType]: resourceId,
         };
     }
 
