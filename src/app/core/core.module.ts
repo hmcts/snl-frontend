@@ -9,7 +9,7 @@ import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 export const COMPONENTS = [
     CalendarContainerComponent,
     CalendarComponent,
-    DurationAsMinutesPipe,
+    DurationAsMinutesPipe
 ];
 
 @NgModule({
