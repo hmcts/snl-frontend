@@ -16,7 +16,11 @@
         <a mat-button routerLink='planner' routerLinkActive="active">Planner</a>
         <a mat-button routerLink='listing' routerLinkActive="active">Listing (new)</a>
         <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
-        <a mat-button routerLink='reports' routerLinkActive="active">Reports</a>
+          <a mat-button [matMenuTriggerFor]="reports">Reports</a>
+          <mat-menu #reports="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
+              <a mat-menu-item routerLink="reports/listed" routerLinkActive="active" color="primary">Listed</a>
+              <a mat-menu-item routerLink="reports/unlisted" routerLinkActive="active">Unlisted</a>
+          </mat-menu>
       </div>
 
       <div *ngIf="isInRole('judge')">

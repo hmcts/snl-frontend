@@ -8,7 +8,6 @@ import { PocComponent } from './admin/components/poc/poc.component';
 import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
 import { PlannerComponent } from './planner/containers/planner.component';
-import { ReportsContainerComponent } from './features/reports/containers/reports-container.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -23,7 +22,7 @@ const routes: Routes = [
             {path: 'listing', component: ListingCreateComponent, canActivate: [AppConfigGuard]},
             {path: 'poc', component: PocComponent, canActivate: [AppConfigGuard]},
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
-            {path: 'reports', component: ReportsContainerComponent, canActivate: [AppConfigGuard]}
+            {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard]
     },

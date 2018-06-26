@@ -1,7 +1,0 @@
-<app-report-picker [reports]="reports" (chooseReport)="chooseReport($event)"></app-report-picker>
-
-<div [ngSwitch]="chosenReport">
-  <app-unlisted-hearing-report *ngSwitchCase="reports.UnlistedHearingReport"></app-unlisted-hearing-report>
-  <app-listed-hearings-report *ngSwitchCase="reports.ListedHearingReport"></app-listed-hearings-report>
-  <div *ngSwitchDefault>No report chosen</div>
-</div>
