@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { UnlistedHearingRequest } from '../model/unlisted-hearings/unlisted-hearing-request';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-reports-container',
@@ -12,7 +10,6 @@ export class ReportsContainerComponent {
 
     chosenReport: string;
     reportNames: string[];
-    data: Observable<UnlistedHearingRequest[]>;
 
     constructor() {
         this.reportNames = ['Unlisted hearings'];
