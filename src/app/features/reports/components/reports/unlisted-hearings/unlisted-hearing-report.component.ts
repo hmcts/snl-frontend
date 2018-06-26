@@ -1,15 +1,15 @@
 import { MatTableDataSource } from '@angular/material';
 import { ReportService } from '../../../services/report-service';
-import { UnlistedHearingRequest } from '../../../model/unlisted-hearings/unlisted-hearing-request';
+import { UnlistedHearingReportEntry } from '../../../model/unlisted-hearing-report-entry';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-unlisted-hearing-requests',
-  templateUrl: './unlisted-hearing-requests.component.html',
+  selector: 'app-unlisted-hearing-report',
+  templateUrl: './unlisted-hearing-report.component.html',
   styleUrls: []
 })
-export class UnlistedHearingRequestsComponent implements OnChanges {
+export class UnlistedHearingReportComponent implements OnChanges {
 
     dataSource: Observable<MatTableDataSource<any>>;
     displayedColumns = ['title', 'hearings', 'minutes'];
@@ -26,14 +26,14 @@ export class UnlistedHearingRequestsComponent implements OnChanges {
         this.dataSource = this.reportService.getUnlistedHearingRequests().map(this._generateTableData);
     }
 
-    private _generateTableData = (unlistedHearingRequests: UnlistedHearingRequest[]) => {
+    private _generateTableData = (unlistedHearingReportEntries: UnlistedHearingReportEntry[]) => {
         let totalHearings = 0;
         let totalMinutes = 0;
 
-        unlistedHearingRequests.forEach(uhr => {totalHearings += uhr.hearings; totalMinutes += uhr.minutes});
+        unlistedHearingReportEntries.forEach(uhr => {totalHearings += uhr.hearings; totalMinutes += uhr.minutes});
 
-        unlistedHearingRequests.push({title: 'Total', hearings: totalHearings, minutes: totalMinutes});
-        return new MatTableDataSource(unlistedHearingRequests)
+        unlistedHearingReportEntries.push({title: 'Total', hearings: totalHearings, minutes: totalMinutes});
+        return new MatTableDataSource(unlistedHearingReportEntries)
     }
 
 }

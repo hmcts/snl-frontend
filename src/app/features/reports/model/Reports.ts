@@ -1,3 +1,4 @@
 export enum Reports {
-    UnlistedHearingRequests = 'Unlisted hearing requests'
+    UnlistedHearingReport = 'Unlisted hearing report',
+    ListedHearingReport = 'Listed hearing report'
 }

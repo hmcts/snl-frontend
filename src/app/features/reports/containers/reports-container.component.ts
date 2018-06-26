@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Reports } from '../model/Reports';
 
 @Component({
@@ -14,7 +14,6 @@ export class ReportsContainerComponent {
 
     constructor() {
         this.reports = Reports;
-        this.chosenReport = Reports.UnlistedHearingRequests;
     }
 
     chooseReport(report: Reports) {
