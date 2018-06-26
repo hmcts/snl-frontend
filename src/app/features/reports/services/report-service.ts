@@ -21,7 +21,6 @@ export class ReportService {
         let end = getHttpFriendly(endDate);
 
         return this.http
-            .get<ListedHearingReportEntry[]>(`${this.config.getApiUrl()}/report/listed-hearing-requests
-            ?startDate=${start}&endDate=${end}`)
+            .get<ListedHearingReportEntry[]>(`${this.config.getApiUrl()}/report/listed-hearing-requests?startDate=${start}&endDate=${end}`)
     }
 }

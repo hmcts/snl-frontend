@@ -40,17 +40,17 @@
 
   <ng-container matColumnDef="duration">
     <mat-header-cell *matHeaderCellDef> Duration (minutes) </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.duration}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.duration | appDurationAsMinutes}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="startDate">
     <mat-header-cell *matHeaderCellDef> Start Date </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.startDate}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.startTime | date: 'mediumDate'}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="startTime">
-    <mat-header-cell *matHeaderCellDef> Start Time) </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.startTime}} </mat-cell>
+    <mat-header-cell *matHeaderCellDef> Start Time </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.startTime | date: 'shortTime'}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="room">

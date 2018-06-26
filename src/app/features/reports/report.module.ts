@@ -7,6 +7,7 @@ import { ReportService } from './services/report-service';
 import { AngularMaterialModule } from '../../../angular-material/angular-material.module';
 import { ListedHearingsReportComponent } from './components/reports/listed-hearings/listed-hearings-report.component';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from '../../core/core.module';
 
 const COMPONENTS = [
     UnlistedHearingReportComponent,
@@ -18,7 +19,8 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     FormsModule,
-    AngularMaterialModule
+    AngularMaterialModule,
+      CoreModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
