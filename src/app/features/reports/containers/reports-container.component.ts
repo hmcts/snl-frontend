@@ -9,18 +9,15 @@ import { Reports } from '../model/Reports';
 })
 export class ReportsContainerComponent {
 
-    chosenReport: string;
+    chosenReport: Reports;
     reports: any;
-    reportNames: string[];
 
     constructor() {
         this.reports = Reports;
-
-        this.reportNames = Object.values(this.reports);
-        this.chosenReport = '';
+        this.chosenReport = Reports.UnlistedHearingRequests;
     }
 
-    chooseReport(report) {
+    chooseReport(report: Reports) {
         this.chosenReport = report;
     }
 }

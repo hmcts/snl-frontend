@@ -1,7 +1,7 @@
 <mat-menu #rootMenu="matMenu">
-  <button *ngFor="let reportName of reportNames"
+  <button *ngFor="let report of getReportValues()"
           mat-menu-item
-          (click)="chooseReport.emit(reportName)">{{reportName}}</button>
+          (click)="chooseReport.emit(report)">{{report}}</button>
 </mat-menu>
 
 <span>Choose a report:</span>
