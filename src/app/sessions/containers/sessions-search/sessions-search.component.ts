@@ -69,7 +69,7 @@ export class SessionsSearchComponent implements OnInit {
         this.filteredSessions$ = combineLatest(this.sessions$, this.filters$, this.filterSessions);
     }
 
-    filterSessions(sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] {
+    filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
         if (filters.startDate !== this.startDate) {
             this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
             this.startDate = filters.startDate;
