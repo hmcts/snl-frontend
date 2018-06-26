@@ -10,10 +10,10 @@ export class ReportService {
     }
 
     getUnlistedHearingRequests(): Observable<UnlistedHearingRequest[]> {
-        return this.fake();
-        /*return this.http
+        //return this.fake();
+        return this.http
             .get<UnlistedHearingRequest[]>(`${this.config.getApiUrl()}/report/unlisted-hearing-requests`)
-   */ }
+    }
 
     fake(): Observable<UnlistedHearingRequest[]> {
         return Observable.of([
