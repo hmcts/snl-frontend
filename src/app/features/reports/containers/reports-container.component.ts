@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Reports } from '../model/Reports';
 
 @Component({
   selector: 'app-reports-container',
@@ -9,10 +10,13 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 export class ReportsContainerComponent {
 
     chosenReport: string;
+    reports: any;
     reportNames: string[];
 
     constructor() {
-        this.reportNames = ['Unlisted hearings'];
+        this.reports = Reports;
+
+        this.reportNames = Object.values(this.reports);
         this.chosenReport = '';
     }
 
