@@ -2,8 +2,8 @@ export class ResourceList {
 
     private _list: ResourceColumn[] = [];
 
-    constructor() {
-        this.add('empty', 'Not allocated');
+    constructor(resource: string) {
+        this.add(resource + '-empty', 'Not allocated');
     }
 
     add(id: string, title: string) {

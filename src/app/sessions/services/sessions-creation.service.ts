@@ -33,7 +33,6 @@ export class SessionsCreationService {
 
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Update(session));
-        this.store.dispatch(new SessionActions.UpsertOne({...session, duration: moment.duration(session.duration * 1000)}));
         this.store.dispatch(new ProblemsActions.RemoveAll());
     }
 
