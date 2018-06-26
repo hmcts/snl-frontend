@@ -11,7 +11,7 @@
     "test:coverage": "istanbul check-coverage --statements 0 --lines 0 --functions 0 --branches 0",
     "test:a11y": "echo 'TODO: Accessibility tests'",
     "test:nsp": "nsp check",
-    "test:smoke": "echo 'TODO: Smoke Tests'",
+    "test:smoke": "ng test --single-run --code-coverage; echo 'TODO: Smoke Tests'",
     "test:smokeDocker": "echo 'TODO: Smoke docker",
     "test:functional": "echo 'TODO: Functional tests'",
     "lint": "tslint --project . -t verbose 'src/**/*.ts'",
@@ -66,8 +66,7 @@
     "rxjs": "^5.5.0",
     "ts-loader": "^3.1.1",
     "url": "^0.11.0",
-    "zone.js": "^0.8.4",
-    "jquery-ui": "^1.12.1"
+    "zone.js": "^0.8.4"
   },
   "devDependencies": {
     "@angular/cli": "1.6.5",
@@ -95,6 +94,7 @@
     "phantomjs-prebuilt": "^2.1.16",
     "protractor": "^5.1.1",
     "protractor-beautiful-reporter": "^1.2.1",
+    "puppeteer": "^1.5.0",
     "sonar-scanner": "^3.0.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.0.0",
