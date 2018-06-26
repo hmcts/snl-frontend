@@ -8,7 +8,6 @@ import * as fromHearingParts from '../../../hearing-part/reducers/index';
 import * as fromSessions from '../../reducers/index';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { v4 as uuid } from 'uuid';
-
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -22,6 +21,10 @@ import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-sessions-search',
@@ -39,9 +42,13 @@ export class SessionsSearchComponent implements OnInit {
     selectedSession: any;
     selectedHearingPartId;
     filteredSessions$: Observable<SessionViewModel[]>;
+    sessionsStatsService: SessionsStatisticsService;
     filters$ = new Subject<SessionFilters>();
 
-    constructor(private store: Store<fromHearingParts.State>, private sessionsStatsService: SessionsStatisticsService) {
+    constructor(private store: Store<fromHearingParts.State>,
+                sessionsStatisticsService: SessionsStatisticsService,
+                public hearingModificationService: HearingPartModificationService,
+                public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
             map(this.asArray)) as Observable<HearingPart[]>;
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
@@ -53,6 +60,7 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = '';
         this.selectedSession = {} ;
         this.filteredSessions$ = this.sessions$;
+        this.sessionsStatsService = sessionsStatisticsService;
     }
 
     ngOnInit() {
@@ -134,5 +142,13 @@ export class SessionsSearchComponent implements OnInit {
 
     private asArray(data) {
         return data ? Object.values(data) : [];
+    }
+
+    private openSummaryDialog() {
+        this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }

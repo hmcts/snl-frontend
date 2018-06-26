@@ -5,7 +5,8 @@
                 *ngIf="!(filterDataLoading$ | async)"
                 [judges]="judges$ | async"
                 [rooms]="rooms$ | async"
-                (searchProposition)="search($event)">
+                (searchProposition)="search($event)"
+        >
         </app-sessions-propositions-form>
     </div>
     <div fxFlex>
