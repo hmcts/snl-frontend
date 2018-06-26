@@ -6,16 +6,18 @@ import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 import { TransactionBackendService } from './services/transaction-backend.service';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 import { ReportService } from '../features/reports/services/report-service';
-import { UnlistedHearingRequestsComponent } from '../features/reports/components/unlisted-hearings/unlisted-hearing-requests.component';
+import { UnlistedHearingRequestsComponent } from '../features/reports/components/reports/unlisted-hearings/unlisted-hearing-requests.component';
 import { ReportsContainerComponent } from '../features/reports/containers/reports-container.component';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
+import { ReportPickerComponent } from '../features/reports/components/report-picker/report-picker.component';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
     CalendarComponent,
     DurationAsMinutesPipe,
     UnlistedHearingRequestsComponent,
-    ReportsContainerComponent
+    ReportsContainerComponent,
+    ReportPickerComponent
 ];
 
 @NgModule({

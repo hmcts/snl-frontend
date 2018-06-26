@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../../app.config';
-import { UnlistedHearingRequest } from '../model/unlisted-hearing-request';
+import { UnlistedHearingRequest } from '../model/unlisted-hearings/unlisted-hearing-request';
 
 @Injectable()
 export class ReportService {

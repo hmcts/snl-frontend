@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { ReportService } from '../services/report-service';
-import { UnlistedHearingRequest } from '../model/unlisted-hearing-request';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { UnlistedHearingRequest } from '../model/unlisted-hearings/unlisted-hearing-request';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -9,18 +8,18 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReportsContainerComponent implements OnInit {
+export class ReportsContainerComponent {
 
+    chosenReport: string;
+    reportNames: string[];
     data: Observable<UnlistedHearingRequest[]>;
 
-    constructor(public reportService: ReportService) {
+    constructor() {
+        this.reportNames = ['Unlisted hearings'];
+        this.chosenReport = '';
     }
 
-    ngOnInit() {
-        this.getData('');
-    }
-
-    getData(event) {
-        this.data = this.reportService.getUnlistedHearingRequests();
+    chooseReport(report) {
+        this.chosenReport = report;
     }
 }
