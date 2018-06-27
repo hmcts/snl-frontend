@@ -179,7 +179,7 @@ export class PlannerComponent implements OnInit {
             hasBackdrop: true,
             data: {
                 message: error.message,
-                showDecline: false
+                hideDecline: true
             }
         });
     }
