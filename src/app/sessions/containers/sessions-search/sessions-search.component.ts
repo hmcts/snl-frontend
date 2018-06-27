@@ -23,6 +23,8 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 
 @Component({
     selector: 'app-sessions-search',
@@ -45,6 +47,7 @@ export class SessionsSearchComponent implements OnInit {
 
     constructor(private store: Store<fromHearingParts.State>,
                 sessionsStatisticsService: SessionsStatisticsService,
+                public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
             map(this.asArray)) as Observable<HearingPart[]>;
@@ -87,12 +90,14 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     assignToSession() {
-        this.store.dispatch(new AssignToSession({
+        this.hearingModificationService.assignHearingPartWithSession({
             hearingPartId: this.selectedHearingPartId,
             userTransactionId: uuid(),
             sessionId: this.selectedSession.id,
             start: null // this.calculateStartOfHearing(this.selectedSession)
-        }));
+        } as SessionAssignment);
+
+        this.openSummaryDialog();
     }
 
     selectSession(session: SessionViewModel) {
