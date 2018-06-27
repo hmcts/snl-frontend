@@ -15,7 +15,7 @@ exports.config = {
     'browserName': 'chrome',
     chromeOptions: {
       args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage'] : [],
-      binary: isHeadlessModeEnabled ? puppeteer.executablePath() : undefined,
+      binary: puppeteer.executablePath(),
     }
   },
   directConnect: true,
