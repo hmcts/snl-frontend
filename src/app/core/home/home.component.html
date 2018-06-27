@@ -18,7 +18,6 @@
         <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
           <a mat-button [matMenuTriggerFor]="reports">Reports</a>
           <mat-menu #reports="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
-              <a mat-menu-item routerLink="reports/listed" routerLinkActive="active" color="primary">Listed</a>
               <a mat-menu-item routerLink="reports/unlisted" routerLinkActive="active">Unlisted</a>
           </mat-menu>
       </div>
@@ -27,6 +26,8 @@
         <a mat-button routerLink='/home/judge/main' routerLinkActive="active">Main</a>
         <a mat-button routerLink='/home/judge/diary-calendar' routerLinkActive="active">Calendar</a>
         <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
+        <a mat-button routerLink='reports/listed' routerLinkActive="active">Reports</a>
+
       </div>
 
     <span class="fill-space"></span>
