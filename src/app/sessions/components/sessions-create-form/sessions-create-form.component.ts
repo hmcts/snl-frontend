@@ -39,7 +39,7 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
             userTransactionId: undefined,
             id: undefined,
             start: moment().toDate(),
-            duration: 30,
+            duration: 1800,
             roomId: null,
             personId: null,
             caseType: null,
@@ -73,6 +73,7 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
         this.session.duration = this.durationInMinutes.valueOf() * 60;
 
         this.createSessionAction.emit(this.session);
+        this.session.id = undefined;
     }
 
     cancel() {
