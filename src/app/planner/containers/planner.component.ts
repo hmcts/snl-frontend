@@ -71,7 +71,7 @@ export class PlannerComponent implements OnInit {
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionById(eventId)))),
+            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))),
             hasBackdrop: false
         });
     }
@@ -81,7 +81,11 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef = this.openConfirmationDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 if (confirmed) {
-                    this.sessionCreationService.update(this.buildSessionUpdate(event));
+                    let sessionVersion$ = this.store.pipe(select(fromSessions.getSessionById(event.detail.event.id)))
+                        .map(session => {
+                            return session.version;
+                        });
+                    this.sessionCreationService.update(this.buildSessionUpdate(event), sessionVersion$);
 
                     this.openSummaryDialog();
                 } else {

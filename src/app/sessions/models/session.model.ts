@@ -7,4 +7,5 @@ export interface Session {
   caseType: string;
   hearingTypes: string[];
   jurisdiction: string;
+  version: number;
 }

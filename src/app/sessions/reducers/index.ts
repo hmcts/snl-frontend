@@ -9,6 +9,7 @@ import { SessionViewModel } from '../models/session.viewmodel';
 import { SessionProposition } from '../models/session-proposition.model';
 import { SessionPropositionView } from '../models/session-proposition-view.model';
 import * as moment from 'moment';
+import { Session } from '../models/session.model';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -132,8 +133,12 @@ export const getFullSessionPropositions = createSelector(getSessionsPropositions
         return finalSessions;
     });
 
-export const getSessionById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {
+export const getSessionViewModelById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {
     return svm.find(s => s.id === id);
+});
+
+export const getSessionById = (id: string) => createSelector(getAllSessions, (sessions: Session[]) => {
+    return sessions.find(s => s.id === id);
 });
 
 export const getRecentlyCreatedSession = createSelector(

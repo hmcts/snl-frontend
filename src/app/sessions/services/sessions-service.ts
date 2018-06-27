@@ -56,9 +56,13 @@ export class SessionsService {
         .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
     }
 
+    /**
+     * @param update - should contain {version: number} and other elements
+     * @returns {Observable<any>}
+     */
     updateSession(update: any): Observable<any> {
-      return this.http
-        .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
+        return this.http
+            .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
     }
 
     searchSessionPropositions(params: SessionPropositionQuery) {
