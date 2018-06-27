@@ -1,4 +1,4 @@
-export interface UnlistedHearingRequest {
+export interface UnlistedHearingReportEntry {
     title: string,
     hearings: number,
     minutes: number

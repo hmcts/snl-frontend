@@ -1,0 +1,66 @@
+<h2>Report (Scheduled Hearings)</h2>
+
+<mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+  <input matInput [matDatepicker]="picker" [(ngModel)]="from" placeholder="From">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+  <input matInput [matDatepicker]="picker2" [(ngModel)]="to" placeholder="To">
+  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+  <mat-datepicker #picker2></mat-datepicker>
+</mat-form-field>
+
+<button mat-raised-button (click)="loadData()">Search</button>
+
+<mat-table #table [dataSource]="dataSource | async">
+  <ng-container matColumnDef="caseId">
+    <mat-header-cell *matHeaderCellDef> Case Id </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseId}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="caseName">
+    <mat-header-cell *matHeaderCellDef> Case Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseName}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="judge">
+    <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.judge}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hearingType">
+    <mat-header-cell *matHeaderCellDef> Hearing Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="caseType">
+    <mat-header-cell *matHeaderCellDef> Case Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="duration">
+    <mat-header-cell *matHeaderCellDef> Duration (minutes) </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.duration | appDurationAsMinutes}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="startDate">
+    <mat-header-cell *matHeaderCellDef> Start Date </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.startTime | date: 'mediumDate'}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="startTime">
+    <mat-header-cell *matHeaderCellDef> Start Time </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.startTime | date: 'shortTime'}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="room">
+    <mat-header-cell *matHeaderCellDef> Room </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.room}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
