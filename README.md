@@ -41,8 +41,6 @@ The following environment variables are required:
 | Name | Description |
 |------|-------------|
 | SNL_API_URL | URL for SNL api. `http://localhost:3451` for local development |
-| SNL_UITEST_VALID_USERNAME | Valid username (this value is used in UITest) |
-| SNL_UITEST_VALID_PASSWORD | Valid password (this value is used in UITest) |
 
 ## Install dependencies
 
