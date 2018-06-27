@@ -36,7 +36,7 @@ export class ListingCreateComponent {
     create() {
         this.listing.id = uuid();
         this.listing.duration.add(this.duration, DURATION_UNIT);
-        if (dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
+        if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
             this.errors = 'Start date should be before End date';
         } else {
             this.store.dispatch(new CreateListingRequest(this.listing));
