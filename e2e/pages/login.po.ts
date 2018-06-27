@@ -1,4 +1,4 @@
-import { element, by } from 'protractor';
+import { element, by, promise, browser } from 'protractor';
 
 export class LoginPage {
     username = element(by.id('username'))
@@ -11,5 +11,6 @@ export class LoginPage {
         this.password.clear()
         this.password.sendKeys(password)
         this.loginButton.click()
+        browser.waitForAngular()
     }
 }

@@ -1,6 +1,7 @@
 import { browser } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../configs/credentials';
+
 let loginPage: LoginPage
 
 describe('Login', () => {
@@ -11,14 +12,12 @@ describe('Login', () => {
     it('should not change URL', () => {
       const expectedURL = browser.getCurrentUrl()
       loginPage.login('invalidUserName', 'invalidPassword')
-      browser.waitForAngular()
       expect(browser.getCurrentUrl()).toEqual(expectedURL)
     });
   });
   describe('When login using valid credentials', () => {
     it('should change URL to calendar', () => {
       loginPage.login(Credentials.ValidUsername, Credentials.ValidPassword)
-      browser.waitForAngular()
       expect(browser.getCurrentUrl()).toContain('/home/calendar')
     });
   });
