@@ -1,6 +1,6 @@
 export class Credentials {
-    static ValidUsername = 'officer1';
-    static ValidPassword = 'asd';
+    static ValidOfficerUsername = 'officer1';
+    static ValidOfficerPassword = 'asd';
     static InvalidUsername = 'invalidUsername';
     static InvalidPassword = 'invalidPassword';
 }

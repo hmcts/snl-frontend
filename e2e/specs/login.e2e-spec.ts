@@ -17,7 +17,7 @@ describe('Login', () => {
   });
   describe('When login using valid credentials', () => {
     it('should change URL to calendar', () => {
-      loginPage.login(Credentials.ValidUsername, Credentials.ValidPassword)
+      loginPage.login(Credentials.ValidOfficerUsername, Credentials.ValidOfficerPassword)
       expect(browser.getCurrentUrl()).toContain('/home/calendar')
     });
   });
