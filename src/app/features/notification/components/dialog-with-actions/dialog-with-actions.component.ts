@@ -13,6 +13,7 @@ export class DialogWithActionsComponent {
     constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
         data.okData = data.okData || true;
         data.declineData = data.declineData || false;
+        data.showDecline = data.showDecline || true;
     }
 
     onOkClick(): void {

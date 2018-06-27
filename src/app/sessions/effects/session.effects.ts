@@ -14,7 +14,7 @@ import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SearchFailed, SessionActionTypes } from '../actions/session.action';
+import { SearchFailed, SessionActionTypes, UpdateComplete } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
@@ -58,8 +58,11 @@ export class SessionEffects {
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
         mergeMap(action =>
             this.sessionsService.updateSession(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
-                catchError((err) => of(new sessionActions.CreateFailed(err.error)))
+                mergeMap((data) => [
+                    new sessionTransactionActs.UpdateTransaction(data),
+                    new UpdateComplete()
+                ]),
+                catchError((err) => of(new sessionActions.UpdateFailed(err.error)))
             )
         )
     );

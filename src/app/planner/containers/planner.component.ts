@@ -87,7 +87,25 @@ export class PlannerComponent implements OnInit {
                         });
                     this.sessionCreationService.update(this.buildSessionUpdate(event), sessionVersion$);
 
-                    this.openSummaryDialog();
+                    let sucess$ = this.store.select(fromSessions.haveUpdateSucceed).subscribe(succeeded => {
+                        if (succeeded) {
+                            this.openSummaryDialog();
+
+                            sucess$.unsubscribe();
+                            failure$.unsubscribe();
+                        }
+                    });
+                    let failure$ = this.store.select(fromSessions.haveUpdateFailed).subscribe(failed => {
+                        if (failed) {
+                            event.detail.revertFunc();
+                            this.store.select(fromSessions.getSessionsError).subscribe(error => {
+                                this.openCreationFailedDialog(error);
+                            }).unsubscribe();
+
+                            sucess$.unsubscribe();
+                            failure$.unsubscribe();
+                        }
+                    });
                 } else {
                     event.detail.revertFunc();
                 }
@@ -153,4 +171,16 @@ export class PlannerComponent implements OnInit {
         });
     }
 
+    private openCreationFailedDialog(error: any) {
+        console.log(error);
+        this.dialog.open(DialogWithActionsComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true,
+            data: {
+                message: error.message,
+                showDecline: false
+            }
+        });
+    }
 }

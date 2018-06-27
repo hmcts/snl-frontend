@@ -3,11 +3,19 @@ import { Session } from '../models/session.model';
 
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 
+export enum Status {
+    NOT_STARTED,
+    PROGRESS,
+    SUCCESS,
+    FAILURE
+}
+
 export interface State extends EntityState<Session> {
     loading: boolean | false;
     error: string | '';
     sessionPropositions: any[];
     loadingPropositions: boolean | false;
+    updateStatus: Status;
 }
 
 export const adapter: EntityAdapter<Session> = createEntityAdapter<Session>();
@@ -16,7 +24,8 @@ export const initialState: State = adapter.getInitialState({
     loading: false,
     error: '',
     sessionPropositions: [],
-    loadingPropositions: false
+    loadingPropositions: false,
+    updateStatus: Status.NOT_STARTED
 });
 
 export function reducer(state: State = initialState, action) {
@@ -60,6 +69,15 @@ export function reducer(state: State = initialState, action) {
         }
         case SessionActionTypes.CreateComplete: {
             return {...state, loading: false};
+        }
+        case SessionActionTypes.Update: {
+            return {...state, loading: true, updateStatus: Status.PROGRESS};
+        }
+        case SessionActionTypes.UpdateFailed: {
+            return {...state, loading: false, updateStatus: Status.FAILURE, error: action.payload};
+        }
+        case SessionActionTypes.UpdateComplete: {
+            return {...state, loading: false, updateStatus: Status.SUCCESS};
         }
         case SessionActionTypes.AddPropositions: {
             return {...state, sessionPropositions: action.payload, loadingPropositions: false};

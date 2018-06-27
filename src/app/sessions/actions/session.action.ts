@@ -10,10 +10,11 @@ export enum SessionActionTypes {
   SearchForJudge = '[Session] Search for judge',
   SearchForJudgeWithHearings = '[Session] Search for judge with hearings',
   SearchComplete = '[Session] Search Complete',
-  UpdateComplete = '[Session] Update Complete',
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   Update = '[Session] Update',
+  UpdateComplete = '[Session] Update Complete',
+  UpdateFailed = '[Session] Update Failed',
   CreateComplete = '[Session] Create Complete',
   CreateAcknowledged = '[Session] Create Acknowledged',
   CreateFailed = '[Session] Create Failed',
@@ -88,7 +89,13 @@ export class CreateComplete implements Action {
 export class UpdateComplete implements Action {
     readonly type = SessionActionTypes.UpdateComplete;
 
-    constructor(public payload: string | String) {}
+    constructor() {}
+}
+
+export class UpdateFailed {
+    readonly type = SessionActionTypes.UpdateFailed;
+
+    constructor(public payload: string) {}
 }
 
 export class CreateFailed implements Action {

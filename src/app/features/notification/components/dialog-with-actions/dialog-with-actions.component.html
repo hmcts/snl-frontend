@@ -2,6 +2,6 @@
     <div>{{data.message}}</div>
     <div>
         <button mat-button (click)="onOkClick()">Ok</button>
-        <button mat-button (click)="onDeclineClick()">Decline</button>
+        <button *ngIf="data.showDecline" mat-button (click)="onDeclineClick()">Decline</button>
     </div>
 </div>
