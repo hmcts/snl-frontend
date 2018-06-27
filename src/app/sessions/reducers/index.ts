@@ -70,7 +70,6 @@ export const getRecentlyCreatedSessionStatus = createSelector(
     getSessionTransactionEntitiesState,
     getRecentlyCreatedTransactionId,
     (sessionCreationEntities, recentlyCreatedSessionId) => {
-        console.log(sessionCreationEntities[recentlyCreatedSessionId]);
         return sessionCreationEntities[recentlyCreatedSessionId];
     }
 );
