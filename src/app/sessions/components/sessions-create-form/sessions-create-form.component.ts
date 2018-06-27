@@ -35,6 +35,8 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
     @Output() cancelAction = new EventEmitter();
 
     constructor() {
+        this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
+
         this.session = {
             userTransactionId: undefined,
             id: undefined,
@@ -42,9 +44,8 @@ export class SessionsCreateFormComponent implements OnInit, OnChanges {
             duration: 1800,
             roomId: null,
             personId: null,
-            caseType: null,
+            caseType: this.caseTypes[0],
         } as SessionCreate;
-        this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.recalculateViewData();
     }
 
