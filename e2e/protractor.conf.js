@@ -4,7 +4,7 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 
-const isHeadlessModeEnabled = false;
+const isHeadlessModeEnabled = true;
 
 exports.config = {
   allScriptsTimeout: 11000,
