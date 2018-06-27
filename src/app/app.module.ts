@@ -34,6 +34,7 @@ import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
 import { AuthorizationHeaderName } from './security/models/access-token';
 import { getLocalStorage } from './utils/storage';
+import { ReportModule } from './features/reports/report.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -98,7 +99,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         JudgesModule,
         HearingPartModule,
         ProblemsModule,
-        PlannerModule
+        PlannerModule,
+        ReportModule
     ],
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
