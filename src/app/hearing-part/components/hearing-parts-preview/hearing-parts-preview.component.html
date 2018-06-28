@@ -22,17 +22,17 @@
 
   <ng-container matColumnDef="duration">
     <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.humanizedDuration}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="target schedule from">
     <mat-header-cell *matHeaderCellDef> Target Schedule From </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.humanizedScheduleStart}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="target schedule to">
     <mat-header-cell *matHeaderCellDef> Target Schedule To </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.humanizedScheduleEnd}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="listed">
@@ -55,3 +55,9 @@
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
+
+<mat-paginator #paginator
+               [pageSize]="10"
+               [pageSizeOptions]="[5, 10, 20]"
+               [showFirstLastButtons]="true">
+</mat-paginator>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input, AfterViewInit } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { SessionFilters } from '../../models/session-filter.model';
@@ -8,7 +8,7 @@ import { SessionFilters } from '../../models/session-filter.model';
   templateUrl: './sessions-filter.component.html',
   styleUrls: ['./sessions-filter.component.scss']
 })
-export class SessionsFilterComponent implements OnInit {
+export class SessionsFilterComponent implements OnInit, AfterViewInit {
 
   @Output() filter = new EventEmitter();
 
@@ -62,6 +62,10 @@ export class SessionsFilterComponent implements OnInit {
               }
           }
       } as SessionFilters;
+  }
+
+  ngAfterViewInit() {
+    this.sendFilter()
   }
 
   sendFilter() {
