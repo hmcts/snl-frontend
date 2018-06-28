@@ -113,6 +113,7 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 jurisdiction: sessionData.jurisdiction
             } as SessionViewModel;
         });
+
         return Object.values(finalSessions);
     });
 

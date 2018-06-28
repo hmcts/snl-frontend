@@ -7,6 +7,17 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 
+interface SessionTableData extends SessionViewModel {
+    utilized: number,
+    allocated: string,
+    startDate: string,
+    available: number,
+    humanizedDuration: string,
+    personName: string,
+    roomName: string,
+    time: string
+}
+
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
@@ -19,6 +30,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
   selectSession = new EventEmitter();
 
   @Input() sessions: SessionViewModel[];
+  tableData: SessionTableData[];
 
   selectedSesssion;
   displayedColumns = [
@@ -32,7 +44,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
       'allocated',
       'utilisation',
       'available',
-      'select session'
+      //'select session'
   ];
   dataSource: MatTableDataSource<any>;
   tableVisible;
@@ -43,7 +55,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
 
     this.tableVisible = false;
 
-    this.dataSource = new MatTableDataSource(this.sessions);
+    this.dataSource = new MatTableDataSource(this.tableData);
   }
 
   parseDate(date) {
@@ -54,7 +66,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
       return moment.duration(duration).humanize();
   }
 
-  calculateUtilized(duration: string, allocated: moment.Duration) {
+  calculateUtilized(duration: number, allocated: moment.Duration) {
     return this.sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
   }
 
@@ -62,7 +74,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
     return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
   }
 
-  calculateAvailable(duration: string, allocated: moment.Duration) {
+  calculateAvailable(duration: number, allocated: moment.Duration) {
     return this.sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
   }
 
@@ -78,10 +90,29 @@ export class SessionTableComponent implements OnInit, OnChanges {
       if (this.sessions) {
           this.tableVisible = true;
 
-          this.sessions.map(element => {
-              element.start = new Date(element.start);
+          let t0 = performance.now();
+
+          this.tableData = this.sessions.map((element: SessionViewModel) => {
+              let tableRow: SessionTableData;
+              let allocated = this.calculateAllocated(element.duration);
+              let startDate = new Date(element.start);
+              tableRow = {...element,
+                  personName: element.person !== undefined ? element.person.name : '',
+                  roomName: element.room !== undefined ? element.room.name : '',
+                  startDate: this.parseDate(startDate),
+                  allocated: allocated.humanize(),
+                  humanizedDuration: moment.duration(element.duration).humanize(),
+                  available: this.calculateAvailable(element.duration, allocated),
+                  utilized: this.calculateUtilized(element.duration, allocated),
+                  time: `${startDate.getHours()}:${(startDate.getMinutes() < 10 ? '0' : '') + startDate.getMinutes()}`
+              };
+              return tableRow;
           });
-          this.dataSource = new MatTableDataSource(this.sessions);
+          this.dataSource = new MatTableDataSource(this.tableData);
+
+          let t1 = performance.now();
+
+          console.log(`Table performance: ${t0 - t1}`);
       }
 
   }
