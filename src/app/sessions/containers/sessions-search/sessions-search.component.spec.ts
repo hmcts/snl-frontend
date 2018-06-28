@@ -19,6 +19,10 @@ import * as sessionsActions from '../../actions/session.action';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { Session } from '../../models/session.model';
 import { SessionFilters } from '../../models/session-filter.model';
+import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
@@ -69,10 +73,19 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('sessions', sessionReducers.reducers),
-        StoreModule.forFeature('judges', judgesReducers.reducers)
+        StoreModule.forFeature('judges', judgesReducers.reducers),
+        BrowserAnimationsModule
       ],
-      providers: [SessionsSearchComponent, SessionsStatisticsService]
+      providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
+      declarations: [TransactionDialogComponent]
     });
+
+    TestBed.overrideModule(BrowserDynamicTestingModule, {
+      set: {
+        entryComponents: [TransactionDialogComponent]
+      }
+    });
+
     mockedFullSession = [defaultFullMockedSession()];
     component = TestBed.get(SessionsSearchComponent);
     store = TestBed.get(Store);
