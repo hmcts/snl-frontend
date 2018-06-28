@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, map, mergeMap, retryWhen, concatMap, withLatestFrom, distinctUntilChanged, filter } from 'rxjs/operators';
+import { catchError, concatMap, filter, map, mergeMap, retryWhen, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
+import { SearchFailed, SessionActionTypes, UpdateComplete } from '../actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
 import * as sessionTransactionActs from '../actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
@@ -14,14 +15,10 @@ import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SearchFailed, SessionActionTypes, UpdateComplete } from '../actions/session.action';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../problems/services/problems.service';
-import {
-    TransactionBackendService,
-    TransactionStatuses
-} from '../../core/services/transaction-backend.service';
+import { TransactionBackendService, TransactionStatuses } from '../../core/services/transaction-backend.service';
 import { CoreNotification } from '../../features/notification/model/core-notification';
 
 @Injectable()
@@ -87,7 +84,6 @@ export class SessionEffects {
         ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
         filter((t: any) => t.payload.status !== TransactionStatuses.STARTED && t.payload.status !== TransactionStatuses.CONFLICT),
         mergeMap(action => [new sessionTransactionActs.GetTransactionUntilStartedOrConflict(action.payload)])
-
     );
 
     @Effect()
@@ -168,8 +164,8 @@ export class SessionEffects {
                     new hearingPartsActions.UpsertMany(data.entities.hearingParts)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
+                )
             )
-        )
         )
     );
 

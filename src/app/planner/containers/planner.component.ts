@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
-import { SearchForDates, } from '../../sessions/actions/session.action';
+import { SearchForDates, SessionActionTypes, } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -27,17 +27,34 @@ export class PlannerComponent implements OnInit {
     private confirmationDialogRef;
     private confirmationDialogOpen;
     private selectedSessionId;
+    private latestEvent: any;
 
     constructor(private store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
                 public hearingModificationService: HearingPartModificationService,
-                public updates$: ActionsSubject) {
+                public actionListener$: ActionsSubject) {
         this.confirmationDialogOpen = false;
 
-        this.updates$.subscribe(data => {
-            if (data.type === sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted) {
-                this.loadDataForAllJudges(this.lastSearchDateRange);
+        this.actionListener$.subscribe(data => {
+            switch (data.type) {
+                case sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted: {
+                    this.loadDataForAllJudges(this.lastSearchDateRange);
+                    break;
+                }
+                case SessionActionTypes.UpdateComplete: {
+                    this.openSummaryDialog();
+                    this.latestEvent = undefined;
+                    break;
+                }
+                case SessionActionTypes.UpdateFailed: {
+                    this.revertLatestEvent();
+                    this.store.select(fromSessions.getSessionsError).subscribe(error => {
+                        this.openCreationFailedDialog(error);
+                    }).unsubscribe();
+                    this.latestEvent = undefined;
+                    break;
+                }
             }
         });
     }
@@ -64,6 +81,12 @@ export class PlannerComponent implements OnInit {
         this.lastSearchDateRange = query;
     }
 
+    private revertLatestEvent() {
+        if (this.latestEvent !== undefined) {
+            this.latestEvent.detail.revertFunc();
+        }
+    }
+
     public eventClick(eventId) {
         if (eventId instanceof CustomEvent) {
             return;
@@ -76,41 +99,20 @@ export class PlannerComponent implements OnInit {
         });
     }
 
-    public eventModify(event) {
+    public eventModifyConfirmationClosed = (confirmed: boolean) => {
+        if (confirmed) {
+            this.sessionCreationService.update(this.buildSessionUpdate(this.latestEvent));
+        } else {
+            this.revertLatestEvent();
+        }
+        this.confirmationDialogOpen = false;
+    };
+
+    public eventModify(event: CustomEvent) {
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();
-            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
-                if (confirmed) {
-                    let sessionVersion$ = this.store.pipe(select(fromSessions.getSessionById(event.detail.event.id)))
-                        .map(session => {
-                            return session.version;
-                        });
-                    this.sessionCreationService.update(this.buildSessionUpdate(event), sessionVersion$);
-
-                    let sucess$ = this.store.select(fromSessions.haveUpdateSucceed).subscribe(succeeded => {
-                        if (succeeded) {
-                            this.openSummaryDialog();
-
-                            sucess$.unsubscribe();
-                            failure$.unsubscribe();
-                        }
-                    });
-                    let failure$ = this.store.select(fromSessions.haveUpdateFailed).subscribe(failed => {
-                        if (failed) {
-                            event.detail.revertFunc();
-                            this.store.select(fromSessions.getSessionsError).subscribe(error => {
-                                this.openCreationFailedDialog(error);
-                            }).unsubscribe();
-
-                            sucess$.unsubscribe();
-                            failure$.unsubscribe();
-                        }
-                    });
-                } else {
-                    event.detail.revertFunc();
-                }
-                this.confirmationDialogOpen = false;
-            });
+            this.latestEvent = event;
+            this.confirmationDialogRef.afterClosed().subscribe(this.eventModifyConfirmationClosed);
         }
     }
 
@@ -172,13 +174,12 @@ export class PlannerComponent implements OnInit {
     }
 
     private openCreationFailedDialog(error: any) {
-        console.log(error);
         this.dialog.open(DialogWithActionsComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true,
             data: {
-                message: error.message,
+                message: error.message + ' Please refresh the data.',
                 hideDecline: true
             }
         });
