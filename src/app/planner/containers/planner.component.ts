@@ -179,7 +179,8 @@ export class PlannerComponent implements OnInit {
             minWidth: 350,
             hasBackdrop: true,
             data: {
-                message: error.message + ' Please refresh the data.',
+                message: 'This session has been changed by another user since you first loaded the calendar, ' +
+                         'please reload the page and try again',
                 hideDecline: true
             }
         });
