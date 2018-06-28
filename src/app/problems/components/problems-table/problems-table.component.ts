@@ -4,7 +4,7 @@ import { Problem } from '../../models/problem.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 
 @Component({
-  selector: 'app-problems',
+  selector: 'app-problems-table',
   templateUrl: './problems-table.component.html',
   styleUrls: ['./problems-table.component.scss']
 })

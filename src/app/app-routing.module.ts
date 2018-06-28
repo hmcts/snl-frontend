@@ -21,7 +21,8 @@ const routes: Routes = [
             {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
             {path: 'listing', component: ListingCreateComponent, canActivate: [AppConfigGuard]},
             {path: 'poc', component: PocComponent, canActivate: [AppConfigGuard]},
-            {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]}
+            {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
+            {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard]
     },

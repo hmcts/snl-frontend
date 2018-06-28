@@ -18,6 +18,7 @@ import * as notificationActions from '../../features/notification/actions/notifi
 import { HEARING_PART_ASSIGN_SUCCESS } from '../models/hearing-part-notifications';
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
 import { Notify } from '../../features/notification/actions/notification.action';
+import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
 
 @Injectable()
 export class HearingPartEffects {
@@ -27,8 +28,7 @@ export class HearingPartEffects {
         ofType<AssignToSession>(HearingPartActionTypes.AssignToSession),
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
-                mergeMap(data => [new AssignComplete({id: action.payload.hearingPartId, session: action.payload.sessionId}),
-                    new Notify(HEARING_PART_ASSIGN_SUCCESS)]),
+                mergeMap(data => [new sessionTransactionActs.UpdateTransaction(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err])))
             )
         )

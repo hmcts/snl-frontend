@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { MatTableDataSource } from '@angular/material';
 import * as fromSessions from '../../reducers/index';
@@ -10,7 +10,8 @@ import { SessionsStatisticsService } from '../../services/sessions-statistics-se
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.css']
+  styleUrls: ['./session-table.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionTableComponent implements OnInit, OnChanges {
 

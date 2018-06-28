@@ -26,6 +26,10 @@ export class JudgePlannerComponent implements OnInit {
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
+    @Output() eventResize = new EventEmitter();
+    @Output() eventDrop = new EventEmitter();
+    @Output() drop = new EventEmitter();
+    @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
 
     constructor(private store: Store<State>) {
@@ -60,7 +64,7 @@ export class JudgePlannerComponent implements OnInit {
             }
         ];
         this.store.pipe(select(judgeReducers.getJudges)).subscribe(elements => {
-            let newResourceList = new ResourceList();
+            let newResourceList = new ResourceList('person');
             Object.values(elements).forEach((judge: Judge) => {
                 newResourceList.add('person-' + judge.id, judge.name);
             });
@@ -76,4 +80,19 @@ export class JudgePlannerComponent implements OnInit {
         this.eventClick.emit(event);
     }
 
+    childEventResize(event) {
+        this.eventResize.emit(event);
+    }
+
+    childEventDrop(event) {
+        this.eventDrop.emit(event);
+    }
+
+    childEventMouseOver(event) {
+        this.eventMouseOver.emit(event);
+    }
+
+    childDrop(event) {
+        this.drop.emit(event);
+    }
 }

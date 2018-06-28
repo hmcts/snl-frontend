@@ -1,5 +1,4 @@
-import { Component, Input, Output, OnInit, NgZone, AfterViewInit, AfterContentChecked,
-  AfterViewChecked, ElementRef, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, NgZone, AfterViewInit, ElementRef, EventEmitter } from '@angular/core';
 import * as $ from 'jquery';
 import 'fullcalendar';
 import 'fullcalendar-scheduler';
@@ -13,7 +12,7 @@ import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-typ
     selector: 'ng-fullcalendar',
     template: '',
 })
-export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChecked, AfterViewChecked {
+export class NgFullCalendarComponent implements AfterViewInit {
     private _eventsModel: EventObjectInput[];
     private _reRender = true;
     get eventsModel(): EventObjectInput[] {
@@ -49,11 +48,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
     @Output() dayClick = new EventEmitter<any>();
     @Output() navLinkDayClick = new EventEmitter<any>();
     @Output() navLinkWeekClick = new EventEmitter<any>();
+    @Output() drop = new EventEmitter<any>();
+    @Output() eventMouseOver = new EventEmitter<any>();
+    @Output() eventMouseOut = new EventEmitter<any>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
-    }
-
-    ngOnInit(): void {
     }
 
     ngAfterViewInit() {
@@ -97,10 +96,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
         }, );
 
     }
-    ngAfterContentChecked() {
-    }
-    ngAfterViewChecked() {
-    }
+
     updateEventsBeforeResize() {
         let events = this.fullCalendar('clientEvents');
         this._reRender = false;
@@ -109,8 +105,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
     }
     updaterOptions() {
         let elem = document.getElementsByTagName('ng-fullcalendar');
-        this.options.eventDrop = (event, duration) => {
-            let detail: UpdateEventModel = { event: event, duration: duration };
+        this.options.eventDrop = (event, duration, revertFunc) => {
+            let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
             let widgetEvent = new CustomEvent('eventDrop', {
                 bubbles: true,
                 detail: detail
@@ -120,8 +116,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.eventResize = (event, duration) => {
-            let detail: UpdateEventModel = { event: event, duration: duration };
+        this.options.eventResize = (event, duration, revertFunc) => {
+            let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
             let widgetEvent = new CustomEvent('eventResize', {
                 bubbles: true,
                 detail: detail
@@ -142,7 +138,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
             }
         };
         this.options.eventClick = (event) => {
-            let detail: UpdateEventModel = { event: event, duration: null };
+            let detail: UpdateEventModel = { event: event, duration: null, revertFunc: null };
             let widgetEvent = new CustomEvent('eventClick', {
                 bubbles: true,
                 detail: detail
@@ -233,6 +229,32 @@ export class CalendarComponent implements OnInit, AfterViewInit, AfterContentChe
             for (let i = 0; i < elem.length; i++) {
                 elem[i].dispatchEvent(widgetEvent);
             }
+        };
+        this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
+           let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
+           const widgetEvent = new CustomEvent('drop', {
+                bubbles: true,
+                detail: detail
+            });
+            // probably need to add an event - not handled!
+           elem[0].dispatchEvent(widgetEvent);
+        };
+
+        this.options.eventMouseover = (event: any, jsEvent: Event, view: any) => {
+            let detail = { event: event, jsEvent: jsEvent, view: view };
+            const widgetEvent = new CustomEvent('eventMouseOver', {
+                bubbles: true,
+                detail: detail
+            });
+            elem[0].dispatchEvent(widgetEvent);
+        };
+        this.options.eventMouseout = (event: any, jsEvent: Event, view: any) => {
+            let detail = { event: event, jsEvent: jsEvent, view: view };
+            const widgetEvent = new CustomEvent('eventMouseOut', {
+                bubbles: true,
+                detail: detail
+            });
+            elem[0].dispatchEvent(widgetEvent);
         };
     }
 

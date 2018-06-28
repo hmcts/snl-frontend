@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
 import { MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
@@ -7,7 +7,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
-  styleUrls: ['./hearing-parts-preview.component.scss']
+  styleUrls: ['./hearing-parts-preview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearingParts: HearingPart[];

@@ -26,6 +26,10 @@ export class RoomPlannerComponent implements OnInit {
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
+    @Output() eventResize = new EventEmitter();
+    @Output() eventDrop = new EventEmitter();
+    @Output() drop = new EventEmitter();
+    @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
 
     constructor(private store: Store<State>) {
@@ -60,7 +64,7 @@ export class RoomPlannerComponent implements OnInit {
             }
         ];
         this.store.pipe(select(fromSessions.getRooms)).subscribe(elements => {
-            let newResourceList = new ResourceList();
+            let newResourceList = new ResourceList('room');
             Object.values(elements).forEach((room: Room) => {
                 newResourceList.add('room-' + room.id, room.name);
             });
@@ -74,5 +78,21 @@ export class RoomPlannerComponent implements OnInit {
 
     childEventClick(event) {
         this.eventClick.emit(event);
+    }
+
+    childEventResize(event) {
+        this.eventResize.emit(event);
+    }
+
+    childEventDrop(event) {
+        this.eventDrop.emit(event);
+    }
+
+    childEventMouseOver(event) {
+        this.eventMouseOver.emit(event);
+    }
+
+    childDrop(event) {
+        this.drop.emit(event);
     }
 }

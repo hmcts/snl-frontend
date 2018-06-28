@@ -7,9 +7,8 @@ import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers/index';
 import * as fromSessions from '../../reducers/index';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
-import { v4 as uuid } from 'uuid';
-
 import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
+import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import * as RoomActions from '../../../rooms/actions/room.action';
@@ -22,11 +21,15 @@ import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
+import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 
 @Component({
-  selector: 'app-sessions-search',
-  templateUrl: './sessions-search.component.html',
-  styleUrls: ['./sessions-search.component.scss']
+    selector: 'app-sessions-search',
+    templateUrl: './sessions-search.component.html',
+    styleUrls: ['./sessions-search.component.scss']
 })
 export class SessionsSearchComponent implements OnInit {
 
@@ -42,7 +45,10 @@ export class SessionsSearchComponent implements OnInit {
     sessionsStatsService: SessionsStatisticsService;
     filters$ = new Subject<SessionFilters>();
 
-    constructor(private store: Store<fromHearingParts.State>, sessionsStatisticsService: SessionsStatisticsService) {
+    constructor(private store: Store<fromHearingParts.State>,
+                sessionsStatisticsService: SessionsStatisticsService,
+                public hearingModificationService: HearingPartModificationService,
+                public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
             map(this.asArray)) as Observable<HearingPart[]>;
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
@@ -52,7 +58,7 @@ export class SessionsSearchComponent implements OnInit {
         this.startDate = moment().toDate();
         this.endDate = moment().add(5, 'years').toDate();
         this.selectedHearingPartId = '';
-        this.selectedSession = {} ;
+        this.selectedSession = {};
         this.filteredSessions$ = this.sessions$;
         this.sessionsStatsService = sessionsStatisticsService;
     }
@@ -63,29 +69,50 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
 
-        this.filteredSessions$ = combineLatest(this.sessions$, this.filters$, (sessions, filters) => {
-            if (filters.startDate !== this.startDate) {
-                this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
-                this.startDate = filters.startDate;
-                this.endDate = filters.endDate;
-            }
+        this.filteredSessions$ = combineLatest(this.sessions$, this.filters$, this.filterSessions);
+    }
 
-            return sessions.filter(s => this.filterByProperty(s.person, filters.judges))
-                .filter(s => this.filterByProperty(s.room, filters.rooms))
-                .filter(s => this.filterByCaseType(s, filters))
-                .filter(s => this.filterByUtilization(s, filters.utilization))
-        })
+    filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
+        if (filters.startDate !== this.startDate) {
+            this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
+            this.startDate = filters.startDate;
+            this.endDate = filters.endDate;
+        }
+
+        return sessions.filter(s => this.filterByProperty(s.person, filters.judges))
+            .filter(s => this.filterByProperty(s.room, filters.rooms))
+            .filter(s => this.filterByCaseType(s, filters))
+            .filter(s => this.filterByUtilization(s, filters.utilization));
     }
 
     selectHearingPart(id: string) {
         this.selectedHearingPartId = id;
     }
 
+    assignToSession() {
+        this.hearingModificationService.assignHearingPartWithSession({
+            hearingPartId: this.selectedHearingPartId,
+            userTransactionId: uuid(),
+            sessionId: this.selectedSession.id,
+            start: null // this.calculateStartOfHearing(this.selectedSession)
+        } as SessionAssignment);
+
+        this.openSummaryDialog();
+    }
+
+    selectSession(session: SessionViewModel) {
+        this.selectedSession = session;
+    }
+
+    assignButtonEnabled() {
+        return !!((this.selectedHearingPartId !== '') && (this.selectedSession.id));
+    }
+
     private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {
         return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType);
     }
 
-    filterByUtilization(session: SessionViewModel, filters) {
+    private filterByUtilization(session: SessionViewModel, filters) {
         let matches = false;
         let anyFilterActive = false;
         Object.values(filters).forEach((filter: UtilizationFilter) => {
@@ -103,36 +130,27 @@ export class SessionsSearchComponent implements OnInit {
         return !anyFilterActive ? true : matches;
     }
 
-    filterByProperty(property, filters) {
+    private filterByProperty(property, filters) {
         if (filters.length === 0) {
             return true;
         }
 
         if (property) {
-           return filters.includes(property.id)
+            return filters.includes(property.id);
         }
 
         return filters.includes('');
     }
 
-    assignToSession() {
-        this.store.dispatch(new AssignToSession({
-            hearingPartId: this.selectedHearingPartId,
-            userTransactionId: uuid(),
-            sessionId: this.selectedSession.id,
-            start: null // this.calculateStartOfHearing(this.selectedSession)
-        }));
-    }
-
-    selectSession(session: SessionViewModel) {
-        this.selectedSession = session;
-    }
-
-    assignButtonEnabled() {
-        return (this.selectedHearingPartId !== '') && (this.selectedSession.id);
-    }
-
-    asArray(data) {
+    private asArray(data) {
         return data ? Object.values(data) : [];
+    }
+
+    private openSummaryDialog() {
+        this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }

@@ -6,7 +6,8 @@ export enum ProblemActionTypes {
     GetComplete = '[Problem] Get Complete',
     GetFailed = '[Problem] Get Failed',
     GetForSession = '[Problem] Get For session',
-    UpsertMany = '[Problem] UpsertMany'
+    UpsertMany = '[Problem] UpsertMany',
+    RemoveAll = '[Problem] Remove All'
 }
 
 /**
@@ -49,4 +50,10 @@ export class GetFailed implements Action {
 
     constructor(public payload: String) {
     }
+}
+
+export class RemoveAll implements Action {
+    readonly type = ProblemActionTypes.RemoveAll;
+
+    constructor() {}
 }

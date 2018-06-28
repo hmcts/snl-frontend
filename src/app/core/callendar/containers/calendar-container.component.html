@@ -1,6 +1,6 @@
-<app-core-callendar
+<app-calendar
         [preTransformedData]="sessions$ | async"
         (loadData)="loadData($event)"
         (eventClickCallback)="eventClick($event)"
         [dataTransformer]="dataTransformer"
-></app-core-callendar>
+></app-calendar>

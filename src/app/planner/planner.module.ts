@@ -7,6 +7,7 @@ import { AngularMaterialModule } from '../../angular-material/angular-material.m
 import { MatButtonModule, MatButtonToggleModule } from '@angular/material';
 import { RoomPlannerComponent } from './components/room-planner/room-planner.component';
 import { JudgePlannerComponent } from './components/judge-planner/judge-planner.component';
+import { SessionModule } from '../sessions/session.module';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import { JudgePlannerComponent } from './components/judge-planner/judge-planner.
         CoreModule,
         AngularMaterialModule,
         MatButtonModule,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        SessionModule
     ],
     declarations: [PlannerComponent, RoomPlannerComponent, JudgePlannerComponent],
     providers: []

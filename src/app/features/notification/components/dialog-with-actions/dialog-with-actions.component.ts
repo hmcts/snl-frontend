@@ -4,26 +4,27 @@ import { State } from '../../../../app.state';
 import { Store } from '@ngrx/store';
 
 @Component({
-    selector: 'app-home',
+    selector: 'app-dialog-actions',
     templateUrl: './dialog-with-actions.component.html',
     styleUrls: []
 })
 export class DialogWithActionsComponent {
 
-    constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any, private store: Store<State>) {
+    constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
+        data.okData = data.okData || true;
+        data.declineData = data.declineData || false;
     }
 
     onOkClick(): void {
-        this.dispatchAndClose(this.data.okAction);
+        this.closeWith(this.data.okData);
     }
 
     onDeclineClick(): void {
-        this.dispatchAndClose(this.data.declineAction);
+        this.closeWith(this.data.declineData);
     }
 
-    private dispatchAndClose(action) {
-        this.store.dispatch(action);
-        this.dialogRef.close();
+    private closeWith(data) {
+        this.dialogRef.close(data);
     }
 
 }

@@ -6,7 +6,7 @@ export function isDateRangeValid(start: Date, end: Date): boolean {
         || (start !== null && end === null)
         || (start !== null
             && end !== null
-            && start.getDate() > end.getDate())
+            && start.getDate() <= end.getDate())
     );
 }
 
