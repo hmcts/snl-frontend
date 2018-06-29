@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, concatMap, filter, map, mergeMap, retryWhen, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, retryWhen, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
@@ -53,8 +53,17 @@ export class SessionEffects {
     @Effect()
     update$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
+        distinctUntilChanged(),
+        withLatestFrom(this.store, (action, state) => {
+            return {
+                ...action, payload: {
+                    ...action.payload,
+                    version: state.sessions.sessions.entities[action.payload.id].version
+                }
+            }
+        }),
         mergeMap(action =>
-            this.sessionsService.updateSession(action.payload).pipe(
+            this.sessionsService.updateSession(action.payload, action.payload.version).pipe(
                 mergeMap((data) => [
                     new sessionTransactionActs.UpdateTransaction(data),
                     new UpdateComplete()

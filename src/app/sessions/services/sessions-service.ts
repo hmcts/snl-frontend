@@ -60,7 +60,8 @@ export class SessionsService {
      * @param update - should contain {version: number} and other elements
      * @returns {Observable<any>}
      */
-    updateSession(update: any): Observable<any> {
+    updateSession(update: any, version: number): Observable<any> {
+        update.version = version;
         return this.http
             .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
     }
