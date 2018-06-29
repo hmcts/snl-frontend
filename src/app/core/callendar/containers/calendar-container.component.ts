@@ -56,7 +56,7 @@ export class CalendarContainerComponent implements OnInit {
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionById(eventId)))),
+            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))),
             hasBackdrop: false
         });
     }

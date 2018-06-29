@@ -61,6 +61,15 @@ export function reducer(state: State = initialState, action) {
         case SessionActionTypes.CreateComplete: {
             return {...state, loading: false};
         }
+        case SessionActionTypes.Update: {
+            return {...state, loading: true};
+        }
+        case SessionActionTypes.UpdateFailed: {
+            return {...state, loading: false, error: action.payload};
+        }
+        case SessionActionTypes.UpdateComplete: {
+            return {...state, loading: false};
+        }
         case SessionActionTypes.AddPropositions: {
             return {...state, sessionPropositions: action.payload, loadingPropositions: false};
         }
