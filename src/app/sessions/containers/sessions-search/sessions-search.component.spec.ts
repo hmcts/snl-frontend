@@ -60,7 +60,8 @@ const mockedSessions: Session[] = [
     person: judgeId,
     caseType: caseType,
     hearingTypes: ['some-hearingTypes'],
-    jurisdiction: 'some jurisdiction'
+    jurisdiction: 'some jurisdiction',
+    version: 0
   }
 ];
 
