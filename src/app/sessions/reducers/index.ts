@@ -10,6 +10,7 @@ import { Session } from '../models/session.model';
 import { SessionProposition } from '../models/session-proposition.model';
 import { SessionPropositionView } from '../models/session-proposition-view.model';
 import * as moment from 'moment';
+import { Dictionary } from '@ngrx/entity/src/models';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -137,8 +138,8 @@ export const getSessionViewModelById = (id: string) => createSelector(getFullSes
     return svm.find(s => s.id === id);
 });
 
-export const getSessionById = (id: string) => createSelector(getAllSessions, (sessions: Session[]) => {
-    return sessions.find(s => s.id === id);
+export const getSessionById = (id: string) => createSelector(getSessionEntities, (sessions: Dictionary<Session>) => {
+    return sessions[id];
 });
 
 export const getRecentlyCreatedSession = createSelector(
