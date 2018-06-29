@@ -1,7 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { State } from '../../../../app.state';
-import { Store } from '@ngrx/store';
 
 @Component({
     selector: 'app-dialog-actions',
@@ -21,6 +19,10 @@ export class DialogWithActionsComponent {
 
     onDeclineClick(): void {
         this.closeWith(this.data.declineData);
+    }
+
+    showDecline(): boolean {
+        return (this.data['hideDecline'] === undefined) ? true : !this.data.hideDecline;
     }
 
     private closeWith(data) {
