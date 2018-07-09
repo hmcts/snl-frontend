@@ -1,8 +1,6 @@
-import { HearingPartActionTypes, UpsertMany, UpsertOne } from '../actions/hearing-part.action';
-
+import { HearingPartActionTypes } from '../actions/hearing-part.action';
 import { HearingPart } from '../models/hearing-part';
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
-import { Session } from '../../sessions/models/session.model';
 
 export interface State extends EntityState<HearingPart> {
     loading: boolean | false;

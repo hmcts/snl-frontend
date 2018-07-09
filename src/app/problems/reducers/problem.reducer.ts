@@ -1,9 +1,6 @@
-
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
-
 import { Problem } from '../models/problem.model';
-import { GetForSession, ProblemActionTypes, RemoveAll } from '../actions/problem.action';
-import { Session } from '../../sessions/models/session.model';
+import { ProblemActionTypes } from '../actions/problem.action';
 
 export interface State extends EntityState<Problem> {
     loading: boolean | false;

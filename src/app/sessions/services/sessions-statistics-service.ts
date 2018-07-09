@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { schema } from 'normalizr';
 import * as moment from 'moment';
 
 @Injectable()

@@ -112,9 +112,9 @@ export class AuthHttpInterceptor implements HttpInterceptor {
 })
 export class AppModule {
     constructor(
-        @Inject(PLATFORM_ID) private platformId: Object,
-        @Inject(LOCALE_ID) private localeId: string,
-        @Inject(APP_ID) private appId: string) {
+        @Inject(PLATFORM_ID) platformId: Object,
+        @Inject(LOCALE_ID) localeId: string,
+        @Inject(APP_ID) appId: string) {
         const platform = isPlatformBrowser(platformId) ?
             'in the browser' : 'on the server';
         console.log(`Running ${platform} with appId=${appId}`);

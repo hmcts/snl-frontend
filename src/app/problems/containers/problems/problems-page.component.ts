@@ -4,7 +4,7 @@ import { Problem } from '../../models/problem.model';
 import * as fromProblems from '../../reducers';
 import * as fromProblemsPartsActions from '../../actions/problem.action'
 import { select, Store } from '@ngrx/store';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-problems-page',

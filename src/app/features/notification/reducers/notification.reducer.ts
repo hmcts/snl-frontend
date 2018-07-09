@@ -1,7 +1,7 @@
 
 import { CoreNotification } from '../model/core-notification';
 import { NotificationActionTypes } from '../actions/notification.action';
-import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export interface State {
     notification: CoreNotification,

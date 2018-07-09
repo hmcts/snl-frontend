@@ -37,7 +37,6 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     roomsLoading$: Observable<boolean>;
     filterDataLoading$: Observable<boolean | false>;
     sessionPropositionsLoading$: Observable<boolean | false>;
-    private transactionDialogRef: MatDialogRef<TransactionDialogComponent>;
     private createSessionDialogRef: MatDialogRef<SessionEditOrCreateDialogComponent>;
 
     constructor(private store: Store<State>,
@@ -108,7 +107,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
 
     dialogSessionCreateClicked(session: SessionCreate) {
         this.sessionCreationService.create(session);
-        this.transactionDialogRef = this.openTransactionDialog(session);
+        this.openTransactionDialog(session);
         this.closeSessionCreateDialog();
     }
 

@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { select, Store } from '@ngrx/store';
 import { MatTableDataSource } from '@angular/material';
-import * as fromSessions from '../../reducers/index';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -37,8 +35,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private store: Store<fromSessions.State>,
-              private sessionsStatsService: SessionsStatisticsService) {
+  constructor(private sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;

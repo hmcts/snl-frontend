@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { SecurityService } from '../services/security.service';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -14,7 +13,7 @@ export class LoginComponent implements OnInit {
     credentials = {username: '', password: ''};
     returnUrl: string;
 
-    constructor(private security: SecurityService, private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+    constructor(private security: SecurityService, private router: Router, private route: ActivatedRoute) {
         this.route.queryParamMap.subscribe(params => {
             this.returnUrl = params.get('returnUrl');
         });

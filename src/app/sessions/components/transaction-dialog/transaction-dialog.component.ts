@@ -10,7 +10,6 @@ import { CommitTransaction, RollbackTransaction } from '../../actions/transactio
 import * as fromSessionIndex from '../../reducers';
 import { Problem } from '../../../problems/models/problem.model';
 import { EntityTransaction } from '../../models/transaction-status.model';
-import { Dictionary } from '@ngrx/entity/src/models';
 import * as fromProblems from '../../../problems/reducers';
 
 @Component({
@@ -62,13 +61,5 @@ export class TransactionDialogComponent {
           this.store.dispatch(action);
       }
       this.dialogRef.close();
-  }
-
-  private filterProblemsForSession(problems: Dictionary<Problem>, sessionId: string | String) {
-    return Object.values(problems).filter(problem => {
-        return problem.references ? problem.references.find(ref => {
-            return ref ? ref.entity_id === sessionId : false
-        }) : false
-    })
   }
 }
