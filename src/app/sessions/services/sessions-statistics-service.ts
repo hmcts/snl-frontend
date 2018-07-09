@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { schema } from 'normalizr';
 import * as moment from 'moment';
+import { SessionViewModel } from '../models/session.viewmodel';
 
 @Injectable()
 export class SessionsStatisticsService {
 
-    calculateAllocatedHearingsDuration(session) {
+    calculateAllocatedHearingsDuration(session: SessionViewModel) {
         let allocated = moment.duration();
         if (session.hearingParts !== undefined) {
             session.hearingParts.forEach(hearingPart => {
@@ -22,8 +23,5 @@ export class SessionsStatisticsService {
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
         let available = reservedDuration.asMinutes() - allocatedDuration.asMinutes();
         return available > 0 ? available : 0;
-    }
-
-    constructor() {
     }
 }

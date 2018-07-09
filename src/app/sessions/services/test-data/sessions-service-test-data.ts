@@ -1,3 +1,9 @@
+import { SessionViewModel } from '../../models/session.viewmodel';
+import { HearingPart } from '../../../hearing-part/models/hearing-part';
+import { Judge } from '../../../judges/models/judge.model';
+import { Room } from '../../../rooms/models/room.model';
+import moment = require('moment');
+
 export const getSessionResponse = {
   id: '2bfd6084-5240-4665-ae86-ba9d90e2215a',
   person: {
