@@ -9,6 +9,6 @@ export interface SessionViewModel {
     room: Room;
     person: Judge;
     caseType: string;
-    hearingParts: HearingPart[];
+    hearingParts: [HearingPart];
     jurisdiction: string;
 }
