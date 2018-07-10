@@ -111,7 +111,6 @@ describe('Security Service', () => {
             httpMock.expectOne(expectedSignInURL).flush(signinResponse);
             expect(storageSpy.setItem).toHaveBeenCalledWith(AuthorizationHeaderName, `Bearer ${token}`);
             expect(securityService.refreshAuthenticatedUserData).toHaveBeenCalledWith(callbackSpy);
-            expect(callbackSpy).toHaveBeenCalled();
         });
 
         it('Refreshing user data should update current user data', () => {
@@ -121,7 +120,17 @@ describe('Security Service', () => {
 
             httpMock.expectOne(expectedUserURL).flush(userResponse);
             expect(securityService.currentUser).toEqual(exampleUserData);
-            expect(callbackSpy).toHaveBeenCalled();
         });
+
+        it('Refreshing user data should with no username should set user to empty', () => {
+            securityService.refreshAuthenticatedUserData(callbackSpy);
+
+            httpMock.expectOne(expectedUserURL).flush({});
+            expect(securityService.currentUser).toEqual(User.emptyUser());
+        });
+
+        afterEach(() => {
+            expect(callbackSpy).toHaveBeenCalled();
+        })
     });
 });
