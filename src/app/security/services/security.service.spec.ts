@@ -47,7 +47,6 @@ describe('Security Service', () => {
                 SecurityService,
                 { provide: AppConfig, useValue: mockedAppConfig },
                 { provide: 'STORAGE', useValue: storageSpy}
-
             ]
         });
         securityService = TestBed.get(SecurityService);
