@@ -4,7 +4,7 @@ import * as RoomActions from '../../../rooms/actions/room.action';
 import * as SessionActions from '../../../sessions/actions/session.action';
 import { State } from '../../../app.state';
 import { select, Store } from '@ngrx/store';
-import * as fromRooms from '../../../rooms/reducers/room.reducer';
+import * as fromRooms from '../../../rooms/reducers';
 import { Judge } from '../../../judges/models/judge.model';
 import { map } from 'rxjs/operators';
 import * as fromSessionIndex from '../../reducers';
@@ -45,9 +45,11 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     ) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-        this.sessionPropositions$ = this.store.pipe(select(fromSessionIndex.getFullSessionPropositions), map(this.asArray));
-        this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionReducer.getSessionPropositionsLoading));
-        this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
+        this.sessionPropositions$ = this.store.pipe(
+            select(fromSessionIndex.getFullSessionPropositions), map(this.asArray)
+        ) as Observable<SessionPropositionView[]>;
+        this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsPropositionLoading));
+        this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
         this.filterDataLoading$ = combineLatest(
             this.roomsLoading$, this.judgesLoading$, (r, j) => {
