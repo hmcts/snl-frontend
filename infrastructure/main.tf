@@ -10,6 +10,7 @@ module "snl-frontend" {
   is_frontend          = true
   subscription         = "${var.subscription}"
   additional_host_name = "${var.external_host_name}"
+  common_tags          = "${var.common_tags}"
 
   app_settings = {
     # REDIS_HOST                   = "${module.redis-cache.host_name}"
