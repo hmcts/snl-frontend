@@ -12,9 +12,11 @@ const mockedAppConfig = {
         return 'https://google.co.uk' + suffix;
     }
 };
+let callbackSpy = jasmine.createSpy();
 
 const expectedSignInURL = `${mockedAppConfig.getApiUrl()}/security/signin`;
 const expectedUserURL = `${mockedAppConfig.getApiUrl()}/security/user`;
+
 const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvZmZpY2VyMSIsImlhdCI6MTUzMTIxMTQzOSwiZXhwIjoxNTMxMjEzMjM5fQ.OC4j7jlIDetjMpvXAJvHLD' +
     'JokjxgW517Rb4UgKj8Vh2j1cLPx4nARZaKNG-g-LrxAelGAvTWUjbrAlDJtbWnrQ';
 const signinResponse = {
@@ -33,7 +35,7 @@ const userResponse = {
 };
 const creds = {'username': 'officer1', 'password': 'password'};
 
-const expectedUserData = Object.assign(new User(), userResponse);
+const exampleUserData = Object.assign(new User(), userResponse);
 
 describe('Security Service', () => {
     beforeEach(() => {
@@ -57,8 +59,9 @@ describe('Security Service', () => {
     });
 
     describe('Logout', () => {
-        fit('Logging out should remove authorization data from storage and set user to empty', () => {
-            let callbackSpy = jasmine.createSpy();
+        it('Logging out should remove authorization data from storage and set user to empty', () => {
+            securityService.currentUser = exampleUserData;
+
             securityService.logout(callbackSpy);
 
             expect(securityService.currentUser).toEqual(User.emptyUser());
@@ -67,9 +70,40 @@ describe('Security Service', () => {
         });
     });
 
+    describe('Authentication verification', () => {
+        let userAuthProperties = ['accountNonExpired', 'accountNonLocked', 'credentialsNonExpired', 'enabled'];
+
+        userAuthProperties.forEach((propertyName) => {
+            let currentUser = {...exampleUserData,
+                accountNonExpired: true,
+                accountNonLocked: true,
+                credentialsNonExpired: true,
+                enabled: true
+            } as User;
+
+            it(`should return false if at least '${propertyName}' is false`, () => {
+                currentUser[propertyName] = false;
+                securityService.currentUser = currentUser;
+
+                expect(securityService.isAuthenticated()).toBeFalsy();
+            })
+        })
+
+        it(`should return true if all of the properties: ( ${userAuthProperties.join(', ')} ) are true`, () => {
+            let currentUser = {...exampleUserData,
+                accountNonExpired: true,
+                accountNonLocked: true,
+                credentialsNonExpired: true,
+                enabled: true
+            } as User;
+            securityService.currentUser = currentUser;
+
+            expect(securityService.isAuthenticated()).toBeTruthy();
+        })
+    });
+
     describe('Login', () => {
-        fit('Signing in should call backend, set storage data and refresh user data', () => {
-            let callbackSpy = jasmine.createSpy();
+        it('Signing in should call backend, set storage data and refresh user data', () => {
             spyOn(securityService, 'refreshAuthenticatedUserData');
 
             securityService.authenticate(creds, callbackSpy);
@@ -77,15 +111,16 @@ describe('Security Service', () => {
             httpMock.expectOne(expectedSignInURL).flush(signinResponse);
             expect(storageSpy.setItem).toHaveBeenCalledWith(AuthorizationHeaderName, `Bearer ${token}`);
             expect(securityService.refreshAuthenticatedUserData).toHaveBeenCalledWith(callbackSpy);
+            expect(callbackSpy).toHaveBeenCalled();
         });
 
-        fit('Refreshing user data should update current username', () => {
-            let callbackSpy = jasmine.createSpy();
+        it('Refreshing user data should update current user data', () => {
+            expect(securityService.currentUser).toEqual(User.emptyUser());
 
             securityService.refreshAuthenticatedUserData(callbackSpy);
 
             httpMock.expectOne(expectedUserURL).flush(userResponse);
-            expect(securityService.currentUser).toEqual(expectedUserData);
+            expect(securityService.currentUser).toEqual(exampleUserData);
             expect(callbackSpy).toHaveBeenCalled();
         });
     });
