@@ -90,6 +90,11 @@ export const getSessionsPropositions = createSelector(
     state => state.sessionPropositions
 );
 
+export const getSessionsPropositionLoading = createSelector(
+    getSessionsEntitiesState,
+    state => state.loadingPropositions
+);
+
 export const {
     selectIds: getSessionIds,
     selectEntities: getSessionEntities,
@@ -129,7 +134,7 @@ export const getFullSessionPropositions = createSelector(getSessionsPropositions
                 availibility: moment.duration(moment(sessionProposition.end).diff(moment(sessionProposition.start))).humanize(),
                 room: rooms[sessionProposition.roomId],
                 judge: judges[sessionProposition.judgeId],
-            } as SessionPropositionView;
+            };
         });
         return finalSessions;
     });
