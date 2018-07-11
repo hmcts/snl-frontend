@@ -24,7 +24,7 @@ import * as moment from 'moment';
 import { SessionCreate } from '../../models/session-create.model';
 import { State } from '../../reducers';
 import { ProblemEffects } from '../../../problems/effects/problem.effects';
-import { CommitTransaction } from '../../actions/transaction.action';
+import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';
 
 let httpMock: HttpTestingController;
 let component: SessionsCreateComponent;
@@ -32,7 +32,7 @@ let storeSpy: jasmine.Spy;
 let store: Store<State>;
 
 describe('SessionsCreateComponent', () => {
-    beforeEach(() => {
+    beforeAll(() => {
         TestBed.configureTestingModule({
             imports: [
                 AngularMaterialModule,
@@ -71,8 +71,9 @@ describe('SessionsCreateComponent', () => {
         httpMock.verify();
     });
 
-    fdescribe('When creating a session', () => {
-        it('the flow should be completed', () => {
+    describe('When created a session', () => {
+
+        it('and accepted the problems the session should appear in state', () => {
             let sessionId = 'a42c68ac-a0e6-4f11-8e58-1fd3d7af1def';
             let session = {
                 userTransactionId: undefined,
@@ -86,7 +87,7 @@ describe('SessionsCreateComponent', () => {
 
             component.create(session);
 
-            let transactionId = storeSpy.calls.all()[0].args[0].payload.id;
+            let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
             httpMock.expectOne(getCreateSessionUrl()).flush(getTransactionStartedResponse(transactionId));
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
@@ -99,7 +100,35 @@ describe('SessionsCreateComponent', () => {
 
             store.pipe(select(state => state.sessions.sessions.entities[sessionId])).subscribe(sess => {
                 expect(sess.id).toEqual(sessionId);
-            })
+            }).unsubscribe();
+        });
+
+        it('and rolled back the transaction the session should not appear in state', () => {
+            let sessionId = 'a42c68ac-a0e6-4f11-8e58-1fd3d7af1def';
+            let session = {
+                userTransactionId: undefined,
+                id: sessionId,
+                start: moment().toDate(),
+                duration: 1800,
+                roomId: null,
+                personId: null,
+                caseType: 'casetype',
+            } as SessionCreate;
+
+            component.create(session);
+
+            let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
+
+            httpMock.expectOne(getCreateSessionUrl()).flush(getTransactionStartedResponse(transactionId));
+            httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
+
+            store.dispatch(new RollbackTransaction(transactionId));
+
+            httpMock.expectOne(getRollbackTransactionUrl(transactionId)).flush(getTransactionRolledbackResponse(transactionId));
+
+            store.pipe(select(state => state.sessions.sessions.entities[sessionId])).subscribe(sess => {
+                expect(sess).not.toBeDefined();
+            }).unsubscribe();
         });
     })
 });
@@ -118,8 +147,13 @@ let getTransactionCommittedResponse = (id: string) => {
     return {'id': id, 'status': 'COMMITTED', 'rulesProcessingStatus': 'COMPLETE'}
 }
 
+let getTransactionRolledbackResponse = (id: string) => {
+    return {'id': id, 'status': 'ROLLEDBACK', 'rulesProcessingStatus': 'COMPLETE'}
+}
+
 let getCreateSessionUrl = () => `${mockedAppConfig.getApiUrl()}/sessions`;
 let getGetProblemsUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/problems/by-user-transaction-id?id=${transactionId}`;
 let getCommitTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/commit`;
+let getRollbackTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/rollback`;
 let getSessionByIdUrl = (sessionId) => `${mockedAppConfig.getApiUrl()}/sessions/${sessionId}`;
 let getGetHearingPartsUrl = () => `${mockedAppConfig.getApiUrl()}/hearing-part`;
