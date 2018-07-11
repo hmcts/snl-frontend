@@ -1,25 +1,63 @@
 import { ProblemsPageComponent } from './problems-page.component';
-import * as fromProblemsPartsActions from '../../actions/problem.action';
+import { TestBed } from '@angular/core/testing';
+import { Store, StoreModule } from '@ngrx/store';
+import { Problem } from '../../models/problem.model';
+import { reducers } from '../../reducers';
+import * as problemsActions from '../../actions/problem.action';
+import * as fromProblems from '../../reducers';
 
 let problemsPageComponent: ProblemsPageComponent;
-let storeSpy;
+let storeSpy: jasmine.Spy;
+let store: Store<fromProblems.State>;
+
+const problems = [
+    {
+        id: '1',
+        message: undefined,
+        severity: undefined,
+        type: undefined,
+        references: undefined
+    },
+    {
+        id: '2',
+        message: undefined,
+        severity: undefined,
+        type: undefined,
+        references: undefined
+    }
+] as Problem[];
 
 describe('ProblemsPageComponent', () => {
     beforeAll(() => {
-        storeSpy = jasmine.createSpyObj('Store', ['pipe', 'dispatch']);
-        problemsPageComponent = new ProblemsPageComponent(storeSpy)
-        problemsPageComponent.ngOnInit()
+        TestBed.configureTestingModule({
+            imports: [
+                StoreModule.forRoot({}),
+                StoreModule.forFeature('problems', reducers),
+            ],
+            providers: [ProblemsPageComponent]
+        });
+
+        store = TestBed.get(Store)
+        storeSpy = spyOn(store, 'dispatch').and.callThrough();
+
+        problemsPageComponent = TestBed.get(ProblemsPageComponent);
+        problemsPageComponent.ngOnInit();
     });
 
     it('should create component', () => {
         expect(problemsPageComponent).toBeDefined();
     });
 
-    it('should call store', () => {
-        expect(storeSpy.pipe).toHaveBeenCalled();
+    it('should dispatch get action on store', () => {
+        const passedObj = storeSpy.calls.argsFor(0)[0];
+        expect(passedObj instanceof problemsActions.Get).toBeTruthy();
     });
 
-    it('should dispatch action on store', () => {
-        expect(storeSpy.dispatch).toHaveBeenCalledWith(new fromProblemsPartsActions.Get());
-    })
+    it('should populate problems', () => {
+        store.dispatch(new problemsActions.GetComplete(problems));
+
+        problemsPageComponent.problems$.subscribe(data => {
+            expect(data).toEqual(problems);
+        })
+    });
 });
