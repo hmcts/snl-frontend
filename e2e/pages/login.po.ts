@@ -1,4 +1,4 @@
-import { element, by, promise, browser } from 'protractor';
+import { element, by, browser } from 'protractor';
 
 export class LoginPage {
     username = element(by.id('username'))
