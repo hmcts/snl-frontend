@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
-import { MatTableDataSource } from '@angular/material';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { MatPaginator, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
+
+interface HearingPartTableData extends HearingPart {
+    humanizedDuration: string,
+    humanizedScheduleStart: string,
+    humanizedScheduleEnd: string
+}
+
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -12,8 +18,10 @@ import { SelectionModel } from '@angular/cdk/collections';
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearingParts: HearingPart[];
-    @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    tableData: HearingPart[];
 
     selectedHearingPartId;
 
@@ -38,11 +46,21 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.hearingParts));
-    }
+        this.tableData = this.hearingParts.map((element: HearingPart) => {
+            let tableRow: HearingPartTableData;
+            let scheduleStart = new Date(element.scheduleStart);
+            let scheduleEnd = new Date(element.scheduleEnd);
 
-    humanizeDuration(duration) {
-        return moment.duration(duration).humanize();
+            tableRow = {...element,
+                humanizedScheduleStart: this.parseDate(scheduleStart),
+                humanizedScheduleEnd: this.parseDate(scheduleEnd),
+                humanizedDuration: moment.duration(element.duration).humanize(),
+            };
+            return tableRow;
+        });
+
+        this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.tableData));
+        this.hearingPartsDataSource.paginator = this.paginator;
     }
 
     parseDate(date) {

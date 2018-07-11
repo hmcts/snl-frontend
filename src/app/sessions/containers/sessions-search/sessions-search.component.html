@@ -17,7 +17,6 @@
     <div>
       <app-hearing-parts-preview id="hearing-part-preview"
               [hearingParts]="hearingParts$ | async"
-              [sessions]="sessions$ | async"
               (selectHearingPart)="selectHearingPart($event)">
       </app-hearing-parts-preview>
     </div>
