@@ -70,8 +70,8 @@ export const getRecentlyCreatedSessionId = createSelector(
 export const getRecentlyCreatedSessionStatus = createSelector(
     getSessionTransactionEntitiesState,
     getRecentlyCreatedTransactionId,
-    (sessionCreationEntities, recentlyCreatedSessionId) => {
-        return sessionCreationEntities[recentlyCreatedSessionId];
+    (sessionTransactionEntities, recentlyCreatedTransactionId) => {
+        return sessionTransactionEntities[recentlyCreatedTransactionId];
     }
 );
 
