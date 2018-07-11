@@ -9,7 +9,7 @@ export class AppConfig {
 
   protected config: Config;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   public load(): Promise<void> {
     console.log('Loading app config...');

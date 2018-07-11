@@ -32,7 +32,7 @@ export class JudgePlannerComponent implements OnInit {
     @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
 
-    constructor(private store: Store<State>) {
+    constructor(private readonly store: Store<State>) {
         this.defaultView = 'timelineWeek';
         this.header = {
             left: 'prev,next today',

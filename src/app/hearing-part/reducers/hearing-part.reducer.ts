@@ -44,7 +44,7 @@ export function reducer(state: State = initialState, action) {
               {...state, loading: false} )};
     }
     case HearingPartActionTypes.UpsertMany: {
-        let updatedCollection = Object.values(action.payload || []).map((hearingPart: HearingPart) => {
+        const updatedCollection = Object.values(action.payload || []).map((hearingPart: HearingPart) => {
             return {
                 id: hearingPart.id,
                 changes: hearingPart

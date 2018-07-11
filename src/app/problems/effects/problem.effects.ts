@@ -33,5 +33,5 @@ export class ProblemEffects {
         )
     );
 
-    constructor(private problemsService: ProblemsService, private actions$: Actions) {}
+    constructor(private readonly problemsService: ProblemsService, private readonly actions$: Actions) {}
 }

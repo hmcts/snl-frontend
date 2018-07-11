@@ -11,7 +11,7 @@ export class AuthToolbarElementComponent implements OnInit {
 
     loggedInUsername = 'Logged user';
 
-    constructor(private security: SecurityService, private router: Router) {
+    constructor(private readonly security: SecurityService, private readonly router: Router) {
     }
 
     ngOnInit() {

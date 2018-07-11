@@ -33,7 +33,7 @@ export class TransactionDialogComponent {
   constructor(
       public dialogRef: MatDialogRef<TransactionDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary,
-      private store: Store<State>) {
+      private readonly store: Store<State>) {
       this.problems$ = combineLatest(this.store.pipe(select(fromProblems.getProblems)),
           this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId)),
           (problems, id) => {return Object.values(problems)});

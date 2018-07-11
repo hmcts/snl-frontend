@@ -34,20 +34,20 @@ export class TransactionBackendService {
     constructor(private http: HttpClient, private config: AppConfig) {
     }
 
-    getUserTransaction(id: string | String): Observable<Transaction> {
+    getUserTransaction(id: string): Observable<Transaction> {
         return this.http
             .get<Transaction>(`${this.getUrl()}/${id}`)
     }
 
-    rollbackTransaction(id: string | String): Observable<any> {
+    rollbackTransaction(id: string): Observable<any> {
         return this.setTransactionAction(id, TransactionActions.ROLLBACK)
     }
 
-    commitTransaction(id: string | String): Observable<any> {
+    commitTransaction(id: string): Observable<any> {
         return this.setTransactionAction(id, TransactionActions.COMMIT)
     }
 
-    private setTransactionAction(id: string | String, action: TransactionActions) {
+    private setTransactionAction(id: string, action: TransactionActions) {
         return this.http
             .post<any>(`${this.getUrl()}/${id}/${action}`, {})
             .pipe(map(data =>  data || []));

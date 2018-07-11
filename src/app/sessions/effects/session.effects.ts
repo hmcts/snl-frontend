@@ -103,7 +103,7 @@ export class SessionEffects {
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
                     if (transcation.status !== TransactionStatuses.STARTED && transcation.status !== TransactionStatuses.CONFLICT) {
-                        throw 'Transaction not started...';
+                        throw new Error('Transaction not started...');
                     } else {
                         return transcation;
                     }
@@ -230,10 +230,10 @@ export class SessionEffects {
         )
     );
 
-    constructor(private sessionsService: SessionsService,
-                private transactionService: TransactionBackendService,
-                private problemsService: ProblemsService,
-                private store: Store<fromSessionIndex.State>,
-                private actions$: Actions) {
+    constructor(private readonly sessionsService: SessionsService,
+                private readonly transactionService: TransactionBackendService,
+                private readonly problemsService: ProblemsService,
+                private readonly store: Store<fromSessionIndex.State>,
+                private readonly actions$: Actions) {
     }
 }

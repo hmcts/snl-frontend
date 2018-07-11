@@ -13,7 +13,7 @@ export class DataWithSimpleResourceTransformer implements IcalendarTransformer<S
         let resource = this._defaultTransformer.transform(session);
         let resourceId = this.eventResourceField + '-empty';
         if (this.eventResourceField && session[this.eventResourceField]) {
-            resourceId = this.eventResourceField + '-' + session[this.eventResourceField].id;
+            resourceId = `${this.eventResourceField} - ${session[this.eventResourceField].id}`;
         }
         resource['resourceId'] = resourceId;
         return resource;

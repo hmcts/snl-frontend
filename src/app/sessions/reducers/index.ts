@@ -105,9 +105,9 @@ export const {
 export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getHearingParts,
     (sessions, rooms, judges, hearingParts) => {
         let finalSessions: SessionViewModel[];
-        if (sessions === undefined) {return []};
+        if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
-            let sessionData: Session = sessions[sessionKey];
+            const sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
                 start: sessionData.start,

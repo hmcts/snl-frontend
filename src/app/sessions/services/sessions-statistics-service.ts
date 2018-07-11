@@ -19,7 +19,7 @@ export class SessionsStatisticsService {
     }
 
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
-        let available = reservedDuration.asMinutes() - allocatedDuration.asMinutes();
+        const available = reservedDuration.asMinutes() - allocatedDuration.asMinutes();
         return available > 0 ? available : 0;
     }
 

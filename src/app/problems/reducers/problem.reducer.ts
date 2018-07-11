@@ -32,7 +32,7 @@ export function reducer(state: State = initialState, action) {
             return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
         }
         case ProblemActionTypes.UpsertMany: {
-            let updatedCollection = Object.values(action.payload || []).map((problem: Problem) => {
+            const updatedCollection = Object.values(action.payload || []).map((problem: Problem) => {
                 return {
                     id: problem.id,
                     changes: problem

@@ -10,7 +10,7 @@ import { rooms } from '../schemas/room.schema';
 @Injectable()
 export class RoomService {
 
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     get(): Observable<any> {
