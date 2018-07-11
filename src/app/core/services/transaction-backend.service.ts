@@ -31,7 +31,7 @@ export interface Transaction {
 
 @Injectable()
 export class TransactionBackendService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     getUserTransaction(id: string): Observable<Transaction> {
