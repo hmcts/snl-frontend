@@ -4,7 +4,7 @@ let authGuard: AuthGuard;
 let securityServiceSpy, routerSpy, next, state;
 
 describe('AuthGuard', () => {
-    beforeEach(() => {
+    beforeAll(() => {
 
         securityServiceSpy = jasmine.createSpyObj('SecuritySevice', ['isAuthenticated']);
         routerSpy = jasmine.createSpyObj('Router', ['navigate']);

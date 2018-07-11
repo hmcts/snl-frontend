@@ -38,7 +38,7 @@ const creds = {'username': 'officer1', 'password': 'password'};
 const exampleUserData = Object.assign(new User(), userResponse);
 
 describe('Security Service', () => {
-    beforeEach(() => {
+    beforeAll(() => {
 
         storageSpy = jasmine.createSpyObj('storage', ['removeItem', 'setItem']);
         TestBed.configureTestingModule({
@@ -113,8 +113,6 @@ describe('Security Service', () => {
         });
 
         it('Refreshing user data should update current user data', () => {
-            expect(securityService.currentUser).toEqual(User.emptyUser());
-
             securityService.refreshAuthenticatedUserData(callbackSpy);
 
             httpMock.expectOne(expectedUserURL).flush(userResponse);
