@@ -3,18 +3,15 @@
   "project": {
     "name": "snl-frontend"
   },
-  "apps": [
-    {
+  "apps": [{
       "root": "src",
       "outDir": "dist/browser",
-      "assets": [
-        {
-  "glob": "**/*",
-  "input": "./public",
-  "output": "./",
-  "allowOutsideOutDir": false
-}
-      ],
+      "assets": [{
+        "glob": "**/*",
+        "input": "./public",
+        "output": "./",
+        "allowOutsideOutDir": false
+      }],
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -38,14 +35,12 @@
     {
       "root": "src",
       "outDir": "dist/server",
-      "assets": [
-        {
-  "glob": "**/*",
-  "input": "./public",
-  "output": "./",
-  "allowOutsideOutDir": false
-}
-      ],
+      "assets": [{
+        "glob": "**/*",
+        "input": "./public",
+        "output": "./",
+        "allowOutsideOutDir": false
+      }],
       "platform": "server",
       "index": "index.html",
       "main": "main.server.ts",
@@ -67,11 +62,10 @@
   ],
   "e2e": {
     "protractor": {
-      "config": "./protractor.conf.js"
+      "config": "./e2e/protractor.conf.js"
     }
   },
-  "lint": [
-    {
+  "lint": [{
       "project": "src/tsconfig.app.json",
       "exclude": "**/node_modules/**"
     },
@@ -91,12 +85,10 @@
   },
   "defaults": {
     "styleExt": "scss",
-    "component": {
-    },
+    "component": {},
     "serve": {
       "port": 3451
     },
-    "schematics": {
-    }
+    "schematics": {}
   }
 }
