@@ -7,8 +7,6 @@ import * as ProblemsActions from '../../problems/actions/problem.action';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
-import * as fromSessions from '../reducers';
-import { Session } from '../models/session.model';
 
 @Injectable()
 export class SessionsCreationService {

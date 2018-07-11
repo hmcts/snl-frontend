@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
 import * as SessionActions from '../../../sessions/actions/session.action';
 import { State } from '../../../app.state';
 import { select, Store } from '@ngrx/store';
-import * as fromRooms from '../../../rooms/reducers/room.reducer';
+import * as fromRooms from '../../../rooms/reducers';
 import { Judge } from '../../../judges/models/judge.model';
 import { map } from 'rxjs/operators';
 import * as fromSessionIndex from '../../reducers';
-import * as fromSessionReducer from '../../reducers/session.reducer';
 import { Room } from '../../../rooms/models/room.model';
 import { Observable } from 'rxjs/Observable';
 import * as fromJudges from '../../../judges/reducers';
@@ -25,19 +24,19 @@ import { SessionsCreationService } from '../../services/sessions-creation.servic
 @Component({
     selector: 'app-sessions-propositions-search',
     templateUrl: './sessions-propositions-search.component.html',
-    styleUrls: ['./sessions-propositions-search.component.scss']
+    styleUrls: ['./sessions-propositions-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SessionsPropositionsSearchComponent implements OnInit {
 
     filterData: SessionPropositionQuery;
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
-    sessionPropositions$: Observable<any>;
+    sessionPropositions$: Observable<SessionPropositionView[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
     filterDataLoading$: Observable<boolean | false>;
     sessionPropositionsLoading$: Observable<boolean | false>;
-    private transactionDialogRef: MatDialogRef<TransactionDialogComponent>;
     private createSessionDialogRef: MatDialogRef<SessionEditOrCreateDialogComponent>;
 
     constructor(private store: Store<State>,
@@ -46,24 +45,20 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     ) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-        this.sessionPropositions$ = this.store.pipe(select(fromSessionIndex.getFullSessionPropositions), map(this.asArray));
-        this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionReducer.getSessionPropositionsLoading));
-        this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
+        this.sessionPropositions$ = this.store.pipe(
+            select(fromSessionIndex.getFullSessionPropositions), map(this.asArray)
+        ) as Observable<SessionPropositionView[]>;
+        this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsPropositionLoading));
+        this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
         this.filterDataLoading$ = combineLatest(
-            this.roomsLoading$, this.judgesLoading$, (r, j) => {
-                return r || j;
-            }
+            this.roomsLoading$, this.judgesLoading$, (r, j) =>  r || j
         );
     }
 
     ngOnInit() {
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
-    }
-
-    private asArray(data) {
-        return Object.values(data) || [];
     }
 
     search(searchRequest: SessionPropositionQuery) {
@@ -79,11 +74,22 @@ export class SessionsPropositionsSearchComponent implements OnInit {
         this.createSessionDialogRef.close();
     }
 
+    dialogSessionCreateClicked(session: SessionCreate) {
+        this.sessionCreationService.create(session);
+        this.openTransactionDialog();
+        this.closeSessionCreateDialog();
+    }
+
+    private asArray(data) {
+        return Object.values(data) || [];
+    }
+
     private openSessionCreateDialog(spv: SessionPropositionView) {
         let durationInSeconds = 0;
         if (this.filterData !== undefined) {
             durationInSeconds = this.filterData.durationInMinutes * 60;
         }
+
         return this.dialog.open(SessionEditOrCreateDialogComponent, {
             width: 'auto',
             minWidth: 350,
@@ -91,7 +97,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 sessionData: {
                     userTransactionId: undefined,
                     id: undefined,
-                    start: moment(spv.date).add(moment.duration(spv.startTime as string)).toDate(),
+                    start: moment(spv.date, 'DD MMM YYYY').add(moment.duration(spv.startTime as string)).toDate(),
                     duration: durationInSeconds,
                     roomId: spv.room.id,
                     personId: spv.judge.id,
@@ -100,19 +106,13 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 rooms$: this.rooms$,
                 judges$: this.judges$,
                 onCreateSessionAction: session => this.dialogSessionCreateClicked(session),
-                onCancelAction: event => this.closeSessionCreateDialog()
+                onCancelAction: () => this.closeSessionCreateDialog()
             },
             hasBackdrop: true
         });
     }
 
-    dialogSessionCreateClicked(session: SessionCreate) {
-        this.sessionCreationService.create(session);
-        this.transactionDialogRef = this.openTransactionDialog(session);
-        this.closeSessionCreateDialog();
-    }
-
-    private openTransactionDialog(session) {
+    private openTransactionDialog() {
         return this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,

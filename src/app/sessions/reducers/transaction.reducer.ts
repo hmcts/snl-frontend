@@ -1,7 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { EntityTransaction } from '../models/transaction-status.model';
-import { EntityTransactionActionTypes, UpdateTransaction } from '../actions/transaction.action';
-import { TransactionStatuses } from '../../core/services/transaction-backend.service';
+import { EntityTransactionActionTypes } from '../actions/transaction.action';
 
 export interface State extends EntityState<EntityTransaction> {
     recent: string

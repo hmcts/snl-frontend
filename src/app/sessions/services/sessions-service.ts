@@ -7,10 +7,9 @@ import { SessionQuery, SessionQueryForDates } from '../models/session-query.mode
 import { AppConfig } from '../../app.config';
 import { SessionCreate } from '../models/session-create.model';
 import { session, sessions, sessionsWithHearings } from '../../core/schemas/data.schema';
-import { normalize, schema } from 'normalizr';
+import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
-import { TransactionStatuses } from '../../core/services/transaction-backend.service';
 import { SessionPropositionQuery } from '../models/session-proposition-query.model';
 import * as moment from 'moment';
 

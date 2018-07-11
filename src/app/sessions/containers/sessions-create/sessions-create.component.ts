@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
-import * as fromRooms from '../../../rooms/reducers/room.reducer';
+import * as fromRooms from '../../../rooms/reducers/index';
 import * as fromJudges from '../../../judges/reducers/index';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
@@ -30,7 +30,7 @@ export class SessionsCreateComponent implements OnInit {
     constructor(private store: Store<State>, public dialog: MatDialog, public sessionCreationService: SessionsCreationService) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
-        this.roomsLoading$ = this.store.pipe(select(fromRooms.getLoading));
+        this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     }
 

@@ -5,10 +5,9 @@ import { AppConfig } from '../../app.config';
 import { SessionAssignment } from '../models/session-assignment';
 import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
-import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
+import { hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { ListingCreate } from '../models/listing-create';
-import { Transaction, TransactionStatuses } from '../../core/services/transaction-backend.service';
 
 @Injectable()
 export class HearingPartService {

@@ -16,8 +16,7 @@ export class CalendarComponent implements OnInit {
     errors: string;
     references = [];
     calHeight = 'auto';
-
-    private events: any[];
+    events: any[];
 
     @Input('preTransformedData') set preTransformedData(value: any[]) {
         if (value === undefined || this.dataTransformer === undefined) {

@@ -7,7 +7,6 @@ import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers/index';
 import * as fromSessions from '../../reducers/index';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
-import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
