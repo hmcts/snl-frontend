@@ -8,59 +8,6 @@ const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 let problemsService: ProblemsService;
 let httpMock: HttpTestingController;
 
-describe('ProblemsService', () => {
-    beforeAll(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
-            providers: [
-                ProblemsService,
-                { provide: AppConfig, useValue: mockedAppConfig }
-            ]
-        });
-        problemsService = TestBed.get(ProblemsService);
-        httpMock = TestBed.get(HttpTestingController);
-    });
-
-    afterEach(() => {
-        httpMock.verify();
-    });
-
-    describe('getProblems', () => {
-        const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems`;
-
-        it('should call proper url', () => {
-            problemsService.get().subscribe();
-            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
-        });
-
-        it('should normalize data properly', () => {
-            problemsService
-                .get()
-                .subscribe(data => {
-                    expect(data).toEqual(normalizedGetProblemsResponse)
-                });
-
-            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
-        });
-    });
-
-    describe('getForTransaction', () => {
-        const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems/by-user-transaction-id?id=1234`;
-
-        it('should call proper url with id', () => {
-            problemsService.getForTransaction('1234').subscribe();
-            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
-        });
-
-        it('should normalize data properly', () => {
-            problemsService
-                .getForTransaction('1234')
-                .subscribe(data => expect(data).toEqual(normalizedGetProblemsResponse));
-            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
-        });
-    })
-});
-
 const getProblemsResponse = [
     {
         id: '20c5aeb8e0317abc02a3c4bde7f04cb2',
@@ -136,3 +83,56 @@ const normalizedGetProblemsResponse = {
         'f25a6ec7-670a-4d89-ad46-567ef96425e3'
     ]
 };
+
+describe('ProblemsService', () => {
+    beforeAll(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            providers: [
+                ProblemsService,
+                { provide: AppConfig, useValue: mockedAppConfig }
+            ]
+        });
+        problemsService = TestBed.get(ProblemsService);
+        httpMock = TestBed.get(HttpTestingController);
+    });
+
+    afterEach(() => {
+        httpMock.verify();
+    });
+
+    describe('getProblems', () => {
+        const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems`;
+
+        it('should call proper url', () => {
+            problemsService.get().subscribe();
+            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
+        });
+
+        it('should normalize data properly', () => {
+            problemsService
+                .get()
+                .subscribe(data => {
+                    expect(data).toEqual(normalizedGetProblemsResponse)
+                });
+
+            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
+        });
+    });
+
+    describe('getForTransaction', () => {
+        const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems/by-user-transaction-id?id=1234`;
+
+        it('should call proper url with id', () => {
+            problemsService.getForTransaction('1234').subscribe();
+            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
+        });
+
+        it('should normalize data properly', () => {
+            problemsService
+                .getForTransaction('1234')
+                .subscribe(data => expect(data).toEqual(normalizedGetProblemsResponse));
+            httpMock.expectOne(expectedUrl).flush(getProblemsResponse);
+        });
+    })
+});
