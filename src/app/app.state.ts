@@ -1,2 +1,2 @@
 
-export interface State {} // NOSONAR
+export interface State {} // NOSONAR typescript:S4023 not relevant
