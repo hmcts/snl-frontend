@@ -66,36 +66,6 @@ export class CalendarComponent implements OnInit {
         this.defaultView = 'agendaDay';
     }
 
-    public refreshViewData() {
-        if (this.loadData === undefined) {
-            return;
-        }
-
-        const dateRange = this.parseDates();
-        if (dateRange === undefined) {
-            return;
-        }
-
-        this.loadData.emit(dateRange);
-    }
-
-    clickButton(model: any) {
-        this.refreshViewData();
-        this.references = [];
-    }
-
-    parseDates() {
-        if (this.ucCalendar === undefined) {
-            return undefined;
-        }
-
-        const view = this.ucCalendar.fullCalendar('getView') as Default;
-        const endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
-        const startDate = view.intervalStart.toDate() || new Date('2018-04-23');
-
-        return {startDate, endDate};
-    }
-
     ngOnInit() {
         this.calendarOptions = {
             // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -122,8 +92,18 @@ export class CalendarComponent implements OnInit {
         }
     }
 
-    public calendarInitialized() {
+    public refreshViewData() {
+        let dateRange = this.parseDates();
+        if (dateRange === undefined) {
+            return;
+        }
+
+        this.loadData.emit(dateRange);
+    }
+
+    public clickButton() {
         this.refreshViewData();
+        this.references = [];
     }
 
     public eventRender(event) {
@@ -163,6 +143,18 @@ export class CalendarComponent implements OnInit {
 
     public eventResize(event) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
+    }
+
+    private parseDates() {
+        if (this.ucCalendar === undefined) {
+            return undefined;
+        }
+
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
+        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+
+        return {startDate: startDate, endDate: endDate};
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
