@@ -35,10 +35,6 @@ export function reducer(state: State = initialState, action) {
     case HearingPartActionTypes.CreateComplete: {
         return {...state, loading: false};
     }
-    case HearingPartActionTypes.AssignComplete: {
-      return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
-              {...state, loading: false} )};
-    }
     case HearingPartActionTypes.UpsertOne: {
       return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
               {...state, loading: false} )};

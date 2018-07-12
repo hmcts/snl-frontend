@@ -8,7 +8,7 @@ export class User {
     xsrftoken: string;
 
     static emptyUser(): User {
-        let user = new User();
+        let user = new User(); // NOSONAR not const
         user.username = 'No User';
         return user;
     }

@@ -14,10 +14,10 @@ export class SessionsCreationService {
     }
 
     create(session: SessionCreate) {
-        let transactionId = uuid();
+        const transactionId = uuid();
 
         session.userTransactionId = transactionId;
-        let transaction = this.createTransaction(session.id, transactionId);
+        const transaction = this.createTransaction(session.id, transactionId);
 
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Create(session));

@@ -13,7 +13,7 @@ export class SecurityService {
 
     constructor(private readonly http: HttpClient,
                 private readonly config: AppConfig,
-                @Inject('STORAGE') private storage: Storage) {
+                @Inject('STORAGE') private storage: Storage) { // NOSONAR not readonly
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 

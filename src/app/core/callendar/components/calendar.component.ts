@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit {
         if (value === undefined || this.dataTransformer === undefined) {
             return;
         }
-        let events = [];
+        let events = []; // NOSONAR
         value.forEach((element) => {
             events.push(this.dataTransformer.transform(element));
         });

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Room } from '../../../rooms/models/room.model';
-import * as fromReducer from '../../../sessions/reducers';
 import * as fromSessions from '../../../sessions/reducers';
 import * as fromRoomActions from '../../../rooms/actions/room.action';
 import { ResourceList } from '../../../core/callendar/model/resource-list';
@@ -51,7 +50,7 @@ export class RoomPlannerComponent implements OnInit {
 
     ngOnInit() {
         this.configureRoomView();
-        this.sessions$ = this.store.select(fromReducer.getFullSessions);
+        this.sessions$ = this.store.select(fromSessions.getFullSessions);
         this.store.dispatch(new fromRoomActions.Get());
     }
 
@@ -64,7 +63,7 @@ export class RoomPlannerComponent implements OnInit {
             }
         ];
         this.store.pipe(select(fromSessions.getRooms)).subscribe(elements => {
-            let newResourceList = new ResourceList('room');
+            let newResourceList = new ResourceList('room'); // NOSONAR not const
             Object.values(elements).forEach((room: Room) => {
                 newResourceList.add('room-' + room.id, room.name);
             });

@@ -64,7 +64,7 @@ export class JudgePlannerComponent implements OnInit {
             }
         ];
         this.store.pipe(select(judgeReducers.getJudges)).subscribe(elements => {
-            let newResourceList = new ResourceList('person');
+            let newResourceList = new ResourceList('person'); // NOSONAR not const
             Object.values(elements).forEach((judge: Judge) => {
                 newResourceList.add('person-' + judge.id, judge.name);
             });
