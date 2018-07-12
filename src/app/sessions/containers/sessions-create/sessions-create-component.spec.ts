@@ -32,7 +32,7 @@ let storeSpy: jasmine.Spy;
 let store: Store<State>;
 
 describe('SessionsCreateComponent', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 AngularMaterialModule,
