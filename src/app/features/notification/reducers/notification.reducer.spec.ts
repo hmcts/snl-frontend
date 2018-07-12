@@ -7,7 +7,7 @@ let notification = {
     duration: 1000
 } as CoreNotification;
 
-fdescribe('NotificationReducer', () => {
+describe('NotificationReducer', () => {
 
     describe('When creating a notification', () => {
         it('the notification should be in state', () => {
