@@ -24,7 +24,7 @@ export class ListingCreateComponent {
 
     listing: ListingCreate;
 
-    constructor(private store: Store<State>) {
+    constructor(private readonly store: Store<State>) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();

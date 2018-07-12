@@ -32,7 +32,7 @@ export class HearingPartEffects {
     );
 
     @Effect()
-    search_hearing$: Observable<Action> = this.actions$.pipe(
+    searchHearing$: Observable<Action> = this.actions$.pipe(
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(() => this.hearingPartService.searchHearingParts().pipe(mergeMap(data => [
             new SearchComplete(data.entities.hearingParts),
@@ -41,6 +41,6 @@ export class HearingPartEffects {
         )
     );
 
-    constructor(private hearingPartService: HearingPartService, private actions$: Actions) {
+    constructor(private readonly hearingPartService: HearingPartService, private readonly actions$: Actions) {
     }
 }

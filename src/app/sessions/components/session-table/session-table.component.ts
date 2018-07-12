@@ -35,7 +35,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private sessionsStatsService: SessionsStatisticsService) {
+  constructor(private readonly sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
@@ -75,7 +75,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
       if (this.sessions) {
           this.tableVisible = true;
 
-          this.sessions.map(element => {
+          this.sessions.forEach(element => {
               element.start = new Date(element.start);
           });
           this.dataSource = new MatTableDataSource(this.sessions);

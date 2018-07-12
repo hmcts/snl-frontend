@@ -39,9 +39,9 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     sessionPropositionsLoading$: Observable<boolean | false>;
     private createSessionDialogRef: MatDialogRef<SessionEditOrCreateDialogComponent>;
 
-    constructor(private store: Store<State>,
-                private dialog: MatDialog,
-                private sessionCreationService: SessionsCreationService
+    constructor(private readonly store: Store<State>,
+                private readonly dialog: MatDialog,
+                private readonly sessionCreationService: SessionsCreationService
     ) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;

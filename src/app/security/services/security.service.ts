@@ -11,15 +11,15 @@ export class SecurityService {
     userSubject$: Subject<User> = new Subject();
     currentUser: User = User.emptyUser();
 
-    constructor(private http: HttpClient,
-                private config: AppConfig,
-                @Inject('STORAGE') private storage: Storage) {
+    constructor(private readonly http: HttpClient,
+                private readonly config: AppConfig,
+                @Inject('STORAGE') private storage: Storage) { // NOSONAR not readonly
         this.userSubject$.subscribe(user => this.currentUser = user);
     }
 
     authenticate(credentials, callback) {
         this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe(sigininResponse => {
-            let accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
+            const accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
             this.storage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
             return this.refreshAuthenticatedUserData(callback);
         });

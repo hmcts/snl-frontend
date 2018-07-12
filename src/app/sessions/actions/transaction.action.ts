@@ -47,20 +47,20 @@ export class GetTransactionUntilStartedOrConflict implements Action {
 export class GetProblemsForTransaction implements Action {
     readonly type = EntityTransactionActionTypes.GetProblemsForTransaction;
 
-    constructor(public payload: string | String) {
+    constructor(public payload: string) {
     }
 }
 
 export class ProblemsLoaded implements Action {
     readonly type = EntityTransactionActionTypes.ProblemsLoaded;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: string) {}
 }
 
 export class TransactionComplete implements Action {
     readonly type = EntityTransactionActionTypes.TransactionComplete;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: string) {}
 }
 
 export class RollbackTransaction implements Action {

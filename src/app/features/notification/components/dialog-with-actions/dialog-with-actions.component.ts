@@ -9,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 export class DialogWithActionsComponent {
 
     constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
-        data.okData = data.okData || true;
+        data.okData = (data.okData !== undefined) ? data.okData : true;
         data.declineData = data.declineData || false;
     }
 

@@ -5,7 +5,7 @@ import * as moment from 'moment';
 export class SessionsStatisticsService {
 
     calculateAllocatedHearingsDuration(session) {
-        let allocated = moment.duration();
+        let allocated = moment.duration(); // NOSONAR not const
         if (session.hearingParts !== undefined) {
             session.hearingParts.forEach(hearingPart => {
                 allocated.add(moment.duration(hearingPart.duration));
@@ -19,7 +19,7 @@ export class SessionsStatisticsService {
     }
 
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
-        let available = reservedDuration.asMinutes() - allocatedDuration.asMinutes();
+        const available = reservedDuration.asMinutes() - allocatedDuration.asMinutes();
         return available > 0 ? available : 0;
     }
 

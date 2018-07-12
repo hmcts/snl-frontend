@@ -5,7 +5,6 @@ import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, ret
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import { SearchFailed, SessionActionTypes, UpdateComplete } from '../actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
 import * as sessionTransactionActs from '../actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
@@ -66,7 +65,7 @@ export class SessionEffects {
             this.sessionsService.updateSession(action.payload, action.payload.version).pipe(
                 mergeMap((data) => [
                     new sessionTransactionActs.UpdateTransaction(data),
-                    new UpdateComplete()
+                    new sessionActions.UpdateComplete()
                 ]),
                 catchError((err) => of(new sessionActions.UpdateFailed(err.error)))
             )
@@ -103,7 +102,7 @@ export class SessionEffects {
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
                     if (transcation.status !== TransactionStatuses.STARTED && transcation.status !== TransactionStatuses.CONFLICT) {
-                        throw 'Transaction not started...';
+                        throw new Error('Transaction not started...');
                     } else {
                         return transcation;
                     }
@@ -180,7 +179,7 @@ export class SessionEffects {
 
     @Effect()
     load$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionActions.SearchForJudge>(SessionActionTypes.SearchForJudge),
+        ofType<sessionActions.SearchForJudge>(sessionActions.SessionActionTypes.SearchForJudge),
         mergeMap(action =>
             this.sessionsService.searchSessionsForJudge(action.payload).pipe(
                 // If successful, dispatch success action with result
@@ -190,14 +189,14 @@ export class SessionEffects {
                     new judgeActions.GetComplete(data.entities.persons)
                 ]),
                 // If request fails, dispatch failed action
-                catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed('Error: ' + err.error)))
             )
         )
     );
 
     @Effect()
     loadSessionsWithHearings$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionActions.SearchForJudgeWithHearings>(SessionActionTypes.SearchForJudgeWithHearings),
+        ofType<sessionActions.SearchForJudgeWithHearings>(sessionActions.SessionActionTypes.SearchForJudgeWithHearings),
         mergeMap(action =>
             this.sessionsService.searchSessionsForJudgeWithHearings(action.payload).pipe(
                 // If successful, dispatch success action with result
@@ -208,7 +207,7 @@ export class SessionEffects {
                     new hearingPartsActions.SearchComplete(data.entities.hearingParts)
                 ]),
                 // If request fails, dispatch failed action
-                catchError((err: HttpErrorResponse) => of(new SearchFailed('Error: ' + err.error)))
+                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed('Error: ' + err.error)))
             )
         )
     );
@@ -230,10 +229,10 @@ export class SessionEffects {
         )
     );
 
-    constructor(private sessionsService: SessionsService,
-                private transactionService: TransactionBackendService,
-                private problemsService: ProblemsService,
-                private store: Store<fromSessionIndex.State>,
-                private actions$: Actions) {
+    constructor(private readonly sessionsService: SessionsService,
+                private readonly transactionService: TransactionBackendService,
+                private readonly problemsService: ProblemsService,
+                private readonly store: Store<fromSessionIndex.State>,
+                private readonly actions$: Actions) {
     }
 }

@@ -21,5 +21,5 @@ export class RoomEffects {
         )
     );
 
-    constructor(private roomService: RoomService, private actions$: Actions) {}
+    constructor(private readonly roomService: RoomService, private readonly actions$: Actions) {}
 }

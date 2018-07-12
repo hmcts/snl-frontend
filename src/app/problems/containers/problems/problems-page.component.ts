@@ -15,7 +15,7 @@ export class ProblemsPageComponent implements OnInit {
 
     problems$: Observable<Problem[]>;
 
-    constructor(private store: Store<fromProblems.State>) {
+    constructor(private readonly store: Store<fromProblems.State>) {
         this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(data => data ? Object.values(data) : []));
     }
 

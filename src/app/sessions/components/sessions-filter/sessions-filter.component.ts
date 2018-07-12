@@ -16,8 +16,8 @@ export class SessionsFilterComponent implements OnInit {
   @Input() judges: Judge[];
   @Input() startDate;
   @Input() endDate;
-  roomsPlaceholder: String;
-  judgesPlaceholder: String;
+  roomsPlaceholder: string;
+  judgesPlaceholder: string;
   filters: SessionFilters;
   caseTypes;
 

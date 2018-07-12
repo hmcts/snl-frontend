@@ -27,7 +27,9 @@ export class SessionsCreateComponent implements OnInit {
     roomsLoading$: Observable<boolean>;
     dialogRef: any;
 
-    constructor(private store: Store<State>, public dialog: MatDialog, public sessionCreationService: SessionsCreationService) {
+    constructor(private readonly store: Store<State>,
+                public dialog: MatDialog,
+                public sessionCreationService: SessionsCreationService) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));

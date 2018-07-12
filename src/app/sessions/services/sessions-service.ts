@@ -15,9 +15,9 @@ import * as moment from 'moment';
 
 @Injectable()
 export class SessionsService {
-    constructor(private http: HttpClient, private config: AppConfig) {}
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {}
 
-    getSession(sessionId: string | String): Observable<any> {
+    getSession(sessionId: string): Observable<any> {
         return this.http
             .get<Session>(`${this.config.getApiUrl()}/sessions/${sessionId}`)
             .pipe(map(data => {return normalize(data, session)}));
@@ -30,8 +30,8 @@ export class SessionsService {
     }
 
     searchSessionsForDates(query: SessionQueryForDates): Observable<any> {
-        let fromDate = getHttpFriendly(query.startDate);
-        let toDate = getHttpFriendly(query.endDate);
+        const fromDate = getHttpFriendly(query.startDate);
+        const toDate = getHttpFriendly(query.endDate);
 
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
@@ -52,7 +52,7 @@ export class SessionsService {
 
     createSession(sessionCreate: SessionCreate): Observable<any> {
       return this.http
-        .put<String>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+        .put<string>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
     }
 
     /**
@@ -62,7 +62,7 @@ export class SessionsService {
     updateSession(update: any, version: number): Observable<any> {
         update.version = version;
         return this.http
-            .put<String>(`${this.config.getApiUrl()}/sessions/update`, update);
+            .put<string>(`${this.config.getApiUrl()}/sessions/update`, update);
     }
 
     searchSessionPropositions(params: SessionPropositionQuery) {
@@ -78,9 +78,9 @@ export class SessionsService {
     }
 
     private createSearchUrl(params: SessionPropositionQuery) {
-        let from = moment(params.from.setHours(0, 0, 0, 0)).format('YYYY-MM-DD HH:mm');
-        let to = moment(params.to.setHours(23, 59, 59, 999)).format('YYYY-MM-DD HH:mm');
-        let durationInSeconds = params.durationInMinutes * 60;
+        const from = moment(params.from.setHours(0, 0, 0, 0)).format('YYYY-MM-DD HH:mm');
+        const to = moment(params.to.setHours(23, 59, 59, 999)).format('YYYY-MM-DD HH:mm');
+        const durationInSeconds = params.durationInMinutes * 60;
 
         let query = `${this.config.getApiUrl()}/search?from=${from}&to=${to}&durationInSeconds=${durationInSeconds}`;
 
