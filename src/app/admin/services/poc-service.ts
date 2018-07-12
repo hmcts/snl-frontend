@@ -5,18 +5,18 @@ import { AppConfig } from '../../app.config';
 
 @Injectable()
 export class PocService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     loadRulesFromDb(): Observable<any> {
         return this.http
-            .post<String>(`${this.config.getApiUrl()}/poc/loaddb`, null, {
+            .post<string>(`${this.config.getApiUrl()}/poc/loaddb`, null, {
               headers: {'Content-Type': 'application/json'}});
     }
 
     inputTime(body): Observable<any> {
         return this.http
-            .put<String>(`${this.config.getApiUrl()}/time`, body, {
+            .put<string>(`${this.config.getApiUrl()}/time`, body, {
                 headers: {'Content-Type': 'application/json'}});
     }
 }

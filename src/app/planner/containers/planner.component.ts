@@ -29,7 +29,7 @@ export class PlannerComponent implements OnInit {
     private selectedSessionId;
     private latestEvent: any;
 
-    constructor(private store: Store<State>,
+    constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
                 public hearingModificationService: HearingPartModificationService,
@@ -117,7 +117,7 @@ export class PlannerComponent implements OnInit {
     }
 
     public drop(event) {
-        let selectedSessionId = this.selectedSessionId;
+        const selectedSessionId = this.selectedSessionId;
 
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();

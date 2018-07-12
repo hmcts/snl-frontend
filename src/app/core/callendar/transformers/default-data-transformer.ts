@@ -8,15 +8,15 @@ export class DefaultDataTransformer  implements IcalendarTransformer<SessionView
     constructor() {}
 
     transform(session: SessionViewModel) {
-        if ((<SessionViewModel>session).id === undefined) {
+        if (session.id === undefined) {
             return session;
         }
-        let judgeName = (session.person) ? session.person.name : 'No Judge';
-        let roomName = (session.room) ? session.room.name : 'No Room';
-        let caseType = (session.caseType) ? session.caseType : 'No Case type';
+        const judgeName = (session.person) ? session.person.name : 'No Judge';
+        const roomName = (session.room) ? session.room.name : 'No Room';
+        const caseType = (session.caseType) ? session.caseType : 'No Case type';
 
         return {
-            title: roomName + ' - ' + judgeName + ' - ' + caseType,
+            title: `${roomName} - ${judgeName} - ${caseType}`,
             start: moment(session.start),
             end: moment(moment(session.start).add(moment.duration(session.duration))),
             id: session.id,

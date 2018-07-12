@@ -11,7 +11,7 @@ import { ListingCreate } from '../models/listing-create';
 
 @Injectable()
 export class HearingPartService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     searchHearingParts(): Observable<any> {
@@ -26,9 +26,9 @@ export class HearingPartService {
                 {sessionId: query.sessionId, start: query.start, userTransactionId: query.userTransactionId});
     }
 
-    createListing(query: ListingCreate): Observable<String> {
+    createListing(query: ListingCreate): Observable<string> {
         return this.http
-            .put<String>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
+            .put<string>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }

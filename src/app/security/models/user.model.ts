@@ -8,7 +8,7 @@ export class User {
     xsrftoken: string;
 
     static emptyUser(): User {
-        let user = new User();
+        let user = new User(); // NOSONAR not const
         user.username = 'No User';
         return user;
     }
@@ -21,8 +21,7 @@ export class User {
         if (!roleName.startsWith('ROLE_')) {
             roleToSearch = 'ROLE_' + roleToSearch;
         }
-        let hasrole = this.authorities.filter(value => value.authority === roleToSearch).length > 0;
-        return hasrole;
+        return this.authorities.filter(value => value.authority === roleToSearch).length > 0;
     }
 }
 

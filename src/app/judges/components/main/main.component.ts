@@ -10,7 +10,7 @@ export class MainComponent implements OnInit {
 
     judge = '"Unknown name"';
 
-    constructor(private securityService: SecurityService) {
+    constructor(private readonly securityService: SecurityService) {
     }
 
     ngOnInit() {

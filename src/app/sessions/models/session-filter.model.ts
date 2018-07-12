@@ -1,8 +1,8 @@
 
 export interface SessionFilters {
-    caseTypes: String[];
-    rooms: String[];
-    judges: String[];
+    caseTypes: string[];
+    rooms: string[];
+    judges: string[];
     startDate: Date;
     endDate: Date;
     utilization: {

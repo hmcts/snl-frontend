@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit {
         if (value === undefined || this.dataTransformer === undefined) {
             return;
         }
-        let events = [];
+        let events = []; // NOSONAR typescript:S3353 not relevant
         value.forEach((element) => {
             events.push(this.dataTransformer.transform(element));
         });
@@ -113,7 +113,7 @@ export class CalendarComponent implements OnInit {
             el.append('</br>');
             el.append(hearing.caseTitle);
             el.append('  -  ' + hearing.hearingType);
-            el.append('  -  ' + moment.duration(hearing.duration).asMinutes() + ' minutes');
+            el.append(`  -   ${moment.duration(hearing.duration).asMinutes()} minutes`);
         });
 
         el = el.get(0);

@@ -10,7 +10,7 @@ export class HomeComponent {
 
     error;
 
-    constructor(private security: SecurityService) {
+    constructor(private readonly security: SecurityService) {
     }
 
     isInRole(roleType: string) {

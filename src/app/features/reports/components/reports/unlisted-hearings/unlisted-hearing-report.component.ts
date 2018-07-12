@@ -26,11 +26,14 @@ export class UnlistedHearingReportComponent implements OnChanges {
         this.dataSource = this.reportService.getUnlistedHearingRequests().map(this._generateTableData);
     }
 
-    private _generateTableData = (unlistedHearingReportEntries: UnlistedHearingReportEntry[]) => {
+    private readonly _generateTableData = (unlistedHearingReportEntries: UnlistedHearingReportEntry[]) => {
         let totalHearings = 0;
         let totalMinutes = 0;
 
-        unlistedHearingReportEntries.forEach(uhr => {totalHearings += uhr.hearings; totalMinutes += uhr.minutes});
+        unlistedHearingReportEntries.forEach(uhr => {
+            totalHearings += uhr.hearings;
+            totalMinutes += uhr.minutes;
+        });
 
         unlistedHearingReportEntries.push({title: 'Total', hearings: totalHearings, minutes: totalMinutes});
         return new MatTableDataSource(unlistedHearingReportEntries)

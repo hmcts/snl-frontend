@@ -24,6 +24,6 @@ export class ListingCreateEffects {
         )
     );
 
-    constructor(private hearingPartService: HearingPartService, private actions$: Actions) {
+    constructor(private readonly hearingPartService: HearingPartService, private readonly actions$: Actions) {
     }
 }

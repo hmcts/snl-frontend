@@ -29,5 +29,5 @@ export class GetComplete implements Action {
 export class GetFailed implements Action {
     readonly type = JudgeActionTypes.GetFailed;
 
-    constructor(public payload: String) {}
+    constructor(public payload: string) {}
 }
