@@ -23,7 +23,7 @@ import { v4 as uuid } from 'uuid';
 export class PlannerComponent implements OnInit {
 
     public view: string;
-    private lastSearchDateRange: SessionQueryForDates;
+    public lastSearchDateRange: SessionQueryForDates;
     private confirmationDialogRef;
     private confirmationDialogOpen;
     private selectedSessionId;
@@ -73,7 +73,7 @@ export class PlannerComponent implements OnInit {
         this.loadDataForAllJudges(this.lastSearchDateRange);
     }
 
-    private loadDataForAllJudges(query: SessionQueryForDates) {
+    public loadDataForAllJudges(query: SessionQueryForDates) {
         if (query === undefined) {
             return;
         }
@@ -81,20 +81,15 @@ export class PlannerComponent implements OnInit {
         this.lastSearchDateRange = query;
     }
 
-    private revertLatestEvent() {
-        if (this.latestEvent !== undefined) {
-            this.latestEvent.detail.revertFunc();
-        }
-    }
-
     public eventClick(eventId) {
         if (eventId instanceof CustomEvent) {
             return;
         }
+        const sessionViewModel = this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))),
+            data: new SessionDialogDetails(sessionViewModel),
             hasBackdrop: false
         });
     }
@@ -150,6 +145,12 @@ export class PlannerComponent implements OnInit {
             duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
             [resourceType]: resourceId,
         };
+    }
+
+    private revertLatestEvent() {
+        if (this.latestEvent !== undefined) {
+            this.latestEvent.detail.revertFunc();
+        }
     }
 
     private openConfirmationDialog() {
