@@ -3,7 +3,7 @@ import { IcalendarTransformer } from './icalendar-transformer';
 import * as moment from 'moment';
 import { EventsColorsForCasetype } from '../model/events-colors-for-casetype';
 
-export class DefaultDataTransformer  implements IcalendarTransformer<SessionViewModel> {
+export class DefaultDataTransformer implements IcalendarTransformer<SessionViewModel> {
 
     constructor() {}
 
