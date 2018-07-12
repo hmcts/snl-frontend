@@ -3,136 +3,142 @@ import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 import * as moment from 'moment';
 
-let component: CalendarComponent
-const testData: any[] = ['one', 'two', 'three']
-const testTransformer: IcalendarTransformer<string> = { transform: (element: string) => { return element } }
+let component: CalendarComponent;
+const testData: any[] = ['one', 'two', 'three'];
+const testTransformer: IcalendarTransformer<string> = {
+  transform: (element: string) => {
+    return element;
+  }
+};
 
 describe('CalendarComponent', () => {
-    beforeEach(() => {
-       component = new CalendarComponent();
+  beforeEach(() => {
+    component = new CalendarComponent();
+  });
+
+  describe('preTransformedData', () => {
+    it('should set events when value is defined', () => {
+      component.dataTransformer = testTransformer;
+      component.preTransformedData = testData;
+
+      expect(component.events).toEqual(testData);
     });
+    it('should not set events when  value is undefined', () => {
+      component.dataTransformer = testTransformer;
+      component.preTransformedData = undefined;
 
-    describe('preTransformedData', () => {
-        it('should set events when value is defined', () => {
-            component.dataTransformer = testTransformer;
-            component.preTransformedData = testData
-
-            expect(component.events).toEqual(testData);
-        });
-        it('should not set events when  value is undefined', () => {
-            component.dataTransformer = testTransformer;
-            component.preTransformedData = undefined
-
-            expect(component.events).not.toBeDefined();
-        });
+      expect(component.events).not.toBeDefined();
     });
+  });
 
-    describe('resources', () => {
-        it('should set resources when value is defined', () => {
-            component.resources = testData
-            expect(component._resources).toEqual(testData);
-        });
+  describe('resources', () => {
+    it('should set resources when value is defined', () => {
+      component.resources = testData;
+      expect(component._resources).toEqual(testData);
     });
+  });
 
-    describe('constructor', () => {
-        it('should set header', () => {
-            const expectedHeader = {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay,listMonth'
-            }
-            expect(component.header).toEqual(expectedHeader)
-        });
-        it('should set empty views', () => {
-            expect(component.views).toEqual({})
-        });
-        it('should set defaultView', () => {
-            expect(component.defaultView).toEqual('agendaDay')
-        });
+  describe('constructor', () => {
+    it('should set header', () => {
+      const expectedHeader = {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,listMonth'
+      };
+      expect(component.header).toEqual(expectedHeader);
     });
-
-    describe('ngOnInit', () => {
-        it('should set calendarOptions', () => {
-            component.ngOnInit()
-            expect(component.calendarOptions).toBeDefined();
-        });
+    it('should set empty views', () => {
+      expect(component.views).toEqual({});
     });
-
-    describe('refreshViewData', () => {
-        it('when loadData is defined should set header', () => {
-            const mockView = {
-                intervalEnd: moment(),
-                intervalStart: moment(),
-            }
-
-            component.ucCalendar = {fullCalendar: () => mockView} as NgFullCalendarComponent
-            const emitSpy = spyOn(component.loadData, 'emit')
-            component.refreshViewData()
-
-            expect(emitSpy).toHaveBeenCalled()
-        });
+    it('should set defaultView', () => {
+      expect(component.defaultView).toEqual('agendaDay');
     });
+  });
 
-    describe('clickButton', () => {
-        it('should remove all object from references', () => {
-            component.clickButton()
-            expect(component.references).toEqual([]);
-        });
+  describe('ngOnInit', () => {
+    it('should set calendarOptions', () => {
+      component.ngOnInit();
+      expect(component.calendarOptions).toBeDefined();
     });
+  });
 
-    describe('eventClick', () => {
-        it('should call emit on eventClickCallback with detail event id', () => {
-            const expectedEventId = 'some event id';
-            const event = { detail: { event: { id: expectedEventId}}}
-            const emitSpy = spyOn(component.eventClickCallback, 'emit')
+  describe('refreshViewData', () => {
+    it('when loadData is defined should set header', () => {
+      const mockView = {
+        intervalEnd: moment(),
+        intervalStart: moment()
+      };
 
-            component.eventClick(event);
+      component.ucCalendar = {
+        fullCalendar: () => mockView
+      } as NgFullCalendarComponent;
+      const emitSpy = spyOn(component.loadData, 'emit');
+      component.refreshViewData();
 
-            expect(emitSpy).toHaveBeenCalledWith(expectedEventId)
-        });
+      expect(emitSpy).toHaveBeenCalled();
     });
+  });
 
-    describe('eventDrop', () => {
-        it('should call emit on eventDropCallback with event', () => {
-            const event = { detail: { event: { start: moment(), end: moment() }}}
-            const emitSpy = spyOn(component.eventDropCallback, 'emit')
-
-            component.eventDrop(event);
-
-            expect(emitSpy).toHaveBeenCalledWith(event)
-        });
+  describe('clickButton', () => {
+    it('should remove all object from references', () => {
+      component.clickButton();
+      expect(component.references).toEqual([]);
     });
+  });
 
-    describe('drop', () => {
-        it('should call emit on dropCallback with event', () => {
-            const event = { detail: { event: { start: moment(), end: moment() }}}
-            const emitSpy = spyOn(component.dropCallback, 'emit')
+  describe('eventClick', () => {
+    it('should call emit on eventClickCallback with detail event id', () => {
+      const expectedEventId = 'some event id';
+      const event = { detail: { event: { id: expectedEventId } } };
+      const emitSpy = spyOn(component.eventClickCallback, 'emit');
 
-            component.drop(event);
+      component.eventClick(event);
 
-            expect(emitSpy).toHaveBeenCalledWith(event)
-        });
+      expect(emitSpy).toHaveBeenCalledWith(expectedEventId);
     });
+  });
 
-    describe('eventMouseOver', () => {
-        it('should call emit on eventMouseOverCallback with event', () => {
-            const event = { detail: { event: { start: moment(), end: moment() }}}
-            const emitSpy = spyOn(component.eventMouseOverCallback, 'emit')
+  describe('eventDrop', () => {
+    it('should call emit on eventDropCallback with event', () => {
+      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const emitSpy = spyOn(component.eventDropCallback, 'emit');
 
-            component.eventMouseOver(event);
+      component.eventDrop(event);
 
-            expect(emitSpy).toHaveBeenCalledWith(event)
-        });
+      expect(emitSpy).toHaveBeenCalledWith(event);
     });
+  });
 
-    describe('eventResize', () => {
-        it('should call emit on eventResize with event', () => {
-            const event = { detail: { event: { start: moment(), end: moment() }}}
-            const emitSpy = spyOn(component.eventResizeCallback, 'emit')
+  describe('drop', () => {
+    it('should call emit on dropCallback with event', () => {
+      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const emitSpy = spyOn(component.dropCallback, 'emit');
 
-            component.eventResize(event);
+      component.drop(event);
 
-            expect(emitSpy).toHaveBeenCalledWith(event)
-        });
+      expect(emitSpy).toHaveBeenCalledWith(event);
     });
+  });
+
+  describe('eventMouseOver', () => {
+    it('should call emit on eventMouseOverCallback with event', () => {
+      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const emitSpy = spyOn(component.eventMouseOverCallback, 'emit');
+
+      component.eventMouseOver(event);
+
+      expect(emitSpy).toHaveBeenCalledWith(event);
+    });
+  });
+
+  describe('eventResize', () => {
+    it('should call emit on eventResize with event', () => {
+      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const emitSpy = spyOn(component.eventResizeCallback, 'emit');
+
+      component.eventResize(event);
+
+      expect(emitSpy).toHaveBeenCalledWith(event);
+    });
+  });
 });
