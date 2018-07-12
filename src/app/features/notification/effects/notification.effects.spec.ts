@@ -7,15 +7,21 @@ import { CoreNotification } from '../model/core-notification';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { MatDialog, MatSnackBar } from '@angular/material';
 
 let notification = {
     message: 'test',
     duration: 1000
 } as CoreNotification;
 
+let snackBarSpy, dialogSpy;
+
 fdescribe('NotificationEffects', () => {
     let effects: NotificationEffects;
     let actions: Observable<any>;
+
+    snackBarSpy = jasmine.createSpyObj('snackBarSpy', ['open']);
+    dialogSpy = jasmine.createSpyObj('dialogSpy', ['open']);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -25,6 +31,14 @@ fdescribe('NotificationEffects', () => {
             providers: [
                 NotificationEffects,
                 provideMockActions(() => actions),
+                {
+                    provide: MatSnackBar,
+                    useValue: snackBarSpy
+                },
+                {
+                    provide: MatDialog,
+                    useValue: dialogSpy
+                }
                 // other providers
             ],
         });
@@ -35,40 +49,36 @@ fdescribe('NotificationEffects', () => {
     fdescribe('When calling', () => {
         it('notify the notification function should be called with proper parameters', () => {
             actions = new ReplaySubject(1);
-            let createNotificationSpy = spyOn(effects, 'createNotification');
 
             let notifyAction = new fromNotifications.Notify(notification);
 
             (actions as any).next(notifyAction);
 
             effects.create$.subscribe(() => {
-                expect(createNotificationSpy).toHaveBeenCalledWith(notifyAction);
+                expect(snackBarSpy.open).toHaveBeenCalled();
             });
         });
 
         it('open dialog the dialog function should be called with proper parameters', () => {
             actions = new ReplaySubject(1);
-            let openDialogSpy = spyOn(effects, 'openDialog');
-
             let openDialogAction = new fromNotifications.OpenDialog('test');
 
             (actions as any).next(openDialogAction);
 
-            effects.create$.subscribe(() => {
-                expect(openDialogSpy).toHaveBeenCalledWith(openDialogAction);
+            effects.openDialog$.subscribe(() => {
+                expect(dialogSpy.open.calls.first().args[1].data).toEqual('test');
             });
         });
 
         it('dialog with actions the dialog function should be called with proper parameters', () => {
             actions = new ReplaySubject(1);
-            let openDialogWithActionSpy = spyOn(effects, 'openDialog');
 
             let openDialogWithActionAction = new fromNotifications.OpenDialogWithAction('test');
 
             (actions as any).next(openDialogWithActionAction);
 
-            effects.create$.subscribe(() => {
-                expect(openDialogWithActionSpy).toHaveBeenCalledWith(openDialogWithActionAction);
+            effects.openDialogWithAction$.subscribe(() => {
+                expect(dialogSpy.open.calls.first().args[1].data).toEqual('test');
             });
         });
     })
