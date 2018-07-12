@@ -18,7 +18,7 @@ export class DraggableHearingPartComponent implements AfterViewChecked {
     ngAfterViewChecked() {
         ($('.draggable-hearing') as any).draggable({
             revert: false,
-            helper: function () { return $(this).clone()
+            helper() { return $(this).clone()
                 .css('pointer-events', 'none')
                 .appendTo('.container')
                 .show()

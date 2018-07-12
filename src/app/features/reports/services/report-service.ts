@@ -8,7 +8,7 @@ import { getHttpFriendly } from '../../../utils/date-utils';
 
 @Injectable()
 export class ReportService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     getUnlistedHearingRequests(): Observable<UnlistedHearingReportEntry[]> {
@@ -17,8 +17,8 @@ export class ReportService {
     }
 
     getListedHearingRequests(startDate: Date, endDate: Date): Observable<ListedHearingReportEntry[]> {
-        let start = getHttpFriendly(startDate);
-        let end = getHttpFriendly(endDate);
+        const start = getHttpFriendly(startDate);
+        const end = getHttpFriendly(endDate);
 
         return this.http
             .get<ListedHearingReportEntry[]>(`${this.config.getApiUrl()}/report/listed-hearing-requests?startDate=${start}&endDate=${end}`)

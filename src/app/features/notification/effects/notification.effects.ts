@@ -45,7 +45,7 @@ export class NotificationEffects {
         })
     );
 
-    constructor(private actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
+    constructor(private readonly actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
     }
 
     createNotification(action) {

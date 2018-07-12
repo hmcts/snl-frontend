@@ -26,7 +26,9 @@ export class CalendarContainerComponent implements OnInit {
     loadData;
     readonly dataTransformer: DefaultDataTransformer;
 
-    constructor(private store: Store<State>, private route: ActivatedRoute, private security: SecurityService,
+    constructor(private readonly store: Store<State>,
+                private readonly route: ActivatedRoute,
+                private readonly security: SecurityService,
                 public dialog: MatDialog) {
         this.dataTransformer = new DefaultDataTransformer();
         this.sessions$ = this.store.select(fromReducer.getFullSessions);

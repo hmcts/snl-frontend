@@ -6,7 +6,7 @@ import { AppConfig } from './app.config';
 @Injectable()
 export class AppConfigGuard implements CanActivate {
 
-    constructor(private appConfig: AppConfig) {}
+    constructor(private readonly appConfig: AppConfig) {}
 
     canActivate(
     next: ActivatedRouteSnapshot,

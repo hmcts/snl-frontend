@@ -30,13 +30,12 @@ export class GetComplete implements Action {
 export class GetFailed implements Action {
     readonly type = RoomActionTypes.GetFailed;
 
-    constructor(public payload: String) {}
+    constructor(public payload: string) {}
 }
 
 export class UpsertMany implements Action {
     readonly type = RoomActionTypes.UpsertMany;
 
     constructor(public payload: Room[]) {
-        console.log(this.type);
     }
 }

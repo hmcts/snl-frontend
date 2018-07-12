@@ -35,16 +35,12 @@ export function reducer(state: State = initialState, action) {
     case HearingPartActionTypes.CreateComplete: {
         return {...state, loading: false};
     }
-    case HearingPartActionTypes.AssignComplete: {
-      return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
-              {...state, loading: false} )};
-    }
     case HearingPartActionTypes.UpsertOne: {
       return {...state, ...adapter.upsertOne({id: action.payload.id, changes: action.payload},
               {...state, loading: false} )};
     }
     case HearingPartActionTypes.UpsertMany: {
-        let updatedCollection = Object.values(action.payload || []).map((hearingPart: HearingPart) => {
+        const updatedCollection = Object.values(action.payload || []).map((hearingPart: HearingPart) => {
             return {
                 id: hearingPart.id,
                 changes: hearingPart

@@ -41,11 +41,10 @@ export class SessionsSearchComponent implements OnInit {
     selectedSession: any;
     selectedHearingPartId;
     filteredSessions$: Observable<SessionViewModel[]>;
-    sessionsStatsService: SessionsStatisticsService;
     filters$ = new Subject<SessionFilters>();
 
-    constructor(private store: Store<fromHearingParts.State>,
-                sessionsStatisticsService: SessionsStatisticsService,
+    constructor(private readonly store: Store<fromHearingParts.State>,
+                private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
@@ -59,7 +58,6 @@ export class SessionsSearchComponent implements OnInit {
         this.selectedHearingPartId = '';
         this.selectedSession = {};
         this.filteredSessions$ = this.sessions$;
-        this.sessionsStatsService = sessionsStatisticsService;
     }
 
     ngOnInit() {
@@ -117,8 +115,8 @@ export class SessionsSearchComponent implements OnInit {
         Object.values(filters).forEach((filter: UtilizationFilter) => {
             if (filter.active) {
                 anyFilterActive = true;
-                let allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
-                let sessionUtilization = this.sessionsStatsService
+                const allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
+                const sessionUtilization = this.sessionsStatsService
                     .calculateUtilizedDuration(moment.duration(session.duration), allocated);
                 if (sessionUtilization >= filter.from && sessionUtilization <= filter.to) {
                     matches = true;

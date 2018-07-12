@@ -10,7 +10,7 @@ import { problems } from '../../core/schemas/data.schema';
 @Injectable()
 export class ProblemsService {
 
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     get(): Observable<any> {
@@ -19,7 +19,7 @@ export class ProblemsService {
             .pipe(map(this.normalizeProblems));
     }
 
-    getForTransaction(id: string | number | String): Observable<any> {
+    getForTransaction(id: string | number): Observable<any> {
         return this.http
             .get<Problem[]>(`${this.config.getApiUrl()}/problems/by-user-transaction-id?id=${id}`)
             .pipe(map(this.normalizeProblems));

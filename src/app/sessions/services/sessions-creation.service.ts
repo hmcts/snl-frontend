@@ -10,14 +10,14 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class SessionsCreationService {
-    constructor(private store: Store<State>) {
+    constructor(private readonly store: Store<State>) {
     }
 
     create(session: SessionCreate) {
-        let transactionId = uuid();
+        const transactionId = uuid();
 
         session.userTransactionId = transactionId;
-        let transaction = this.createTransaction(session.id, transactionId);
+        const transaction = this.createTransaction(session.id, transactionId);
 
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Create(session));
@@ -25,18 +25,14 @@ export class SessionsCreationService {
     }
 
     update(session: any) {
-        let transactionId = uuid();
+        const transactionId = uuid();
 
         session.userTransactionId = transactionId;
-        let transaction = this.createTransaction(session.id, transactionId);
+        const transaction = this.createTransaction(session.id, transactionId);
 
-        // this.store.select(fromSessions.getSessionById(session.id))
-        //     .subscribe((storeSession: Session) => {
-        //         session.version = storeSession.version;
-                this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
-                this.store.dispatch(new SessionActions.Update(session));
-                this.store.dispatch(new ProblemsActions.RemoveAll());
-            // }).unsubscribe();
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
+        this.store.dispatch(new SessionActions.Update(session));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
     }
 
     private createTransaction(sessionId, transactionId): EntityTransaction {

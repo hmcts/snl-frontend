@@ -9,7 +9,7 @@ import * as ProblemsActions from '../../problems/actions/problem.action';
 
 @Injectable()
 export class HearingPartModificationService {
-    constructor(private store: Store<fromHearingParts.State>) {
+    constructor(private readonly store: Store<fromHearingParts.State>) {
     }
 
     assignHearingPartWithSession(assignment: SessionAssignment) {

@@ -28,8 +28,8 @@ export class TransactionDialogComponent {
   transactionId: string;
 
   constructor(
-      private dialogRef: MatDialogRef<TransactionDialogComponent>,
-      private store: Store<State>) {
+      private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
+      private readonly store: Store<State>) {
       this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
       this.transacted$ = this.transactionStatus$.pipe(map(status => status.completed));

@@ -1,8 +1,8 @@
 export const AuthorizationHeaderName = 'Authorization';
 
 export class AccessToken {
-    accessToken: string | String = '';
-    tokenType: string | String = '';
+    accessToken = '';
+    tokenType = '';
 
     constructor(accessToken: string, tokenType: string) {
         this.accessToken = accessToken;

@@ -27,7 +27,7 @@ export class Get implements Action {
 export class GetForSession implements Action {
     readonly type = ProblemActionTypes.GetForSession;
 
-    constructor(public payload: string | number | String) {
+    constructor(public payload: string | number) {
     }
 }
 
@@ -48,7 +48,7 @@ export class UpsertMany implements Action {
 export class GetFailed implements Action {
     readonly type = ProblemActionTypes.GetFailed;
 
-    constructor(public payload: String) {
+    constructor(public payload: string) {
     }
 }
 

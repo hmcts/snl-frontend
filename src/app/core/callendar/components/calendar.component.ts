@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit {
         if (value === undefined || this.dataTransformer === undefined) {
             return;
         }
-        let events = [];
+        let events = []; // NOSONAR typescript:S3353 not relevant
         value.forEach((element) => {
             events.push(this.dataTransformer.transform(element));
         });
@@ -66,47 +66,6 @@ export class CalendarComponent implements OnInit {
         this.defaultView = 'agendaDay';
     }
 
-    public refreshViewData() {
-        if (this.loadData === undefined) {
-            return;
-        }
-
-        let dateRange = this.parseDates();
-        if (dateRange === undefined) {
-            return;
-        }
-
-        this.loadData.emit(dateRange);
-    }
-
-    clickButton(model: any) {
-        this.refreshViewData();
-        this.references = [];
-    }
-
-    // A function for displaying ellipsis that can be used in further stories
-    applyEllipsis() {
-        this.references.forEach(el => {
-            let wordArray = el.innerHTML.split(' ');
-            while (el.scrollHeight > el.offsetHeight) {
-                wordArray.pop();
-                el.innerHTML = wordArray.join(' ') + '...';
-            }
-        });
-    }
-
-    parseDates() {
-        if (this.ucCalendar === undefined) {
-            return undefined;
-        }
-
-        let view = this.ucCalendar.fullCalendar('getView') as Default;
-        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
-        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
-
-        return {startDate: startDate, endDate: endDate};
-    }
-
     ngOnInit() {
         this.calendarOptions = {
             // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -133,8 +92,18 @@ export class CalendarComponent implements OnInit {
         }
     }
 
-    public calendarInitialized() {
+    public refreshViewData() {
+        let dateRange = this.parseDates();
+        if (dateRange === undefined) {
+            return;
+        }
+
+        this.loadData.emit(dateRange);
+    }
+
+    public clickButton() {
         this.refreshViewData();
+        this.references = [];
     }
 
     public eventRender(event) {
@@ -144,7 +113,7 @@ export class CalendarComponent implements OnInit {
             el.append('</br>');
             el.append(hearing.caseTitle);
             el.append('  -  ' + hearing.hearingType);
-            el.append('  -  ' + moment.duration(hearing.duration).asMinutes() + ' minutes');
+            el.append(`  -   ${moment.duration(hearing.duration).asMinutes()} minutes`);
         });
 
         el = el.get(0);
@@ -174,6 +143,18 @@ export class CalendarComponent implements OnInit {
 
     public eventResize(event) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
+    }
+
+    private parseDates() {
+        if (this.ucCalendar === undefined) {
+            return undefined;
+        }
+
+        let view = this.ucCalendar.fullCalendar('getView') as Default;
+        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+
+        return {startDate: startDate, endDate: endDate};
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
