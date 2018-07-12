@@ -1,6 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { SessionCreationSummary } from '../../models/session-creation-summary';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -18,7 +17,6 @@ import * as fromProblems from '../../../problems/reducers';
   styleUrls: ['./transaction-dialog.component.scss']
 })
 export class TransactionDialogComponent {
-
   problems$: Observable<Problem[]>;
   transactionStatus$: Observable<EntityTransaction>;
   transacted$: Observable<boolean>;
@@ -27,16 +25,12 @@ export class TransactionDialogComponent {
   conflicted$: Observable<boolean>;
   buttonText$: Observable<string>;
   okAction: Action;
-
   transactionId: string;
 
   constructor(
-      public dialogRef: MatDialogRef<TransactionDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: SessionCreationSummary,
-      private readonly store: Store<State>) {
-      this.problems$ = combineLatest(this.store.pipe(select(fromProblems.getProblems)),
-          this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionId)),
-          (problems, id) => {return Object.values(problems)});
+      private dialogRef: MatDialogRef<TransactionDialogComponent>,
+      private store: Store<State>) {
+      this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentlyCreatedSessionStatus));
       this.transacted$ = this.transactionStatus$.pipe(map(status => status.completed));
       this.conflicted$ = this.transactionStatus$.pipe(map(status => status.conflicted));
@@ -56,7 +50,7 @@ export class TransactionDialogComponent {
     this.dispatchAndClose(new RollbackTransaction(this.transactionId));
   }
 
-  private dispatchAndClose(action) {
+  private dispatchAndClose(action: Action) {
       if (action !== null) {
           this.store.dispatch(action);
       }
