@@ -31,6 +31,31 @@ let component: SessionsCreateComponent;
 let storeSpy: jasmine.Spy;
 let store: Store<State>;
 
+const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
+
+let getCreatedSessionResponse = (sessionId: string) => {
+    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'caseType': 'SCLAIMS', 'room': null}
+}
+
+let getTransactionStartedResponse = (id: string) => {
+    return {'id': id, 'status': 'STARTED', 'rulesProcessingStatus': 'COMPLETE'}
+}
+
+let getTransactionCommittedResponse = (id: string) => {
+    return {'id': id, 'status': 'COMMITTED', 'rulesProcessingStatus': 'COMPLETE'}
+}
+
+let getTransactionRolledbackResponse = (id: string) => {
+    return {'id': id, 'status': 'ROLLEDBACK', 'rulesProcessingStatus': 'COMPLETE'}
+}
+
+let getCreateSessionUrl = () => `${mockedAppConfig.getApiUrl()}/sessions`;
+let getGetProblemsUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/problems/by-user-transaction-id?id=${transactionId}`;
+let getCommitTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/commit`;
+let getRollbackTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/rollback`;
+let getSessionByIdUrl = (sessionId) => `${mockedAppConfig.getApiUrl()}/sessions/${sessionId}`;
+let getGetHearingPartsUrl = () => `${mockedAppConfig.getApiUrl()}/hearing-part`;
+
 describe('SessionsCreateComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -132,28 +157,3 @@ describe('SessionsCreateComponent', () => {
         });
     })
 });
-
-const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
-
-let getCreatedSessionResponse = (sessionId: string) => {
-    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'caseType': 'SCLAIMS', 'room': null}
-}
-
-let getTransactionStartedResponse = (id: string) => {
-    return {'id': id, 'status': 'STARTED', 'rulesProcessingStatus': 'COMPLETE'}
-}
-
-let getTransactionCommittedResponse = (id: string) => {
-    return {'id': id, 'status': 'COMMITTED', 'rulesProcessingStatus': 'COMPLETE'}
-}
-
-let getTransactionRolledbackResponse = (id: string) => {
-    return {'id': id, 'status': 'ROLLEDBACK', 'rulesProcessingStatus': 'COMPLETE'}
-}
-
-let getCreateSessionUrl = () => `${mockedAppConfig.getApiUrl()}/sessions`;
-let getGetProblemsUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/problems/by-user-transaction-id?id=${transactionId}`;
-let getCommitTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/commit`;
-let getRollbackTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/rollback`;
-let getSessionByIdUrl = (sessionId) => `${mockedAppConfig.getApiUrl()}/sessions/${sessionId}`;
-let getGetHearingPartsUrl = () => `${mockedAppConfig.getApiUrl()}/hearing-part`;
