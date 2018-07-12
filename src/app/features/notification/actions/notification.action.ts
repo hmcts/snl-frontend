@@ -36,5 +36,5 @@ export class OpenDialogWithAction implements Action {
 export class Dismiss implements Action {
     readonly type = NotificationActionTypes.Dismiss;
 
-    constructor(public payload: string = null) {}
+    constructor() {}
 }
