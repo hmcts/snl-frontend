@@ -21,7 +21,7 @@ export function reducer(state: State = initialState, action) {
         return {...state, notification: action.payload, isDismissed: false};
     }
     case NotificationActionTypes.Dismiss: {
-        return {...state, notification: action.payload, isDismissed: true};
+        return {...state, isDismissed: true};
     }
     default:
         return state;
