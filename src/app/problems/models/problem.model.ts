@@ -5,5 +5,5 @@ export interface Problem {
     message: string;
     severity: string;
     type: string;
-    references: [ProblemReference];
+    references: ProblemReference[];
 }

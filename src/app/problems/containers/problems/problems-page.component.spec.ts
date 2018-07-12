@@ -28,7 +28,7 @@ const problems = [
 ] as Problem[];
 
 describe('ProblemsPageComponent', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 StoreModule.forRoot({}),
