@@ -16,7 +16,7 @@ let notification = {
 
 let snackBarSpy, dialogSpy;
 
-fdescribe('NotificationEffects', () => {
+describe('NotificationEffects', () => {
     let effects: NotificationEffects;
     let actions: Observable<any>;
 
@@ -39,7 +39,7 @@ fdescribe('NotificationEffects', () => {
         effects = TestBed.get(NotificationEffects);
     });
 
-    fdescribe('When calling', () => {
+    describe('When calling', () => {
         it('notify the notification function should be called with proper parameters', () => {
             actions = new ReplaySubject(1);
 
