@@ -31,15 +31,8 @@ fdescribe('NotificationEffects', () => {
             providers: [
                 NotificationEffects,
                 provideMockActions(() => actions),
-                {
-                    provide: MatSnackBar,
-                    useValue: snackBarSpy
-                },
-                {
-                    provide: MatDialog,
-                    useValue: dialogSpy
-                }
-                // other providers
+                { provide: MatSnackBar, useValue: snackBarSpy },
+                { provide: MatDialog, useValue: dialogSpy }
             ],
         });
 
