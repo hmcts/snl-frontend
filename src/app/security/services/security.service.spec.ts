@@ -38,7 +38,7 @@ const creds = {'username': 'officer1', 'password': 'password'};
 const exampleUserData = Object.assign(new User(), userResponse);
 
 describe('Security Service', () => {
-    beforeAll(() => {
+    beforeEach(() => {
 
         storageSpy = jasmine.createSpyObj('storage', ['removeItem', 'setItem']);
         TestBed.configureTestingModule({
