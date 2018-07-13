@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
     returnUrl: string;
 
     constructor(private readonly security: SecurityService,
-                private readonly router: Router,
+                readonly router: Router,
                 private readonly route: ActivatedRoute) {
         this.route.queryParamMap.subscribe(params => {
             this.returnUrl = params.get('returnUrl');
