@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material';
 import * as judgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers/index';
 import { JudgePlannerComponent } from './judge-planner.component';
+import { Judge } from '../../../judges/models/judge.model';
 
 let store: Store<fromHearingParts.State>;
 let storeSpy: jasmine.Spy;
@@ -13,7 +14,9 @@ let component: JudgePlannerComponent;
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
-fdescribe('JudgePlannerComponent', () => {
+const mockedJudges: Judge[] = [{ id: 'judge-id', name: 'some-judge-name' }];
+
+describe('JudgePlannerComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -33,36 +36,36 @@ fdescribe('JudgePlannerComponent', () => {
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
 
-  describe('constructor', () => {
-    it('should be defined', () => {
+  describe('When creating the component', () => {
+    it('it should be defined', () => {
       expect(component).toBeDefined();
     });
-    it('should set proper config', () => {
-        let defaultView = 'timelineWeek';
-        let header = {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'timelineDay,timelineWeek,timelineMonth'
-        };
-        let views = {
-            timelineDay: {
-                slotDuration: '00:10'
-            },
-            timelineWeek: {
-                slotDuration: '00:30'
-            }
-        };
-
-        expect(component.defaultView).toEqual(defaultView);
-        expect(component.header).toEqual(header);
-        expect(component.views).toEqual(views);
+    it('proper config values should be set', () => {
+        expect(component.defaultView).toBeDefined();
+        expect(component.header).toBeDefined();
+        expect(component.views).toBeDefined();
     });
 
-    describe('ngOnInit', () => {
-      it('should dispatch Judge Get action', () => {
+    describe('When calling ngOnInit', () => {
+      it('the Judge Get action should be dispatched', () => {
         component.ngOnInit();
         const action = storeSpy.calls.argsFor(0)[0];
         expect(action instanceof judgeActions.Get).toBeTruthy();
+      });
+    });
+
+    describe('When configuring the view', () => {
+      it('the resources should be generated person-wise', () => {
+        store.dispatch(new judgeActions.GetComplete(mockedJudges));
+        component.configureJudgeView();
+        let judge = component.resources.find(r => r.id === 'person-judge-id');
+        expect(judge).toBeDefined()
+      });
+      it('the first resource should be for the "not allocated" slot', () => {
+          store.dispatch(new judgeActions.GetComplete(mockedJudges));
+          component.configureJudgeView();
+          let judge = component.resources.find(r => r.id === 'person-empty');
+          expect(judge).toBeDefined()
       });
     });
 
@@ -89,11 +92,9 @@ fdescribe('JudgePlannerComponent', () => {
             }
         ];
 
-      let outputSpy;
-
       outputs.forEach(output => {
           it(`'${output.func}' then the '${output.emitter}' should be emitted`, () => {
-              outputSpy = spyOn(component[output.emitter as any], 'emit');
+              let outputSpy = spyOn(component[output.emitter as any], 'emit');
 
               component[output.func]('any');
 
