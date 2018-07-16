@@ -93,7 +93,7 @@ export class CalendarComponent implements OnInit {
     }
 
     public refreshViewData() {
-        let dateRange = this.parseDates();
+        const dateRange = this.parseDates();
         if (dateRange === undefined) {
             return;
         }
@@ -150,11 +150,11 @@ export class CalendarComponent implements OnInit {
             return undefined;
         }
 
-        let view = this.ucCalendar.fullCalendar('getView') as Default;
-        let endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
-        let startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+        const view = this.ucCalendar.fullCalendar('getView') as Default;
+        const endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
+        const startDate = view.intervalStart.toDate() || new Date('2018-04-23');
 
-        return {startDate: startDate, endDate: endDate};
+        return {startDate, endDate};
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
