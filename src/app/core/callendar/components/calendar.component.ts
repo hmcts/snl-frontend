@@ -145,14 +145,14 @@ export class CalendarComponent implements OnInit {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
     }
 
-    private parseDates() {
+    private parseDates(): {startDate: moment.Moment, endDate: moment.Moment} {
         if (this.ucCalendar === undefined) {
             return undefined;
         }
 
         const view = this.ucCalendar.fullCalendar('getView') as Default;
-        const endDate = view.intervalEnd.toDate() || new Date('2018-04-29');
-        const startDate = view.intervalStart.toDate() || new Date('2018-04-23');
+        const endDate = view.intervalEnd;
+        const startDate = view.intervalStart;
 
         return {startDate, endDate};
     }

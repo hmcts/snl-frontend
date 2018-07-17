@@ -9,7 +9,7 @@ import * as notificationActions from '../../features/notification/actions/notifi
 import * as sessionTransactionActs from '../actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as problemActions from '../../problems/actions/problem.action';
-import * as fromSessionIndex from '../reducers/index';
+import * as fromSessionIndex from '../reducers';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';

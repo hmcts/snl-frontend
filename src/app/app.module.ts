@@ -105,8 +105,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-        {provide: LOCALE_ID, useValue: 'en-GB'},
-        {provide: 'STORAGE', useFactory: getLocalStorage}
+        {provide: LOCALE_ID, useValue: AppConfig.locale},
+        {provide: 'STORAGE', useFactory: getLocalStorage},
     ],
     bootstrap: [AppComponent]
 })

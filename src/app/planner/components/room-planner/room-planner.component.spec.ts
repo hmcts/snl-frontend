@@ -1,8 +1,8 @@
-import { Get, GetComplete } from './../../../rooms/actions/room.action';
+import { Get, GetComplete } from '../../../rooms/actions/room.action';
 import { RoomPlannerComponent } from './room-planner.component';
-import { Store, StoreModule } from '../../../../../node_modules/@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { TestBed } from '../../../../../node_modules/@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import * as sessionReducers from '../../../sessions/reducers';
 import { SearchComplete } from '../../../sessions/actions/session.action';
 import { Session } from '../../../sessions/models/session.model';

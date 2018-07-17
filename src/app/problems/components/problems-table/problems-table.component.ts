@@ -1,4 +1,4 @@
-import { ProblemReference } from './../../models/problem-reference.model';
+import { ProblemReference } from '../../models/problem-reference.model';
 import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { Problem } from '../../models/problem.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
