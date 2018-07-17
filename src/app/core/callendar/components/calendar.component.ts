@@ -150,9 +150,9 @@ export class CalendarComponent implements OnInit {
             return undefined;
         }
 
-        let view = this.ucCalendar.fullCalendar('getView') as Default;
-        let endDate = view.intervalEnd;
-        let startDate = view.intervalStart;
+        const view = this.ucCalendar.fullCalendar('getView') as Default;
+        const endDate = view.intervalEnd;
+        const startDate = view.intervalStart;
 
         return {startDate, endDate};
     }
