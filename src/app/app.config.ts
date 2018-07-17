@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class AppConfig {
 
+  static locale = 'en-GB';
+
   protected config: Config;
 
   constructor(private readonly http: HttpClient) {}
