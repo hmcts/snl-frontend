@@ -4,8 +4,8 @@ import { SearchForDates } from '../../actions/session.action';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
-import * as fromSessions from '../../reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
+import * as fromSessions from '../../reducers';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
@@ -14,7 +14,7 @@ import * as RoomActions from '../../../rooms/actions/room.action';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
-import * as fromJudges from '../../../judges/reducers/index';
+import * as fromJudges from '../../../judges/reducers';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
@@ -32,8 +32,8 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 })
 export class SessionsSearchComponent implements OnInit {
 
-    startDate: Date;
-    endDate: Date;
+    startDate: moment.Moment;
+    endDate: moment.Moment;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
@@ -53,8 +53,8 @@ export class SessionsSearchComponent implements OnInit {
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
-        this.startDate = moment().toDate();
-        this.endDate = moment().add(5, 'years').toDate();
+        this.startDate = moment();
+        this.endDate = moment().add(5, 'years');
         this.selectedHearingPartId = '';
         this.selectedSession = {};
         this.filteredSessions$ = this.sessions$;

@@ -1,7 +1,7 @@
-import { TestBed } from '../../../../node_modules/@angular/core/testing';
-import { StoreModule, Store, ActionsSubject } from '../../../../node_modules/@ngrx/store';
+import { TestBed } from '@angular/core/testing';
+import { StoreModule, Store, ActionsSubject } from '@ngrx/store';
 import { PlannerComponent } from './planner.component';
-import { MatDialog } from '../../../../node_modules/@angular/material';
+import { MatDialog } from '@angular/material';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { State } from '../../app.state';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
@@ -11,7 +11,7 @@ import { SearchForDates, UpdateComplete, UpdateFailed } from '../../sessions/act
 import { Observable } from '../../../../node_modules/rxjs/Observable';
 import { TransactionConflicted } from '../../sessions/actions/transaction.action';
 import { EntityTransaction } from '../../sessions/models/transaction-status.model';
-import * as sessionReducers from '../../sessions/reducers/index';
+import * as sessionReducers from '../../sessions/reducers';
 
 let component: PlannerComponent;
 let store: Store<State>;
@@ -46,10 +46,8 @@ const openDialogMockObj = {
   afterClosed: (): Observable<boolean> => new Observable(() => {})
 };
 const sessionQuery: SessionQueryForDates = {
-    startDate: moment().toDate(),
-    endDate: moment()
-      .add(1, 'day')
-      .toDate()
+    startDate: moment(),
+    endDate: moment().add(1, 'day')
 };
 
 describe('PlannerComponent', () => {

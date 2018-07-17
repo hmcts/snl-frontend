@@ -1,9 +1,10 @@
+import * as moment from 'moment'
 
 export interface SessionQuery {
-  date: Date;
+  date: moment.Moment;
 }
 
 export interface SessionQueryForDates {
-    startDate: Date;
-    endDate: Date;
+    startDate: moment.Moment;
+    endDate: moment.Moment;
 }

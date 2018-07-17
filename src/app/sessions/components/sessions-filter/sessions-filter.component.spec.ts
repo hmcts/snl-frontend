@@ -27,10 +27,8 @@ describe('SessionsFilterComponent', () => {
         caseTypes: [],
         rooms: [],
         judges: [],
-        startDate: moment().toDate(),
-        endDate: moment()
-          .add(1, 'day')
-          .toDate(),
+        startDate: moment(),
+        endDate: moment().add(1, 'day'),
         utilization: {
           unlisted: {
             active: false,
