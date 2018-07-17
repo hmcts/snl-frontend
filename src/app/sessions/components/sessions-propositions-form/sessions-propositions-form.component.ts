@@ -12,8 +12,8 @@ import * as moment from 'moment'
 export class SessionsPropositionsFormComponent implements OnInit {
 
     searchParams = {
-        from: new Date(),
-        to: new Date(),
+        from: moment(),
+        to:  moment(),
         durationInMinutes: 1,
         roomId: null,
         judgeId: null
@@ -21,8 +21,8 @@ export class SessionsPropositionsFormComponent implements OnInit {
     roomsPlaceholder: string;
     judgesPlaceholder: string;
 
-    minStartDate = new Date();
-    get minEndDate(): Date {
+    minStartDate =  moment();
+    get minEndDate(): moment.Moment {
         if ( moment(this.searchParams.from).isAfter(moment(this.minStartDate)) ) {
             return this.searchParams.from;
         } else {

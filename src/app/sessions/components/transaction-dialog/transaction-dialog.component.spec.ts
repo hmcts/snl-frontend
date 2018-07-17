@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as fromProblems from '../../../problems/reducers';
 import { MatDialogRef } from '@angular/material';
-import * as sessionReducers from './../../reducers/index';
+import * as sessionReducers from '../../reducers';
 import { TransactionDialogComponent } from './transaction-dialog.component';
 import * as problemActions from '../../../problems/actions/problem.action';
 import { Problem } from '../../../problems/models/problem.model';

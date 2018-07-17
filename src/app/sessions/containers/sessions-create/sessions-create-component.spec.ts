@@ -1,11 +1,11 @@
-import * as sessionReducers from './../../reducers/index';
-import * as judgesReducers from './../../../judges/reducers/index';
-import { AngularMaterialModule } from './../../../../angular-material/angular-material.module';
+import * as sessionReducers from '../../reducers';
+import * as judgesReducers from '../../../judges/reducers';
+import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { select, Store, StoreModule } from '@ngrx/store';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
@@ -103,7 +103,7 @@ describe('SessionsCreateComponent', () => {
             let session = {
                 userTransactionId: undefined,
                 id: sessionId,
-                start: moment().toDate(),
+                start: moment(),
                 duration: 1800,
                 roomId: null,
                 personId: null,
@@ -133,7 +133,7 @@ describe('SessionsCreateComponent', () => {
             let session = {
                 userTransactionId: undefined,
                 id: sessionId,
-                start: moment().toDate(),
+                start: moment(),
                 duration: 1800,
                 roomId: null,
                 personId: null,

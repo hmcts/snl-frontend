@@ -1,20 +1,20 @@
-import { SessionAssignment } from './../../../hearing-part/models/session-assignment';
-import { Judge } from './../../../judges/models/judge.model';
-import * as sessionReducers from './../../reducers/index';
-import { Room } from './../../../rooms/models/room.model';
-import { HearingPart } from './../../../hearing-part/models/hearing-part';
-import { AngularMaterialModule } from './../../../../angular-material/angular-material.module';
+import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { Judge } from '../../../judges/models/judge.model';
+import * as sessionReducers from '../../reducers';
+import { Room } from '../../../rooms/models/room.model';
+import { HearingPart } from '../../../hearing-part/models/hearing-part';
+import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
 import { SessionsSearchComponent } from './sessions-search.component';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.action';
 import * as moment from 'moment';
 import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
-import * as judgesReducers from '../../../judges/reducers/index';
+import * as judgesReducers from '../../../judges/reducers';
 import * as sessionsActions from '../../actions/session.action';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { Session } from '../../models/session.model';
@@ -173,9 +173,7 @@ describe('SessionsSearchComponent', () => {
       let startDayAsTomorrowFilters: SessionFilters;
       beforeEach(() => {
         startDayAsTomorrowFilters = defaultSessionFilter();
-        startDayAsTomorrowFilters.startDate = moment()
-          .add(1, 'day')
-          .toDate();
+        startDayAsTomorrowFilters.startDate = moment().add(1, 'day');
         component.filterSessions([], startDayAsTomorrowFilters);
       });
       it('should dispatch [Session] SearchForDates action', () => {
@@ -358,10 +356,8 @@ function defaultSessionFilter(): SessionFilters {
     caseTypes: [],
     rooms: [],
     judges: [],
-    startDate: new Date(),
-    endDate: moment()
-      .add(2, 'day')
-      .toDate(),
+    startDate: moment(),
+    endDate: moment().add(2, 'day'),
     utilization: {
       unlisted: {
         active: false,

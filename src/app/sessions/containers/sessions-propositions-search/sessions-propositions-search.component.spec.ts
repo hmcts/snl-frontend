@@ -1,15 +1,15 @@
-import { SessionPropositionQuery } from './../../models/session-proposition-query.model';
+import { SessionPropositionQuery } from '../../models/session-proposition-query.model';
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import { SessionsPropositionsSearchComponent } from './sessions-propositions-search.component';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import * as roomActions from '../../../rooms/actions/room.action';
 import { Room } from '../../../rooms/models/room.model';
 import { MatDialog } from '@angular/material';
-import * as sessionReducers from './../../reducers/index';
+import * as sessionReducers from '../../reducers';
 import * as judgeActions from '../../../judges/actions/judge.action';
-import * as judgesReducers from '../../../judges/reducers/index';
+import * as judgesReducers from '../../../judges/reducers';
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionsActions from '../../actions/session.action';
 import { SessionProposition } from '../../models/session-proposition.model';
@@ -32,7 +32,7 @@ const sessionsCreationServiceSpy = jasmine.createSpyObj(
 );
 const mockedJudges: Judge[] = [{ id: judgeId, name: 'some-judge-name' }];
 const sessionPropositions: SessionProposition[] = [
-  { start: new Date(), end: new Date(), judgeId: judgeId, roomId: roomId }
+  { start: moment(), end: moment(), judgeId: judgeId, roomId: roomId }
 ];
 const sessionPropositionViewsMock: SessionPropositionView[] = [
   {
@@ -52,8 +52,8 @@ const sessionPropositionViewsMock: SessionPropositionView[] = [
 ];
 const mockedSPV = sessionPropositionViewsMock[0];
 const sessionPropositionQuery: SessionPropositionQuery = {
-  from: new Date(),
-  to: new Date(),
+  from: moment(),
+  to: moment(),
   durationInMinutes: 0,
   roomId: roomId,
   judgeId: judgeId
@@ -170,8 +170,7 @@ describe('SessionsPropositionsSearchComponent', () => {
       const passedData = matDialogSpy.open.calls.first().args[1].data;
       const passedSessionData: SessionCreate = passedData.sessionData;
       const expectedStartDate = moment(mockedSPV.date, 'DD MMM YYYY')
-        .add(moment.duration(mockedSPV.startTime as string))
-        .toDate();
+        .add(moment.duration(mockedSPV.startTime as string));
       const expectedSessionData = {
         userTransactionId: undefined,
         id: undefined,
@@ -208,7 +207,7 @@ describe('SessionsPropositionsSearchComponent', () => {
           personId: 'some-person-id',
           roomId: 'some-room-id',
           duration: 30,
-          start: new Date(),
+          start: moment(),
           caseType: 'some-case-type'
         };
 

@@ -1,6 +1,6 @@
-import { DatePipe } from '@angular/common';
+import * as moment from 'moment'
 
-export function isDateRangeValid(start: Date, end: Date): boolean {
+export function isDateRangeValid(start: moment.Moment, end: moment.Moment): boolean {
     return (
            (start === null && end !== null)
         || (start !== null && end === null)
@@ -10,6 +10,6 @@ export function isDateRangeValid(start: Date, end: Date): boolean {
     );
 }
 
-export function getHttpFriendly(date) {
-    return new DatePipe('en-UK').transform(date, 'dd-MM-yyyy');
+export function getHttpFriendly(date: moment.Moment): string {
+    return date.format('DD-MM-YYYY');
 }

@@ -1,6 +1,8 @@
+import * as moment from 'moment'
+
 export interface SessionPropositionQuery {
-    from: Date;
-    to: Date;
+    from: moment.Moment;
+    to: moment.Moment;
     durationInMinutes: number;
     roomId: string;
     judgeId: string;

@@ -78,8 +78,8 @@ export class SessionsService {
     }
 
     private createSearchUrl(params: SessionPropositionQuery) {
-        const from = moment(params.from.setHours(0, 0, 0, 0)).format('YYYY-MM-DD HH:mm');
-        const to = moment(params.to.setHours(23, 59, 59, 999)).format('YYYY-MM-DD HH:mm');
+        const from = params.from.startOf('day').format('YYYY-MM-DD HH:mm');
+        const to = params.to.endOf('day').format('YYYY-MM-DD HH:mm');
         const durationInSeconds = params.durationInMinutes * 60;
 
         let query = `${this.config.getApiUrl()}/search?from=${from}&to=${to}&durationInSeconds=${durationInSeconds}`;
