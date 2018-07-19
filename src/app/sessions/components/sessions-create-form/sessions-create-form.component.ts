@@ -56,7 +56,7 @@ export class SessionsCreateFormComponent {
         this.session = {
             userTransactionId: undefined,
             id: undefined,
-            start: moment().toDate(),
+            start: moment(),
             duration: 1800,
             roomId: null,
             personId: null,
@@ -77,8 +77,8 @@ export class SessionsCreateFormComponent {
     create() {
         this.session.id = (this.session.id === undefined) ? uuid() : this.session.id;
         const timeArr = this.time.split(':');
-        this.session.start.setHours(+timeArr[0]);
-        this.session.start.setMinutes(+timeArr[1]);
+        this.session.start.set('hours', +timeArr[0]);
+        this.session.start.set('minutes', +timeArr[1]);
         this.session.duration = this.durationInMinutes.valueOf() * 60;
 
         this.createSessionAction.emit(this.session);

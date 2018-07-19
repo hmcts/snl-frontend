@@ -49,7 +49,7 @@ describe('SessionsCreateFormComponent', () => {
             component.sessionData = {
                 userTransactionId: 'uti',
                 id: 'id',
-                start: moment().toDate(),
+                start: moment(),
                 duration: 900,
                 roomId: 'rid',
                 personId: 'pid',
