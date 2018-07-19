@@ -74,7 +74,6 @@ describe('Session', () => {
   fdescribe('When create session ', () => {
     it('should be visible in calendar', async () => {
       const numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
-      console.log('number of visible events = ' + numberOfVisibleEvents)
       navigationFlow.goToCreateSessionPage()
       sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
       browser.sleep(5000)
@@ -82,7 +81,6 @@ describe('Session', () => {
       transactionDialogPage.clickAcceptButton()
       navigationFlow.goToCalendarPage();
       const numberOfVisibleEventsAfterSessionCreation = await calendarPage.getNumberOfVisibleEvents()
-      console.log('number of visible events AFTER session creation = ' + numberOfVisibleEventsAfterSessionCreation)
       expect(numberOfVisibleEvents + 1).toEqual(numberOfVisibleEventsAfterSessionCreation)
       navigationFlow.goToCreateNewListingPage()
       listingCreationPage.createListingRequest(listingCreationForm)
