@@ -45,7 +45,6 @@ export class ElementHelper {
                 },
                 true
               );
-              console.log(`if text = ${text} contains ${values} == ${isRowContainsPassedValues}`)
               return isRowContainsPassedValues;
             });
           }).first();

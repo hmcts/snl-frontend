@@ -12,8 +12,6 @@ export class Table {
             text,
             values
           );
-          // TODO delete this line
-          console.log(`if text = ${text} contains ${values} == ${isRowContainsPassedValues}`);
           return isRowContainsPassedValues;
         });
       })

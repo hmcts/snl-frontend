@@ -1,4 +1,3 @@
-import { browser } from 'protractor';
 import { ListingCreationForm } from './../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 import { SessionCreationPage } from '../pages/session-creation.po';
@@ -76,7 +75,6 @@ describe('Session', () => {
       const numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
       navigationFlow.goToCreateSessionPage()
       sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
-      browser.sleep(5000)
       expect(transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
       transactionDialogPage.clickAcceptButton()
       navigationFlow.goToCalendarPage();
