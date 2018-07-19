@@ -65,32 +65,54 @@ const transactionDialogPage = new TransactionDialogPage()
 const listingCreationPage = new ListingCreationPage()
 const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
+let numberOfVisibleEvents: number;
 
-describe('Session', () => {
+describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
   beforeAll(() => {
     loginFlow.loginIfNeeded();
+    navigationFlow.goToCalendarPage()
   });
-  fdescribe('When create session ', () => {
-    it('should be visible in calendar', async () => {
-      const numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
+  describe('Remember number of visible events in calendar, Go to create session page and create session', () => {
+    it('Transaction dialog should be displayed ', async () => {
+      numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
       navigationFlow.goToCreateSessionPage()
       sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
       expect(transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
       transactionDialogPage.clickAcceptButton()
+    });
+  });
+  describe('Go back to calendar page ', () => {
+    it('newly created session should be visible', async () => {
       navigationFlow.goToCalendarPage();
       const numberOfVisibleEventsAfterSessionCreation = await calendarPage.getNumberOfVisibleEvents()
       expect(numberOfVisibleEvents + 1).toEqual(numberOfVisibleEventsAfterSessionCreation)
+    });
+  });
+  describe('Go to create new listing page, create listing with different case type', () => {
+    it('newly created session should be visible', async () => {
       navigationFlow.goToCreateNewListingPage()
       listingCreationPage.createListingRequest(listingCreationForm)
+    });
+  });
+  describe('Go to search session page, find and select created session and listing', () => {
+    it('assign button should be enabled', async () => {
       navigationFlow.goToSessionSearchPage()
       sessionSearchPage.filterSession(formValues)
       sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType)
       sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate)
       expect(sessionSearchPage.assignButton.isEnabled()).toEqual(true)
+    });
+  });
+  describe('Click on "assign" button,', () => {
+    it('transaction dialog with problem that case types are different should be displayed', async () => {
       sessionSearchPage.assignButton.click()
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypeProblemText)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
       transactionDialogPage.clickAcceptButton()
+    });
+  });
+  describe('Go to calendar, click on created session', () => {
+    it('despite problem it should assign listing request to session and display its details', async () => {
       navigationFlow.goToCalendarPage()
       calendarPage.clickOnEventWith(startTimeAMFormat)
       expect(sessionDetailsDialogPage
