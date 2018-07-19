@@ -7,13 +7,7 @@ export class Table {
     return this.parentElement
       .all(by.css('mat-row'))
       .filter(el => {
-        return el.getText().then(text => {
-          const isRowContainsPassedValues = this.isTextContainsValues(
-            text,
-            values
-          );
-          return isRowContainsPassedValues;
-        });
+        return el.getText().then(text => this.isTextContainsValues(text, values));
       })
       .first();
   }

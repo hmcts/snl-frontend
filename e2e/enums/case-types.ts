@@ -1,5 +1,5 @@
 export enum CaseTypes {
-    SCLAIMS = 'SCLAIMS',
-    FTRACK = 'FTRACK',
-    MTRACK = 'MTRACK'
+  SCLAIMS = 'SCLAIMS',
+  FTRACK = 'FTRACK',
+  MTRACK = 'MTRACK'
 }

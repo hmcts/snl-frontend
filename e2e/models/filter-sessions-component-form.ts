@@ -4,10 +4,10 @@ import { Judges } from '../enums/judges';
 import { ListingDetailsOptions } from './listing-details-options';
 
 export interface FilterSessionsComponentForm {
-    startDate: string,
-    endDate: string,
-    caseType: CaseTypes,
-    room: Rooms,
-    judge: Judges,
-    listingDetailsOptions: ListingDetailsOptions
+  startDate: string;
+  endDate: string;
+  caseType: CaseTypes;
+  room: Rooms;
+  judge: Judges;
+  listingDetailsOptions: ListingDetailsOptions;
 }
