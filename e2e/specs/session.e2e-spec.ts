@@ -19,6 +19,7 @@ const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
+const startTimeAMFormat = now.format('h:mm')
 const duration = 15
 const sessionCaseType = CaseTypes.FTRACK
 const room = Rooms.ROOM_B
@@ -95,7 +96,7 @@ describe('Session', () => {
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
       transactionDialogPage.clickAcceptButton()
       navigationFlow.goToCalendarPage()
-      calendarPage.clickOnEventWith(startTime)
+      calendarPage.clickOnEventWith(startTimeAMFormat)
       expect(sessionDetailsDialogPage
         .isDialogWithTextsDisplayed(sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType))
       .toBeTruthy()
