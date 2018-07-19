@@ -10,12 +10,13 @@ import * as judgesReducers from '../../../judges/reducers';
 import * as fromHearingParts from '../../../hearing-part/reducers';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
+import * as moment from 'moment';
 
 let component: RoomPlannerComponent;
 let store: Store<State>;
 let storeSpy: jasmine.Spy;
 
-const now = new Date();
+const now = moment();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const caseType = 'some-case-type';

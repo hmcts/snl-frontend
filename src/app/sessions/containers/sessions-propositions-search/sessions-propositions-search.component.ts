@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
-import * as SessionActions from '../../../sessions/actions/session.action';
+import * as SessionActions from '../../actions/session.action';
 import { State } from '../../../app.state';
 import { select, Store } from '@ngrx/store';
 import * as fromRooms from '../../../rooms/reducers';
@@ -97,7 +97,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 sessionData: {
                     userTransactionId: undefined,
                     id: undefined,
-                    start: moment(spv.date, 'DD MMM YYYY').add(moment.duration(spv.startTime as string)).toDate(),
+                    start: moment(spv.date, 'DD MMM YYYY').add(moment.duration(spv.startTime as string)),
                     duration: durationInSeconds,
                     roomId: spv.room.id,
                     personId: spv.judge.id,

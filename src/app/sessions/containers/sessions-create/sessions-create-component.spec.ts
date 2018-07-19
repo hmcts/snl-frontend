@@ -103,7 +103,7 @@ describe('SessionsCreateComponent', () => {
             let session = {
                 userTransactionId: undefined,
                 id: sessionId,
-                start: moment().toDate(),
+                start: moment(),
                 duration: 1800,
                 roomId: null,
                 personId: null,
@@ -133,7 +133,7 @@ describe('SessionsCreateComponent', () => {
             let session = {
                 userTransactionId: undefined,
                 id: sessionId,
-                start: moment().toDate(),
+                start: moment(),
                 duration: 1800,
                 roomId: null,
                 personId: null,

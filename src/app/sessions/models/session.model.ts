@@ -1,6 +1,7 @@
+import * as moment from 'moment'
 export interface Session {
   id: string,
-  start: Date;
+  start: moment.Moment;
   duration: number;
   room: string;
   person: string;
