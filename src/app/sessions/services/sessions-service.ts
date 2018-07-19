@@ -11,7 +11,6 @@ import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
 import { SessionPropositionQuery } from '../models/session-proposition-query.model';
-import * as moment from 'moment';
 
 @Injectable()
 export class SessionsService {
