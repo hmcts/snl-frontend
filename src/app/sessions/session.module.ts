@@ -12,7 +12,7 @@ import { AngularMaterialModule } from '../../angular-material/angular-material.m
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { SessionsService } from './services/sessions-service';
-import { reducers } from './reducers/index';
+import { reducers } from './reducers';
 import { JudgeEffects } from '../judges/effects/judge.effects';
 import { RoomEffects } from '../rooms/effects/room.effects';
 import { JudgeService } from '../judges/services/judge.service';

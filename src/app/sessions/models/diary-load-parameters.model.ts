@@ -1,5 +1,6 @@
+import * as moment from 'moment';
 export interface DiaryLoadParameters {
     judgeUsername: string,
-    startDate: Date,
-    endDate: Date
+    startDate: moment.Moment,
+    endDate: moment.Moment
 }

@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HearingPartsPreviewComponent } from './components/hearing-parts-preview/hearing-parts-preview.component';
 import { StoreModule } from '@ngrx/store';
-import { reducers } from './reducers/index';
+import { reducers } from './reducers';
 import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';

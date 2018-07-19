@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReportService } from '../../../services/report-service';
 import { MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-listed-hearings-report',
@@ -9,8 +10,8 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: []
 })
 export class ListedHearingsReportComponent {
-    from: Date;
-    to: Date;
+    from: moment.Moment;
+    to: moment.Moment;
 
     dataSource: Observable<MatTableDataSource<any>>;
     displayedColumns = ['caseId', 'caseName', 'judge', 'hearingType', 'caseType', 'duration',

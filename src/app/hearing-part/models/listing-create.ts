@@ -7,7 +7,7 @@ export interface ListingCreate {
     caseType: string;
     hearingType: string
     duration: moment.Duration
-    scheduleStart: Date;
-    scheduleEnd: Date;
-    createdAt: Date;
+    scheduleStart: moment.Moment;
+    scheduleEnd: moment.Moment;
+    createdAt: moment.Moment;
 }

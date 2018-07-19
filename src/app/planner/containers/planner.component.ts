@@ -6,7 +6,7 @@ import { SessionQueryForDates } from '../../sessions/models/session-query.model'
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../sessions/models/session-dialog-details.model';
-import * as fromSessions from '../../sessions/reducers/index';
+import * as fromSessions from '../../sessions/reducers';
 import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
