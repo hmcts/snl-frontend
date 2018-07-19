@@ -1,5 +1,5 @@
 import { TopMenu } from '../pages/top-menu.po';
-import { element, by } from '../../node_modules/protractor';
+import { CalendarPage } from '../pages/calendar.po';
 
 export class NavigationFlow {
     topMenu = new TopMenu()
@@ -8,7 +8,7 @@ export class NavigationFlow {
         this.topMenu.openCalendarPage()
         // Due some reasons events in calendar aren't displayed until some action will be taken
         // workaround for it is to select already selected view mode (month/week/day/list)
-        element.all((by.className('fc-state-active'))).first().click()
+       new CalendarPage().quickWaitToRenderEvents()
     }
 
     goToCreateSessionPage() {
