@@ -13,6 +13,7 @@ import { HearingParts } from '../enums/hearing-parts';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
+import { SnackBar } from '../components/snack-bar';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -28,6 +29,7 @@ const caseTitle = 'e2e Test'
 const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
+const listingCreatedNoteText = 'Listing request created!'
 
 const listingCreationForm: ListingCreationForm = {
   caseNumber,
@@ -65,6 +67,7 @@ const transactionDialogPage = new TransactionDialogPage()
 const listingCreationPage = new ListingCreationPage()
 const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
+const snackBar = new SnackBar();
 let numberOfVisibleEvents: number;
 
 describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
@@ -92,6 +95,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
     it('newly created session should be visible', async () => {
       navigationFlow.goToCreateNewListingPage()
       listingCreationPage.createListingRequest(listingCreationForm)
+      expect(snackBar.isNoteWithTextPresent(listingCreatedNoteText)).toBeTruthy()
     });
   });
   describe('Go to search session page, find and select created session and listing', () => {
