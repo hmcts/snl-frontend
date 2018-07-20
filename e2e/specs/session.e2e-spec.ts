@@ -8,7 +8,7 @@ import { CaseTypes } from '../enums/case-types';
 import { Rooms } from '../enums/rooms';
 import { Judges } from '../enums/judges';
 import { CalendarPage } from '../pages/calendar.po';
-import { ListingCreationPage } from '../pages/listing-creation.po.';
+import { ListingCreationPage } from '../pages/listing-creation.po';
 import { HearingParts } from '../enums/hearing-parts';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';

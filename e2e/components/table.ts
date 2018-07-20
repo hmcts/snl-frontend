@@ -7,12 +7,12 @@ export class Table {
     return this.parentElement
       .all(by.css('mat-row'))
       .filter(el => {
-        return el.getText().then(text => this.isTextContainsValues(text, values));
+        return el.getText().then(text => this.areValuesInText(text, values));
       })
       .first();
   }
 
-  private isTextContainsValues(text: string, values: string[]): boolean {
+  private areValuesInText(text: string, values: string[]): boolean {
     return values.reduce((previous, current) => {
       return text.indexOf(current) !== -1 && previous;
     }, true);

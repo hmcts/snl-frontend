@@ -1,4 +1,4 @@
-import { ElementHelper } from './../utils/element-helper';
+import { ElementHelper } from '../utils/element-helper';
 import { element, by } from 'protractor';
 import { ListingCreationForm } from '../models/listing-creation-form';
 
