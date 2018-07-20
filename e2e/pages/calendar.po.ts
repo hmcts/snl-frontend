@@ -2,26 +2,25 @@ import { by, element, browser, ExpectedConditions, promise } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class CalendarPage {
-  private calendarEntryClass = by.className('fc-v-event');
+  private calendarEntryClass = by.className('fc-list-item');
 
   getNumberOfVisibleEvents(): promise.Promise<number> {
-    this.quickWaitToRenderEvents();
     return element.all(this.calendarEntryClass).count();
   }
 
-  quickWaitToRenderEvents() {
-    // Due some reasons events in calendar aren't displayed until some action will be taked
+  openListView() {
+    // Due some reasons events in calendar aren't displayed until some action will be taken
     // workaround for it is to select already selected view mode (month/week/day/list)
-    element.all(by.className('fc-state-active')).first().click();
+    element(by.className('fc-listMonth-button')).click();
     browser
       .wait(
-        ExpectedConditions.visibilityOf(element(this.calendarEntryClass)),
+        ExpectedConditions.visibilityOf(element.all(this.calendarEntryClass).first()),
         Wait.short
       )
       .catch(() => Promise.resolve(false));
   }
 
   clickOnEventWith(startTime: string) {
-    element(by.css(`div[data-start="${startTime}"]`)).click();
+    element.all(by.cssContainingText('.fc-list-item-time', startTime)).last().click()
   }
 }

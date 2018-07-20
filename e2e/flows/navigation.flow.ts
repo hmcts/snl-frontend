@@ -6,7 +6,7 @@ export class NavigationFlow {
 
   goToCalendarPage() {
     this.topMenu.openCalendarPage();
-    new CalendarPage().quickWaitToRenderEvents();
+    new CalendarPage().openListView();
   }
 
   goToCreateSessionPage() {

@@ -15,6 +15,6 @@ export class LoginPage {
   }
 
   isDisplayed(): promise.Promise<boolean> {
-    return this.username.isDisplayed();
+    return this.username.isPresent();
   }
 }

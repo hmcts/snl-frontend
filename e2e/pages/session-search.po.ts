@@ -9,7 +9,7 @@ import { Table } from '../components/table';
 export class SessionSearchPage {
   private filterSessionComponent = new FilterSessionComponent();
   private sessionsTable = new Table(element(by.id('sessions-table')))
-  private listingRequestsTable = new Table(element(by.id('hearing-part-preview')))
+  private listingRequestsTable = new Table(element(by.css('mat-table#hearing-part-preview')))
   public assignButton = element(by.id('assign'));
 
   filterSession(formValues: FilterSessionsComponentForm) {
