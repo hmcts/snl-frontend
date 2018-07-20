@@ -16,7 +16,7 @@ exports.config = {
         'browserName': 'chrome',
         'acceptInsecureCerts': true,
         chromeOptions: {
-            args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage'] : [],
+            args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
         }
     },

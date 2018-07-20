@@ -1,6 +1,6 @@
 import { browser } from 'protractor';
 import { LoginPage } from '../pages/login.po';
-import { Credentials } from '../configs/credentials';
+import { Credentials } from '../enums/credentials';
 
 let loginPage: LoginPage
 

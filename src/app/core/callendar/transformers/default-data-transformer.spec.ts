@@ -6,7 +6,7 @@ import { IcalendarTransformer } from './icalendar-transformer';
 
 let session = {
     id: 'id',
-    start: new Date(),
+    start: moment(),
     duration: 60,
     room: { name: 'room' },
     person: { name: 'person' },
@@ -17,7 +17,7 @@ let session = {
 
 let expectedEvent = {
     title: `${session.room.name} - ${session.person.name} - ${session.caseType}`,
-    start: moment(session.start),
+    start: session.start,
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
