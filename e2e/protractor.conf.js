@@ -6,6 +6,8 @@ const puppeteer = require('puppeteer');
 
 const isHeadlessModeEnabled = true;
 
+const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
+
 exports.config = {
     allScriptsTimeout: 11000,
     suites: {
@@ -21,7 +23,7 @@ exports.config = {
         }
     },
     directConnect: true,
-    baseUrl: process.env.TEST_URL || 'http://localhost:3451/',
+    baseUrl: baseUrl,
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,
