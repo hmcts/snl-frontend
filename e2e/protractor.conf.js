@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 
 const isHeadlessModeEnabled = true;
 
-const baseUrl = ('https://pr-116-snl-frontend-preview-staging.service.core-compute-preview.internal').replace('https', 'http');
+const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
 
 exports.config = {
     allScriptsTimeout: 11000,
@@ -17,10 +17,6 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         'acceptInsecureCerts': true,
-        'proxy': {
-            'proxyType': 'manual',
-            'httpProxy': 'proxyout.reform.hmcts.net:8080'
-        },
         chromeOptions: {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
@@ -43,7 +39,7 @@ exports.config = {
                 displayStacktrace: true
             }
         }));
-        browser.manage().timeouts().implicitlyWait(5000);
+        browser.manage().timeouts().implicitlyWait(10000);
         return browser.get('/');
     }
 };
