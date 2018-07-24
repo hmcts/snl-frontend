@@ -15,7 +15,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
 
-    selectedHearingPartId;
+    selectedHearingPart;
 
     hearingPartsDataSource: MatTableDataSource<HearingPart>;
     displayedColumns = [
@@ -31,10 +31,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     ];
 
     constructor() {
+        this.selectedHearingPart = new SelectionModel<HearingPart>(false, []);
     }
 
     ngOnInit() {
-        this.selectedHearingPartId = new SelectionModel<string>(false, []);
     }
 
     ngOnChanges() {
@@ -53,8 +53,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
     }
 
-    toggleHearing(id) {
-        this.selectedHearingPartId.toggle(id)
-        this.selectHearingPart.emit(this.selectedHearingPartId.isSelected(id) ? id : '')
+    toggleHearing(hearing) {
+        console.log(hearing)
+
+        this.selectedHearingPart.toggle(hearing)
+        this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {})
     }
 }

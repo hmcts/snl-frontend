@@ -347,7 +347,7 @@ function defaultFullMockedSession(): SessionViewModel {
     person: mockedJudges[0],
     caseType: caseType,
     hearingParts: [mockedHearingParts[0]],
-    jurisdiction: 'some jurisdiction'
+    jurisdiction: 'some jurisdiction'z
   };
 }
 

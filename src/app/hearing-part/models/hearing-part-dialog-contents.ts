@@ -4,5 +4,6 @@ export const HEARING_PART_ASSIGN_CONFLICT = 'The hearing part cannot be assigned
     ' entities is already being modified by someone else. Please try again later';
 
 export const HEARING_PART_DIALOGS = {
-    [TransactionStatuses.CONFLICT]: HEARING_PART_ASSIGN_CONFLICT
+    [TransactionStatuses.CONFLICT]: HEARING_PART_ASSIGN_CONFLICT,
+    ['OK']: 'OK, OK'
 }
