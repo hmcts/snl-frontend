@@ -6,7 +6,7 @@ export class SessionDetailsDialogPage {
 
   isDialogWithTextsDisplayed(...text: string[]): promise.Promise<boolean> {
     const eventsWrapper = element.all(by.css('app-details-dialog'));
-    return this.elementHelper
+      return this.elementHelper
       .elementThatContains(eventsWrapper, ...text)
       .isDisplayed();
   }

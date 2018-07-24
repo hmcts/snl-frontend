@@ -14,6 +14,7 @@ import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { SnackBar } from '../components/snack-bar';
+import { browser, protractor } from 'protractor';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -30,6 +31,19 @@ const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCas
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
 const listingCreatedNoteText = 'Listing request created!'
+
+var origFn = browser.driver.controlFlow().execute;
+
+browser.driver.controlFlow().execute = function() {
+    var args = arguments;
+
+    // queue 100ms wait
+    origFn.call(browser.driver.controlFlow(), function() {
+        return protractor.promise.delayed(100);
+    });
+
+    return origFn.apply(browser.driver.controlFlow(), args);
+};
 
 const listingCreationForm: ListingCreationForm = {
   caseNumber,
@@ -118,8 +132,9 @@ describe('Create Session and Listing Request, assign them despite problem, check
   describe('Go to calendar, click on created session', () => {
     it('despite problem it should assign listing request to session and display its details', async () => {
       navigationFlow.goToCalendarPage()
-      calendarPage.clickOnEventWith(startTimeAMFormat)
-      expect(sessionDetailsDialogPage
+      await calendarPage.clickOnEventWith(startTimeAMFormat)
+        browser.sleep(3000);
+        expect(sessionDetailsDialogPage
         .isDialogWithTextsDisplayed(sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType))
       .toBeTruthy()
       sessionDetailsDialogPage.close()

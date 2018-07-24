@@ -20,7 +20,7 @@ export class CalendarPage {
       .catch(() => Promise.resolve(false));
   }
 
-  clickOnEventWith(startTime: string) {
+  async clickOnEventWith(startTime: string) {
     element.all(by.cssContainingText('.fc-list-item-time', startTime)).last().click()
   }
 }

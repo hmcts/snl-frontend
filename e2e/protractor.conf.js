@@ -4,12 +4,12 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 
-const isHeadlessModeEnabled = true;
+const isHeadlessModeEnabled = false;
 
 const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
 
 exports.config = {
-    allScriptsTimeout: 11000,
+    allScriptsTimeout: 111000,
     suites: {
       e2e: './**/*.e2e-spec.ts',
       smoke: '../smoke-test/*.smoke-spec.ts'
@@ -27,7 +27,7 @@ exports.config = {
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 30000,
+        defaultTimeoutInterval: 130000,
         print: function () {}
     },
     onPrepare() {
