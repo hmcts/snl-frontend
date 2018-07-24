@@ -17,8 +17,9 @@ describe('Login', () => {
   });
   describe('When login using valid credentials', () => {
     it('should change URL to calendar', () => {
-      loginPage.login(Credentials.ValidOfficerUsername, Credentials.ValidOfficerPassword)
-      expect(browser.getCurrentUrl()).toContain('/home/calendar')
+      loginPage.login(Credentials.ValidOfficerUsername, Credentials.ValidOfficerPassword);
+        browser.waitForAngular();
+        expect(browser.getCurrentUrl()).toContain('/home/calendar');
     });
   });
 });

@@ -14,6 +14,7 @@ import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { SnackBar } from '../components/snack-bar';
+import { browser } from 'protractor';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -112,14 +113,15 @@ describe('Create Session and Listing Request, assign them despite problem, check
       sessionSearchPage.assignButton.click()
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypeProblemText)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
-      transactionDialogPage.clickAcceptButton()
+      transactionDialogPage.clickAcceptButton();
     });
   });
   describe('Go to calendar, click on created session', () => {
     it('despite problem it should assign listing request to session and display its details', async () => {
       navigationFlow.goToCalendarPage()
+      browser.waitForAngular();
       calendarPage.clickOnEventWith(startTimeAMFormat)
-      expect(sessionDetailsDialogPage
+        expect(sessionDetailsDialogPage
         .isDialogWithTextsDisplayed(sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType))
       .toBeTruthy()
       sessionDetailsDialogPage.close()
