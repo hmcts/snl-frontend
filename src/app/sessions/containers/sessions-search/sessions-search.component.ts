@@ -88,9 +88,6 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     assignToSession() {
-        console.log(this.selectedHearingPart)
-        console.log(this.selectedSession)
-
         this.hearingModificationService.assignHearingPartWithSession({
             hearingPartId: this.selectedHearingPart.id,
             hearingPartVersion: this.selectedHearingPart.version,

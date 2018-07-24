@@ -54,8 +54,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     toggleHearing(hearing) {
-        console.log(hearing)
-
         this.selectedHearingPart.toggle(hearing)
         this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {})
     }

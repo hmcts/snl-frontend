@@ -64,13 +64,12 @@ export class SessionTableComponent implements OnInit, OnChanges {
   }
 
   toggleSession(session) {
-    console.log(session)
     this.selectedSesssion.toggle(session);
     this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
   }
 
   ngOnInit() {
-      console.log(this.sessions)
+
   }
 
   ngOnChanges() {

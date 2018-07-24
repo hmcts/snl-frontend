@@ -21,8 +21,6 @@ export class HearingPartService {
     }
 
     assignToSession(query: SessionAssignment): Observable<any> {
-        console.log(query);
-
         return this.http
             .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
                 query);
