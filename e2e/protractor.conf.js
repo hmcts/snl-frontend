@@ -39,7 +39,7 @@ exports.config = {
                 displayStacktrace: true
             }
         }));
-        browser.manage().timeouts().implicitlyWait(5000);
+        browser.manage().timeouts().implicitlyWait(10000);
         return browser.get('/');
     }
 };

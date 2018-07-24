@@ -126,14 +126,14 @@ describe('Create Session and Listing Request, assign them despite problem, check
       sessionSearchPage.assignButton.click()
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypeProblemText)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
-      transactionDialogPage.clickAcceptButton()
+      transactionDialogPage.clickAcceptButton();
     });
   });
   describe('Go to calendar, click on created session', () => {
     it('despite problem it should assign listing request to session and display its details', async () => {
       navigationFlow.goToCalendarPage()
-      await calendarPage.clickOnEventWith(startTimeAMFormat)
-        browser.sleep(3000);
+      browser.waitForAngular();
+      calendarPage.clickOnEventWith(startTimeAMFormat)
         expect(sessionDetailsDialogPage
         .isDialogWithTextsDisplayed(sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType))
       .toBeTruthy()
