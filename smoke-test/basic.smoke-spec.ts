@@ -8,7 +8,7 @@ describe('SNL frontend smoke tests', () => {
         it('should get page', () => {
             browser.get('/');
 
-            loginPage.isDisplayed();
+            expect(loginPage.isDisplayed()).toBeTruthy();
             expect(browser.getTitle()).toEqual('Scheduling and Listing');
         });
     });
