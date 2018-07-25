@@ -110,7 +110,7 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
             const sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
-                start: sessionData.start,
+                start: moment(sessionData.start),
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],

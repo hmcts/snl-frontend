@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
-import * as fromSessions from '../../../sessions/reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
+import * as fromSessions from '../../../sessions/reducers';
 import { MatDialog } from '@angular/material';
 import * as judgeActions from '../../../judges/actions/judge.action';
-import * as judgesReducers from '../../../judges/reducers/index';
+import * as judgesReducers from '../../../judges/reducers';
 import { JudgePlannerComponent } from './judge-planner.component';
 import { Judge } from '../../../judges/models/judge.model';
 

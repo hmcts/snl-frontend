@@ -10,27 +10,27 @@
                 <div *ngIf="success">Listing added successfully</div>
 
                 <mat-form-field>
-                    <input [(ngModel)]="listing.caseNumber" name="caseNumber" matInput placeholder="Case number" type="text" required>
+                    <input id="caseNumber" [(ngModel)]="listing.caseNumber" name="caseNumber" matInput placeholder="Case number" type="text" required>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input [(ngModel)]="listing.caseTitle" name="caseTitle" matInput placeholder="Case title" type="text" required>
+                    <input id="caseTitle" [(ngModel)]="listing.caseTitle" name="caseTitle" matInput placeholder="Case title" type="text" required>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select placeholder="Case type" ngModel name="caseType" [(value)]="listing.caseType" [required]="true">
+                    <mat-select id="selectCaseType" placeholder="Case type" ngModel name="caseType" [(value)]="listing.caseType" [required]="true">
                         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select placeholder="Hearing type" ngModel name="hearingType" [(value)]="listing.hearingType" required>
+                    <mat-select id="selectHearingPart" placeholder="Hearing type" ngModel name="hearingType" [(value)]="listing.hearingType" required>
                         <mat-option *ngFor="let hearing of hearings" value="{{hearing}}">{{hearing}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input [(ngModel)]="duration" name="duration" type="number" matInput placeholder="Duration" min="1">
+                    <input id="duration" [(ngModel)]="duration" name="duration" type="number" matInput placeholder="Duration" min="1">
                     <span matSuffix>Minutes</span>
                 </mat-form-field>
 
@@ -42,13 +42,13 @@
 
                 <div>Target Schedule <i>(DD/MM/YYYY)</i></div>
                 <mat-form-field class="date-picker-element">
-                    <input matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart" name="scheduleStart" placeholder="From:">
+                    <input id="fromDate" matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart" name="scheduleStart" placeholder="From:">
                     <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                     <mat-datepicker #pickerStart></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field class="date-picker-element">
-                    <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd" name="scheduleEnd" placeholder="To:">
+                    <input id="endDate" matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd" name="scheduleEnd" placeholder="To:">
                     <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                     <mat-datepicker #pickerEnd></mat-datepicker>
                 </mat-form-field>
@@ -56,7 +56,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="!newListForm.valid">Save</button>
+            <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="!newListForm.valid">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>

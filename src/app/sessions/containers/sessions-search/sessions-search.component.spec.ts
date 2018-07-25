@@ -28,7 +28,8 @@ let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
-const now = new Date();
+const nowMoment = moment();
+const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const caseType = 'some-case-type';
@@ -54,7 +55,7 @@ const mockedHearingParts: HearingPart[] = [
 const mockedSessions: Session[] = [
   {
     id: 'some-session-id',
-    start: now,
+    start: nowMoment,
     duration: sessionDuration,
     room: roomId,
     person: judgeId,
@@ -341,7 +342,7 @@ function computeAndVerifyFilteredSessionToBeEmptyArray(
 function defaultFullMockedSession(): SessionViewModel {
   return {
     id: 'some-session-id',
-    start: now,
+    start: nowMoment,
     duration: sessionDuration,
     room: mockedRooms[0],
     person: mockedJudges[0],

@@ -31,7 +31,7 @@
 
   <ng-container matColumnDef="time">
     <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.start.getHours()}}:{{(element.start.getMinutes()<10?'0':'') + element.start.getMinutes() }} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{parseTime(element.start)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="duration">
@@ -50,7 +50,7 @@
   </ng-container>
 
   <ng-container matColumnDef="utilisation">
-    <mat-header-cell *matHeaderCellDef> Utilisation </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Utilization </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{calculateUtilized(element.duration, calculateAllocated(element))}} %</mat-cell>
   </ng-container>
 
