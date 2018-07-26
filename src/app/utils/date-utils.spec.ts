@@ -37,9 +37,4 @@ describe('DateUtils', () => {
             expect(dateUtils.getHttpFriendly(momentDate)).toEqual('01-03-2013');
         })
     })
-})
-
-
-export function getHttpFriendly(date: moment.Moment): string {
-    return date.format('DD-MM-YYYY');
-}
+});
