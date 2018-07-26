@@ -48,9 +48,11 @@ const mockedHearingParts: HearingPart[] = [
     hearingType: 'some-hearing-type',
     duration: moment.duration(sessionDuration),
     scheduleStart: now,
-    scheduleEnd: now
+    scheduleEnd: now,
+    version: 2
   }
 ];
+const mockedHearingPart = mockedHearingParts[0];
 const mockedSessions: Session[] = [
   {
     id: 'some-session-id',
@@ -61,7 +63,7 @@ const mockedSessions: Session[] = [
     caseType: caseType,
     hearingTypes: ['some-hearingTypes'],
     jurisdiction: 'some jurisdiction',
-    version: 0
+    version: 1
   }
 ];
 
@@ -128,8 +130,8 @@ describe('SessionsSearchComponent', () => {
       expect(component.startDate).toBeDefined();
       expect(component.endDate).toBeDefined();
     });
-    it('should set empty string to selectedHearingPartId', () => {
-      expect(component.selectedHearingPartId).toEqual('');
+    it('should set null to selectedHearingPart', () => {
+      expect(component.selectedHearingPart).toEqual({});
     });
     it('should set selectedSession to empty obj', () => {
       expect(component.selectedSession).toEqual({});
@@ -250,19 +252,16 @@ describe('SessionsSearchComponent', () => {
   });
 
   describe('selectHearingPart', () => {
-    it('should set selectedHearingPartId', () => {
-      const expectedHearingPartId = 'some-hp-id';
-      component.selectHearingPart(expectedHearingPartId);
-      expect(component.selectedHearingPartId).toEqual(expectedHearingPartId);
+    it('should set selectedHearingPart', () => {
+      component.selectHearingPart(mockedHearingPart);
+      expect(component.selectedHearingPart).toEqual(mockedHearingPart);
     });
   });
 
   describe('assignToSession', () => {
     it('should dispatch AssignToSession action', () => {
-      const expectedSelectedHearingPartId = 'some-selected-hearing-part-id';
-
       component.selectedSession = mockedFullSession[0];
-      component.selectedHearingPartId = expectedSelectedHearingPartId;
+      component.selectedHearingPart = mockedHearingPart;
       component.assignToSession();
 
       const passedObj = storeSpy.calls.first().args[0];
@@ -272,12 +271,18 @@ describe('SessionsSearchComponent', () => {
         passedObj instanceof hearingPartActions.AssignToSession
       ).toBeTruthy();
       expect(sessionAssignmentPayload.hearingPartId).toEqual(
-        expectedSelectedHearingPartId
+        mockedHearingPart.id
+      );
+      expect(sessionAssignmentPayload.hearingPartVersion).toEqual(
+          mockedHearingPart.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
       expect(sessionAssignmentPayload.sessionId).toEqual(
         mockedFullSession[0].id
       );
+      expect(sessionAssignmentPayload.sessionVersion).toEqual(
+          mockedFullSession[0].version
+      )
       expect(sessionAssignmentPayload.start).toBeNull();
     });
   });
@@ -292,22 +297,22 @@ describe('SessionsSearchComponent', () => {
   });
 
   describe('assignButtonEnabled', () => {
-    describe('when selectedHearingPartId is not null and selectedSession is set', () => {
+    describe('when selectedHearingPart is not null and selectedSession is set', () => {
       it('should return true ', () => {
         component.selectedSession = mockedFullSession[0];
-        component.selectedHearingPartId = 'some id';
+        component.selectedHearingPart = mockedHearingPart;
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
-    describe('when either selectedHearingPartId is not null or selectedSession is not set', () => {
+    describe('when either selectedHearingPart is not null or selectedSession is not set', () => {
       it('should return false ', () => {
         component.selectedSession = {};
-        component.selectedHearingPartId = 'some id';
+        component.selectedHearingPart = mockedHearingPart;
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {
         component.selectedSession = {};
-        component.selectedHearingPartId = '';
+        component.selectedHearingPart = {};
         expect(component.assignButtonEnabled()).toEqual(false);
       });
     });
@@ -347,7 +352,8 @@ function defaultFullMockedSession(): SessionViewModel {
     person: mockedJudges[0],
     caseType: caseType,
     hearingParts: [mockedHearingParts[0]],
-    jurisdiction: 'some jurisdiction'z
+    jurisdiction: 'some jurisdiction',
+    version: 1
   };
 }
 

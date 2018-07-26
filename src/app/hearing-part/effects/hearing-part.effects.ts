@@ -26,7 +26,7 @@ export class HearingPartEffects {
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
                 mergeMap(data => [new sessionTransactionActs.UpdateTransaction(data)]),
-                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status]))
+                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status])))
             )
         )
     );
