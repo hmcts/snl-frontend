@@ -20,13 +20,13 @@ describe('DateUtils', () => {
         it('should return true when start date is undefined', () => {
             const end = moment().endOf('day');
 
-            expect(dateUtils.isDateRangeValid(undefined, end)).toBeTruthy();
+            expect(dateUtils.isDateRangeValid(null, end)).toBeTruthy();
         });
 
         it('should return true when end date is undefined', () => {
             const start = moment().startOf('day');
 
-            expect(dateUtils.isDateRangeValid(start, undefined)).toBeTruthy();
+            expect(dateUtils.isDateRangeValid(start, null)).toBeTruthy();
         });
     });
 
