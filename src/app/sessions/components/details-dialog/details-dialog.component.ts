@@ -10,7 +10,7 @@ import { SessionDialogDetails } from '../../models/session-dialog-details.model'
 export class DetailsDialogComponent {
 
     private offset = {x: 0, y: 0};
-    private readonly dialogId: string;
+    readonly dialogId: string;
 
     constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
