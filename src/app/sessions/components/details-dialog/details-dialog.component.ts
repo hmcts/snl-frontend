@@ -9,17 +9,31 @@ import { SessionDialogDetails } from '../../models/session-dialog-details.model'
 })
 export class DetailsDialogComponent {
 
-  constructor(
+    private offset = {x: 0, y: 0};
+    private readonly dialogId: string;
+
+    constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public sessionDetails: SessionDialogDetails) { }
+      @Inject(MAT_DIALOG_DATA) public sessionDetails: SessionDialogDetails) {
+      this.dialogId = this.dialogRef.id;
+    }
 
     onCloseClick(): void {
         this.dialogRef.close();
     }
 
-    @HostListener('drag', ['$event'])
     @HostListener('dragend', ['$event'])
     drag(e: DragEvent) {
-        this.dialogRef.updatePosition({left: `${e.x}px`, top: `${e.y}px`} as DialogPosition)
+        this.dialogRef.updatePosition({left: `${e.x - this.offset.x}px`,
+            top: `${e.y - this.offset.y}px`} as DialogPosition)
     }
+
+    @HostListener('dragstart', ['$event'])
+    onDragStart(e: DragEvent) {
+      const dialog = document.querySelector(`#${this.dialogId}`);
+      const top = dialog.getBoundingClientRect().top;
+      const left = dialog.getBoundingClientRect().left;
+
+      this.offset = {x: e.x - left, y: e.y - top};
+      }
 }
