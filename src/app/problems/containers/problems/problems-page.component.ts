@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Problem } from '../../models/problem.model';
 import * as fromProblems from '../../reducers';
 import * as fromProblemsPartsActions from '../../actions/problem.action'

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as fromReducer from '../../../sessions/reducers';
 import { SearchForDates, SearchForJudgeWithHearings, } from '../../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../../sessions/models/session-query.model';

@@ -1,4 +1,4 @@
-import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Problem } from '../models/problem.model';
 import { ProblemActionTypes } from '../actions/problem.action';
 
@@ -32,13 +32,9 @@ export function reducer(state: State = initialState, action) {
             return {...state, ...adapter.addAll(Object.values(action.payload || []), {...state, loading: false})};
         }
         case ProblemActionTypes.UpsertMany: {
-            const updatedCollection = Object.values(action.payload || []).map((problem: Problem) => {
-                return {
-                    id: problem.id,
-                    changes: problem
-                } as Update<Problem>;
-            });
-            return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};        }
+            return {...state, ...adapter.upsertMany(action.payload === undefined ? [] : Object.values(action.payload),
+                    {...state, loading: false})};
+        }
         default:
             return state;
     }

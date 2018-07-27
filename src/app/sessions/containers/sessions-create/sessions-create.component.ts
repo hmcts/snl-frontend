@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { State } from '../../../app.state';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as fromRooms from '../../../rooms/reducers';
 import * as fromJudges from '../../../judges/reducers';
 import * as JudgeActions from '../../../judges/actions/judge.action';

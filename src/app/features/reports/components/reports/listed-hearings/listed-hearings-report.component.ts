@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ReportService } from '../../../services/report-service';
 import { MatTableDataSource } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment'
 
 @Component({
@@ -21,7 +22,6 @@ export class ListedHearingsReportComponent {
     }
 
     loadData() {
-        this.dataSource = this.reportService.getListedHearingRequests(this.from, this.to)
-            .map(data => new MatTableDataSource(data));
+        this.dataSource = this.reportService.getListedHearingRequests(this.from, this.to).pipe(map(data => new MatTableDataSource(data)))
     }
 }

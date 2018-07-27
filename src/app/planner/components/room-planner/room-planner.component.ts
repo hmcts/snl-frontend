@@ -7,7 +7,7 @@ import { select, Store } from '@ngrx/store';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { State } from '../../../app.state';
 
 @Component({
