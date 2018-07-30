@@ -85,7 +85,7 @@ const normalizedGetProblemsResponse = {
 };
 
 describe('ProblemsService', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [

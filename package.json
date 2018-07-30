@@ -7,7 +7,7 @@
     "postinstall": "webdriver-manager update",
     "build": "ng build --prod",
     "start": "ng serve --proxy-config proxy.config.json",
-    "test": "ng test --code-coverage",
+    "test": "ng test --code-coverage --watch=false",
     "test:coverage": "istanbul check-coverage --statements 0 --lines 0 --functions 0 --branches 0",
     "test:a11y": "echo 'TODO: Accessibility tests'",
     "test:nsp": "nsp check",
