@@ -1,28 +1,31 @@
-<div draggable="true" class="container" fxLayout="column">
-  <h1 fxFlex mat-dialog-title  unselectable="on">Session details</h1>
-  <div fxFlex fxLayout="column" fxLayoutGap="5%" mat-dialog-content>
-    <div fxFlex fxLayout="column" fxLayoutGap="10px">
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <span fxFlex>{{(sessionDetails.session | async).caseType  || '(No case type)'}}</span>
-        <span fxFlex>{{(sessionDetails.session | async).person?.name || '(No judge)'}}</span>
-        <span fxFlex>{{(sessionDetails.session| async).room?.name  || '(No room)'}}</span>
+<div draggable="true" style="display: flex" fxLayout="column">
+  <h1 fxFlex mat-dialog-title unselectable="on">Session details</h1>
+  <mat-dialog-content>
+    <div fxFlex fxLayout="column" fxLayoutGap="5%" >
+      <div fxFlex fxLayout="column" fxLayoutGap="10px">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+          <span fxFlex>{{sessionData.caseType  || '(No case type)'}}</span>
+          <span fxFlex>{{sessionData.person?.name || '(No judge)'}}</span>
+          <span fxFlex>{{sessionData.room?.name  || '(No room)'}}</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="4%">
+          <span fxFlex>{{sessionData.start | date: 'dd/MM/yyyy'}}</span>
+          <span fxFlex>{{data.time | async}} - {{data.endTime | async}}</span>
+          <span fxFlex>{{sessionData.duration | appDurationAsMinutes}} minutes</span>
+        </div>
+        <hr>
       </div>
-      <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="4%">
-        <span fxFlex>{{(sessionDetails.session | async).start | date: 'dd/MM/yyyy'}}</span>
-        <span fxFlex>{{sessionDetails.time | async}} - {{sessionDetails.endTime | async}}</span>
-        <span fxFlex>{{(sessionDetails.session | async).duration | appDurationAsMinutes}} minutes</span>
+      <div fxLayout="column">
+        <span fxFlex>{{sessionData?.hearingParts?.length}} hearing(s) listed</span>
+        <span fxFlex>Allocated: {{data.allocatedHearingsDuration | async | appDurationAsMinutes}} minutes</span>
+        <span fxFlex>Available: {{data.availableDuration | async}} minutes</span>
       </div>
-      <hr>
+      <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
+        <app-draggable-hearing-part *ngFor="let hearingPart of sessionData.hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>
+      </div>
     </div>
-    <div fxLayout="column">
-      <span fxFlex>{{(sessionDetails.session | async)?.hearingParts?.length}} hearing(s) listed</span>
-      <span fxFlex>Allocated: {{sessionDetails.allocatedHearingsDuration | async | appDurationAsMinutes}} minutes</span>
-      <span fxFlex>Available: {{sessionDetails.availableDuration | async}} minutes</span>
-    </div>
-    <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
-        <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>
-    </div>
-  </div>
+  </mat-dialog-content>
+
   <div fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>
     <button mat-button (click)="onCloseClick()">Close</button>
   </div>

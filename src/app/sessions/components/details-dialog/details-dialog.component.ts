@@ -9,9 +9,19 @@ import { SessionDialogDetails } from '../../models/session-dialog-details.model'
 })
 export class DetailsDialogComponent {
 
+  public sessionData;
+  public time;
+  public allocatedHearingsDuration;
+  public availableDuration;
+
   constructor(
       public dialogRef: MatDialogRef<DetailsDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public sessionDetails: SessionDialogDetails) { }
+      @Inject(MAT_DIALOG_DATA) public data: SessionDialogDetails) {
+      data.session.subscribe(s => this.sessionData = s);
+      data.availableDuration.subscribe(ad => this.availableDuration = ad);
+      data.allocatedHearingsDuration.subscribe(ahd => this.allocatedHearingsDuration = ahd);
+      data.time.subscribe(t => this.time = t);
+  }
 
     onCloseClick(): void {
         this.dialogRef.close();
