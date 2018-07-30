@@ -127,7 +127,7 @@ export class SessionEffects {
 
     @Effect()
     rollbackTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.RollbackTransaction>(),
+        ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.EntityTransactionActionTypes.RollbackTransaction),
         switchMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionRolledBack(data.id)]),
@@ -138,7 +138,7 @@ export class SessionEffects {
 
     @Effect()
     commitTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.CommitTransaction>(),
+        ofType<sessionTransactionActs.CommitTransaction>(sessionTransactionActs.EntityTransactionActionTypes.CommitTransaction),
         mergeMap(action =>
             this.transactionService.commitTransaction(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionCommitted(data.id)]),
