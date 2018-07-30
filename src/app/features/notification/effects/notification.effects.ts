@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Action } from '@ngrx/store';
 import { Notify, NotificationActionTypes, OpenDialog, OpenDialogWithAction } from '../actions/notification.action';

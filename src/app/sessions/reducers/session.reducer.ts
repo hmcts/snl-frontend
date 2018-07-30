@@ -1,7 +1,7 @@
 import { SessionActionTypes } from '../actions/session.action';
 import { Session } from '../models/session.model';
 
-import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 export interface State extends EntityState<Session> {
     loading: boolean | false;
@@ -37,20 +37,11 @@ export function reducer(state: State = initialState, action) {
             return {...state, ...adapter.removeOne(action.payload, {...state, loading: false})};
         }
         case SessionActionTypes.UpsertOne: {
-            const updatedSession = {
-                id: action.payload.id,
-                changes: action.payload
-            } as Update<Session>;
-            return {...state, ...adapter.upsertOne(updatedSession, {...state, loading: false})};
+            return {...state, ...adapter.upsertOne(action.payload, {...state, loading: false})};
         }
         case SessionActionTypes.UpsertMany: {
-            const updatedCollection = Object.values(action.payload || []).map((session: Session) => {
-                return {
-                    id: session.id,
-                    changes: session
-                } as Update<Session>;
-            });
-            return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};
+            return {...state, ...adapter.upsertMany(action.payload === undefined ? [] : Object.values(action.payload),
+                    {...state, loading: false})};
         }
         case SessionActionTypes.Create: {
             return {...state, loading: true};

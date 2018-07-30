@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Action, select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';

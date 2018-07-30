@@ -1,7 +1,8 @@
 import { MatTableDataSource } from '@angular/material';
 import { ReportService } from '../../../services/report-service';
 import { UnlistedHearingReportEntry } from '../../../model/unlisted-hearing-report-entry';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Component, OnChanges } from '@angular/core';
 
 @Component({
@@ -23,7 +24,7 @@ export class UnlistedHearingReportComponent implements OnChanges {
     }
 
     loadData() {
-        this.dataSource = this.reportService.getUnlistedHearingRequests().map(this._generateTableData);
+        this.dataSource = this.reportService.getUnlistedHearingRequests().pipe(map(this._generateTableData));
     }
 
     private readonly _generateTableData = (unlistedHearingReportEntries: UnlistedHearingReportEntry[]) => {

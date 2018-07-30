@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { NotificationEffects } from './notification.effects';
 import * as fromNotifications from '../actions/notification.action';
 import { CoreNotification } from '../model/core-notification';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { MatDialog, MatSnackBar } from '@angular/material';
 
 let notification = {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppConfig } from '../../../app.config';
 import { UnlistedHearingReportEntry } from '../model/unlisted-hearing-report-entry';
 import { ListedHearingReportEntry } from '../model/listed-hearing-report-entry';

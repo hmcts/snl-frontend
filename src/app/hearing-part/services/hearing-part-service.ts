@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AppConfig } from '../../app.config';
 import { SessionAssignment } from '../models/session-assignment';
 import { HearingPart } from '../models/hearing-part';

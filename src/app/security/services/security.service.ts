@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../app.config';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { User } from '../models/user.model';
 import { AccessToken, AuthorizationHeaderName } from '../models/access-token';
 

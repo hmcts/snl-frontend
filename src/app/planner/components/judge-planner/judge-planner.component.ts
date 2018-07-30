@@ -3,7 +3,7 @@ import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
 import * as fromReducer from '../../../sessions/reducers';
 import * as judgeReducers from '../../../judges/reducers';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ResourceList } from '../../../core/callendar/model/resource-list';

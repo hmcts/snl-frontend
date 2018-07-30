@@ -22,7 +22,7 @@ import { SecurityService } from './security/services/security.service';
 import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { PocComponent } from './admin/components/poc/poc.component';
 import { AdminModule } from './admin/admin.module';

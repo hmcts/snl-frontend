@@ -1,5 +1,5 @@
 import { SessionCreate } from './session-create.model';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Room } from '../../rooms/models/room.model';
 import { Judge } from '../../judges/models/judge.model';
 

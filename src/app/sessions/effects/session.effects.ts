@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs/Observable';
-import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, retryWhen, withLatestFrom } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+import { Observable, timer,  of } from 'rxjs';
+import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, switchMap, retryWhen, withLatestFrom } from 'rxjs/operators';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
@@ -14,8 +13,7 @@ import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/mergeMap';
+
 import { ProblemsService } from '../../problems/services/problems.service';
 import { TransactionBackendService, TransactionStatuses } from '../../core/services/transaction-backend.service';
 import { CoreNotification } from '../../features/notification/model/core-notification';
@@ -107,7 +105,7 @@ export class SessionEffects {
                         return transcation;
                     }
                 }),
-                retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
+                retryWhen(errors => errors.pipe(mergeMap(() => timer(3000)))), // Set TIMER
                 concatMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
             )
         ),
@@ -130,7 +128,7 @@ export class SessionEffects {
     @Effect()
     rollbackTransaction: Observable<Action> = this.actions$.pipe(
         ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.EntityTransactionActionTypes.RollbackTransaction),
-        mergeMap(action =>
+        switchMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
                 mergeMap((data) => [new sessionTransactionActs.TransactionRolledBack(data.id)]),
             )
