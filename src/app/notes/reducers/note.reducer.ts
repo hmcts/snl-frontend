@@ -22,9 +22,6 @@ export function reducer(state: State = initialState, action) {
         case NoteActionTypes.Create: {
             return {...state, loading: true};
         }
-        case NoteActionTypes.GetFailed: {
-            return {...state, loading: false, error: action.payload};
-        }
         case NoteActionTypes.GetComplete: {
             return adapter.addMany( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
         }

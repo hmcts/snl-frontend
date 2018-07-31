@@ -4,7 +4,7 @@ import { Note } from '../models/note.model';
 export enum NoteActionTypes {
   Get = '[Notes] Get',
   GetComplete = '[Notes] Get Complete',
-  GetFailed = '[Notes] Get Failed',
+  Error = '[Notes] Error',
   UpsertMany = '[Notes] Upsert Many',
   UpsertOne = '[Notes] Upsert One',
   Create = '[Notes] Create',
@@ -54,8 +54,8 @@ export class GetComplete implements Action {
     constructor() {}
 }
 
-export class GetFailed implements Action {
-    readonly type = NoteActionTypes.GetFailed;
+export class Error implements Action {
+    readonly type = NoteActionTypes.Error;
 
     constructor(public payload: string) {}
 }

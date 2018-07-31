@@ -1,24 +1,33 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SecurityModule } from '../security/security.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './reducers';
 import { NotesEffects } from './effects/notes.effects';
 import { CoreModule } from '../core/core.module';
-import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 import { NotesService } from './services/notes.service';
+import { AngularMaterialModule } from '../../angular-material/angular-material.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NoteComponent } from './components/note/note.component';
+import { NoteListComponent } from './components/notes-list/note-list.component';
+
+const COMPONENTS = [
+    NoteComponent,
+    NoteListComponent
+];
 
 @NgModule({
     imports: [
         CommonModule,
-        FullCalendarModule,
+        AngularMaterialModule,
+        FormsModule,
+        ReactiveFormsModule,
         CoreModule,
-        SecurityModule,
         StoreModule.forFeature('notes', reducers),
         EffectsModule.forFeature([NotesEffects])
     ],
-    declarations: [],
+    declarations: COMPONENTS,
+    exports: COMPONENTS,
     providers: [NotesService]
 })
 export class NotesModule {

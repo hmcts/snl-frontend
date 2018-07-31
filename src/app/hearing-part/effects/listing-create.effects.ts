@@ -8,7 +8,7 @@ import { CreateComplete, CreateFailed, CreateListingRequest, HearingPartActionTy
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import { LISTING_REQUEST_CREATED } from '../models/hearing-part-notifications';
-import { Notify } from '../../features/notification/actions/notification.action';
+import * as fromNotifications  from '../../features/notification/actions/notification.action';
 import * as fromNotes from '../../notes/actions/notes.action';
 
 @Injectable()
@@ -19,9 +19,10 @@ export class ListingCreateEffects {
         ofType<CreateListingRequest>(HearingPartActionTypes.CreateListingRequest),
         mergeMap(action =>
             this.hearingPartService.createListing(action.payload).pipe(
-                concatMap(() => [new CreateComplete(),
+                concatMap(() => [
                     new fromNotes.CreateMany(action.payload.notes),
-                    new Notify(LISTING_REQUEST_CREATED)]),
+                    new CreateComplete(),
+                    new fromNotifications.Notify(LISTING_REQUEST_CREATED)]),
                 catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
             )
         )

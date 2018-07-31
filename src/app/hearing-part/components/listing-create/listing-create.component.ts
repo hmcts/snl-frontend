@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
@@ -7,6 +7,9 @@ import { v4 as uuid } from 'uuid';
 import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
+import { Note } from '../../../notes/models/note.model';
+import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 const DURATION_UNIT = 'minute';
 
@@ -16,13 +19,15 @@ const DURATION_UNIT = 'minute';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent {
+    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+
     hearings: string[];
     caseTypes: string[];
     duration = 0;
     errors = '';
     success: boolean;
 
-    listing: ListingCreate;
+    public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
@@ -35,6 +40,7 @@ export class ListingCreateComponent {
 
     create() {
         this.listing.id = uuid();
+        this.listing.notes = this.noteList.getModifiedOrNewNotes().map(this.generateUUIDIfUndefined);
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
             this.errors = 'Start date should be before End date';
@@ -46,19 +52,50 @@ export class ListingCreateComponent {
     }
 
     private initiateListing() {
+        let now = moment();
         this.listing = {
             id: undefined,
-            caseNumber: undefined,
-            caseTitle: undefined,
-            caseType: undefined,
-            hearingType: undefined,
-            duration: moment.duration(0, DURATION_UNIT),
-            scheduleStart: null,
-            scheduleEnd: null,
-            createdAt: moment()
+            caseNumber: `case-number-${now}`,
+            caseTitle: `case-title-${now}`,
+            caseType: this.caseTypes[0],
+            hearingType: this.hearings[0],
+            duration: moment.duration(30, DURATION_UNIT),
+            scheduleStart: now,
+            scheduleEnd: now,
+            createdAt: now,
+            notes: this.defaultListingNotes()
         } as ListingCreate;
         this.duration = 0;
         this.errors = '';
         this.success = false;
+    }
+
+    private defaultListingNotes(): Note[] {
+        let specReqNote = {
+            id: undefined,
+            content: '',
+            type: 'Special Requirements'
+        } as Note
+
+        let facReqNote = {
+            id: undefined,
+            content: '',
+            type: 'Facility Requirements'
+        } as Note
+
+        let otherNote = {
+            id: undefined,
+            content: '',
+            type: 'Other note'
+        } as Note
+
+        return [specReqNote, facReqNote, otherNote];
+    }
+
+    private generateUUIDIfUndefined(note: NoteViewmodel): NoteViewmodel {
+        if ((note.id === undefined) || (note.id === '') || (note.id === null)) {
+            note.id = uuid();
+        }
+        return note;
     }
 }

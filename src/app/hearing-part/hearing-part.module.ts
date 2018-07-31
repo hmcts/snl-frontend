@@ -14,6 +14,7 @@ import { ListingCreateEffects } from './effects/listing-create.effects';
 import { HearingPartModificationService } from './services/hearing-part-modification-service';
 import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
 import { CoreModule } from '../core/core.module';
+import { NotesModule } from '../notes/notes.module';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -25,6 +26,7 @@ export const COMPONENTS = [
   imports: [
     CommonModule,
     AngularMaterialModule,
+    NotesModule,
     FlexLayoutModule,
     CoreModule,
     FormsModule,

@@ -1,7 +1,7 @@
-<div class="sessions-create-container">
-    <mat-card>
+<div style="display:flex" fxLayout="row">
+    <mat-card class="listing-create-container">
         <mat-card-header>
-            <mat-card-subtitle>Create a new listing request</mat-card-subtitle>
+            <mat-card-title>Create a new listing request</mat-card-title>
         </mat-card-header>
 
         <mat-card-content>
@@ -58,5 +58,12 @@
         <mat-card-actions>
             <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="!newListForm.valid">Save</button>
         </mat-card-actions>
+    </mat-card>
+
+    <mat-card fxLayout="column" fxLayoutGap="10%">
+        <mat-card-header>Notes</mat-card-header>
+        <mat-card-content>
+            <app-note-list [notes]="listing.notes"></app-note-list>
+        </mat-card-content>
     </mat-card>
 </div>
