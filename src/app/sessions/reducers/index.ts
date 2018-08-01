@@ -1,6 +1,6 @@
 import * as fromRooms from '../../rooms/reducers/room.reducer'
-import * as fromJudgesIndex from '../../judges/reducers/index';
-import * as fromHearingPartIndex from '../../hearing-part/reducers/index';
+import * as fromJudgesIndex from '../../judges/reducers';
+import * as fromHearingPartIndex from '../../hearing-part/reducers';
 import * as fromSessions from './session.reducer'
 import * as fromSessionTransaction from './transaction.reducer'
 import * as fromRoot from '../../app.state';
@@ -70,8 +70,8 @@ export const getRecentlyCreatedSessionId = createSelector(
 export const getRecentlyCreatedSessionStatus = createSelector(
     getSessionTransactionEntitiesState,
     getRecentlyCreatedTransactionId,
-    (sessionCreationEntities, recentlyCreatedSessionId) => {
-        return sessionCreationEntities[recentlyCreatedSessionId];
+    (sessionTransactionEntities, recentlyCreatedTransactionId) => {
+        return sessionTransactionEntities[recentlyCreatedTransactionId];
     }
 );
 
@@ -90,6 +90,11 @@ export const getSessionsPropositions = createSelector(
     state => state.sessionPropositions
 );
 
+export const getSessionsPropositionLoading = createSelector(
+    getSessionsEntitiesState,
+    state => state.loadingPropositions
+);
+
 export const {
     selectIds: getSessionIds,
     selectEntities: getSessionEntities,
@@ -100,12 +105,12 @@ export const {
 export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getHearingParts,
     (sessions, rooms, judges, hearingParts) => {
         let finalSessions: SessionViewModel[];
-        if (sessions === undefined) {return []};
+        if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
-            let sessionData: Session = sessions[sessionKey];
+            const sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
-                start: sessionData.start,
+                start: moment(sessionData.start),
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
@@ -126,10 +131,10 @@ export const getFullSessionPropositions = createSelector(getSessionsPropositions
                 startTime: moment(sessionProposition.start).format('HH:mm'),
                 endTime: moment(sessionProposition.end).format('HH:mm'),
                 date: moment(sessionProposition.start).format('DD MMM YYYY'),
-                availibility: moment.duration(moment(sessionProposition.end).diff(moment(sessionProposition.start))).humanize(),
+                availibility: moment.duration(sessionProposition.end.diff(sessionProposition.start)).humanize(),
                 room: rooms[sessionProposition.roomId],
                 judge: judges[sessionProposition.judgeId],
-            } as SessionPropositionView;
+            };
         });
         return finalSessions;
     });

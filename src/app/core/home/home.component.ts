@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { SecurityService } from '../../security/services/security.service';
 
 @Component({
@@ -7,14 +6,11 @@ import { SecurityService } from '../../security/services/security.service';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
     error;
 
-    constructor(private security: SecurityService, private http: HttpClient) {
-    }
-
-    ngOnInit() {
+    constructor(private readonly security: SecurityService) {
     }
 
     isInRole(roleType: string) {

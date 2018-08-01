@@ -7,9 +7,11 @@ import { HttpClient } from '@angular/common/http';
 @Injectable()
 export class AppConfig {
 
+  static locale = 'en-GB';
+
   protected config: Config;
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
   public load(): Promise<void> {
     console.log('Loading app config...');
@@ -28,7 +30,7 @@ export class AppConfig {
   }
 
   public getApiUrl() {
-    return this.config.api_url;
+    return this.config.apiUrl;
   }
 
   /**
@@ -42,5 +44,5 @@ export class AppConfig {
 }
 
 export class Config {
-  api_url: string;
+  apiUrl: string;
 }

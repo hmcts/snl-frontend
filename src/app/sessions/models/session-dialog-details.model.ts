@@ -4,7 +4,7 @@ import { SessionsStatisticsService } from '../services/sessions-statistics-servi
 import { Observable } from 'rxjs/Observable';
 
 export class SessionDialogDetails {
-    private sessionsStatsService: SessionsStatisticsService;
+    private readonly sessionsStatsService: SessionsStatisticsService;
 
     public time: Observable<string>;
     public endTime: Observable<string>;

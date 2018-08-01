@@ -73,7 +73,7 @@ describe('SessionsService', () => {
   });
 
   describe('searchSessions', () => {
-    const date = new Date();
+    const date = moment();
     const expectedGetSessionURL = `${mockedAppConfig.getApiUrl()}/sessions?date=${date}`;
     const sessionQuery = { date };
 
@@ -96,8 +96,8 @@ describe('SessionsService', () => {
       `/sessions?startDate=${startDayString}` +
       `&endDate=${endDayString}`;
     const sessionQueryForDates = {
-      startDate: moment(startDayString, format).toDate(),
-      endDate: moment(endDayString, format).toDate()
+      startDate: moment(startDayString, format),
+      endDate: moment(endDayString, format)
     };
 
     it('should build valid URL', () => {
@@ -120,8 +120,8 @@ describe('SessionsService', () => {
 
   describe('searchSessionsForJudge', () => {
     const diaryLoadParameters = {
-      startDate: moment(startDayString, format).toDate(),
-      endDate: moment(endDayString, format).toDate(),
+      startDate: moment(startDayString, format),
+      endDate: moment(endDayString, format),
       judgeUsername
     };
 
@@ -145,8 +145,8 @@ describe('SessionsService', () => {
 
   describe('searchSessionsForJudgeWithHearings', () => {
     const diaryLoadParameters = {
-      startDate: moment(startDayString, format).toDate(),
-      endDate: moment(endDayString, format).toDate(),
+      startDate: moment(startDayString, format),
+      endDate: moment(endDayString, format),
       judgeUsername
     };
 
@@ -181,7 +181,7 @@ describe('SessionsService', () => {
       personId: 'some-person-id',
       roomId: 'some-room-id',
       duration: 30,
-      start: new Date(),
+      start: moment(),
       caseType: 'some-case-type'
     };
 

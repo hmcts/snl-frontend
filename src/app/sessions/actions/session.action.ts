@@ -83,7 +83,7 @@ export class Update implements Action {
 export class CreateComplete implements Action {
     readonly type = SessionActionTypes.CreateComplete;
 
-    constructor(public payload: string | String) {}
+    constructor(public payload: string) {}
 }
 
 export class UpdateComplete implements Action {

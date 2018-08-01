@@ -1,6 +1,6 @@
 export class ResourceList {
 
-    private _list: ResourceColumn[] = [];
+    private _list: ResourceColumn[] = []; // NOSONAR not readonly
 
     constructor(resource: string) {
         this.add(resource + '-empty', 'Not allocated');

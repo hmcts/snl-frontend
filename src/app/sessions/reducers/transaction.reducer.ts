@@ -1,7 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { EntityTransaction } from '../models/transaction-status.model';
-import { EntityTransactionActionTypes, UpdateTransaction } from '../actions/transaction.action';
-import { TransactionStatuses } from '../../core/services/transaction-backend.service';
+import { EntityTransactionActionTypes } from '../actions/transaction.action';
 
 export interface State extends EntityState<EntityTransaction> {
     recent: string
@@ -37,12 +36,12 @@ export function reducer(state: State = initialState, action) {
 }
 
 function upsertSession(state, action, problemsLoaded: boolean, completed: boolean, conflicted: boolean) {
-    let updatedSession = {
+    const updatedSession = {
         id: action.payload,
         changes: {
-            problemsLoaded: problemsLoaded,
-            completed: completed,
-            conflicted: conflicted
+            problemsLoaded,
+            completed,
+            conflicted
         }
     } as Update<EntityTransaction>;
     return {...state, ...adapter.upsertOne(updatedSession, state)};

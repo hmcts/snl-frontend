@@ -1,10 +1,11 @@
+import * as moment from 'moment'
 
 export interface SessionFilters {
-    caseTypes: String[];
-    rooms: String[];
-    judges: String[];
-    startDate: Date;
-    endDate: Date;
+    caseTypes: string[];
+    rooms: string[];
+    judges: string[];
+    startDate: moment.Moment;
+    endDate: moment.Moment;
     utilization: {
         unlisted: UtilizationFilter,
         partListed: UtilizationFilter,

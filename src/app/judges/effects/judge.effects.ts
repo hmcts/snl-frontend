@@ -21,5 +21,5 @@ export class JudgeEffects {
         )
     );
 
-    constructor(private judgeService: JudgeService, private actions$: Actions) {}
+    constructor(private readonly judgeService: JudgeService, private readonly actions$: Actions) {}
 }

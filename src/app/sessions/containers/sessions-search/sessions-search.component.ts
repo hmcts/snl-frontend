@@ -4,10 +4,9 @@ import { SearchForDates } from '../../actions/session.action';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
-import * as fromSessions from '../../reducers/index';
+import * as fromHearingParts from '../../../hearing-part/reducers';
+import * as fromSessions from '../../reducers';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
-import { AssignToSession } from '../../../hearing-part/actions/hearing-part.action';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -15,7 +14,7 @@ import * as RoomActions from '../../../rooms/actions/room.action';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
-import * as fromJudges from '../../../judges/reducers/index';
+import * as fromJudges from '../../../judges/reducers';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
@@ -33,8 +32,8 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 })
 export class SessionsSearchComponent implements OnInit {
 
-    startDate: Date;
-    endDate: Date;
+    startDate: moment.Moment;
+    endDate: moment.Moment;
     hearingParts$: Observable<HearingPart[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
@@ -42,11 +41,10 @@ export class SessionsSearchComponent implements OnInit {
     selectedSession: any;
     selectedHearingPartId;
     filteredSessions$: Observable<SessionViewModel[]>;
-    sessionsStatsService: SessionsStatisticsService;
     filters$ = new Subject<SessionFilters>();
 
-    constructor(private store: Store<fromHearingParts.State>,
-                sessionsStatisticsService: SessionsStatisticsService,
+    constructor(private readonly store: Store<fromHearingParts.State>,
+                private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
@@ -55,12 +53,11 @@ export class SessionsSearchComponent implements OnInit {
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
-        this.startDate = moment().toDate();
-        this.endDate = moment().add(5, 'years').toDate();
+        this.startDate = moment();
+        this.endDate = moment().add(5, 'years');
         this.selectedHearingPartId = '';
         this.selectedSession = {};
         this.filteredSessions$ = this.sessions$;
-        this.sessionsStatsService = sessionsStatisticsService;
     }
 
     ngOnInit() {
@@ -118,8 +115,8 @@ export class SessionsSearchComponent implements OnInit {
         Object.values(filters).forEach((filter: UtilizationFilter) => {
             if (filter.active) {
                 anyFilterActive = true;
-                let allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
-                let sessionUtilization = this.sessionsStatsService
+                const allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
+                const sessionUtilization = this.sessionsStatsService
                     .calculateUtilizedDuration(moment.duration(session.duration), allocated);
                 if (sessionUtilization >= filter.from && sessionUtilization <= filter.to) {
                     matches = true;

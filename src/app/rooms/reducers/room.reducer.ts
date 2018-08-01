@@ -25,7 +25,7 @@ export function reducer(state: State = initialState, action) {
         return adapter.addAll( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
     }
     case RoomActionTypes.UpsertMany: {
-      let updatedCollection = Object.values(action.payload || []).map((room: Room) => {
+      const updatedCollection = Object.values(action.payload || []).map((room: Room) => {
           return {
               id: room.id,
               changes: room

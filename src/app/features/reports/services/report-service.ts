@@ -5,10 +5,11 @@ import { AppConfig } from '../../../app.config';
 import { UnlistedHearingReportEntry } from '../model/unlisted-hearing-report-entry';
 import { ListedHearingReportEntry } from '../model/listed-hearing-report-entry';
 import { getHttpFriendly } from '../../../utils/date-utils';
+import * as moment from 'moment'
 
 @Injectable()
 export class ReportService {
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     getUnlistedHearingRequests(): Observable<UnlistedHearingReportEntry[]> {
@@ -16,9 +17,9 @@ export class ReportService {
             .get<UnlistedHearingReportEntry[]>(`${this.config.getApiUrl()}/report/unlisted-hearing-requests`)
     }
 
-    getListedHearingRequests(startDate: Date, endDate: Date): Observable<ListedHearingReportEntry[]> {
-        let start = getHttpFriendly(startDate);
-        let end = getHttpFriendly(endDate);
+    getListedHearingRequests(startDate: moment.Moment, endDate: moment.Moment): Observable<ListedHearingReportEntry[]> {
+        const start = getHttpFriendly(startDate);
+        const end = getHttpFriendly(endDate);
 
         return this.http
             .get<ListedHearingReportEntry[]>(`${this.config.getApiUrl()}/report/listed-hearing-requests?startDate=${start}&endDate=${end}`)

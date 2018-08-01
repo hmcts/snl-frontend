@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { select, Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import * as fromSessions from '../../reducers/index';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -13,7 +11,7 @@ import { SessionsStatisticsService } from '../../services/sessions-statistics-se
   styleUrls: ['./session-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionTableComponent implements OnInit, OnChanges {
+export class SessionTableComponent implements OnChanges {
 
   @Output()
   selectSession = new EventEmitter();
@@ -37,8 +35,7 @@ export class SessionTableComponent implements OnInit, OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private store: Store<fromSessions.State>,
-              private sessionsStatsService: SessionsStatisticsService) {
+  constructor(private readonly sessionsStatsService: SessionsStatisticsService) {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
@@ -48,6 +45,10 @@ export class SessionTableComponent implements OnInit, OnChanges {
 
   parseDate(date) {
       return moment(date).format('DD/MM/YYYY');
+  }
+
+  parseTime(date: moment.Moment) {
+    return date.format('HH:mm');
   }
 
   humanizeDuration(duration) {
@@ -71,19 +72,11 @@ export class SessionTableComponent implements OnInit, OnChanges {
     this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
   }
 
-  ngOnInit() {
-  }
-
   ngOnChanges() {
       if (this.sessions) {
           this.tableVisible = true;
-
-          this.sessions.map(element => {
-              element.start = new Date(element.start);
-          });
           this.dataSource = new MatTableDataSource(this.sessions);
       }
-
   }
 
 }

@@ -8,7 +8,7 @@ import { Judge } from '../models/judge.model';
 @Injectable()
 export class JudgeService {
 
-    constructor(private http: HttpClient, private config: AppConfig) {
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
     get(): Observable<Judge[]> {

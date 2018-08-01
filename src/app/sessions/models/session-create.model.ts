@@ -1,10 +1,11 @@
+import * as moment from 'moment';
 
 export interface SessionCreate {
-    id: String;
-    userTransactionId: String,
-    personId: String;
-    roomId: String;
+    id: string;
+    userTransactionId: string,
+    personId: string;
+    roomId: string;
     duration: number;
-    start: Date;
-    caseType: String
+    start: moment.Moment;
+    caseType: string
 }

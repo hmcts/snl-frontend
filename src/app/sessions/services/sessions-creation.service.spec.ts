@@ -1,4 +1,4 @@
-import { SessionCreate } from './../models/session-create.model';
+import { SessionCreate } from '../models/session-create.model';
 import { SessionsCreationService } from './sessions-creation.service';
 
 let storeSpy;

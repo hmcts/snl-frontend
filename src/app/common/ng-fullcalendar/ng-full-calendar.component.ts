@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, NgZone, AfterViewInit, ElementRef, EventEmitter } from '@angular/core';
+import { Component, Input, Output, NgZone, AfterViewInit, ElementRef, EventEmitter } from '@angular/core';
 import * as $ from 'jquery';
 import 'fullcalendar';
 import 'fullcalendar-scheduler';

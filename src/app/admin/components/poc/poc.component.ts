@@ -16,7 +16,7 @@ export class PocComponent implements OnInit {
   hourRequestBody = {timeType: 'hour', value: 0} as TimeRequestBody;
   minuteRequestBody = {timeType: 'minute', value: 0} as TimeRequestBody;
 
-  constructor(private pocService: PocService) {
+  constructor(private readonly pocService: PocService) {
   }
 
   ngOnInit() {

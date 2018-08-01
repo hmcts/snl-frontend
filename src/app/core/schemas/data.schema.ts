@@ -8,12 +8,12 @@ export const hearingPart = new schema.Entity('hearingParts', {});
 export const hearingParts = new schema.Array(hearingPart);
 
 export const session = new schema.Entity('sessions', {
-    person: person,
-    room: room,
-    hearingParts: hearingParts
+    person,
+    room,
+    hearingParts
 } as Schema);
 
-hearingPart.define({session: session} as Schema);
+hearingPart.define({session} as Schema);
 
 export const sessions = new schema.Array(session);
 export const sessionsWithHearings = new schema.Entity('sessionsWithHearings', {sessions, hearingParts}  as Schema);

@@ -11,8 +11,6 @@ import { DialogInfoComponent } from '../components/dialog-info/dialog-info.compo
 @Injectable()
 export class NotificationEffects {
 
-    FOREVER = {duration: 1000000000};
-
     notificationHandle;
 
     @Effect({ dispatch: false })
@@ -40,14 +38,14 @@ export class NotificationEffects {
     );
 
     @Effect({ dispatch: false })
-    OpenDialogWithAction$: Observable<Action> = this.actions$.pipe(
+    openDialogWithAction$: Observable<Action> = this.actions$.pipe(
         ofType<OpenDialogWithAction>(NotificationActionTypes.OpenDialogWithAction),
         tap((action: OpenDialogWithAction) => {
             this.openDialog(action.payload);
         })
     );
 
-    constructor(private actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
+    constructor(private readonly actions$: Actions, public snackBar: MatSnackBar, public dialog: MatDialog) {
     }
 
     createNotification(action) {

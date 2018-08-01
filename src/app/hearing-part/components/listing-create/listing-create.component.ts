@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { Create, CreateListingRequest } from '../../actions/hearing-part.action';
+import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
 
@@ -24,7 +24,7 @@ export class ListingCreateComponent {
 
     listing: ListingCreate;
 
-    constructor(private store: Store<State>) {
+    constructor(private readonly store: Store<State>) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
@@ -55,7 +55,7 @@ export class ListingCreateComponent {
             duration: moment.duration(0, DURATION_UNIT),
             scheduleStart: null,
             scheduleEnd: null,
-            createdAt: new Date(moment.now())
+            createdAt: moment()
         } as ListingCreate;
         this.duration = 0;
         this.errors = '';
