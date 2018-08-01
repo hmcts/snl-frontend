@@ -1,5 +1,6 @@
 import * as moment from 'moment'
 import { Session } from '../../sessions/models/session.model';
+// import { Priority } from './priority-model';
 
 export interface HearingPartViewmodel {
     id: string;
@@ -11,4 +12,5 @@ export interface HearingPartViewmodel {
     duration: moment.Duration
     scheduleStart: Date;
     scheduleEnd: Date;
+    // priority: Priority;
 }

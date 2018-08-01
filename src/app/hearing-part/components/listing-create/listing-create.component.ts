@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
+import { Priority } from '../../models/priority-model';
 
 const DURATION_UNIT = 'minute';
 
@@ -21,6 +22,7 @@ export class ListingCreateComponent {
     duration = 0;
     errors = '';
     success: boolean;
+    priorityValues = Object.values(Priority);
 
     listing: ListingCreate;
 
@@ -55,7 +57,8 @@ export class ListingCreateComponent {
             duration: moment.duration(0, DURATION_UNIT),
             scheduleStart: null,
             scheduleEnd: null,
-            createdAt: moment()
+            createdAt: moment(),
+            priority: Priority.Low
         } as ListingCreate;
         this.duration = 0;
         this.errors = '';

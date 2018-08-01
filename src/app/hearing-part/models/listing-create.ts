@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { Priority } from './priority-model';
 
 export interface ListingCreate {
     id: string;
@@ -10,4 +11,5 @@ export interface ListingCreate {
     scheduleStart: moment.Moment;
     scheduleEnd: moment.Moment;
     createdAt: moment.Moment;
+    priority: Priority;
 }
