@@ -31,7 +31,6 @@ describe('NoteReducer', () => {
 
     describe('The \'loading\' flag should be true when', () => {
         [   new fromNotes.Get(),
-            new fromNotes.Create(note),
             new fromNotes.CreateMany([note])
         ].forEach(action => {
             it(`'${action.type}' is dispatched`, () => {

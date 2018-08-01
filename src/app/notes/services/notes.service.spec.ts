@@ -45,17 +45,6 @@ describe('NotesService', () => {
         });
     });
 
-    describe('createNote', () => {
-        const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes`;
-
-        it('should call proper url', () => {
-            notesService.create(note).subscribe(
-                data => expect(data).toEqual(note)
-            );
-            httpMock.expectOne(expectedUrl).flush(note);
-        });
-    });
-
     describe('get', () => {
         const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes`;
 
