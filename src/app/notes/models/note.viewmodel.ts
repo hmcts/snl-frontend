@@ -9,6 +9,7 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         id: note.id,
         content: note.content,
         type: note.type,
-        modified: false
+        modified: false,
+        parentId: note.parentId
     } as NoteViewmodel
 }

@@ -31,8 +31,8 @@ export const getNotesLoading = createSelector(
 );
 
 export const {
-    selectIds: getJudgesIds,
-    selectEntities: getJudgesEntities,
-    selectAll: getAllJudges,
-    selectTotal: getTotalJudges,
+    selectIds: getNotesIds,
+    selectEntities: getNotesEntities,
+    selectAll: getAllNotes,
+    selectTotal: getTotalNotes,
 } = fromNotes.adapter.getSelectors(getNotesState);

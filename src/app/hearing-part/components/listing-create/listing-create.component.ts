@@ -39,7 +39,10 @@ export class ListingCreateComponent {
 
     create() {
         this.listing.id = uuid();
-        this.listing.notes = this.noteList.getModifiedNotes().map(this.generateUUIDIfUndefined);
+        this.listing.notes = this.noteList.getModifiedNotes()
+            .map(n => this.generateUUIDIfUndefined(n))
+            .map(n => this.assignParentIdIfUndefined(n, this.listing.id));
+
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
             this.errors = 'Start date should be before End date';
@@ -89,10 +92,21 @@ export class ListingCreateComponent {
         return [specReqNote, facReqNote, otherNote];
     }
 
-    private generateUUIDIfUndefined(note: NoteViewmodel): NoteViewmodel {
-        if ((note.id === undefined) || (note.id === '') || (note.id === null)) {
+    private generateUUIDIfUndefined(note: Note): Note {
+        if (this.isLogicallyUndefined(note.id)) {
             note.id = uuid();
         }
         return note;
+    }
+
+    private assignParentIdIfUndefined(note: Note, parentId: string): Note {
+        if (this.isLogicallyUndefined(note.parentId)) {
+            note.parentId = parentId;
+        }
+        return note;
+    }
+
+    private isLogicallyUndefined(property: any) {
+        return (property === undefined) || (property === '') || (property === null)
     }
 }
