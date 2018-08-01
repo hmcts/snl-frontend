@@ -13,18 +13,21 @@ export class NotesService {
 
     get(): Observable<Note[]> {
         return this.http
-            .get<Note[]>(`${this.config.getNotesUrl()}/notes`)
+            .get<Note[]>(this.getUrl())
             .pipe(map(notes => notes || []));
     }
 
     create(note: Note): Observable<Note> {
         return this.http
-            .post<Note>(`${this.config.getNotesUrl()}/notes`, note)
+            .post<Note>(this.getUrl(), note)
     }
 
     createMany(notes: Note[]): Observable<Note[]> {
         return this.http
-            .post<Note[]>(`${this.config.getNotesUrl()}/notes`, notes)
+            .post<Note[]>(this.getUrl(), notes)
     }
 
+    private getUrl() {
+        return `${this.config.getNotesUrl()}/notes`;
+    }
 }

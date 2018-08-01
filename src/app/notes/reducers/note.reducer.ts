@@ -15,15 +15,10 @@ export const initialState: State = adapter.getInitialState({
 
 export function reducer(state: State = initialState, action) {
     switch (action.type) {
-        case NoteActionTypes.Get: {
-            return {...state, loading: true};
-        }
+        case NoteActionTypes.Get:
         case NoteActionTypes.CreateMany:
         case NoteActionTypes.Create: {
             return {...state, loading: true};
-        }
-        case NoteActionTypes.GetComplete: {
-            return adapter.addMany( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
         }
         case NoteActionTypes.UpsertOne: {
             const updatedNote = {

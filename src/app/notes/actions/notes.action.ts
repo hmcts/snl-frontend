@@ -9,7 +9,6 @@ export enum NoteActionTypes {
   UpsertMany = '[Notes] Upsert Many',
   UpsertOne = '[Notes] Upsert One',
 
-  GetComplete = '[Notes] Get Complete',
   Error = '[Notes] Error'
 }
 
@@ -41,12 +40,6 @@ export class UpsertOne implements Action {
     readonly type = NoteActionTypes.UpsertOne;
 
     constructor(public payload: Note) {}
-}
-
-export class GetComplete implements Action {
-    readonly type = NoteActionTypes.GetComplete;
-
-    constructor() {}
 }
 
 export class Error implements Action {

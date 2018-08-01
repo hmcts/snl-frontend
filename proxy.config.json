@@ -5,12 +5,5 @@
     "pathRewrite": {
       "^/api": ""
     }
-  },
-  "/notes": {
-    "target": "http://localhost:8093",
-    "secure": false,
-    "pathRewrite": {
-      "^/notes": ""
-    }
   }
 }
