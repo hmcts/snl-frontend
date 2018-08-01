@@ -5,6 +5,7 @@ export interface Note {
   type: string;
   content: string;
   parentId: string;
+  entity: string;
 }
 
 export function getNoteFromViewModel(note: NoteViewmodel): Note {
@@ -12,6 +13,7 @@ export function getNoteFromViewModel(note: NoteViewmodel): Note {
         id: note.id,
         content: note.content,
         type: note.type,
-        parentId: note.parentId
+        parentId: note.parentId,
+        entity: note.entity
     } as Note
 }

@@ -8,14 +8,16 @@ let note = {
     id: '1',
     content: 'a',
     type: 't',
-    parentId: 'p'
+    parentId: 'p',
+    entity: 'e'
 } as Note;
 
 let secondNote = {
     id: '2',
     content: 'a',
     type: 't',
-    parentId: 'p'
+    parentId: 'p',
+    entity: 'e'
 } as Note;
 
 let notes = [note, secondNote];
