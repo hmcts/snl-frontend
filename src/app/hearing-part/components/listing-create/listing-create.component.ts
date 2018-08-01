@@ -40,7 +40,8 @@ export class ListingCreateComponent {
         this.listing.id = uuid();
         this.listing.notes = this.noteList.getModifiedNotes()
             .map(n => this.generateUUIDIfUndefined(n))
-            .map(n => this.assignParentIdIfUndefined(n, this.listing.id));
+            .map(n => this.assignParentIdIfUndefined(n, this.listing.id))
+            .map(n => this.assignEntityName(n, 'ListingRequest'));
 
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
@@ -102,6 +103,11 @@ export class ListingCreateComponent {
         if (this.isLogicallyUndefined(note.parentId)) {
             note.parentId = parentId;
         }
+        return note;
+    }
+
+    private assignEntityName(note: Note, entity: string): Note {
+        note.entity = entity;
         return note;
     }
 
