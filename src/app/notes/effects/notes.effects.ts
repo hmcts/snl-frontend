@@ -5,7 +5,7 @@ import { catchError, distinctUntilChanged, filter, map, mergeMap, tap } from 'rx
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Get, UpsertMany, UpsertOne, NoteActionTypes, Create, CreateMany, Error } from '../actions/notes.action';
+import { Get, UpsertMany, NoteActionTypes, CreateMany, Error } from '../actions/notes.action';
 import { NotesService } from '../services/notes.service';
 
 @Injectable()
@@ -16,17 +16,6 @@ export class NotesEffects {
         mergeMap(() =>
             this.notesService.get().pipe(
                 map(data => (new UpsertMany(data))),
-                catchError((err: HttpErrorResponse) => of(new Error(err.error)))
-            )
-        )
-    );
-
-    @Effect()
-    create$: Observable<Action> = this.actions$.pipe(
-        ofType<Create>(NoteActionTypes.Create),
-        mergeMap(action =>
-            this.notesService.create(action.payload).pipe(
-                map(createdNote => (new UpsertOne(createdNote))),
                 catchError((err: HttpErrorResponse) => of(new Error(err.error)))
             )
         )

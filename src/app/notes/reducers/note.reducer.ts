@@ -16,8 +16,7 @@ export const initialState: State = adapter.getInitialState({
 export function reducer(state: State = initialState, action) {
     switch (action.type) {
         case NoteActionTypes.Get:
-        case NoteActionTypes.CreateMany:
-        case NoteActionTypes.Create: {
+        case NoteActionTypes.CreateMany: {
             return {...state, loading: true};
         }
         case NoteActionTypes.UpsertOne: {

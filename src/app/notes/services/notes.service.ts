@@ -17,11 +17,6 @@ export class NotesService {
             .pipe(map(notes => notes || []));
     }
 
-    create(note: Note): Observable<Note> {
-        return this.http
-            .post<Note>(this.getUrl(), note)
-    }
-
     createMany(notes: Note[]): Observable<Note[]> {
         return this.http
             .post<Note[]>(this.getUrl(), notes)

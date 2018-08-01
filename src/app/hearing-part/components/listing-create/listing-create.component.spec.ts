@@ -107,7 +107,6 @@ describe('ListingCreateComponent', () => {
         it('with properly generated parentIds', () => {
             expect(createdListing.notes[0].parentId).toEqual(createdListing.id);
             expect(createdListing.notes[1].parentId).toEqual(createdListing.id);
-
         });
 
         it('with properly generated entity names', () => {
