@@ -9,7 +9,6 @@ import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
 import { Note } from '../../../notes/models/note.model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
-import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 const DURATION_UNIT = 'minute';
 
@@ -53,7 +52,7 @@ export class ListingCreateComponent {
     }
 
     private initiateListing() {
-        let now = moment();
+        const now = moment();
         this.listing = {
             id: undefined,
             caseNumber: `number-${now.toISOString()}`,
@@ -71,19 +70,19 @@ export class ListingCreateComponent {
     }
 
     private defaultListingNotes(): Note[] {
-        let specReqNote = {
+        const specReqNote = {
             id: undefined,
             content: '',
             type: 'Special Requirements'
         } as Note;
 
-        let facReqNote = {
+        const facReqNote = {
             id: undefined,
             content: '',
             type: 'Facility Requirements'
         } as Note;
 
-        let otherNote = {
+        const otherNote = {
             id: undefined,
             content: '',
             type: 'Other note'

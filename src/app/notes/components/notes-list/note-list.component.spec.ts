@@ -7,13 +7,15 @@ let noteListComponent: NoteListComponent;
 let note = {
     id: '1',
     content: 'a',
-    type: 't'
+    type: 't',
+    parentId: 'p'
 } as Note;
 
 let secondNote = {
     id: '2',
     content: 'a',
-    type: 't'
+    type: 't',
+    parentId: 'p'
 } as Note;
 
 let notes = [note, secondNote];
