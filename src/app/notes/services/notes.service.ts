@@ -14,7 +14,7 @@ export class NotesService {
     get(): Observable<Note[]> {
         return this.http
             .get<Note[]>(`${this.config.getNotesUrl()}/notes`)
-            .pipe(map(judges => judges || []));
+            .pipe(map(notes => notes || []));
     }
 
     create(note: Note): Observable<Note> {

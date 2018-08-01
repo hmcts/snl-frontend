@@ -1,13 +1,12 @@
-<div style="display:flex" fxLayout="row">
-    <mat-card class="listing-create-container">
+<div style="display:flex">
+    <mat-card>
         <mat-card-header>
             <mat-card-title>Create a new listing request</mat-card-title>
         </mat-card-header>
 
-        <mat-card-content>
-            <form id="ngForm" #newListForm="ngForm" (ngSubmit)="create(); newListForm.resetForm();" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+        <mat-card-content fxLayout="row" fxLayoutGap="5%">
+            <form id="ngForm" #newListForm="ngForm" (ngSubmit)="create();" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div *ngIf="errors">Error: {{errors}}</div>
-                <div *ngIf="success">Listing added successfully</div>
 
                 <mat-form-field>
                     <input id="caseNumber" [(ngModel)]="listing.caseNumber" name="caseNumber" matInput placeholder="Case number" type="text" required>
@@ -53,17 +52,17 @@
                     <mat-datepicker #pickerEnd></mat-datepicker>
                 </mat-form-field>
             </form>
+
+            <div style="padding-right: 2em">
+                <div fxLayout="column" fxLayoutGap="10%">
+                    <app-note-list [notes]="listing.notes"></app-note-list>
+                </div>
+            </div>
+
         </mat-card-content>
 
         <mat-card-actions>
             <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="!newListForm.valid">Save</button>
         </mat-card-actions>
-    </mat-card>
-
-    <mat-card fxLayout="column" fxLayoutGap="10%">
-        <mat-card-header>Notes</mat-card-header>
-        <mat-card-content>
-            <app-note-list [notes]="listing.notes"></app-note-list>
-        </mat-card-content>
     </mat-card>
 </div>

@@ -6,7 +6,7 @@ import { getNoteViewModel, NoteViewmodel } from '../../models/note.viewmodel';
 @Component({
   selector: 'app-note-list',
   templateUrl: './note-list.component.html',
-  styleUrls: ['./note-list.component.scss'],
+  styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteListComponent {
@@ -16,11 +16,7 @@ export class NoteListComponent {
         this.noteViewModels = notes.map(getNoteViewModel);
     };
 
-    getModifiedOrNewNotes(): Note[] {
-        return this.noteViewModels.filter(this.noteModified).map(getNoteFromViewModel);
-    }
-
-    private noteModified(note: NoteViewmodel): boolean {
-        return note.modified
+    getModifiedNotes(): Note[] {
+        return this.noteViewModels.filter(n => n.modified).map(getNoteFromViewModel);
     }
 }

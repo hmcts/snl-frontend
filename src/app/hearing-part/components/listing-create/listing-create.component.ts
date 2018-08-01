@@ -16,7 +16,7 @@ const DURATION_UNIT = 'minute';
 @Component({
     selector: 'app-listing-create',
     templateUrl: './listing-create.component.html',
-    styleUrls: ['./listing-create.component.scss']
+    styleUrls: []
 })
 export class ListingCreateComponent {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
@@ -25,7 +25,6 @@ export class ListingCreateComponent {
     caseTypes: string[];
     duration = 0;
     errors = '';
-    success: boolean;
 
     public listing: ListingCreate;
 
@@ -40,14 +39,13 @@ export class ListingCreateComponent {
 
     create() {
         this.listing.id = uuid();
-        this.listing.notes = this.noteList.getModifiedOrNewNotes().map(this.generateUUIDIfUndefined);
+        this.listing.notes = this.noteList.getModifiedNotes().map(this.generateUUIDIfUndefined);
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
             this.errors = 'Start date should be before End date';
         } else {
             this.store.dispatch(new CreateListingRequest(this.listing));
             this.initiateListing();
-            this.success = true;
         }
     }
 
@@ -55,19 +53,18 @@ export class ListingCreateComponent {
         let now = moment();
         this.listing = {
             id: undefined,
-            caseNumber: `case-number-${now}`,
-            caseTitle: `case-title-${now}`,
+            caseNumber: `number-${now.toISOString()}`,
+            caseTitle: `title-${now.toISOString()}`,
             caseType: this.caseTypes[0],
             hearingType: this.hearings[0],
-            duration: moment.duration(30, DURATION_UNIT),
+            duration: moment.duration(),
             scheduleStart: now,
-            scheduleEnd: now,
+            scheduleEnd: moment().add(30, 'day'),
             createdAt: now,
             notes: this.defaultListingNotes()
         } as ListingCreate;
-        this.duration = 0;
+        this.duration = 30;
         this.errors = '';
-        this.success = false;
     }
 
     private defaultListingNotes(): Note[] {
@@ -75,19 +72,19 @@ export class ListingCreateComponent {
             id: undefined,
             content: '',
             type: 'Special Requirements'
-        } as Note
+        } as Note;
 
         let facReqNote = {
             id: undefined,
             content: '',
             type: 'Facility Requirements'
-        } as Note
+        } as Note;
 
         let otherNote = {
             id: undefined,
             content: '',
             type: 'Other note'
-        } as Note
+        } as Note;
 
         return [specReqNote, facReqNote, otherNote];
     }

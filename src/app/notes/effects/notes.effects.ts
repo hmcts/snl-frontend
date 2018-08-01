@@ -13,7 +13,7 @@ export class NotesEffects {
     @Effect()
     get$: Observable<Action> = this.actions$.pipe(
         ofType<Get>(NoteActionTypes.Get),
-        mergeMap(action =>
+        mergeMap(() =>
             this.notesService.get().pipe(
                 map(data => (new UpsertMany(data))),
                 catchError((err: HttpErrorResponse) => of(new Error(err.error)))

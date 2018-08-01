@@ -1,3 +1,5 @@
-<div>
+<div fxLayout="column" fxLayoutGap="10%">
   <app-note *ngFor="let note of noteViewModels" [note]="note"></app-note>
+
+  <div *ngIf="noteViewModels.length === 0">No notes available</div>
 </div>
