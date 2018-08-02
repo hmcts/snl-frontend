@@ -15,6 +15,7 @@ import { HearingPartModificationService } from './services/hearing-part-modifica
 import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
+import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -35,6 +36,6 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingPartModificationService]
+  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration]
 })
 export class HearingPartModule { }

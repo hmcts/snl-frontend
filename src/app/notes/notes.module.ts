@@ -10,6 +10,7 @@ import { AngularMaterialModule } from '../../angular-material/angular-material.m
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoteComponent } from './components/note/note.component';
 import { NoteListComponent } from './components/notes-list/note-list.component';
+import { NotesPreparerService } from './services/notes-preparer.service';
 
 const COMPONENTS = [
     NoteComponent,
@@ -28,7 +29,7 @@ const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [NotesService]
+    providers: [NotesService, NotesPreparerService]
 })
 export class NotesModule {
 }

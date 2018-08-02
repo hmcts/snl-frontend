@@ -9,6 +9,8 @@ import { NoteListComponent } from '../../../notes/components/notes-list/note-lis
 import { NoteComponent } from '../../../notes/components/note/note.component';
 import { CreateListingRequest, HearingPartActionTypes } from '../../actions/hearing-part.action';
 import { Note } from '../../../notes/models/note.model';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -31,7 +33,7 @@ describe('ListingCreateComponent', () => {
                 BrowserAnimationsModule
             ],
             declarations: [ListingCreateComponent, NoteComponent, NoteListComponent],
-            providers: [NoteListComponent],
+            providers: [NoteListComponent, NotesPreparerService, ListingCreateNotesConfiguration],
         });
 
         fixture = TestBed.createComponent(ListingCreateComponent);

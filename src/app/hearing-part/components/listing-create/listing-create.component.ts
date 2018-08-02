@@ -7,8 +7,9 @@ import { v4 as uuid } from 'uuid';
 import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
-import { Note } from '../../../notes/models/note.model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 
 const DURATION_UNIT = 'minute';
 
@@ -27,7 +28,9 @@ export class ListingCreateComponent {
 
     public listing: ListingCreate;
 
-    constructor(private readonly store: Store<State>) {
+    constructor(private readonly store: Store<State>,
+                private notePreparerService: NotesPreparerService,
+                private listingNotesConfig: ListingCreateNotesConfiguration) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
@@ -38,10 +41,9 @@ export class ListingCreateComponent {
 
     create() {
         this.listing.id = uuid();
-        this.listing.notes = this.noteList.getModifiedNotes()
-            .map(n => this.generateUUIDIfUndefined(n))
-            .map(n => this.assignParentIdIfUndefined(n, this.listing.id))
-            .map(n => this.assignEntityName(n, 'ListingRequest'));
+        this.listing.notes = this.notePreparerService.prepare(this.noteList.getModifiedNotes(),
+            this.listing.id,
+            this.listingNotesConfig.entityName);
 
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
@@ -64,54 +66,9 @@ export class ListingCreateComponent {
             scheduleStart: now,
             scheduleEnd: moment().add(30, 'day'),
             createdAt: now,
-            notes: this.defaultListingNotes()
+            notes: this.listingNotesConfig.defaultNotes
         } as ListingCreate;
         this.duration = 30;
         this.errors = '';
-    }
-
-    private defaultListingNotes(): Note[] {
-        const specReqNote = {
-            id: undefined,
-            content: '',
-            type: 'Special Requirements'
-        } as Note;
-
-        const facReqNote = {
-            id: undefined,
-            content: '',
-            type: 'Facility Requirements'
-        } as Note;
-
-        const otherNote = {
-            id: undefined,
-            content: '',
-            type: 'Other note'
-        } as Note;
-
-        return [specReqNote, facReqNote, otherNote];
-    }
-
-    private generateUUIDIfUndefined(note: Note): Note {
-        if (this.isLogicallyUndefined(note.id)) {
-            note.id = uuid();
-        }
-        return note;
-    }
-
-    private assignParentIdIfUndefined(note: Note, parentId: string): Note {
-        if (this.isLogicallyUndefined(note.parentId)) {
-            note.parentId = parentId;
-        }
-        return note;
-    }
-
-    private assignEntityName(note: Note, entity: string): Note {
-        note.entity = entity;
-        return note;
-    }
-
-    private isLogicallyUndefined(property: any) {
-        return (property === undefined) || (property === '') || (property === null)
     }
 }

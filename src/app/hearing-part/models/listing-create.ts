@@ -13,7 +13,3 @@ export interface ListingCreate {
     createdAt: moment.Moment;
     notes: Note[];
 }
-
-export function defaultListing () {
-
-}
