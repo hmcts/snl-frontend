@@ -33,6 +33,10 @@ export class AppConfig {
     return this.config.apiUrl;
   }
 
+  public getNotesUrl() {
+    return this.config.notesUrl;
+  }
+
   /**
    * Creates url to call api service, provides hostname and protocol
    * @param suffix - should start '/' and contain the rest of url
@@ -45,4 +49,5 @@ export class AppConfig {
 
 export class Config {
   apiUrl: string;
+  notesUrl: string;
 }

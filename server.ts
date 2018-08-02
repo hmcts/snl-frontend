@@ -16,7 +16,8 @@ const app = express();
 
 const PORT = process.env.PORT || 3451;
 const CONFIG = {
-  'apiUrl': process.env['SNL_API_URL'] || 'http://localhost:8090'
+  'apiUrl': process.env['SNL_API_URL'] || 'http://localhost:8090',
+  'notesUrl': process.env['SNL_NOTES_URL'] || 'http://localhost:8093'
 };
 const DIST_FOLDER = join(process.cwd());
 
@@ -24,7 +25,11 @@ app.use(cors())
 app.options('*', cors()) // include before other routes
 
 app.all('/*', function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', CONFIG.apiUrl);
+    let allowedOrigins = [CONFIG.apiUrl, CONFIG.notesUrl];
+    let origin = req.headers.origin;
+    if(allowedOrigins.indexOf(origin) > -1) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Authorization, Origin');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
 
