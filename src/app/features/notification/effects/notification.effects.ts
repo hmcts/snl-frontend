@@ -56,7 +56,11 @@ export class NotificationEffects {
         this.notificationHandle.dismiss();
     }
 
-    openDialog(message) {
+    openDialog(message: string) {
+        if(message == undefined) {
+            throw 'Message is empty, can\'t create a dialog.';
+        }
+
         return this.dialog.open(DialogInfoComponent, {
             width: 'auto',
             minWidth: 350,

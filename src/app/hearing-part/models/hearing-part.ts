@@ -10,4 +10,5 @@ export interface HearingPart {
     duration: moment.Duration
     scheduleStart: Date;
     scheduleEnd: Date;
+    version: number;
 }
