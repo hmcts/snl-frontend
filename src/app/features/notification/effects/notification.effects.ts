@@ -57,7 +57,7 @@ export class NotificationEffects {
     }
 
     openDialog(message: string) {
-        if(message == undefined) {
+        if (message === undefined) {
             throw 'Message is empty, can\'t create a dialog.';
         }
 
