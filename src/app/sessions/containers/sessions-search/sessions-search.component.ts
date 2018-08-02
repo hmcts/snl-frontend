@@ -39,7 +39,7 @@ export class SessionsSearchComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
     selectedSession: any;
-    selectedHearingPartId;
+    selectedHearingPart;
     filteredSessions$: Observable<SessionViewModel[]>;
     filters$ = new Subject<SessionFilters>();
 
@@ -49,13 +49,14 @@ export class SessionsSearchComponent implements OnInit {
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
             map(this.asArray)) as Observable<HearingPart[]>;
+
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
-        this.selectedHearingPartId = '';
+        this.selectedHearingPart = {};
         this.selectedSession = {};
         this.filteredSessions$ = this.sessions$;
     }
@@ -82,15 +83,17 @@ export class SessionsSearchComponent implements OnInit {
             .filter(s => this.filterByUtilization(s, filters.utilization));
     }
 
-    selectHearingPart(id: string) {
-        this.selectedHearingPartId = id;
+    selectHearingPart(hearingPart: HearingPart) {
+        this.selectedHearingPart = hearingPart;
     }
 
     assignToSession() {
         this.hearingModificationService.assignHearingPartWithSession({
-            hearingPartId: this.selectedHearingPartId,
-            userTransactionId: uuid(),
+            hearingPartId: this.selectedHearingPart.id,
+            hearingPartVersion: this.selectedHearingPart.version,
             sessionId: this.selectedSession.id,
+            sessionVersion: this.selectedSession.version,
+            userTransactionId: uuid(),
             start: null // this.calculateStartOfHearing(this.selectedSession)
         } as SessionAssignment);
 
@@ -102,7 +105,7 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     assignButtonEnabled() {
-        return !!((this.selectedHearingPartId !== '') && (this.selectedSession.id));
+        return !!((this.selectedHearingPart.id) && (this.selectedSession.id));
     }
 
     private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {

@@ -12,4 +12,5 @@ export interface SessionViewModel {
     caseType: string;
     hearingParts: HearingPart[];
     jurisdiction: string;
+    version: number;
 }
