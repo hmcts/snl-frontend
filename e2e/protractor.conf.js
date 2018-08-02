@@ -6,8 +6,10 @@ const puppeteer = require('puppeteer');
 
 const isHeadlessModeEnabled = true;
 
+const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
+
 exports.config = {
-    allScriptsTimeout: 11000,
+    allScriptsTimeout: 111000,
     suites: {
       e2e: './**/*.e2e-spec.ts',
       smoke: '../smoke-test/*.smoke-spec.ts'
@@ -16,16 +18,16 @@ exports.config = {
         'browserName': 'chrome',
         'acceptInsecureCerts': true,
         chromeOptions: {
-            args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage'] : [],
+            args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
         }
     },
     directConnect: true,
-    baseUrl: process.env.TEST_URL || 'http://localhost:3451/',
+    baseUrl: baseUrl,
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 30000,
+        defaultTimeoutInterval: 130000,
         print: function () {}
     },
     onPrepare() {
@@ -37,7 +39,7 @@ exports.config = {
                 displayStacktrace: true
             }
         }));
-        browser.manage().timeouts().implicitlyWait(5000);
+        browser.manage().timeouts().implicitlyWait(10000);
         return browser.get('/');
     }
 };

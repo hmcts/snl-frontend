@@ -6,32 +6,32 @@
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
 
     <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="filters.startDate" placeholder="Choose date">
+      <input id="startDate" matInput [matDatepicker]="picker" [(ngModel)]="filters.startDate" placeholder="Choose start date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="filters.endDate" placeholder="Choose end date">
+      <input id="endDate" matInput [matDatepicker]="pickerEnd" [(ngModel)]="filters.endDate" placeholder="Choose end date">
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Select the case type" multiple [(value)] = "filters.caseTypes">
+      <mat-select id="selectCaseType" placeholder="Select the case type" multiple [(value)] = "filters.caseTypes">
         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{roomsPlaceholder}}" multiple [(value)] = "filters.rooms">
+      <mat-select id="selectRoom"  placeholder="{{roomsPlaceholder}}" multiple [(value)] = "filters.rooms">
         <mat-option value="">(No room)</mat-option>
         <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.judges">
+      <mat-select id="selectJudge"  placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.judges">
         <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>
@@ -42,22 +42,22 @@
     <mat-card-header>
       <mat-card-subtitle>Listing details</mat-card-subtitle>
     </mat-card-header>
-    <mat-checkbox [(ngModel)]="filters.utilization.unlisted.active">Unlisted</mat-checkbox>
-    <mat-checkbox [(ngModel)]="filters.utilization.partListed.active">Part Listed</mat-checkbox>
-    <mat-checkbox [(ngModel)]= "filters.utilization.fullyListed.active">Fully Listed</mat-checkbox>
-    <mat-checkbox [(ngModel)]="filters.utilization.overListed.active">Over Listed</mat-checkbox>
-    <mat-checkbox [(ngModel)]="filters.utilization.custom.active">Custom</mat-checkbox>
+    <mat-checkbox id="unlistedCheckbox" [(ngModel)]="filters.utilization.unlisted.active">Unlisted</mat-checkbox>
+    <mat-checkbox id="partCheckbox" [(ngModel)]="filters.utilization.partListed.active">Part Listed</mat-checkbox>
+    <mat-checkbox id="fullyListedCheckbox" [(ngModel)]= "filters.utilization.fullyListed.active">Fully Listed</mat-checkbox>
+    <mat-checkbox id="overListedCheckbox" [(ngModel)]="filters.utilization.overListed.active">Over Listed</mat-checkbox>
+    <mat-checkbox id="customCheckbox" [(ngModel)]="filters.utilization.custom.active">Custom</mat-checkbox>
     <div fxLayout="row" fxLayoutGap="10%">
         <mat-form-field fxFlex="25%">
-          <input matInput placeholder="from" type="number" [(ngModel)]="filters.utilization.custom.from">
+          <input id="customFrom" matInput placeholder="from" type="number" [(ngModel)]="filters.utilization.custom.from">
         </mat-form-field>
         <p fxFlex="10%">-</p>
         <mat-form-field fxFlex="25%">
-          <input matInput placeholder="to" type="number" [(ngModel)]="filters.utilization.custom.to">
+          <input id="customTo" matInput placeholder="to" type="number" [(ngModel)]="filters.utilization.custom.to">
         </mat-form-field>
         <p fxFlex="10%">%</p>
     </div>
   </div>
 
-  <button mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
+  <button id="filter" mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
 </mat-card>

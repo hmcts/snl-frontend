@@ -1,10 +1,11 @@
 import { Judge } from '../../judges/models/judge.model';
 import { Room } from '../../rooms/models/room.model';
 import { HearingPart } from '../../hearing-part/models/hearing-part';
+import * as moment from 'moment';
 
 export interface SessionViewModel {
     id: string;
-    start: Date;
+    start: moment.Moment;
     duration: number;
     room: Room;
     person: Judge;

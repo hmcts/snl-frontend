@@ -5,41 +5,41 @@
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
     <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input matInput [matDatepicker]="picker" [(ngModel)]="session.start" placeholder="Choose date">
+      <input matInput id="startDate" [matDatepicker]="picker" [(ngModel)]="session.start" placeholder="Choose date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field>
-      <input [(ngModel)]="time" matInput placeholder="Start time" type="time">
+      <input id="startTime" [(ngModel)]="time" matInput placeholder="Start time" type="time">
     </mat-form-field>
 
     <mat-form-field>
-      <input [(ngModel)]="durationInMinutes" type="number" matInput placeholder="Duration">
+      <input id="duration" [(ngModel)]="durationInMinutes" type="number" matInput placeholder="Duration">
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Select the case type" [(value)]="session.caseType">
+      <mat-select id="selectCaseType" placeholder="Select the case type" [(value)]="session.caseType">
         <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{roomsPlaceholder}}" [(value)]="session.roomId">
+      <mat-select id="selectRoom" placeholder="{{roomsPlaceholder}}" [(value)]="session.roomId">
         <mat-option value="">(No room)</mat-option>
         <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="{{judgesPlaceholder}}" [(value)]="session.personId">
+      <mat-select id="selectJudge" placeholder="{{judgesPlaceholder}}" [(value)]="session.personId">
         <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-      <button mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
+      <button id="create" mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
       <button *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
     </div>
   </mat-card-content>
