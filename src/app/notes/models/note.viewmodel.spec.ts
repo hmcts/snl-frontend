@@ -5,7 +5,7 @@ let note = {
     id: '1',
     content: 'a',
     type: 't',
-    parentId: 'p',
+    entityId: 'p',
     modified: true,
 } as NoteViewmodel;
 

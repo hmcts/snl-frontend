@@ -19,7 +19,7 @@ export class NotesService {
 
     createMany(notes: Note[]): Observable<Note[]> {
         return this.http
-            .post<Note[]>(this.getUrl(), notes)
+            .put<Note[]>(this.getUrl(), notes)
     }
 
     private getUrl() {

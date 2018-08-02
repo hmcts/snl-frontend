@@ -10,7 +10,7 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         content: note.content,
         type: note.type,
         modified: false,
-        parentId: note.parentId,
-        entity: note.entity
+        entityId: note.entityId,
+        entityType: note.entityType
     } as NoteViewmodel
 }

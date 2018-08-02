@@ -52,16 +52,16 @@ describe('ListingCreateComponent', () => {
               id: undefined,
               content: 'a',
               type: 't',
-              parentId: undefined,
-              entity: 'e'
+              entityId: undefined,
+              entityType: 'e'
           } as Note;
 
           secondNote = {
               id: undefined,
               content: 'a',
               type: 't',
-              parentId: undefined,
-              entity: 'e'
+              entityId: undefined,
+              entityType: 'e'
           } as Note;
       })
     it('should dispatch proper action', () => {
@@ -107,13 +107,13 @@ describe('ListingCreateComponent', () => {
         });
 
         it('with properly generated parentIds', () => {
-            expect(createdListing.notes[0].parentId).toEqual(createdListing.id);
-            expect(createdListing.notes[1].parentId).toEqual(createdListing.id);
+            expect(createdListing.notes[0].entityId).toEqual(createdListing.id);
+            expect(createdListing.notes[1].entityId).toEqual(createdListing.id);
         });
 
-        it('with properly generated entity names', () => {
-            expect(createdListing.notes[0].entity).toEqual('ListingRequest');
-            expect(createdListing.notes[1].entity).toEqual('ListingRequest');
+        it('with properly generated entityType names', () => {
+            expect(createdListing.notes[0].entityType).toEqual('ListingRequest');
+            expect(createdListing.notes[1].entityType).toEqual('ListingRequest');
         });
     })
   });

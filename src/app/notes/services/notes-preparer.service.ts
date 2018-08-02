@@ -22,14 +22,14 @@ export class NotesPreparerService {
     }
 
     private assignParentIdIfUndefined(note: Note, parentId: string): Note {
-        if (this.isLogicallyUndefined(note.parentId)) {
-            note.parentId = parentId;
+        if (this.isLogicallyUndefined(note.entityId)) {
+            note.entityId = parentId;
         }
         return note;
     }
 
     private assignEntityName(note: Note, entity: string): Note {
-        note.entity = entity;
+        note.entityType = entity;
         return note;
     }
 

@@ -33,7 +33,7 @@
     <div style="margin-top: 20px" *ngFor="let problem of problems$ | async; let i = index">
       <p>{{i + 1}}. {{problem.message}} - {{problem.severity}}</p>
       <ul>
-        <li *ngFor="let reference of problem.references">{{reference.entity}} - {{reference.description}}</li>
+        <li *ngFor="let reference of problem.references">{{reference.entityType}} - {{reference.description}}</li>
       </ul>
     </div>
   </div>

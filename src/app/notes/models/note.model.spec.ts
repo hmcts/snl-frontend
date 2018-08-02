@@ -5,8 +5,8 @@ let note = {
     id: '1',
     content: 'a',
     type: 't',
-    parentId: 'p',
-    entity: 'e'
+    entityId: 'p',
+    entityType: 'e'
 } as Note;
 
 describe('When converting note to noteviewmodel', () => {

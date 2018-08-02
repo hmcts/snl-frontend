@@ -6,7 +6,7 @@
     "ng": "ng",
     "postinstall": "webdriver-manager update",
     "build": "ng build --prod",
-    "start": "ng serve --proxy-config proxy.config.json",
+    "start": "ng serve",
     "test": "ng test --single-run --code-coverage",
     "test:coverage": "istanbul check-coverage --statements 0 --lines 0 --functions 0 --branches 0",
     "test:a11y": "echo 'TODO: Accessibility tests'",

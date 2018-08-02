@@ -23,8 +23,8 @@ describe('Notes Effects', () => {
         id: undefined,
         content: 'a',
         type: 't',
-        parentId: undefined,
-        entity: 'e'
+        entityId: undefined,
+        entityType: 'e'
     } as Note;
 
     beforeEach(() => {
