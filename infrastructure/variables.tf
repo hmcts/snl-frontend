@@ -30,19 +30,6 @@ variable "object_id" {
   description           = "(Required) The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. This is usually sourced from environemnt variables and not normally required to be specified."
 } */
 
-variable "custom_api_url" {
-  type        = "string"
-  default     = "http://snl-api-aat.service.core-compute-aat.internal"
-  description = "Custom url"
-}
-
-variable "custom_notes_url" {
-  type        = "string"
-  default     = "http://snl-notes-aat.service.core-compute-aat.internal"
-  description = "Custom url"
-}
-
-
 variable "external_host_name" {
   default = "snl-frontend.reform.hmcts.net"
 }

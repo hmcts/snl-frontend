@@ -1,11 +1,11 @@
 locals {
   app_full_name = "${var.product}-${var.component}"
 
-  aat_api_url = "${var.custom_api_url}"
+  aat_api_url = "http://snl-api-aat.service.core-compute-aat.internal"
   local_api_url = "http://snl-api-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   api_url = "${var.env == "preview" ? local.aat_api_url : local.local_api_url}"
 
-  aat_notes_url = "${var.custom_notes_url}"
+  aat_notes_url = "http://snl-notes-aat.service.core-compute-aat.internal"
   local_notes_url = "http://snl-notes-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   notes_url = "${var.env == "preview" ? local.aat_notes_url : local.local_notes_url}"
 }
