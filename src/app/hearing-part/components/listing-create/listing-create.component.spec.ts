@@ -43,7 +43,6 @@ describe('ListingCreateComponent', () => {
         store = TestBed.get(Store);
     });
 
-
     describe('Initial state ', () => {
         it('should include priority', () => {
             expect(component.errors).toBeUndefined();
@@ -74,7 +73,7 @@ describe('ListingCreateComponent', () => {
               entityId: undefined,
               entityType: 'e'
           } as Note;
-      })
+      });
 
       it('should fail and update error when start date is before end date', () => {
           component.create();
@@ -133,7 +132,7 @@ describe('ListingCreateComponent', () => {
 
             createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
             createdListing = createListingAction.payload;
-        })
+        });
 
         it('with properly generated ids', () => {
             expect(createdListing.notes.length).toEqual(2);
