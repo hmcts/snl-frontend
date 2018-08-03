@@ -10,6 +10,7 @@ import * as dateUtils from '../../../utils/date-utils';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
+import { FormControl, NgForm, Validators } from '@angular/forms';
 
 const DURATION_UNIT = 'minute';
 
@@ -20,6 +21,8 @@ const DURATION_UNIT = 'minute';
 })
 export class ListingCreateComponent {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
+
+    estDurationForm;
 
     hearings: string[];
     caseTypes: string[];
@@ -37,6 +40,8 @@ export class ListingCreateComponent {
         this.store.select(getHearingPartError).subscribe(error => {
             this.errors = error;
         });
+
+        this.estDurationForm = new FormControl('', Validators.min(1));
     }
 
     create() {
@@ -70,5 +75,9 @@ export class ListingCreateComponent {
         } as ListingCreate;
         this.duration = 30;
         this.errors = '';
+    }
+
+    public isValid(form: NgForm) {
+        return !form.valid || !this.estDurationForm.valid
     }
 }

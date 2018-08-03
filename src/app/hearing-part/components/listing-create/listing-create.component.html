@@ -29,7 +29,7 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="duration" [(ngModel)]="duration" name="duration" type="number" matInput placeholder="Duration" min="1">
+                    <input id="duration" [formControl]="estDurationForm" [(ngModel)]="duration" name="duration" type="number" matInput placeholder="Estimated duration" min="1" required>
                     <span matSuffix>Minutes</span>
                 </mat-form-field>
 
@@ -41,7 +41,7 @@
 
                 <div>Target Schedule <i>(DD/MM/YYYY)</i></div>
                 <mat-form-field class="date-picker-element">
-                    <input id="fromDate" matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart" name="scheduleStart" placeholder="From:">
+                    <input id="fromDate" matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart" name="scheduleStart" placeholder="From:" re>
                     <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                     <mat-datepicker #pickerStart></mat-datepicker>
                 </mat-form-field>
@@ -62,7 +62,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="!newListForm.valid">Save</button>
+            <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="isValid(newListForm)">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>

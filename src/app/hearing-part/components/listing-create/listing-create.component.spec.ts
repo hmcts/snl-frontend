@@ -11,6 +11,8 @@ import { CreateListingRequest, HearingPartActionTypes } from '../../actions/hear
 import { Note } from '../../../notes/models/note.model';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
+import moment = require('moment');
+import { ListingCreate } from '../../models/listing-create';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -64,7 +66,41 @@ describe('ListingCreateComponent', () => {
               entityType: 'e'
           } as Note;
       })
-    it('should dispatch proper action', () => {
+
+    it('with custom inputs should dispatch proper action', () => {
+        let now = moment();
+        component.listing = {
+            id: undefined,
+            caseNumber: 'number',
+            caseTitle: 'title',
+            caseType: 'case type',
+            hearingType: 'hearing type',
+            duration: moment.duration(30, 'minute'),
+            scheduleStart: now,
+            scheduleEnd: now,
+            createdAt: now,
+            notes: []
+        } as ListingCreate;
+
+        component.create();
+
+        expect(storeSpy).toHaveBeenCalledTimes(1);
+
+        const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+        const createdListing = createListingAction.payload;
+
+        expect(createListingAction.type).toEqual(HearingPartActionTypes.CreateListingRequest);
+        expect(createdListing.id).toBeDefined();
+        expect(createdListing.caseNumber).toEqual('number');
+        expect(createdListing.caseType).toEqual('case type');
+        expect(createdListing.hearingType).toEqual('hearing type');
+        expect(createdListing.scheduleStart).toEqual(now);
+        expect(createdListing.scheduleEnd).toEqual(now);
+        expect(createdListing.notes).toEqual([]);
+    });
+
+      it('with default inputs should dispatch proper action', () => {
+        let defaultListing = component.listing;
         component.create();
 
         expect(storeSpy).toHaveBeenCalledTimes(1);
@@ -72,6 +108,7 @@ describe('ListingCreateComponent', () => {
         const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
 
         expect(createListingAction.type).toEqual(HearingPartActionTypes.CreateListingRequest);
+        expect(createListingAction.payload).toEqual(defaultListing);
     });
 
     it('should prepare listing request with id', () => {
@@ -84,6 +121,44 @@ describe('ListingCreateComponent', () => {
 
         expect(createdListing.id).toBeDefined();
     });
+
+    describe('The action should not be sent', () => {
+        it('If start date is after end date', () => {
+            component.listing.scheduleStart = moment().add(1, 'day');
+            component.listing.scheduleEnd = moment();
+
+            expect(component.errors).not.toEqual('Start date should be before End date');
+
+            component.create();
+
+            expect(storeSpy).toHaveBeenCalledTimes(0);
+            expect(component.errors).toEqual('Start date should be before End date');
+        })
+
+        it('If start date is undefined', () => {
+            expect(component.errors).not.toEqual('Start date should be before End date');
+
+            component.listing.scheduleStart = undefined;
+            component.listing.scheduleEnd = moment();
+
+            component.create();
+
+            expect(storeSpy).toHaveBeenCalledTimes(0);
+            expect(component.errors).toEqual('Start date should be before End date');
+        })
+
+        it('If end date is undefined', () => {
+            expect(component.errors).not.toEqual('Start date should be before End date');
+
+            component.listing.scheduleStart = moment();
+            component.listing.scheduleEnd = undefined;
+
+            component.create();
+
+            expect(storeSpy).toHaveBeenCalledTimes(0);
+            expect(component.errors).toEqual('Start date should be before End date');
+        })
+    })
 
     describe('should prepare notes', () => {
         let createListingAction;
