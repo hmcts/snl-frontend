@@ -38,3 +38,15 @@ variable "subscription" {}
 variable "common_tags" {
   type = "map"
 }
+
+variable "api_url" {
+  type        = "string"
+  default     = "http://snl-api-aat.service.core-compute-aat.internal"
+  description = "Scheduling and Listing "
+}
+
+variable "notes_url" {
+  type        = "string"
+  default     = "snl"
+  description = "Scheduling and Listing "
+}

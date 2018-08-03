@@ -1,5 +1,5 @@
 #!groovy
-@Library("Infrastructure") _
+@Library("Infrastructure@custom-tf-vars-at-runtime") _
 
 properties([
     parameters([
@@ -7,12 +7,23 @@ properties([
         string(name: 'APP', defaultValue: 'frontend', description: ''),
         string(name: 'TYPE', defaultValue: 'angular', description: ''),
         string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be build and deployed'),
+        string(name: 'CUSTOM_VARS', defaultValue: '', description: 'Custom terraform variables'),
         choice(name: 'SUBSCRIPTION', choices: 'sandbox', description: 'Azure subscriptions available to build in')
     ]),
     [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend.git'],
     pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
 
-withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+withParameterizedPipeline(params.TYPE,
+        params.PRODUCT_NAME,
+        params.APP,
+        params.ENVIRONMENT,
+        params.SUBSCRIPTION,
+        params.CUSTOM_VARS) {
 
+    after('checkout') {
+        echo '==================== CUSTOM TERRAFORM VARS ========================='
+        echo params.CUSTOM_VARS
+        echo '==================== CUSTOM TERRAFORM VARS ========================='
+    }
 }
