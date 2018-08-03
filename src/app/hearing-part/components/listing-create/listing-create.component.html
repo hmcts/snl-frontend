@@ -5,52 +5,59 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form id="ngForm" #newListForm="ngForm" (ngSubmit)="create();" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
-                <div *ngIf="errors">Error: {{errors}}</div>
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="create();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+                <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
-                    <input id="caseNumber" [(ngModel)]="listing.caseNumber" name="caseNumber" matInput placeholder="Case number" type="text" required>
+                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.caseNumber" matInput placeholder="Case number *" type="text">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="caseTitle" [(ngModel)]="listing.caseTitle" name="caseTitle" matInput placeholder="Case title" type="text" required>
+                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.caseTitle" matInput placeholder="Case title *" type="text" >
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectCaseType" placeholder="Case type" ngModel name="caseType" [(value)]="listing.caseType" [required]="true">
-                        <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
+                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *" [(ngModel)]="listing.caseType">
+                        <mat-option *ngFor="let case of caseTypes" selected="case == caseTypes[0]" [value]="case">{{case}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectHearingPart" placeholder="Hearing type" ngModel name="hearingType" [(value)]="listing.hearingType" required>
-                        <mat-option *ngFor="let hearing of hearings" value="{{hearing}}">{{hearing}}</mat-option>
+                    <mat-select id="selectHearingPart" formControlName="hearingType" placeholder="Hearing type *" [(ngModel)]="listing.hearingType" >
+                        <mat-option *ngFor="let hearing of hearings" selected="hearing == hearings[0]" [value]="hearing">{{hearing}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="duration" [formControl]="estDurationForm" [(ngModel)]="duration" name="duration" type="number" matInput placeholder="Estimated duration" min="1" required>
+                    <input id="duration" formControlName="duration" [ngModel]="listing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
                     <span matSuffix>Minutes</span>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput [matDatepicker]="createdAt" [(ngModel)]="listing.createdAt" name="createdAt" placeholder="Created at:">
+                    <input matInput [matDatepicker]="createdAt" formControlName="createdAt" [(ngModel)]="listing.createdAt" placeholder="Created at:">
                     <mat-datepicker-toggle matSuffix [for]="createdAt"></mat-datepicker-toggle>
                     <mat-datepicker #createdAt></mat-datepicker>
                 </mat-form-field>
 
-                <div>Target Schedule <i>(DD/MM/YYYY)</i></div>
-                <mat-form-field class="date-picker-element">
-                    <input id="fromDate" matInput [matDatepicker]="pickerStart" [(ngModel)]="listing.scheduleStart" name="scheduleStart" placeholder="From:" re>
-                    <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerStart></mat-datepicker>
-                </mat-form-field>
+                <div formGroupName="targetDates">
+                    <div style="padding-bottom:3px">Target Schedule <i>(DD/MM/YYYY)</i></div>
+                    <div class="error" *ngIf="listingCreate.get('targetDates').hasError('targetFromAfterTargetTo')">
+                        <i>Target from</i> must be before <i>Target to</i>!
+                    </div>
+                    <mat-form-field class="date-picker-element">
+                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom"  [(ngModel)]="listing.scheduleStart" placeholder="From:" re>
+                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStart></mat-datepicker>
+                    </mat-form-field>
 
-                <mat-form-field class="date-picker-element">
-                    <input id="endDate" matInput [matDatepicker]="pickerEnd" [(ngModel)]="listing.scheduleEnd" name="scheduleEnd" placeholder="To:">
-                    <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                    <mat-datepicker #pickerEnd></mat-datepicker>
-                </mat-form-field>
+                    <mat-form-field class="date-picker-element">
+                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.scheduleEnd" placeholder="To:">
+                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+
             </form>
 
             <div style="padding-right: 2em">
@@ -62,7 +69,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button id="save" mat-raised-button color="accent" fxFlexAlign="right" form="ngForm" [disabled]="isValid(newListForm)">Save</button>
+            <button id="save" mat-raised-button color="accent" form="list-form" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>

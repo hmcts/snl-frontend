@@ -13,6 +13,7 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import moment = require('moment');
 import { ListingCreate } from '../../models/listing-create';
+import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -35,7 +36,7 @@ describe('ListingCreateComponent', () => {
                 StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
                 BrowserAnimationsModule
             ],
-            declarations: [ListingCreateComponent, NoteComponent, NoteListComponent],
+            declarations: [ListingCreateComponent, NoteComponent, NoteListComponent, DurationAsMinutesPipe],
             providers: [NoteListComponent, NotesPreparerService, ListingCreateNotesConfiguration],
         });
 
@@ -132,43 +133,25 @@ describe('ListingCreateComponent', () => {
         expect(createdListing.id).toBeDefined();
     });
 
-    describe('The action should not be sent', () => {
-        it('If start date is after end date', () => {
-            component.listing.scheduleStart = moment().add(1, 'day');
-            component.listing.scheduleEnd = moment();
+      it('If start date is undefined', () => {
+          component.listing.scheduleStart = undefined;
+          component.listing.scheduleEnd = moment();
 
-            expect(component.errors).not.toEqual('Start date should be before End date');
+          component.create();
 
-            component.create();
+          expect(storeSpy).toHaveBeenCalledTimes(1);
+          expect(component.errors).toEqual('');
+      })
 
-            expect(storeSpy).toHaveBeenCalledTimes(0);
-            expect(component.errors).toEqual('Start date should be before End date');
-        })
+      it('If end date is undefined', () => {
+          component.listing.scheduleStart = moment();
+          component.listing.scheduleEnd = undefined;
 
-        it('If start date is undefined', () => {
-            expect(component.errors).not.toEqual('Start date should be before End date');
+          component.create();
 
-            component.listing.scheduleStart = undefined;
-            component.listing.scheduleEnd = moment();
-
-            component.create();
-
-            expect(storeSpy).toHaveBeenCalledTimes(0);
-            expect(component.errors).toEqual('Start date should be before End date');
-        })
-
-        it('If end date is undefined', () => {
-            expect(component.errors).not.toEqual('Start date should be before End date');
-
-            component.listing.scheduleStart = moment();
-            component.listing.scheduleEnd = undefined;
-
-            component.create();
-
-            expect(storeSpy).toHaveBeenCalledTimes(0);
-            expect(component.errors).toEqual('Start date should be before End date');
-        })
-    })
+          expect(storeSpy).toHaveBeenCalledTimes(1);
+          expect(component.errors).toEqual('');
+      })
 
     describe('should prepare notes', () => {
         let createListingAction;
