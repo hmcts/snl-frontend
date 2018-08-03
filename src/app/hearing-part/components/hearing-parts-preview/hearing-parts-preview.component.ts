@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
-import {MatSort, MatTableDataSource, Sort} from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
