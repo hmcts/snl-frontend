@@ -71,7 +71,7 @@ export class ListingCreateComponent {
             scheduleStart: now,
             scheduleEnd: moment().add(30, 'day'),
             createdAt: now,
-            notes: this.listingNotesConfig.defaultNotes
+            notes: this.listingNotesConfig.defaultNotes()
         } as ListingCreate;
         this.duration = 30;
         this.errors = '';

@@ -18,6 +18,7 @@ let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
 let store: Store<fromHearingParts.State>;
 let fixture: ComponentFixture<ListingCreateComponent>;
+let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 
 let note;
 let secondNote;
@@ -40,6 +41,7 @@ describe('ListingCreateComponent', () => {
 
         fixture = TestBed.createComponent(ListingCreateComponent);
         component = fixture.componentInstance;
+        listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
         store = TestBed.get(Store);
     });
 
@@ -109,6 +111,14 @@ describe('ListingCreateComponent', () => {
 
         expect(createListingAction.type).toEqual(HearingPartActionTypes.CreateListingRequest);
         expect(createListingAction.payload).toEqual(defaultListing);
+    });
+
+      it('with some notes it should set default notes post-creation', () => {
+        component.listing.notes = [{...note, content: 'custom content'}];
+
+        component.create();
+
+        expect(component.listing.notes).toEqual(listingCreateNoteConfig.defaultNotes());
     });
 
     it('should prepare listing request with id', () => {

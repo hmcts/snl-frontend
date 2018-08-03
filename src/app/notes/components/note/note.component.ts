@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { NoteViewmodel } from '../../models/note.viewmodel';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-note',
@@ -17,7 +16,6 @@ export class NoteComponent {
 
     constructor() {
         this.content.valueChanges
-            .pipe(debounceTime(300))
             .subscribe( (value) => {
                 this.note.modified = true;
                 this.note.content = value;
