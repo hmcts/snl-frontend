@@ -1,54 +1,54 @@
-<mat-table id="hearing-part-preview" *ngIf="hearingPartsDataSource" #table [dataSource]="hearingPartsDataSource">
+<mat-table id="hearing-part-preview" *ngIf="dataSource" #table [dataSource]="dataSource" matSort>
   <!-- Position Column -->
-  <ng-container matColumnDef="case number">
-    <mat-header-cell *matHeaderCellDef> Case Number </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="case title">
-    <mat-header-cell *matHeaderCellDef> Case Title </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="case type">
-    <mat-header-cell *matHeaderCellDef> Case Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="hearing type">
-    <mat-header-cell *matHeaderCellDef> Hearing Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="duration">
-    <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="target schedule from">
-    <mat-header-cell *matHeaderCellDef> Target Schedule From </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="target schedule to">
-    <mat-header-cell *matHeaderCellDef> Target Schedule To </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="listed">
-    <mat-header-cell *matHeaderCellDef> Is listed? </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <span>{{isListed(element.session)}}</span>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="select hearing">
-    <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
+  <ng-container matColumnDef="selectHearing">
+    <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
                     (change)="$event ? toggleHearing(element) : null"
                     [checked]="selectedHearingPart.isSelected(element)">&nbsp;
       </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="caseNumber">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Number </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="caseTitle">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Title </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="caseType">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="hearingType">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="duration">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Estimated Duration </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="scheduleStart">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule From </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="scheduleEnd">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule To </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="listed">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Is listed? </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span>{{isListed(element.session)}}</span>
     </mat-cell>
   </ng-container>
 

@@ -8,6 +8,16 @@
 
 <mat-table id="sessions-table" *ngIf="dataSource && tableVisible" #table [dataSource]="dataSource">
   <!-- Position Column -->
+  <ng-container matColumnDef="select session">
+    <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleSession(element) : null"
+                    [checked]="selectedSesssion.isSelected(element)">&nbsp;
+      </mat-checkbox>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef> Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
@@ -35,7 +45,7 @@
   </ng-container>
 
   <ng-container matColumnDef="duration">
-    <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Estimated Duration </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
   </ng-container>
 
@@ -57,16 +67,6 @@
   <ng-container matColumnDef="available">
     <mat-header-cell *matHeaderCellDef> Available </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{calculateAvailable(element.duration, calculateAllocated(element))}} minutes</mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="select session">
-    <mat-header-cell *matHeaderCellDef> Select session </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? toggleSession(element) : null"
-                    [checked]="selectedSesssion.isSelected(element)">&nbsp;
-      </mat-checkbox>
-    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

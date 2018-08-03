@@ -16,6 +16,7 @@ import { DraggableHearingPartComponent } from './components/draggable-hearing-pa
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
+import { MatSortModule } from '@angular/material';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -31,6 +32,7 @@ export const COMPONENTS = [
     FlexLayoutModule,
     CoreModule,
     FormsModule,
+    MatSortModule,
     StoreModule.forFeature('hearingParts', reducers),
     EffectsModule.forFeature([HearingPartEffects, ListingCreateEffects]),
   ],

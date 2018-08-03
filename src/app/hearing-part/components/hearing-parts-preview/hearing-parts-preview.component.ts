@@ -1,6 +1,15 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
-import { MatTableDataSource } from '@angular/material';
+import {MatSort, MatTableDataSource, Sort} from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
@@ -14,31 +23,48 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearingParts: HearingPart[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
+    @ViewChild(MatSort) sort: MatSort;
 
     selectedHearingPart;
 
-    hearingPartsDataSource: MatTableDataSource<HearingPart>;
+    dataSource: MatTableDataSource<HearingPart>;
     displayedColumns = [
-      'case number',
-      'case title',
-      'case type',
-      'hearing type',
+      'caseNumber',
+      'caseTitle',
+      'caseType',
+      'hearingType',
       'duration',
-      'target schedule from',
-      'target schedule to',
+      'scheduleStart',
+      'scheduleEnd',
       'listed',
-      'select hearing'
+      'selectHearing'
     ];
+
+
 
     constructor() {
         this.selectedHearingPart = new SelectionModel<HearingPart>(false, []);
     }
 
     ngOnInit() {
+        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+
     }
 
     ngOnChanges() {
-        this.hearingPartsDataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        console.log(Object.values(this.hearingParts));
+
+        //funny it sorts wrong if don't do this :o
+        this.dataSource.sortingDataAccessor = (item, property) => {
+            return item[property];
+        }
+
+        this.dataSource.sort = this.sort;
+    }
+
+    ngAfterViewInit() {
+        this.dataSource.sort = this.sort;
     }
 
     humanizeDuration(duration) {
