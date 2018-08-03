@@ -29,9 +29,11 @@ describe('SessionsStatisticsService', () => {
                     hearingType: undefined,
                     duration: moment.duration('PT20M'),
                     scheduleStart: undefined,
-                    scheduleEnd: undefined
+                    scheduleEnd: undefined,
+                    version: undefined
                 }] as [HearingPart],
-                jurisdiction: undefined
+                jurisdiction: undefined,
+                version: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT20M'));
@@ -54,7 +56,8 @@ describe('SessionsStatisticsService', () => {
                     hearingType: undefined,
                     duration: moment.duration('PT20M'),
                     scheduleStart: undefined,
-                    scheduleEnd: undefined
+                    scheduleEnd: undefined,
+                    version: undefined
                 }, {
                     id: undefined,
                     session: undefined,
@@ -64,7 +67,8 @@ describe('SessionsStatisticsService', () => {
                     hearingType: undefined,
                     duration: moment.duration('PT10M'),
                     scheduleStart: undefined,
-                    scheduleEnd: undefined
+                    scheduleEnd: undefined,
+                    version: undefined
                 }, {
                     id: undefined,
                     session: undefined,
@@ -74,9 +78,11 @@ describe('SessionsStatisticsService', () => {
                     hearingType: undefined,
                     duration: moment.duration('PT1H'),
                     scheduleStart: undefined,
-                    scheduleEnd: undefined
+                    scheduleEnd: undefined,
+                    version: undefined
                 }] as HearingPart[],
-                jurisdiction: undefined
+                jurisdiction: undefined,
+                version: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT1H30M'));
@@ -91,7 +97,8 @@ describe('SessionsStatisticsService', () => {
                 person: undefined,
                 caseType: undefined,
                 hearingParts: [] as [HearingPart],
-                jurisdiction: undefined
+                jurisdiction: undefined,
+                version: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration(0));

@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { Note } from '../../notes/models/note.model';
 import { Priority } from './priority-model';
 
 export interface ListingCreate {
@@ -11,5 +12,6 @@ export interface ListingCreate {
     scheduleStart: moment.Moment;
     scheduleEnd: moment.Moment;
     createdAt: moment.Moment;
+    notes: Note[];
     priority: Priority;
 }

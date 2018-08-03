@@ -110,13 +110,14 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
             const sessionData: Session = sessions[sessionKey];
             return {
                 id: sessionData.id,
-                start: sessionData.start,
+                start: moment(sessionData.start),
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
                 caseType: sessionData.caseType,
                 hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id),
-                jurisdiction: sessionData.jurisdiction
+                jurisdiction: sessionData.jurisdiction,
+                version: sessionData.version
             } as SessionViewModel;
         });
         return Object.values(finalSessions);

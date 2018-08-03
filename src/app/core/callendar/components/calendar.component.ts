@@ -68,7 +68,7 @@ export class CalendarComponent implements OnInit {
 
     ngOnInit() {
         this.calendarOptions = {
-            // schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+            schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
             height: this.calHeight,
             defaultDate: this.initialStartDate,
             contentHeight: this.calHeight,

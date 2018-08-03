@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -11,7 +11,7 @@ import { SessionsStatisticsService } from '../../services/sessions-statistics-se
   styleUrls: ['./session-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionTableComponent implements OnInit, OnChanges {
+export class SessionTableComponent implements OnChanges {
 
   @Output()
   selectSession = new EventEmitter();
@@ -47,6 +47,10 @@ export class SessionTableComponent implements OnInit, OnChanges {
       return moment(date).format('DD/MM/YYYY');
   }
 
+  parseTime(date: moment.Moment) {
+    return date.format('HH:mm');
+  }
+
   humanizeDuration(duration) {
       return moment.duration(duration).humanize();
   }
@@ -68,19 +72,11 @@ export class SessionTableComponent implements OnInit, OnChanges {
     this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
   }
 
-  ngOnInit() {
-  }
-
   ngOnChanges() {
       if (this.sessions) {
           this.tableVisible = true;
-
-          this.sessions.forEach(element => {
-              element.start = new Date(element.start);
-          });
           this.dataSource = new MatTableDataSource(this.sessions);
       }
-
   }
 
 }

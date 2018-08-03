@@ -46,8 +46,8 @@
     <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? toggleHearing(element.id) : null"
-                    [checked]="selectedHearingPartId.isSelected(element.id)">&nbsp;
+                    (change)="$event ? toggleHearing(element) : null"
+                    [checked]="selectedHearingPart.isSelected(element)">&nbsp;
       </mat-checkbox>
     </mat-cell>
   </ng-container>

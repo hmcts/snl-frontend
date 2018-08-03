@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
@@ -8,15 +8,20 @@ import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
 import { Priority } from '../../models/priority-model';
+import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 
 const DURATION_UNIT = 'minute';
 
 @Component({
     selector: 'app-listing-create',
     templateUrl: './listing-create.component.html',
-    styleUrls: ['./listing-create.component.scss']
+    styleUrls: []
 })
 export class ListingCreateComponent {
+    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+
     hearings: string[];
     caseTypes: string[];
     duration = 0;
@@ -24,9 +29,11 @@ export class ListingCreateComponent {
     success: boolean;
     priorityValues = Object.values(Priority);
 
-    listing: ListingCreate;
+    public listing: ListingCreate;
 
-    constructor(private readonly store: Store<State>) {
+    constructor(private readonly store: Store<State>,
+                private notePreparerService: NotesPreparerService,
+                private listingNotesConfig: ListingCreateNotesConfiguration) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
@@ -37,6 +44,10 @@ export class ListingCreateComponent {
 
     create() {
         this.listing.id = uuid();
+        this.listing.notes = this.notePreparerService.prepare(this.noteList.getModifiedNotes(),
+            this.listing.id,
+            this.listingNotesConfig.entityName);
+
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
             this.errors = 'Start date should be before End date';
@@ -48,19 +59,21 @@ export class ListingCreateComponent {
     }
 
     private initiateListing() {
+        const now = moment();
         this.listing = {
             id: undefined,
-            caseNumber: undefined,
-            caseTitle: undefined,
-            caseType: undefined,
-            hearingType: undefined,
-            duration: moment.duration(0, DURATION_UNIT),
-            scheduleStart: null,
-            scheduleEnd: null,
-            createdAt: moment(),
+            caseNumber: `number-${now.toISOString()}`,
+            caseTitle: `title-${now.toISOString()}`,
+            caseType: this.caseTypes[0],
+            hearingType: this.hearings[0],
+            duration: moment.duration(),
+            scheduleStart: now,
+            scheduleEnd: moment().add(30, 'day'),
+            createdAt: now,
+            notes: this.listingNotesConfig.defaultNotes,
             priority: Priority.Low
         } as ListingCreate;
-        this.duration = 0;
+        this.duration = 30;
         this.errors = '';
         this.success = false;
     }
