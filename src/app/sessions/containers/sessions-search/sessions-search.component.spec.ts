@@ -23,6 +23,7 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { Priority } from '../../../hearing-part/models/priority-model';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
@@ -48,7 +49,8 @@ const mockedHearingParts: HearingPart[] = [
     hearingType: 'some-hearing-type',
     duration: moment.duration(sessionDuration),
     scheduleStart: now,
-    scheduleEnd: now
+    scheduleEnd: now,
+    priority: Priority.Low
   }
 ];
 const mockedSessions: Session[] = [
