@@ -4,7 +4,7 @@ import * as moment from 'moment';
 @Injectable()
 export class SessionsStatisticsService {
 
-    calculateAllocatedHearingsDuration(session) {
+    calculateAllocatedHearingsDuration(session): moment.Duration {
         let allocated = moment.duration(); // NOSONAR not const
         if (session.hearingParts !== undefined) {
             session.hearingParts.forEach(hearingPart => {

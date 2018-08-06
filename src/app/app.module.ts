@@ -122,5 +122,6 @@ export class AppModule {
         console.log(`Running ${platform} with appId=${appId}`);
 
         moment.locale(localeId);
+        moment.defaultFormat = 'DD/MM/YYYY';
     }
 }
