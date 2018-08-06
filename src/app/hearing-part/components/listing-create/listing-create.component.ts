@@ -4,7 +4,7 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { CreateListingRequest } from '../../actions/hearing-part.action';
+import { CreateFailed, CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
 import { Priority } from '../../models/priority-model';
@@ -50,7 +50,8 @@ export class ListingCreateComponent {
 
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
-            this.errors = 'Start date should be before End date';
+            this.store.dispatch(new CreateFailed('Start date should be before End date'));
+            this.success = false;
         } else {
             this.store.dispatch(new CreateListingRequest(this.listing));
             this.initiateListing();
