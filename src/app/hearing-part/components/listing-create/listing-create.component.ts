@@ -4,9 +4,10 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { CreateListingRequest } from '../../actions/hearing-part.action';
+import { CreateFailed, CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartError } from '../../reducers/hearing-part.reducer';
 import * as dateUtils from '../../../utils/date-utils';
+import { Priority } from '../../models/priority-model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
@@ -25,12 +26,14 @@ export class ListingCreateComponent {
     caseTypes: string[];
     duration = 0;
     errors = '';
+    success: boolean;
+    priorityValues = Object.values(Priority);
 
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
-                private notePreparerService: NotesPreparerService,
-                private listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly notePreparerService: NotesPreparerService,
+                private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
@@ -47,10 +50,12 @@ export class ListingCreateComponent {
 
         this.listing.duration.add(this.duration, DURATION_UNIT);
         if (!dateUtils.isDateRangeValid(this.listing.scheduleStart, this.listing.scheduleEnd)) {
-            this.errors = 'Start date should be before End date';
+            this.store.dispatch(new CreateFailed('Start date should be before End date'));
+            this.success = false;
         } else {
             this.store.dispatch(new CreateListingRequest(this.listing));
             this.initiateListing();
+            this.success = true;
         }
     }
 
@@ -66,9 +71,11 @@ export class ListingCreateComponent {
             scheduleStart: now,
             scheduleEnd: moment().add(30, 'day'),
             createdAt: now,
-            notes: this.listingNotesConfig.defaultNotes
+            notes: this.listingNotesConfig.defaultNotes,
+            priority: Priority.Low
         } as ListingCreate;
         this.duration = 30;
         this.errors = '';
+        this.success = false;
     }
 }
