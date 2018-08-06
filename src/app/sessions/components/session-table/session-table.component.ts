@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild} from '@angular/core';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -50,7 +50,7 @@ export class SessionTableComponent implements OnChanges {
   }
 
   humanizeDuration(duration) {
-      return moment.duration(duration).humanize();
+      return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
   }
 
   calculateUtilized(duration: number, allocated: moment.Duration): number {
@@ -88,6 +88,8 @@ export class SessionTableComponent implements OnChanges {
                   case 'time':
                   case 'date':
                       return item['start'].unix();
+                  case 'duration':
+                      return moment.duration(item[property]);
                   default:
                       return item[property];
               }
@@ -95,10 +97,6 @@ export class SessionTableComponent implements OnChanges {
 
           this.dataSource.sort = this.sort;
       }
-  }
-
-  ngAfterViewInit() {
-      this.dataSource.sort = this.sort;
   }
 
     private decorateSessions(sessions: SessionViewModel[]) {
@@ -116,7 +114,6 @@ export class SessionTableComponent implements OnChanges {
     }
 }
 
-function getPropertyMemberOrNull(item :object, property :string, key :string) {
+function getPropertyMemberOrNull(item: object, property: string, key: string) {
     return item[property] !== undefined ? item[property][key] : null;
 }
-

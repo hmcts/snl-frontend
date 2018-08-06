@@ -40,8 +40,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'selectHearing'
     ];
 
-
-
     constructor() {
         this.selectedHearingPart = new SelectionModel<HearingPart>(false, []);
     }
@@ -53,22 +51,22 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
-        console.log(Object.values(this.hearingParts));
 
-        //funny it sorts wrong if don't do this :o
         this.dataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+                case 'duration':
+                    return moment.duration(item[property]).asMilliseconds();
+                default:
+                    return item[property];
+            }
             return item[property];
         }
 
         this.dataSource.sort = this.sort;
     }
 
-    ngAfterViewInit() {
-        this.dataSource.sort = this.sort;
-    }
-
     humanizeDuration(duration) {
-        return moment.duration(duration).humanize();
+        return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
     }
 
     parseDate(date) {
