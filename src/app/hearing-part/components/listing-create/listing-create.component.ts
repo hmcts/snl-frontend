@@ -32,8 +32,8 @@ export class ListingCreateComponent {
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
-                private notePreparerService: NotesPreparerService,
-                private listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly notePreparerService: NotesPreparerService,
+                private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
         this.hearings = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
         this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
         this.initiateListing();
