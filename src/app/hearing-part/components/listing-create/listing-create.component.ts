@@ -4,8 +4,9 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { getHearingPartsError } from '../../reducers/index';
+import { CreateListingRequest } from '../../actions/hearing-part.action';
+import { Priority } from '../../models/priority-model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
@@ -26,12 +27,14 @@ export class ListingCreateComponent {
     hearings: string[] = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
     caseTypes: string[] = ['SCLAIMS', 'FTRACK', 'MTRACK'];
     errors = '';
+    success: boolean;
+    priorityValues = Object.values(Priority);
 
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
-                private notePreparerService: NotesPreparerService,
-                private listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly notePreparerService: NotesPreparerService,
+                private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;
@@ -42,15 +45,15 @@ export class ListingCreateComponent {
     }
 
     create() {
-            this.listing.id = uuid();
-            this.listing.notes = this.notePreparerService.prepare(
-                this.noteList.getModifiedNotes(),
-                this.listing.id,
-                this.listingNotesConfig.entityName
-            );
+        this.listing.id = uuid();
+        this.listing.notes = this.notePreparerService.prepare(
+            this.noteList.getModifiedNotes(),
+            this.listing.id,
+            this.listingNotesConfig.entityName
+        );
 
-            this.store.dispatch(new CreateListingRequest(this.listing));
-            this.initiateListing();
+        this.store.dispatch(new CreateListingRequest(this.listing));
+        this.initiateListing();
     }
 
     updateDuration(durationValue) {
@@ -82,9 +85,11 @@ export class ListingCreateComponent {
             scheduleStart: now,
             scheduleEnd: moment().add(30, 'day'),
             createdAt: now,
-            notes: this.listingNotesConfig.defaultNotes()
+            notes: this.listingNotesConfig.defaultNotes(),
+            priority: Priority.Low
         } as ListingCreate;
         this.errors = '';
+        this.success = false;
     }
 
     private initiateForm() {

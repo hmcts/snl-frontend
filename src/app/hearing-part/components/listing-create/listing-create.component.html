@@ -39,6 +39,12 @@
                     <mat-datepicker #createdAt></mat-datepicker>
                 </mat-form-field>
 
+                <mat-form-field>
+                    <mat-select placeholder="Priority level" [(value)]="listing.priority" required>
+                        <mat-option *ngFor="let priority of priorityValues" value="{{priority}}">{{priority}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
                 <div formGroupName="targetDates">
                     <div style="padding-bottom:3px">Target Schedule <i>(DD/MM/YYYY)</i></div>
                     <div class="error" *ngIf="listingCreate.get('targetDates').hasError('targetFromAfterTargetTo')">
@@ -56,8 +62,6 @@
                         <mat-datepicker #pickerEnd></mat-datepicker>
                     </mat-form-field>
                 </div>
-
-
             </form>
 
             <div style="padding-right: 2em">
