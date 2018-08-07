@@ -36,7 +36,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'duration',
       'scheduleStart',
       'scheduleEnd',
-      'listed',
       'selectHearing'
     ];
 
@@ -46,7 +45,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
-
     }
 
     ngOnChanges() {

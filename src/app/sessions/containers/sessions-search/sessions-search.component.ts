@@ -47,8 +47,11 @@ export class SessionsSearchComponent implements OnInit {
                 private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
-            map(this.asArray)) as Observable<HearingPart[]>;
+        this.hearingParts$ = this.store.pipe(
+            select(fromHearingParts.getHearingPartsEntities),
+            map(this.asArray),
+            map(this.filterUnlistedHearingParts)
+        ) as Observable<HearingPart[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
@@ -151,6 +154,12 @@ export class SessionsSearchComponent implements OnInit {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
+        });
+    }
+
+    private filterUnlistedHearingParts(data: HearingPart[]): HearingPart[] {
+        return data.filter(h => {
+            return h.session === undefined || h.session === '' || h.session === null
         });
     }
 }

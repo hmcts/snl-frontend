@@ -120,7 +120,7 @@ export class AppModule {
         const platform = isPlatformBrowser(platformId) ?
             'in the browser' : 'on the server';
 
-        moment.locale(localeId);
+        moment.locale(localeId, {invalidDate: ''});
         moment.defaultFormat = 'DD/MM/YYYY';
     }
 }

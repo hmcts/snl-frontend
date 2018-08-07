@@ -45,13 +45,6 @@
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="listed">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Is listed? </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <span>{{isListed(element.session)}}</span>
-    </mat-cell>
-  </ng-container>
-
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
