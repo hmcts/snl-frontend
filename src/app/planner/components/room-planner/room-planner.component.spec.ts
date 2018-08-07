@@ -45,7 +45,10 @@ let mockedFullSession: SessionViewModel = {
   caseType: caseType,
   hearingParts: [],
   jurisdiction: 'some jurisdiction',
-  version: 0
+  version: 0,
+  allocated: undefined,
+  utilization: undefined,
+  available: undefined
 };
 
 describe('RoomPlannerComponent', () => {

@@ -76,8 +76,6 @@ export class SessionTableComponent implements OnChanges {
           this.dataSource = new MatTableDataSource(this.decorateSessions(this.sessions));
 
           this.dataSource.sortingDataAccessor = (item, property) => {
-              console.log(item);
-
               switch (property) {
                   case 'person':
                       return getPropertyMemberOrNull(item, property, 'name');

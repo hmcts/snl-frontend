@@ -20,9 +20,7 @@ import {
     MatTableModule,
     MatToolbarModule, MatMenuModule, MatProgressSpinnerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS
 } from '@angular/material';
-import {
-  MomentDateAdapter,
-  MAT_MOMENT_DATE_FORMATS } from '../../node_modules/@angular/material-moment-adapter';
+import { MomentDateAdapter } from '../../node_modules/@angular/material-moment-adapter';
 import { AppConfig } from '../app/app.config';
 
 @NgModule({
