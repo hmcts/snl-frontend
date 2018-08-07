@@ -21,6 +21,7 @@ export class SessionTableComponent implements OnChanges {
 
   selectedSesssion;
   displayedColumns = [
+      'select session',
       'person',
       'time',
       'date',
@@ -31,7 +32,6 @@ export class SessionTableComponent implements OnChanges {
       'allocated',
       'utilization',
       'available',
-      'select session'
   ];
 
   dataSource: MatTableDataSource<any>;

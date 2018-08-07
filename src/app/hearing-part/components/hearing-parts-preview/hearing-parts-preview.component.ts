@@ -29,6 +29,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     dataSource: MatTableDataSource<HearingPart>;
     displayedColumns = [
+      'selectHearing',
       'caseNumber',
       'caseTitle',
       'caseType',
@@ -36,7 +37,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'duration',
       'scheduleStart',
       'scheduleEnd',
-      'selectHearing'
     ];
 
     constructor() {
