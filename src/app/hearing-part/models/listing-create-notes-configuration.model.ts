@@ -5,14 +5,12 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ListingCreateNotesConfiguration implements NotesConfiguration {
     public readonly entityName;
-    public readonly defaultNotes;
 
     constructor() {
         this.entityName = 'ListingRequest';
-        this.defaultNotes = this.defaultListingNotes();
     }
 
-    private defaultListingNotes(): Note[] {
+    public defaultNotes(): Note[] {
         const specReqNote = {
             id: undefined,
             content: '',
