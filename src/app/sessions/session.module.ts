@@ -29,7 +29,6 @@ import { SessionsPropositionsSearchComponent } from './containers/sessions-propo
 import { SessionsPropositionsTableComponent } from './components/sessions-propositions-table/sessions-propositions-table.component';
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
-import { MatSortModule } from '@angular/material';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -54,7 +53,6 @@ export const COMPONENTS = [
       FormsModule,
       HearingPartModule,
       CoreModule,
-      MatSortModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{

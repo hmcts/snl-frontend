@@ -18,7 +18,13 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatTableModule,
-    MatToolbarModule, MatMenuModule, MatProgressSpinnerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS
+    MatToolbarModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    DateAdapter,
+    MAT_DATE_LOCALE,
+    MAT_DATE_FORMATS,
+    MatSortModule
 } from '@angular/material';
 import { MomentDateAdapter } from '../../node_modules/@angular/material-moment-adapter';
 import { AppConfig } from '../app/app.config';
@@ -46,7 +52,8 @@ import { AppConfig } from '../app/app.config';
     MatDialogModule,
     MatMenuModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule
   ],
   exports: [
     MatCardModule,
@@ -68,7 +75,8 @@ import { AppConfig } from '../app/app.config';
     MatRadioModule,
     MatMenuModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule
   ],
   declarations: [],
   providers: [

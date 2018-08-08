@@ -3,7 +3,6 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
-import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 
 @Component({
   selector: 'app-session-table',
@@ -37,12 +36,12 @@ export class SessionTableComponent implements OnChanges {
   dataSource: MatTableDataSource<any>;
   tableVisible;
 
-  constructor(private readonly sessionsStatsService: SessionsStatisticsService) {
+  constructor() {
     this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
 
     this.tableVisible = false;
 
-    this.dataSource = new MatTableDataSource(this.decorateSessions(this.sessions));
+    this.dataSource = new MatTableDataSource(this.sessions);
   }
 
   parseTime(date: moment.Moment) {
@@ -53,18 +52,6 @@ export class SessionTableComponent implements OnChanges {
       return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
   }
 
-  calculateUtilized(duration: number, allocated: moment.Duration): number {
-    return this.sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
-  }
-
-  calculateAllocated(session: SessionViewModel) {
-    return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
-  }
-
-  calculateAvailable(duration: number, allocated: moment.Duration) {
-    return this.sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
-  }
-
   toggleSession(session: SessionViewModel) {
     this.selectedSesssion.toggle(session);
     this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
@@ -73,7 +60,7 @@ export class SessionTableComponent implements OnChanges {
   ngOnChanges() {
       if (this.sessions) {
           this.tableVisible = true;
-          this.dataSource = new MatTableDataSource(this.decorateSessions(this.sessions));
+          this.dataSource = new MatTableDataSource(this.sessions);
 
           this.dataSource.sortingDataAccessor = (item, property) => {
               switch (property) {
@@ -96,20 +83,6 @@ export class SessionTableComponent implements OnChanges {
           this.dataSource.sort = this.sort;
       }
   }
-
-    private decorateSessions(sessions: SessionViewModel[]) {
-        if (sessions === undefined) {
-            return sessions;
-        }
-
-        return sessions.map(session => {
-            session.allocated = this.calculateAllocated(session);
-            session.utilization = this.calculateUtilized(session.duration, session.allocated);
-            session.available = this.calculateAvailable(session.duration, session.allocated);
-
-            return session;
-        });
-    }
 }
 
 function getPropertyMemberOrNull(item: object, property: string, key: string) {

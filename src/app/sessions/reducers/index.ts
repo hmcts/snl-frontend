@@ -11,6 +11,7 @@ import { SessionProposition } from '../models/session-proposition.model';
 import { SessionPropositionView } from '../models/session-proposition-view.model';
 import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
+import {SessionsStatisticsService} from "../services/sessions-statistics-service";
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -103,11 +104,14 @@ export const {
 } = fromSessions.adapter.getSelectors(getSessionsEntitiesState);
 
 export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getHearingParts,
-    (sessions, rooms, judges, hearingParts) => {
+    (sessions, rooms, judges, inputHearingParts) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
             const sessionData: Session = sessions[sessionKey];
+            const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.session === sessionData.id);
+            const allocated = calculateAllocated(hearingParts);
+
             return {
                 id: sessionData.id,
                 start: moment(sessionData.start),
@@ -115,16 +119,33 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
                 caseType: sessionData.caseType,
-                hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id),
+                hearingParts: hearingParts,
                 jurisdiction: sessionData.jurisdiction,
                 version: sessionData.version,
-                allocated: undefined,
-                utilization: undefined,
-                available: undefined
+                allocated: allocated,
+                utilization: calculateUtilized(sessionData.duration, allocated),
+                available: calculateAvailable(sessionData.duration, allocated)
             } as SessionViewModel;
         });
+
         return Object.values(finalSessions);
     });
+
+let sessionsStatsService = new SessionsStatisticsService();
+
+function calculateAllocated(hearingParts) {
+  return sessionsStatsService.calculateAllocatedHearingsDuration({
+    hearingParts: hearingParts
+  });
+}
+
+function calculateUtilized(duration: number, allocated: moment.Duration): number {
+  return sessionsStatsService.calculateUtilizedDuration(moment.duration(duration), allocated);
+}
+
+function calculateAvailable(duration: number, allocated: moment.Duration) {
+  return sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
+}
 
 export const getFullSessionPropositions = createSelector(getSessionsPropositions, getRooms, fromJudgesIndex.getJudges,
     (sessions, rooms, judges) => {

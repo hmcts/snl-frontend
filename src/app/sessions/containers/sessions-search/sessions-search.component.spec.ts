@@ -359,9 +359,9 @@ function defaultFullMockedSession(): SessionViewModel {
     hearingParts: [mockedListedHearingParts[0]],
     jurisdiction: 'some jurisdiction',
     version: 1,
-    allocated: undefined,
-    utilization: undefined,
-    available: undefined
+    allocated: moment.duration('PT0.03S'),
+    utilization: 100,
+    available: 0
   };
 }
 
