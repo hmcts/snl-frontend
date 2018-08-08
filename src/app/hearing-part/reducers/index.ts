@@ -30,6 +30,11 @@ export const getHearingPartsLoading = createSelector(
     state => state.loading
 );
 
+export const getHearingPartsError = createSelector(
+    getHearingPartsEntitiesState,
+    state => state.error
+);
+
 export const {
     selectIds: getHearingPartsIds,
     selectEntities: getHearingPartsEntities,
