@@ -4,7 +4,7 @@ import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { getHearingPartsError } from '../../reducers/index';
+import { getHearingPartsError } from '../../reducers';
 import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
@@ -12,10 +12,11 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
-import { Observable } from '../../../../../node_modules/rxjs';
+import { Observable } from 'rxjs';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
 import { map } from 'rxjs/operators';
+import { asArray } from '../../../utils/array-utils';
 
 const DURATION_UNIT = 'minute';
 
@@ -46,7 +47,7 @@ export class ListingCreateComponent implements OnInit {
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;
         });
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
         this.initiateListing();
         this.initiateForm();
@@ -117,9 +118,5 @@ export class ListingCreateComponent implements OnInit {
                 targetTo: new FormControl(this.listing.scheduleEnd),
             }, this.targetDatesValidator)
         })
-    }
-
-    private asArray(data) {
-        return data ? Object.values(data) : [];
     }
 }
