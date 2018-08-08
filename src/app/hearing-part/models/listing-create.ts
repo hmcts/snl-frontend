@@ -7,11 +7,13 @@ export interface ListingCreate {
     caseNumber: string;
     caseTitle: string;
     caseType: string;
-    hearingType: string
-    duration: moment.Duration
+    hearingType: string;
+    duration: moment.Duration;
     scheduleStart: moment.Moment;
     scheduleEnd: moment.Moment;
     createdAt: moment.Moment;
     notes: Note[];
     priority: Priority;
+    communicationFacilitator: string;
+    reservedJudgeId: string;
 }
