@@ -64,6 +64,7 @@ describe('ListingCreateComponent', () => {
       expect(component.errors).toEqual('');
       expect(component.listing).toBeDefined();
       expect(component.listing.priority).toBe(Priority.Low);
+
     });
   });
 
@@ -209,7 +210,16 @@ describe('ListingCreateComponent', () => {
         );
       });
 
-      it('should prepare listing request with id', () => {
+      it('with some notes it should set default notes post-creation', () => {
+        component.listing.notes = [{...note, content: 'custom content'}];
+
+        component.create();
+
+        expect(component.listing.notes).toEqual(listingCreateNoteConfig.defaultNotes());
+    });
+
+    it('should prepare listing request with id', () => {
+
         component.create();
 
         expect(storeSpy).toHaveBeenCalledTimes(1);
