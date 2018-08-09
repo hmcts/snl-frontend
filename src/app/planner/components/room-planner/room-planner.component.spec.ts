@@ -48,7 +48,7 @@ let mockedFullSession: SessionViewModel = {
   version: 0,
   allocated: moment.duration('P0D'),
   utilization: 0,
-  available: 0.0005
+  available: moment.duration('PT0.03S')
 };
 
 describe('RoomPlannerComponent', () => {
