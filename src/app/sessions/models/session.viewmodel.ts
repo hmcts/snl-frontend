@@ -15,5 +15,5 @@ export interface SessionViewModel {
     version: number;
     allocated: moment.Duration;
     utilization: number;
-    available: number;
+    available: moment.Duration;
 }

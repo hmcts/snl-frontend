@@ -17,7 +17,7 @@ export class SessionDialogDetails {
         this.time = this.session.map(s => this.getTime(s.start));
         this.endTime = this.session.map(s => this.getEndTime(s.start, s.duration));
         this.allocatedHearingsDuration = this.session.map(s => this.getAllocatedHearingsDuration(s));
-        this.availableDuration = this.session.map(s => this.getAvailableDuration(s));
+        this.availableDuration = this.session.map(s => this.getAvailableDuration(s).asMinutes());
     }
 
     private getTime(time) {

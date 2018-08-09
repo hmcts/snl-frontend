@@ -19,7 +19,7 @@ export class SessionsStatisticsService {
     }
 
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
-        return reservedDuration - allocatedDuration;
+        return reservedDuration.subtract(allocatedDuration);
     }
 
     constructor() {
