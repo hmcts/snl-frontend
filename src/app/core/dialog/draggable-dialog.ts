@@ -4,7 +4,7 @@ import { HostListener } from '@angular/core';
 export class DraggableDialog {
 
     private offset = {x: 0, y: 0};
-    private dialogId: string;
+    dialogId: string;
 
     constructor(public dialogRef: MatDialogRef<any>) {
         this.dialogId = this.dialogRef.id;
