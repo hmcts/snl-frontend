@@ -11,7 +11,7 @@ import { SessionProposition } from '../models/session-proposition.model';
 import { SessionPropositionView } from '../models/session-proposition-view.model';
 import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
-import {SessionsStatisticsService} from "../services/sessions-statistics-service";
+import { SessionsStatisticsService } from '../services/sessions-statistics-service';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;

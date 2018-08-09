@@ -66,7 +66,7 @@
 
   <ng-container matColumnDef="available">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Available </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.available}} minutes</mat-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.available)}}</mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

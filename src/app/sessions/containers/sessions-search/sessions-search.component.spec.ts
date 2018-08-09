@@ -56,7 +56,7 @@ const mockedUnlistedHearingPart: HearingPart = {
 }
 const mockedUnlistedHearingParts: HearingPart[] = [mockedUnlistedHearingPart];
 
-//same as unlisted, but with session set to matching id in Session
+// same as unlisted, but with session set to matching id in Session
 let mockedListedHearingPart = { ...mockedUnlistedHearingPart, session: 'some-session-id' };
 const mockedListedHearingParts: HearingPart[] = [mockedListedHearingPart];
 
