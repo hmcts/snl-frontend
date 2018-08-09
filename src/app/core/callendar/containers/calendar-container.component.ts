@@ -13,7 +13,6 @@ import { DetailsDialogComponent } from '../../../sessions/components/details-dia
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../../sessions/models/session-dialog-details.model';
 import { DefaultDataTransformer } from '../transformers/default-data-transformer';
-import * as fromSessions from '../../../sessions/reducers';
 
 @Component({
     selector: 'app-calendar-container',
@@ -58,7 +57,7 @@ export class CalendarContainerComponent implements OnInit {
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: new SessionDialogDetails(this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))),
+            data: new SessionDialogDetails(this.store.pipe(select(fromReducer.getSessionViewModelById(eventId)))),
             hasBackdrop: false
         });
     }

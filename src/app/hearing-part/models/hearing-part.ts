@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { Priority } from './priority-model';
 
 export interface HearingPart {
     id: string;
@@ -11,4 +12,5 @@ export interface HearingPart {
     scheduleStart: Date;
     scheduleEnd: Date;
     version: number;
+    priority: Priority;
 }
