@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { HearingPart } from '../../models/hearing-part';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
@@ -24,6 +24,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
     selectedHearingPart;
 
@@ -61,6 +62,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
 
         this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
     }
 
     humanizeDuration(duration) {

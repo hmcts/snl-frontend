@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -17,6 +17,7 @@ export class SessionTableComponent implements OnChanges {
 
   @Input() sessions: SessionViewModel[];
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   selectedSesssion;
   displayedColumns = [
@@ -81,6 +82,7 @@ export class SessionTableComponent implements OnChanges {
           }
 
           this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
       }
   }
 }
