@@ -2,7 +2,7 @@ import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { getNotes } from '../../notes/reducers';
-import { HearingPartViewModel} from '../models/hearing-part.viewmodel';
+import { HearingPartViewModel } from '../models/hearing-part.viewmodel';
 import { HearingPart } from '../models/hearing-part';
 
 export interface HearingPartsState {
