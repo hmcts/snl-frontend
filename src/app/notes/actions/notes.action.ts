@@ -3,6 +3,7 @@ import { Note } from '../models/note.model';
 
 export enum NoteActionTypes {
   Get = '[Notes] Get',
+  GetByEntities = '[Notes] Get By Entities',
   CreateMany = '[Notes] Create Many',
 
   UpsertMany = '[Notes] Upsert Many',
@@ -15,6 +16,12 @@ export class Get implements Action {
   readonly type = NoteActionTypes.Get;
 
   constructor() {}
+}
+
+export class GetByEntities implements Action {
+  readonly type = NoteActionTypes.GetByEntities;
+
+  constructor(public payload: string[]) {}
 }
 
 export class CreateMany implements Action {

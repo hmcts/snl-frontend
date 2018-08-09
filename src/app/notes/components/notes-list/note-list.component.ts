@@ -11,6 +11,7 @@ import { getNoteViewModel, NoteViewmodel } from '../../models/note.viewmodel';
 })
 export class NoteListComponent {
     public noteViewModels: NoteViewmodel[];
+    @Input() disabled: boolean;
 
     @Input() set notes(notes: Note[]) {
         this.noteViewModels = notes.map(getNoteViewModel);

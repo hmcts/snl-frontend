@@ -42,6 +42,14 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="notes">
+    <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span (click)="openNotesDialog(element.notes)">{{hasNotes(element.notes)}}</span>
+    </mat-cell>
+  </ng-container>
+
+
   <ng-container matColumnDef="select hearing">
     <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
     <mat-cell *matCellDef="let element">

@@ -2,7 +2,6 @@ import { SessionAssignment } from '../../../hearing-part/models/session-assignme
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionReducers from '../../reducers';
 import { Room } from '../../../rooms/models/room.model';
-import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
 import { SessionsSearchComponent } from './sessions-search.component';
@@ -15,6 +14,8 @@ import * as moment from 'moment';
 import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers';
+import * as notesReducers from '../../../notes/reducers';
+
 import * as sessionsActions from '../../actions/session.action';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { Session } from '../../models/session.model';
@@ -23,6 +24,10 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { HearingPart } from '../../../hearing-part/models/hearing-part';
+import * as notesActions from '../../../notes/actions/notes.action';
+import { Note } from '../../../notes/models/note.model';
+import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 
 let storeSpy: jasmine.Spy;
@@ -40,6 +45,14 @@ const notListedDuration = 0;
 const customDuration = 16;
 const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
 const mockedJudges: Judge[] = [{ id: judgeId, name: 'some-judge-name' }];
+const mockedNotes: Note[] = [
+    {
+        id: 'note-id',
+        content: 'nice content',
+        type: 'Facility Requirements',
+        entityId: 'some-id',
+        entityType: 'ListingRequest'
+    }];
 const mockedHearingParts: HearingPart[] = [
   {
     id: 'some-id',
@@ -53,9 +66,13 @@ const mockedHearingParts: HearingPart[] = [
     scheduleEnd: now,
     version: 2,
     priority: Priority.Low
-  }
-];
+  }];
 const mockedHearingPart = mockedHearingParts[0];
+const mockedHearingPartsViewModel: HearingPartViewModel[] = [
+    {
+        ...mockedHearingPart,
+        notes: mockedNotes
+    }];
 const mockedSessions: Session[] = [
   {
     id: 'some-session-id',
@@ -80,6 +97,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('sessions', sessionReducers.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
+        StoreModule.forFeature('notes', notesReducers.reducers),
         BrowserAnimationsModule
       ],
       providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
@@ -104,8 +122,10 @@ describe('SessionsSearchComponent', () => {
     });
     it('should fetch hearingParts', () => {
       store.dispatch(new hearingPartActions.SearchComplete(mockedHearingParts));
+      store.dispatch(new notesActions.UpsertMany(mockedNotes));
+
       component.hearingParts$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual(mockedHearingParts);
+        expect(hearingParts).toEqual(mockedHearingPartsViewModel);
       });
     });
     it('should fetch rooms', () => {
