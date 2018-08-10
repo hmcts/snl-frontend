@@ -9,15 +9,15 @@ export class NavigationFlow {
     new CalendarPage().openListView();
   }
 
-  goToCreateSessionPage() {
-    this.topMenu.openSessionCreatePage();
+  goToNewSessionPage() {
+    this.topMenu.openNewSessionPage();
   }
 
-  goToCreateNewListingPage() {
-    this.topMenu.openNewListingCreationPage();
+  goToNewListingRequestPage() {
+    this.topMenu.openNewListingRequestPage();
   }
 
-  goToSessionSearchPage() {
-    this.topMenu.openSessionSearchPage();
+  goToListHearingsPage() {
+    this.topMenu.openListHearingPage();
   }
 }

@@ -1,16 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { Store, select } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { getHearingPartsError } from '../../reducers/index';
+import { getHearingPartsError } from '../../reducers';
 import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as JudgeActions from '../../../judges/actions/judge.action';
+import { Observable } from 'rxjs';
+import { Judge } from '../../../judges/models/judge.model';
+import * as fromJudges from '../../../judges/reducers';
+import { map } from 'rxjs/operators';
+import { asArray } from '../../../utils/array-utils';
 
 const DURATION_UNIT = 'minute';
 
@@ -19,16 +25,18 @@ const DURATION_UNIT = 'minute';
     templateUrl: './listing-create.component.html',
     styleUrls: ['./listing-create.component.scss']
 })
-export class ListingCreateComponent {
+export class ListingCreateComponent implements OnInit {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
     listingCreate: FormGroup;
 
     hearings: string[] = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
     caseTypes: string[] = ['SCLAIMS', 'FTRACK', 'MTRACK'];
+    communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom']
     errors = '';
     success: boolean;
     priorityValues = Object.values(Priority);
+    judges$: Observable<Judge[]>;
 
     public listing: ListingCreate;
 
@@ -39,9 +47,14 @@ export class ListingCreateComponent {
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;
         });
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
         this.initiateListing();
         this.initiateForm();
+    }
+
+    ngOnInit() {
+        this.store.dispatch(new JudgeActions.Get());
     }
 
     create() {

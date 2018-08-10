@@ -32,10 +32,10 @@ const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
 const listingCreatedNoteText = 'Listing request created!'
 
-var origFn = browser.driver.controlFlow().execute;
+const origFn = browser.driver.controlFlow().execute;
 
 browser.driver.controlFlow().execute = function() {
-    var args = arguments;
+    const args = arguments;
 
     // queue 100ms wait
     origFn.call(browser.driver.controlFlow(), function() {
@@ -89,10 +89,10 @@ describe('Create Session and Listing Request, assign them despite problem, check
     loginFlow.loginIfNeeded();
     navigationFlow.goToCalendarPage()
   });
-  describe('Remember number of visible events in calendar, Go to create session page and create session', () => {
+  describe('Remember number of visible events in calendar, Go to new session page and create session', () => {
     it('Transaction dialog should be displayed ', async () => {
       numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
-      navigationFlow.goToCreateSessionPage()
+      navigationFlow.goToNewSessionPage()
       sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
       expect(transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
       transactionDialogPage.clickAcceptButton()
@@ -105,16 +105,16 @@ describe('Create Session and Listing Request, assign them despite problem, check
       expect(numberOfVisibleEvents + 1).toEqual(numberOfVisibleEventsAfterSessionCreation)
     });
   });
-  describe('Go to create new listing page, create listing with different case type', () => {
+  describe('Go to  new listing request page, create listing with different case type', () => {
     it('newly created session should be visible', async () => {
-      navigationFlow.goToCreateNewListingPage()
+      navigationFlow.goToNewListingRequestPage()
       listingCreationPage.createListingRequest(listingCreationForm)
       expect(snackBar.isNoteWithTextPresent(listingCreatedNoteText)).toBeTruthy()
     });
   });
-  describe('Go to search session page, find and select created session and listing', () => {
+  describe('Go to list hearing page, find and select created session and listing', () => {
     it('assign button should be enabled', async () => {
-      navigationFlow.goToSessionSearchPage()
+      navigationFlow.goToListHearingsPage()
       sessionSearchPage.filterSession(formValues)
       sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType)
       sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate)

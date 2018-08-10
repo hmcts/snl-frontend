@@ -24,6 +24,7 @@ import { TransactionDialogComponent } from '../../components/transaction-dialog/
 import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { asArray } from '../../../utils/array-utils';
 
 @Component({
     selector: 'app-sessions-search',
@@ -48,10 +49,10 @@ export class SessionsSearchComponent implements OnInit {
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
-            map(this.asArray)) as Observable<HearingPart[]>;
+            map(asArray)) as Observable<HearingPart[]>;
 
-        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(this.asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
+        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
@@ -140,10 +141,6 @@ export class SessionsSearchComponent implements OnInit {
         }
 
         return filters.includes('');
-    }
-
-    private asArray(data) {
-        return data ? Object.values(data) : [];
     }
 
     private openSummaryDialog() {

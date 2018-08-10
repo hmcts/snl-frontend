@@ -45,6 +45,18 @@
                     </mat-select>
                 </mat-form-field>
 
+                <mat-form-field>
+                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.communicationFacilitator">
+                        <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.reservedJudgeId">
+                        <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
                 <div formGroupName="targetDates">
                     <div style="padding-bottom:3px">Target Schedule <i>(DD/MM/YYYY)</i></div>
                     <div class="error" *ngIf="listingCreate.get('targetDates').hasError('targetFromAfterTargetTo')">

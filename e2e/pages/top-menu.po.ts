@@ -3,19 +3,19 @@ import { Wait } from '../enums/wait';
 
 export class TopMenu {
   private parentElement = element(by.css('mat-toolbar-row'));
-  private sessionButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Sessions');
+  private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
   private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
-  private listingNewButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listing (new)');
 
-  openSessionCreatePage() {
-    this.parentElement.element(this.sessionButtonSelector).click();
-    const createMenuButton = element(by.linkText('Create'));
-    browser.wait(
-      ExpectedConditions.presenceOf(createMenuButton),
-      Wait.normal,
-      'Cant find Create menu button'
-    );
-    createMenuButton.click();
+  openNewSessionPage() {
+    this.openListingSubMenu('New Session');
+  }
+
+  openNewListingRequestPage() {
+    this.openListingSubMenu('New Listing Request');
+  }
+
+  openListHearingPage() {
+    this.openListingSubMenu('List Hearings');
   }
 
   openCalendarPage() {
@@ -27,18 +27,14 @@ export class TopMenu {
     this.parentElement.element(this.calendarButtonSelector).click();
   }
 
-  openNewListingCreationPage() {
-    this.parentElement.element(this.listingNewButtonSelector).click();
-  }
-
-  openSessionSearchPage() {
-    this.parentElement.element(this.sessionButtonSelector).click();
-    const searchMenuButton = element(by.linkText('Search'));
+  private openListingSubMenu(optionName: string) {
+    this.parentElement.element(this.listingsButtonSelector).click();
+    const subElement = element(by.linkText(optionName));
     browser.wait(
-      ExpectedConditions.presenceOf(searchMenuButton),
+      ExpectedConditions.presenceOf(subElement),
       Wait.normal,
-      'Cant find Search menu button'
+      `Cant find ${optionName} menu button`
     );
-    searchMenuButton.click();
+    subElement.click();
   }
 }

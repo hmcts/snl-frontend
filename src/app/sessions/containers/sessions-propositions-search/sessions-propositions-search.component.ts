@@ -20,6 +20,7 @@ import { SessionCreate } from '../../models/session-create.model';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
+import { asArray } from '../../../utils/array-utils';
 
 @Component({
     selector: 'app-sessions-propositions-search',
@@ -43,10 +44,10 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 private readonly dialog: MatDialog,
                 private readonly sessionCreationService: SessionsCreationService
     ) {
-        this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
+        this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(asArray)) as Observable<Room[]>;
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.sessionPropositions$ = this.store.pipe(
-            select(fromSessionIndex.getFullSessionPropositions), map(this.asArray)
+            select(fromSessionIndex.getFullSessionPropositions), map(asArray)
         ) as Observable<SessionPropositionView[]>;
         this.sessionPropositionsLoading$ = this.store.pipe(select(fromSessionIndex.getSessionsPropositionLoading));
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
@@ -78,10 +79,6 @@ export class SessionsPropositionsSearchComponent implements OnInit {
         this.sessionCreationService.create(session);
         this.openTransactionDialog();
         this.closeSessionCreateDialog();
-    }
-
-    private asArray(data) {
-        return Object.values(data) || [];
     }
 
     private openSessionCreateDialog(spv: SessionPropositionView) {
