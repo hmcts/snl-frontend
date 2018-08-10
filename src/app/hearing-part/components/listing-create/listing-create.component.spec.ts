@@ -19,6 +19,9 @@ import moment = require('moment');
 import { ListingCreate } from '../../models/listing-create';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
 import { Priority } from '../../models/priority-model';
+import * as JudgeActions from '../../../judges/actions/judge.action';
+import * as judgesReducers from '../../../judges/reducers';
+import { Judge } from '../../../judges/models/judge.model';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -28,6 +31,7 @@ let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 
 let note;
 let secondNote;
+const mockedJudges: Judge[] = [{ id: 'judge-id', name: 'some-judge-name' }];
 
 describe('ListingCreateComponent', () => {
   beforeEach(() => {
@@ -38,6 +42,7 @@ describe('ListingCreateComponent', () => {
         FormsModule,
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
+        StoreModule.forFeature('judges', judgesReducers.reducers),
         BrowserAnimationsModule
       ],
       declarations: [
@@ -52,11 +57,11 @@ describe('ListingCreateComponent', () => {
         ListingCreateNotesConfiguration
       ]
     });
-
     fixture = TestBed.createComponent(ListingCreateComponent);
     component = fixture.componentInstance;
     listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
     store = TestBed.get(Store);
+    storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
 
   describe('Initial state ', () => {
@@ -66,12 +71,27 @@ describe('ListingCreateComponent', () => {
       expect(component.listing.priority).toBe(Priority.Low);
 
     });
+
+    it('should get judges from store', () => {
+        store.dispatch(new JudgeActions.GetComplete(mockedJudges))
+        component.judges$.subscribe(judges => {
+            expect(judges).toEqual(mockedJudges);
+        });
+    });
+  });
+
+  describe('ngOnInit', () => {
+    it('should dispatch Get Judges action', () => {
+        component.ngOnInit()
+        const passedObj = storeSpy.calls.argsFor(0)[0];
+        expect(passedObj instanceof JudgeActions.Get).toBeTruthy();
+    });
   });
 
   describe('create', () => {
     beforeEach(() => {
       fixture.detectChanges();
-      storeSpy = spyOn(store, 'dispatch');
+      storeSpy.calls.reset()
       // @ts-ignore: non existent in @types
       storeSpy.calls.saveArgumentsByValue();
 

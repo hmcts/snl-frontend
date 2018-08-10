@@ -13,6 +13,7 @@ import { TransactionDialogComponent } from '../../components/transaction-dialog/
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
+import { asArray } from '../../../utils/array-utils';
 
 @Component({
     selector: 'app-sessions-create',
@@ -30,8 +31,8 @@ export class SessionsCreateComponent implements OnInit {
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService) {
-        this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(this.asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(this.asArray)) as Observable<Judge[]>;
+        this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(asArray)) as Observable<Room[]>;
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
     }
@@ -52,9 +53,5 @@ export class SessionsCreateComponent implements OnInit {
             minWidth: 350,
             hasBackdrop: true
         });
-    }
-
-    private asArray(data) {
-        return Object.values(data) || [];
     }
 }
