@@ -20,7 +20,7 @@ export class SessionsStatisticsService {
 
     calculateAvailableDuration(reservedDuration: moment.Duration, allocatedDuration: moment.Duration) {
         let availableDuration = reservedDuration.subtract(allocatedDuration);
-        if(availableDuration.asMinutes() < 0) {
+        if (availableDuration.asMinutes() < 0) {
             return moment.duration('PT0M');
         }
 
