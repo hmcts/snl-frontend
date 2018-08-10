@@ -67,7 +67,7 @@ export class SessionsSearchComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
-        this.store.dispatch(new fromHearingPartsActions.Search());
+        this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
 

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../app.config';
@@ -14,10 +14,13 @@ export class HearingPartService {
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
-    searchHearingParts(): Observable<any> {
+    searchHearingParts(params): Observable<any> {
         return this.http
-            .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`)
-            .pipe(map(data => {return normalize(data, hearingParts)}));
+            .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`, {
+              params: new HttpParams({ fromObject: params })
+            })
+          .pipe(map(data => {return normalize(data, hearingParts)}));
+
     }
 
     assignToSession(query: SessionAssignment): Observable<any> {
