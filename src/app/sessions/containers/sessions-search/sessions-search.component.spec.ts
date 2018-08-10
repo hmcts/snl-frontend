@@ -65,13 +65,16 @@ const mockedHearingParts: HearingPart[] = [
     scheduleStart: now,
     scheduleEnd: now,
     version: 2,
-    priority: Priority.Low
+    priority: Priority.Low,
+    reservedJudgeId: judgeId,
+    communicationFacilitator: 'interpreter'
   }];
 const mockedHearingPart = mockedHearingParts[0];
 const mockedHearingPartsViewModel: HearingPartViewModel[] = [
     {
         ...mockedHearingPart,
-        notes: mockedNotes
+        notes: mockedNotes,
+        reservedJudge: mockedJudges[0]
     }];
 const mockedSessions: Session[] = [
   {
@@ -120,12 +123,13 @@ describe('SessionsSearchComponent', () => {
     it('should be defined', () => {
       expect(component).toBeDefined();
     });
-    it('should fetch hearingParts', () => {
+    fit('should fetch hearingParts', () => {
       store.dispatch(new hearingPartActions.SearchComplete(mockedHearingParts));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
+      store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearingParts$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual(mockedHearingPartsViewModel);
+      expect(hearingParts).toEqual(mockedHearingPartsViewModel);
       });
     });
     it('should fetch rooms', () => {

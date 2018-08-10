@@ -3,7 +3,6 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { Note } from '../../../notes/models/note.model';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 @Component({
@@ -30,7 +29,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'target schedule to',
       'listed',
       'select hearing',
-      'notes'
+      'notes',
+        'communication facilitator',
+        'priority',
+        'reserved judge'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -56,15 +58,19 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
     }
 
-    hasNotes(notes: Note[]) {
-        return notes.length !== 0 ? 'Yes' : 'No'
+    hasNotes(hearingPart: HearingPartViewModel): boolean {
+        return hearingPart.notes.length > 0;
     }
 
-    openNotesDialog(notes: Note[]) {
-        this.dialog.open(NotesListDialogComponent, {
-            data: notes,
-            hasBackdrop: false
-        })
+    openNotesDialog(hearingPart: HearingPartViewModel) {
+        if (this.hasNotes(hearingPart)) {
+            this.dialog.open(NotesListDialogComponent, {
+                data: hearingPart.notes,
+                hasBackdrop: false
+            })
+        } else {
+            return;
+        }
     }
 
     toggleHearing(hearing) {

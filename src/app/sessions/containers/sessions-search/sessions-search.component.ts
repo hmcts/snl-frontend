@@ -49,7 +49,7 @@ export class SessionsSearchComponent implements OnInit {
                 private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsWithNotes),
+        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getFullHearingParts),
             map(asArray)) as Observable<HearingPartViewModel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
