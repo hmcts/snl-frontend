@@ -123,7 +123,7 @@ describe('SessionsSearchComponent', () => {
     it('should be defined', () => {
       expect(component).toBeDefined();
     });
-    fit('should fetch hearingParts', () => {
+    it('should fetch hearingParts', () => {
       store.dispatch(new hearingPartActions.SearchComplete(mockedHearingParts));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
