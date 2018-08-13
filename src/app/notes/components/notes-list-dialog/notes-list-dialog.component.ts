@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 @Component({
     selector: 'app-notes-list-dialog',
     templateUrl: './notes-list-dialog.component.html',
-    styleUrls: []
+    styleUrls: ['./notes-list-dialog.component.scss']
 })
 export class NotesListDialogComponent extends DraggableDialog {
 

@@ -30,9 +30,9 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'listed',
       'select hearing',
       'notes',
-        'communication facilitator',
-        'priority',
-        'reserved judge'
+      'communication facilitator',
+      'priority',
+      'reserved judge'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -66,7 +66,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         if (this.hasNotes(hearingPart)) {
             this.dialog.open(NotesListDialogComponent, {
                 data: hearingPart.notes,
-                hasBackdrop: false
+                hasBackdrop: false,
+                width: '30%'
             })
         } else {
             return;
