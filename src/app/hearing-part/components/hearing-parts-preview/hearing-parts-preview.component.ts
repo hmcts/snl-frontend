@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { HearingPart } from '../../models/hearing-part';
-import { MatTableDataSource } from '@angular/material';
+import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
+import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
+import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -11,13 +12,13 @@ import { SelectionModel } from '@angular/cdk/collections';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
-    @Input() hearingParts: HearingPart[];
+    @Input() hearingParts: HearingPartViewModel[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
 
     selectedHearingPart;
 
-    hearingPartsDataSource: MatTableDataSource<HearingPart>;
+    hearingPartsDataSource: MatTableDataSource<HearingPartViewModel>;
     displayedColumns = [
       'case number',
       'case title',
@@ -27,11 +28,15 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'target schedule from',
       'target schedule to',
       'listed',
-      'select hearing'
+      'select hearing',
+      'communication facilitator',
+      'priority',
+      'reserved judge',
+      'notes'
     ];
 
-    constructor() {
-        this.selectedHearingPart = new SelectionModel<HearingPart>(false, []);
+    constructor(public dialog: MatDialog) {
+        this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
     }
 
     ngOnInit() {
@@ -51,6 +56,20 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     isListed(sessionId) {
         return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
+    }
+
+    hasNotes(hearingPart: HearingPartViewModel): boolean {
+        return hearingPart.notes.length > 0;
+    }
+
+    openNotesDialog(hearingPart: HearingPartViewModel) {
+        if (this.hasNotes(hearingPart)) {
+            this.dialog.open(NotesListDialogComponent, {
+                data: hearingPart.notes,
+                hasBackdrop: false,
+                width: '30%'
+            })
+        }
     }
 
     toggleHearing(hearing) {

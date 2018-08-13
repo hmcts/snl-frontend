@@ -11,10 +11,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoteComponent } from './components/note/note.component';
 import { NoteListComponent } from './components/notes-list/note-list.component';
 import { NotesPreparerService } from './services/notes-preparer.service';
+import { NotesListDialogComponent } from './components/notes-list-dialog/notes-list-dialog.component';
 
 const COMPONENTS = [
     NoteComponent,
-    NoteListComponent
+    NoteListComponent,
+    NotesListDialogComponent
 ];
 
 @NgModule({
@@ -29,7 +31,8 @@ const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [NotesService, NotesPreparerService]
+    providers: [NotesService, NotesPreparerService],
+    entryComponents: [NotesListDialogComponent]
 })
 export class NotesModule {
 }

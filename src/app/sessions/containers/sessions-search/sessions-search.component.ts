@@ -25,6 +25,7 @@ import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { asArray } from '../../../utils/array-utils';
+import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 
 @Component({
     selector: 'app-sessions-search',
@@ -35,7 +36,7 @@ export class SessionsSearchComponent implements OnInit {
 
     startDate: moment.Moment;
     endDate: moment.Moment;
-    hearingParts$: Observable<HearingPart[]>;
+    hearingParts$: Observable<HearingPartViewModel[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
@@ -48,8 +49,8 @@ export class SessionsSearchComponent implements OnInit {
                 private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getHearingPartsEntities),
-            map(asArray)) as Observable<HearingPart[]>;
+        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getFullHearingParts),
+            map(asArray)) as Observable<HearingPartViewModel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
