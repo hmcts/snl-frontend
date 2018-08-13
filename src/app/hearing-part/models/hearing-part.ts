@@ -13,4 +13,6 @@ export interface HearingPart {
     scheduleEnd: Date;
     version: number;
     priority: Priority;
+    reservedJudgeId: string;
+    communicationFacilitator: string;
 }

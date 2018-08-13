@@ -16,6 +16,7 @@ import * as sessionActions from '../../sessions/actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
 import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
+import * as notesActions from '../../notes/actions/notes.action';
 
 @Injectable()
 export class HearingPartEffects {
@@ -37,7 +38,8 @@ export class HearingPartEffects {
         mergeMap(action =>
           this.hearingPartService.searchHearingParts(action.payload).pipe(mergeMap(data => [
             new SearchComplete(data.entities.hearingParts),
-            new sessionActions.UpsertMany(data.entities.sessions)
+            new sessionActions.UpsertMany(data.entities.sessions),
+            new notesActions.GetByEntities(Object.keys(data.entities.hearingParts))
         ]), catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error))))
         )
     );

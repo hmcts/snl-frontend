@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { SearchForDates } from '../../actions/session.action';
-import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers';
@@ -25,6 +24,7 @@ import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { asArray } from '../../../utils/array-utils';
+import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 
 @Component({
     selector: 'app-sessions-search',
@@ -35,7 +35,7 @@ export class SessionsSearchComponent implements OnInit {
 
     startDate: moment.Moment;
     endDate: moment.Moment;
-    hearingParts$: Observable<HearingPart[]>;
+    hearingParts$: Observable<HearingPartViewModel[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
@@ -49,10 +49,10 @@ export class SessionsSearchComponent implements OnInit {
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(
-            select(fromHearingParts.getHearingPartsEntities),
+          select(fromHearingParts.getFullHearingParts),
             map(asArray),
             map(this.filterUnlistedHearingParts)
-        ) as Observable<HearingPart[]>;
+          ) as Observable<HearingPartViewModel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
@@ -87,7 +87,7 @@ export class SessionsSearchComponent implements OnInit {
             .filter(s => this.filterByUtilization(s, filters.utilization));
     }
 
-    selectHearingPart(hearingPart: HearingPart) {
+    selectHearingPart(hearingPart: HearingPartViewModel) {
         this.selectedHearingPart = hearingPart;
     }
 
@@ -154,7 +154,7 @@ export class SessionsSearchComponent implements OnInit {
         });
     }
 
-    private filterUnlistedHearingParts(data: HearingPart[]): HearingPart[] {
+    private filterUnlistedHearingParts(data: HearingPartViewModel[]): HearingPartViewModel[] {
         return data.filter(h => {
             return h.session === undefined || h.session === '' || h.session === null
         });

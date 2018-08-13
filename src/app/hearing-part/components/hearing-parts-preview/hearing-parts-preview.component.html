@@ -25,6 +25,21 @@
     <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="communicationFacilitator">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="priority">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Priority </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="reservedJudge">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="hearingType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
@@ -45,8 +60,17 @@
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="notes">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Notes </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span [class.clickable]="hasNotes(element)" (click)="openNotesDialog(element)">
+        {{hasNotes(element) ? "Yes" : "No"}}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[1, 5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

@@ -1,18 +1,11 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnInit,
-    Output,
-    ViewChild
-} from '@angular/core';
-import { HearingPart } from '../../models/hearing-part';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
+import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
+import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
+import { Priority } from '../../models/priority-model';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -20,7 +13,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
-    @Input() hearingParts: HearingPart[];
+    @Input() hearingParts: HearingPartViewModel[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
@@ -28,7 +21,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     selectedHearingPart;
 
-    dataSource: MatTableDataSource<HearingPart>;
+    dataSource: MatTableDataSource<HearingPartViewModel>;
     displayedColumns = [
       'selectHearing',
       'caseNumber',
@@ -36,12 +29,16 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'caseType',
       'hearingType',
       'duration',
+      'communicationFacilitator',
+      'priority',
+      'reservedJudge',
+      'notes',
       'scheduleStart',
       'scheduleEnd',
     ];
 
-    constructor() {
-        this.selectedHearingPart = new SelectionModel<HearingPart>(false, []);
+    constructor(public dialog: MatDialog) {
+        this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
     }
 
     ngOnInit() {
@@ -55,6 +52,21 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             switch (property) {
                 case 'duration':
                     return moment.duration(item[property]).asMilliseconds();
+
+                case 'reservedJudge':
+                    return item[property] === undefined ? null : item[property].name;
+
+                case 'priority':
+                    switch (item[property]) {
+                      case Priority.Low:
+                        return 0;
+                      case Priority.Medium:
+                        return 1;
+                      case Priority.High:
+                        return 2;
+                    }
+                    return null;
+
                 default:
                     return item[property];
             }
@@ -73,8 +85,18 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         return moment(date).format('DD/MM/YYYY');
     }
 
-    isListed(sessionId) {
-        return sessionId !== undefined && sessionId !== '' && sessionId !== null ? 'Yes' : 'No';
+    hasNotes(hearingPart: HearingPartViewModel): boolean {
+        return hearingPart.notes.length > 0;
+    }
+
+    openNotesDialog(hearingPart: HearingPartViewModel) {
+        if (this.hasNotes(hearingPart)) {
+            this.dialog.open(NotesListDialogComponent, {
+                data: hearingPart.notes,
+                hasBackdrop: false,
+                width: '30%'
+            })
+        }
     }
 
     toggleHearing(hearing) {

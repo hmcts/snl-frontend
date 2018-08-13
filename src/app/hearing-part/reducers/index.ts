@@ -1,6 +1,10 @@
 import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
+import { getNotes } from '../../notes/reducers';
+import { HearingPartViewModel } from '../models/hearing-part.viewmodel';
+import { HearingPart } from '../models/hearing-part';
+import { getJudgesEntities } from '../../judges/reducers';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
@@ -25,6 +29,27 @@ export const getHearingParts = createSelector(
     state => state.entities
 );
 
+export const {
+    selectIds: getHearingPartsIds,
+    selectEntities: getHearingPartsEntities,
+    selectAll: getAllHearingParts,
+    selectTotal: getTotalHearingParts,
+} = fromHearingParts.adapter.getSelectors(getHearingPartsEntitiesState);
+
+export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, getJudgesEntities,
+    (hearingParts, notes, judges) => {
+        let finalHearingParts: HearingPartViewModel[];
+        if (hearingParts === undefined) { return []; }
+        finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
+            return {
+                ...hearingPart,
+                reservedJudge: judges[hearingPart.reservedJudgeId],
+                notes: Object.values(notes).filter(note => note.entityId === hearingPart.id),
+            };
+        });
+        return finalHearingParts;
+    });
+
 export const getHearingPartsLoading = createSelector(
     getHearingPartsEntitiesState,
     state => state.loading
@@ -34,10 +59,3 @@ export const getHearingPartsError = createSelector(
     getHearingPartsEntitiesState,
     state => state.error
 );
-
-export const {
-    selectIds: getHearingPartsIds,
-    selectEntities: getHearingPartsEntities,
-    selectAll: getAllHearingParts,
-    selectTotal: getTotalHearingParts,
-} = fromHearingParts.adapter.getSelectors(getHearingPartsEntitiesState);
