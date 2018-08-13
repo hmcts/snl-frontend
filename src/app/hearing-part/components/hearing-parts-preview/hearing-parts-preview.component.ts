@@ -29,10 +29,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'target schedule to',
       'listed',
       'select hearing',
-      'notes',
       'communication facilitator',
       'priority',
-      'reserved judge'
+      'reserved judge',
+      'notes'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -69,8 +69,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 hasBackdrop: false,
                 width: '30%'
             })
-        } else {
-            return;
         }
     }
 

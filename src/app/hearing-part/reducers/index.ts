@@ -4,7 +4,7 @@ import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/s
 import { getNotes } from '../../notes/reducers';
 import { HearingPartViewModel } from '../models/hearing-part.viewmodel';
 import { HearingPart } from '../models/hearing-part';
-import { getJudges } from '../../judges/reducers';
+import { getJudgesEntities } from '../../judges/reducers';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
@@ -36,14 +36,14 @@ export const {
     selectTotal: getTotalHearingParts,
 } = fromHearingParts.adapter.getSelectors(getHearingPartsEntitiesState);
 
-export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, getJudges,
+export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, getJudgesEntities,
     (hearingParts, notes, judges) => {
         let finalHearingParts: HearingPartViewModel[];
         if (hearingParts === undefined) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
             return {
                 ...hearingPart,
-                reservedJudge: Object.values(judges).find(judge => judge.id === hearingPart.reservedJudgeId),
+                reservedJudge: judges[hearingPart.reservedJudgeId],
                 notes: Object.values(notes).filter(note => note.entityId === hearingPart.id),
             };
         });
