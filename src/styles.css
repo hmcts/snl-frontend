@@ -4,6 +4,11 @@
 @import "~fullcalendar/dist/fullcalendar.css";
 @import "~fullcalendar-scheduler/dist/scheduler.css";
 
+/* Remove user agent margin == use full width of screen */
+body {
+    margin: 0;
+}
+
 html * {
     font-family: sans-serif !important;
 }
