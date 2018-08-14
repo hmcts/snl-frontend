@@ -1,4 +1,4 @@
-<div fxLayout="row" fxLayoutGap="5%">
+<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
   <div fxFlex="25%">
     <app-sessions-filter
             (filter)="filters$.next($event)"
@@ -9,8 +9,8 @@
 
     </app-sessions-filter>
   </div>
-  <div fxFlex="60%">
-    <div style="margin-top: 30px; margin-bottom: 10px">
+  <div fxFlex>
+    <div class="heading">
       Listing Requests:
     </div>
 
@@ -22,7 +22,7 @@
       </app-hearing-parts-preview>
     </div>
 
-    <div style="margin-top: 30px; margin-bottom: 10px">
+    <div class="heading">
       Actions:
     </div>
 
@@ -33,7 +33,7 @@
             class="get-sessions-button"
             id="assign">Assign</button>
 
-    <div style="margin-top: 30px; margin-bottom: 10px">
+    <div class="heading">
       Sessions:
     </div>
 

@@ -15,6 +15,21 @@
     <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="communication facilitator">
+    <mat-header-cell *matHeaderCellDef> Communication Facilitator </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="priority">
+    <mat-header-cell *matHeaderCellDef> Priority </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="reserved judge">
+    <mat-header-cell *matHeaderCellDef> Reserved to Judge </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="hearing type">
     <mat-header-cell *matHeaderCellDef> Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
@@ -42,12 +57,22 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="notes">
+    <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span [class.clickable]="hasNotes(element)" (click)="openNotesDialog(element)">
+        {{hasNotes(element) ? "Yes" : "No"}}
+      </span>
+    </mat-cell>
+  </ng-container>
+
+
   <ng-container matColumnDef="select hearing">
     <mat-header-cell *matHeaderCellDef> Select Hearing </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? toggleHearing(element.id) : null"
-                    [checked]="selectedHearingPartId.isSelected(element.id)">&nbsp;
+                    (change)="$event ? toggleHearing(element) : null"
+                    [checked]="selectedHearingPart.isSelected(element)">&nbsp;
       </mat-checkbox>
     </mat-cell>
   </ng-container>

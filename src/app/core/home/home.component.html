@@ -6,19 +6,19 @@
 
       <div *ngIf="isInRole('officer')">
         <a mat-button routerLink='/' routerLinkActive="active">Main</a>
-        <a mat-button [matMenuTriggerFor]="sessions">Sessions</a>
+        <a mat-button [matMenuTriggerFor]="sessions">Listings</a>
           <mat-menu #sessions="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
-            <a mat-menu-item routerLink="sessions/search" routerLinkActive="active" color="primary">Search</a>
-            <a mat-menu-item routerLink="sessions/create" routerLinkActive="active">Create</a>
-            <a mat-menu-item routerLink="sessions/search-proposition" routerLinkActive="active"> Search proposition</a>
+              <a mat-menu-item routerLink="sessions/search" routerLinkActive="active" color="primary">List Hearings</a>
+              <a mat-menu-item routerLink="sessions/search-proposition" routerLinkActive="active"> Find availability</a>
+              <a mat-menu-item routerLink="listing" routerLinkActive="active">New Listing Request</a>
+              <a mat-menu-item routerLink="sessions/create" routerLinkActive="active">New Session</a>
           </mat-menu>
         <a mat-button routerLink='calendar' routerLinkActive="active">Calendar</a>
         <a mat-button routerLink='planner' routerLinkActive="active">Planner</a>
-        <a mat-button routerLink='listing' routerLinkActive="active">Listing (new)</a>
         <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
           <a mat-button [matMenuTriggerFor]="reports">Reports</a>
           <mat-menu #reports="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
-              <a mat-menu-item routerLink="reports/unlisted" routerLinkActive="active">Unlisted</a>
+              <a mat-menu-item routerLink="reports/unlisted" routerLinkActive="active">Unlisted Hearings Requests</a>
           </mat-menu>
       </div>
 
@@ -26,7 +26,11 @@
         <a mat-button routerLink='/home/judge/main' routerLinkActive="active">Main</a>
         <a mat-button routerLink='/home/judge/diary-calendar' routerLinkActive="active">Calendar</a>
         <a mat-button routerLink='problems' routerLinkActive="active">Problems</a>
-        <a mat-button routerLink='reports/listed' routerLinkActive="active">Reports</a>
+        <a mat-button [matMenuTriggerFor]="reports">Reports</a>
+
+        <mat-menu #reports="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
+          <a mat-menu-item routerLink="reports/listed" routerLinkActive="active">Listed Hearings Requests</a>
+        </mat-menu>
 
       </div>
 
@@ -39,8 +43,8 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<div class="toolbar-to-content-spacer" ></div>
+<div class="toolbar-to-content-spacer"></div>
 
-<div class="content-container" style="margin-left: 15px">
+<div class="content-container">
   <router-outlet></router-outlet>
 </div>

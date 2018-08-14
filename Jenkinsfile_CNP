@@ -13,8 +13,12 @@ def app = "frontend"
 
 withPipeline("angular", product, app) {
 
-     before('buildinfra:prod') {
-       error 'This is PoC project for Scheduling and Listing therefore the prod environment will not be built'
-     }
+  afterCheckout {
+    sh "yarn cache clean"
+  }
+
+  before('buildinfra:prod') {
+    error 'This is PoC project for Scheduling and Listing therefore the prod environment will not be built'
+  }
 
 }

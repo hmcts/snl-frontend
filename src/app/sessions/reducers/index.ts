@@ -116,7 +116,8 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 person: judges[sessionData.person],
                 caseType: sessionData.caseType,
                 hearingParts: Object.values(hearingParts).filter(hearingPart => hearingPart.session === sessionData.id),
-                jurisdiction: sessionData.jurisdiction
+                jurisdiction: sessionData.jurisdiction,
+                version: sessionData.version
             } as SessionViewModel;
         });
         return Object.values(finalSessions);
