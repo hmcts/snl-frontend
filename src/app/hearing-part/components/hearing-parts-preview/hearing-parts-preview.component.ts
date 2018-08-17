@@ -5,7 +5,7 @@ import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { Priority } from '../../models/priority-model';
+import { priorityValue } from '../../models/priority-model';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -57,28 +57,15 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                     return item[property] === undefined ? null : item[property].name;
 
                 case 'priority':
-                    switch (item[property]) {
-                      case Priority.Low:
-                        return 0;
-                      case Priority.Medium:
-                        return 1;
-                      case Priority.High:
-                        return 2;
-                    }
-                    return null;
+                    return priorityValue(item[property]);
 
                 default:
                     return item[property];
             }
-            return item[property];
-        }
+        };
 
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
-    }
-
-    humanizeDuration(duration) {
-        return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
     }
 
     parseDate(date) {
@@ -100,7 +87,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     toggleHearing(hearing) {
-        this.selectedHearingPart.toggle(hearing)
-        this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {})
+        this.selectedHearingPart.toggle(hearing);
+        this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {});
     }
 }

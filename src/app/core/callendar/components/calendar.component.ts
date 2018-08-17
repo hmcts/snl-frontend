@@ -79,7 +79,8 @@ export class CalendarComponent implements OnInit {
             droppable: true,
             eventLimit: false,
             header: this.header,
-            views: this.views
+            views: this.views,
+            titleFormat: 'DD/MM/YYYY'
         };
         // when there are defined resources, agendaDay view for a simple calendar may not work
         // another approach would be to create separate component for scheduler

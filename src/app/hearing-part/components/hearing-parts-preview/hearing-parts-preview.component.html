@@ -26,8 +26,8 @@
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
+    <mat-header-cell class="communicationFacilitator" *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
+    <mat-cell class="communicationFacilitator" *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="priority">
@@ -47,7 +47,7 @@
 
   <ng-container matColumnDef="duration">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Estimated Duration </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.duration | appDurationFormat}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="scheduleStart">

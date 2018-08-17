@@ -17,11 +17,12 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import moment = require('moment');
 import { ListingCreate } from '../../models/listing-create';
-import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
+import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import { Priority } from '../../models/priority-model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers';
 import { Judge } from '../../../judges/models/judge.model';
+import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -49,6 +50,7 @@ describe('ListingCreateComponent', () => {
         ListingCreateComponent,
         NoteComponent,
         NoteListComponent,
+        DurationFormatPipe,
         DurationAsMinutesPipe
       ],
       providers: [

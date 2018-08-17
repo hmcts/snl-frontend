@@ -42,7 +42,7 @@
 
   <ng-container matColumnDef="duration">
     <mat-header-cell *matHeaderCellDef> Duration (minutes) </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.duration | appDurationAsMinutes}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.duration | appDurationFormat}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="startDate">
