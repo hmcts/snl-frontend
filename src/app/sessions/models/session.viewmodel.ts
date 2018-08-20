@@ -13,4 +13,7 @@ export interface SessionViewModel {
     hearingParts: HearingPart[];
     jurisdiction: string;
     version: number;
+    allocated: moment.Duration;
+    utilization: number;
+    available: moment.Duration;
 }

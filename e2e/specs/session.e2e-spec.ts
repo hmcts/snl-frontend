@@ -114,11 +114,12 @@ describe('Create Session and Listing Request, assign them despite problem, check
   });
   describe('Go to list hearing page, find and select created session and listing', () => {
     it('assign button should be enabled', async () => {
-      navigationFlow.goToListHearingsPage()
-      sessionSearchPage.filterSession(formValues)
-      sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType)
-      sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate)
-      expect(sessionSearchPage.assignButton.isEnabled()).toEqual(true)
+      navigationFlow.goToListHearingsPage();
+      sessionSearchPage.filterSession(formValues);
+      sessionSearchPage.changeMaxItemsPerPage('100');
+      sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType);
+      sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate);
+      expect(sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
   });
   describe('Click on "assign" button,', () => {

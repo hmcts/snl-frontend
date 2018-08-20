@@ -27,7 +27,7 @@ export enum HearingPartActionTypes {
 export class Search implements Action {
   readonly type = HearingPartActionTypes.Search;
 
-  constructor() {}
+  constructor(public payload?: object) {}
 }
 
 export class SearchComplete implements Action {

@@ -11,14 +11,14 @@
       <div fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="4%">
         <span fxFlex>{{(sessionDetails.session | async).start | date: 'dd/MM/yyyy'}}</span>
         <span fxFlex>{{sessionDetails.time | async}} - {{sessionDetails.endTime | async}}</span>
-        <span fxFlex>{{(sessionDetails.session | async).duration | appDurationAsMinutes}} minutes</span>
+        <span fxFlex>{{(sessionDetails.session | async).duration | appDurationFormat}}</span>
       </div>
       <hr>
     </div>
     <div fxLayout="column">
       <span fxFlex>{{(sessionDetails.session | async)?.hearingParts?.length}} hearing(s) listed</span>
-      <span fxFlex>Allocated: {{sessionDetails.allocatedHearingsDuration | async | appDurationAsMinutes}} minutes</span>
-      <span fxFlex>Available: {{sessionDetails.availableDuration | async}} minutes</span>
+      <span fxFlex>Allocated: {{sessionDetails.allocatedHearingsDuration | async}}</span>
+      <span fxFlex>Available: {{sessionDetails.availableDuration | async}}</span>
     </div>
     <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
         <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>

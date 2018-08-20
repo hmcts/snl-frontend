@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { SearchForDates } from '../../actions/session.action';
-import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers';
@@ -49,8 +48,11 @@ export class SessionsSearchComponent implements OnInit {
                 private readonly sessionsStatsService: SessionsStatisticsService,
                 public hearingModificationService: HearingPartModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(select(fromHearingParts.getFullHearingParts),
-            map(asArray)) as Observable<HearingPartViewModel[]>;
+        this.hearingParts$ = this.store.pipe(
+          select(fromHearingParts.getFullHearingParts),
+            map(asArray),
+            map(this.filterUnlistedHearingParts)
+          ) as Observable<HearingPartViewModel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
@@ -65,7 +67,7 @@ export class SessionsSearchComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
-        this.store.dispatch(new fromHearingPartsActions.Search());
+        this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
 
@@ -85,7 +87,7 @@ export class SessionsSearchComponent implements OnInit {
             .filter(s => this.filterByUtilization(s, filters.utilization));
     }
 
-    selectHearingPart(hearingPart: HearingPart) {
+    selectHearingPart(hearingPart: HearingPartViewModel) {
         this.selectedHearingPart = hearingPart;
     }
 
@@ -149,6 +151,12 @@ export class SessionsSearchComponent implements OnInit {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
+        });
+    }
+
+    private filterUnlistedHearingParts(data: HearingPartViewModel[]): HearingPartViewModel[] {
+        return data.filter(h => {
+            return h.session === undefined || h.session === '' || h.session === null
         });
     }
 }
