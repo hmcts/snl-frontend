@@ -36,4 +36,10 @@ export class HearingPartService {
             });
     }
 
+    deleteHearingPart(hearingPartId: string): Observable<any> {
+        return this.http.delete(`${this.config.getApiUrl()}/hearing-part/${hearingPartId}`, {
+          headers: {'Content-Type': 'application/json'}
+        });
+    }
+
 }

@@ -44,6 +44,16 @@ export class HearingPartEffects {
         )
     );
 
+    @Effect()
+    deleteHearing$: Observable<Action> = this.actions$.pipe(
+      ofType<any>(HearingPartActionTypes.DeleteListingRequest),
+      mergeMap(action =>
+        this.hearingPartService.deleteHearingPart(action.payload).pipe(mergeMap(data => [
+
+        ]), catchError( (err: HttpErrorResponse) => of(new SearchFailed(err.error)) ))
+      )
+    );
+
     constructor(private readonly hearingPartService: HearingPartService, private readonly actions$: Actions) {
     }
 }

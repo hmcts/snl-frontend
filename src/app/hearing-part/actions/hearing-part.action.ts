@@ -14,7 +14,8 @@ export enum HearingPartActionTypes {
   AssignToSession = '[HearingPart] Assign to session',
   UpsertMany = '[HearingPart] Upsert Many',
   UpsertOne = '[HearingPart] Upsert One',
-  AssignFailed = '[HearingPart] Assign Failed'
+  AssignFailed = '[HearingPart] Assign Failed',
+  DeleteListingRequest = '[HearingPart] Delete Listing Request',
 }
 
 /**
@@ -82,4 +83,10 @@ export class UpsertOne implements Action {
     readonly type = HearingPartActionTypes.UpsertOne;
 
     constructor(public payload: any) {}
+}
+
+export class DeleteListingRequest implements Action {
+  readonly  type = HearingPartActionTypes.DeleteListingRequest;
+
+  constructor(public payload: any) {}
 }
