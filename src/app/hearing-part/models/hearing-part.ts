@@ -9,8 +9,8 @@ export interface HearingPart {
     caseType: string;
     hearingType: string
     duration: moment.Duration
-    scheduleStart: Date;
-    scheduleEnd: Date;
+    scheduleStart: moment.Moment;
+    scheduleEnd: moment.Moment;
     version: number;
     priority: Priority;
     reservedJudgeId: string;

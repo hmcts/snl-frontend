@@ -7,7 +7,7 @@ import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
 import { hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
-import { ListingCreate } from '../models/listing-create';
+import * as moment from 'moment';
 
 @Injectable()
 export class HearingPartService {
@@ -19,7 +19,13 @@ export class HearingPartService {
             .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`, {
               params: new HttpParams({ fromObject: params })
             })
-          .pipe(map(data => {return normalize(data, hearingParts)}));
+          .pipe(map(data => data.map(hp => {
+              hp.scheduleEnd = moment(hp.scheduleEnd);
+              hp.scheduleStart = moment(hp.scheduleStart);
+              hp.duration = moment.duration(hp.duration);
+              return hp;
+          })),
+              map(data => {return normalize(data, hearingParts)}));
 
     }
 
@@ -29,7 +35,7 @@ export class HearingPartService {
                 query);
     }
 
-    createListing(query: ListingCreate): Observable<string> {
+    createListing(query: HearingPart): Observable<string> {
         return this.http
             .put<string>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}

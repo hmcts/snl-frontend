@@ -16,11 +16,13 @@ import { DraggableHearingPartComponent } from './components/draggable-hearing-pa
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
+import { ListingEditOrCreateDialogComponent } from './components/listing-create-dialog/listing-edit-or-create-dialog';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
     ListingCreateComponent,
-    DraggableHearingPartComponent
+    DraggableHearingPartComponent,
+    ListingEditOrCreateDialogComponent
 ];
 
 @NgModule({
@@ -37,6 +39,8 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration]
+  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
+  entryComponents: [ListingEditOrCreateDialogComponent, HearingPartsPreviewComponent],
+
 })
 export class HearingPartModule { }

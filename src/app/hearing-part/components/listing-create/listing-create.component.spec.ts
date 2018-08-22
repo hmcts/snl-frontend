@@ -70,8 +70,7 @@ describe('ListingCreateComponent', () => {
     it('should include priority', () => {
       expect(component.errors).toEqual('');
       expect(component.listing).toBeDefined();
-      expect(component.listing.priority).toBe(Priority.Low);
-
+      expect(component.listing.hearingPart.priority).toBe(Priority.Low);
     });
 
     it('should get judges from store', () => {
@@ -117,16 +116,23 @@ describe('ListingCreateComponent', () => {
     it('with custom inputs should dispatch proper action', () => {
       let now = moment();
       component.listing = {
-        id: undefined,
-        caseNumber: 'number',
-        caseTitle: 'title',
-        caseType: 'case type',
-        hearingType: 'hearing type',
-        duration: moment.duration(30, 'minute'),
-        scheduleStart: now,
-        scheduleEnd: now,
-        createdAt: now,
-        notes: []
+        hearingPart: {
+            id: undefined,
+            session: undefined,
+            caseNumber: 'number',
+            caseTitle: 'title',
+            caseType: 'case type',
+            hearingType: 'hearing type',
+            duration: moment.duration(30, 'minute'),
+            scheduleStart: now,
+            scheduleEnd: now,
+            createdAt: now,
+            version: 0,
+            priority: undefined,
+            reservedJudgeId: undefined,
+            communicationFacilitator: undefined
+        },
+          notes: []
       } as ListingCreate;
 
       component.create();
@@ -139,12 +145,12 @@ describe('ListingCreateComponent', () => {
       expect(createListingAction.type).toEqual(
         HearingPartActionTypes.CreateListingRequest
       );
-      expect(createdListing.id).toBeDefined();
-      expect(createdListing.caseNumber).toEqual('number');
-      expect(createdListing.caseType).toEqual('case type');
-      expect(createdListing.hearingType).toEqual('hearing type');
-      expect(createdListing.scheduleStart).toEqual(now);
-      expect(createdListing.scheduleEnd).toEqual(now);
+      expect(createdListing.hearingPart.id).toBeDefined();
+      expect(createdListing.hearingPart.caseNumber).toEqual('number');
+      expect(createdListing.hearingPart.caseType).toEqual('case type');
+      expect(createdListing.hearingPart.hearingType).toEqual('hearing type');
+      expect(createdListing.hearingPart.scheduleStart).toEqual(now);
+      expect(createdListing.hearingPart.scheduleEnd).toEqual(now);
       expect(createdListing.notes).toEqual([]);
     });
 
@@ -159,7 +165,7 @@ describe('ListingCreateComponent', () => {
       expect(createListingAction.type).toEqual(
         HearingPartActionTypes.CreateListingRequest
       );
-      expect(createListingAction.payload).toEqual(defaultListing);
+      expect(createListingAction.payload.hearingPart).toEqual(defaultListing.hearingPart);
     });
 
     it('with some notes it should set default notes post-creation', () => {
@@ -172,13 +178,13 @@ describe('ListingCreateComponent', () => {
       );
 
       it('should fail when start date is after end date', () => {
-        component.listing.scheduleStart = moment();
-        component.listing.scheduleEnd = moment().subtract(10, 'day');
+        component.listing.hearingPart.scheduleStart = moment();
+        component.listing.hearingPart.scheduleEnd = moment().subtract(10, 'day');
         component.create();
 
         expect(component.success).toBe(false);
         expect(component.listing).toBeDefined();
-        expect(component.listing.id).not.toBeUndefined();
+        expect(component.listing.hearingPart.id).not.toBeUndefined();
 
         const createFailed = storeSpy.calls.mostRecent()
           .args[0] as CreateFailed;
@@ -186,8 +192,8 @@ describe('ListingCreateComponent', () => {
       });
 
       it('If start date is undefined', () => {
-        component.listing.scheduleStart = undefined;
-        component.listing.scheduleEnd = moment();
+        component.listing.hearingPart.scheduleStart = undefined;
+        component.listing.hearingPart.scheduleEnd = moment();
 
         component.create();
 
@@ -196,8 +202,8 @@ describe('ListingCreateComponent', () => {
       });
 
       it('If end date is undefined', () => {
-        component.listing.scheduleStart = moment();
-        component.listing.scheduleEnd = undefined;
+        component.listing.hearingPart.scheduleStart = moment();
+        component.listing.hearingPart.scheduleEnd = undefined;
 
         component.create();
 
@@ -206,8 +212,8 @@ describe('ListingCreateComponent', () => {
       });
 
       it('should succeed when start date is before end date', () => {
-        component.listing.scheduleStart = moment();
-        component.listing.scheduleEnd = moment().add(10, 'day');
+        component.listing.hearingPart.scheduleStart = moment();
+        component.listing.hearingPart.scheduleEnd = moment().add(10, 'day');
         component.create();
 
         const createFailed = storeSpy.calls.mostRecent()
@@ -232,13 +238,13 @@ describe('ListingCreateComponent', () => {
         );
       });
 
-      it('with some notes it should set default notes post-creation', () => {
-        component.listing.notes = [{...note, content: 'custom content'}];
-
-        component.create();
-
-        expect(component.listing.notes).toEqual(listingCreateNoteConfig.defaultNotes());
-    });
+    //   it('with some notes it should set default notes post-creation', () => {
+    //     component.listing.notes = [{...note, content: 'custom content'}];
+    //
+    //     component.create();
+    //
+    //     expect(component.listing.notes).toEqual(listingCreateNoteConfig.defaultNotes());
+    // });
 
     it('should prepare listing request with id', () => {
 
@@ -249,7 +255,7 @@ describe('ListingCreateComponent', () => {
         const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
         const createdListing = createListingAction.payload;
 
-        expect(createdListing.id).toBeDefined();
+        expect(createdListing.hearingPart.id).toBeDefined();
       });
     });
 
@@ -263,6 +269,8 @@ describe('ListingCreateComponent', () => {
           note,
           secondNote
         ]);
+
+        component.isBeingEdited = true;
 
         component.create();
 
