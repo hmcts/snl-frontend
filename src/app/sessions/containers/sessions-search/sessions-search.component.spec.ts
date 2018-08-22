@@ -34,7 +34,6 @@ let component: SessionsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
-const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const caseType = 'some-case-type';
@@ -61,8 +60,8 @@ const mockedUnlistedHearingPart: HearingPartViewModel = {
     caseType: 'some-case-type',
     hearingType: 'some-hearing-type',
     duration: moment.duration(sessionDuration),
-    scheduleStart: now,
-    scheduleEnd: now,
+    scheduleStart: nowMoment,
+    scheduleEnd: nowMoment,
     version: 2,
     priority: Priority.Low,
     notes: mockedNotes,
