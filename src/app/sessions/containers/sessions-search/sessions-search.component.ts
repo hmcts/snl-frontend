@@ -101,7 +101,9 @@ export class SessionsSearchComponent implements OnInit {
             start: null // this.calculateStartOfHearing(this.selectedSession)
         } as SessionAssignment);
 
-        this.openSummaryDialog();
+        this.openSummaryDialog().afterClosed().subscribe(() => {
+            this.store.dispatch(new fromHearingPartsActions.Search());
+        });
     }
 
     selectSession(session: SessionViewModel) {
@@ -147,7 +149,7 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

@@ -28,6 +28,7 @@ import { SessionsPropositionsSearchComponent } from './containers/sessions-propo
 import { SessionsPropositionsTableComponent } from './components/sessions-propositions-table/sessions-propositions-table.component';
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
+import { TransactionsModule } from '../features/transactions/transactions.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -50,6 +51,7 @@ export const COMPONENTS = [
       FlexLayoutModule,
       FormsModule,
       HearingPartModule,
+      TransactionsModule,
       CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),

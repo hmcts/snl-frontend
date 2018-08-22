@@ -123,6 +123,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new CommitTransaction(transactionId));
+            component.dialogRef.close();
 
             httpMock.expectOne(getCommitTransactionUrl(transactionId)).flush(getTransactionCommittedResponse(transactionId));
             httpMock.expectOne(getSessionByIdUrl(sessionId)).flush(getCreatedSessionResponse(sessionId));

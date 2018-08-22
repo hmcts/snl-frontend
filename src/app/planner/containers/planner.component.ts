@@ -15,6 +15,8 @@ import * as sessionTransactionActs from '../../features/transactions/actions/tra
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
+import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import * as fromSessionActions from '../../sessions/actions/session.action';
 
 @Component({
     selector: 'app-planner',
@@ -43,7 +45,10 @@ export class PlannerComponent implements OnInit {
                     break;
                 }
                 case SessionActionTypes.UpdateComplete: {
-                    this.openSummaryDialog();
+                    this.openSummaryDialog().afterClosed().subscribe(() => {
+                        this.fetchModifiedEntities();
+                    });
+
                     this.latestEvent = undefined;
                     break;
                 }
@@ -79,6 +84,10 @@ export class PlannerComponent implements OnInit {
         }
         this.store.dispatch(new SearchForDates(query));
         this.lastSearchDateRange = query;
+    }
+
+    public fetchModifiedEntities() {
+        this.sessionCreationService.fetchUpdatedEntities();
     }
 
     public eventClick(eventId) {
@@ -125,7 +134,10 @@ export class PlannerComponent implements OnInit {
                         sessionId: selectedSessionId,
                         start: null
                     } as SessionAssignment);
-                    this.openSummaryDialog();
+
+                    this.openSummaryDialog().afterClosed().subscribe(() => {
+                        this.store.dispatch(new fromHearingPartsActions.Search());
+                    });
                 }
             });
         }
@@ -167,7 +179,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
