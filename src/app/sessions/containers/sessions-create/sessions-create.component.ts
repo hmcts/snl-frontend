@@ -47,10 +47,11 @@ export class SessionsCreateComponent implements OnInit {
     create(session) {
         this.sessionId = session.id;
         this.sessionCreationService.create(session);
-        this.dialogRef = this.openDialog().afterClosed().subscribe(() => this.getCreatedSession(this.sessionId));
+        this.dialogRef = this.openDialog();
+        this.dialogRef.afterClosed().subscribe(() => this.getCreatedSession(this.sessionId));
     }
 
-    private getCreatedSession(sessionId: string) {
+    public getCreatedSession(sessionId: string) {
         this.store.dispatch(new SessionActions.Get(sessionId));
     }
 

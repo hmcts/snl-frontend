@@ -57,7 +57,6 @@ let getGetProblemsUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/probl
 let getCommitTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/commit`;
 let getRollbackTransactionUrl = (transactionId) => `${mockedAppConfig.getApiUrl()}/user-transaction/${transactionId}/rollback`;
 let getSessionByIdUrl = (sessionId) => `${mockedAppConfig.getApiUrl()}/sessions/${sessionId}`;
-let getGetHearingPartsUrl = () => `${mockedAppConfig.getApiUrl()}/hearing-part`;
 
 describe('SessionsCreateComponent', () => {
     beforeEach(() => {
@@ -88,7 +87,7 @@ describe('SessionsCreateComponent', () => {
             set: {
                 entryComponents: [TransactionDialogComponent]
             }
-        });
+        }).compileComponents();
 
         component = TestBed.get(SessionsCreateComponent);
         httpMock = TestBed.get(HttpTestingController);
@@ -123,11 +122,10 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new CommitTransaction(transactionId));
-            component.dialogRef.close();
+            component.getCreatedSession(component.sessionId);
 
             httpMock.expectOne(getCommitTransactionUrl(transactionId)).flush(getTransactionCommittedResponse(transactionId));
             httpMock.expectOne(getSessionByIdUrl(sessionId)).flush(getCreatedSessionResponse(sessionId));
-            httpMock.expectOne(getGetHearingPartsUrl()).flush([]);
 
             store.pipe(select(state => state.sessions.sessions.entities[sessionId])).subscribe(sess => {
                 expect(sess.id).toEqual(sessionId);

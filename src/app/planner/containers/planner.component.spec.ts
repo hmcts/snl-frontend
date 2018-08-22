@@ -55,7 +55,7 @@ describe('PlannerComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         StoreModule.forRoot({}),
-        StoreModule.forFeature('sessions', sessionReducers.reducers)
+        StoreModule.forFeature('sessions', sessionReducers.reducers),
       ],
       providers: [
         ActionsSubject,
@@ -96,7 +96,9 @@ describe('PlannerComponent', () => {
     });
 
     it('should call openSummaryDialog when Session.UpdateComplete has been dispatched', () => {
-      store.dispatch(new UpdateComplete());
+        matDialogSpy.open.and.returnValue(openDialogMockObj);
+
+        store.dispatch(new UpdateComplete());
       expect(matDialogSpy.open).toHaveBeenCalled();
     });
 
