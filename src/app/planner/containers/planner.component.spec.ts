@@ -9,8 +9,8 @@ import * as moment from 'moment';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { SearchForDates, UpdateComplete, UpdateFailed } from '../../sessions/actions/session.action';
 import { Observable } from '../../../../node_modules/rxjs/Observable';
-import { TransactionConflicted } from '../../sessions/actions/transaction.action';
-import { EntityTransaction } from '../../sessions/models/transaction-status.model';
+import { TransactionConflicted } from '../../features/transactions/actions/transaction.action';
+import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as sessionReducers from '../../sessions/reducers';
 
 let component: PlannerComponent;

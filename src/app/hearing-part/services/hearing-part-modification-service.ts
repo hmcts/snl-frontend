@@ -3,8 +3,8 @@ import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../reducers';
 import { SessionAssignment } from '../models/session-assignment';
 import { AssignToSession } from '../actions/hearing-part.action';
-import { InitializeTransaction } from '../../sessions/actions/transaction.action';
-import { EntityTransaction } from '../../sessions/models/transaction-status.model';
+import { InitializeTransaction } from '../../features/transactions/actions/transaction.action';
+import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as ProblemsActions from '../../problems/actions/problem.action';
 
 @Injectable()

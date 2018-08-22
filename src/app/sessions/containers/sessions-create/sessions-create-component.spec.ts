@@ -1,5 +1,6 @@
 import * as sessionReducers from '../../reducers';
 import * as judgesReducers from '../../../judges/reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { select, Store, StoreModule } from '@ngrx/store';
 import { TestBed } from '@angular/core/testing';
@@ -8,7 +9,7 @@ import { SessionsStatisticsService } from '../../services/sessions-statistics-se
 import * as fromHearingParts from '../../../hearing-part/reducers';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { Actions, EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from '../../effects/session.effects';
@@ -24,7 +25,9 @@ import * as moment from 'moment';
 import { SessionCreate } from '../../models/session-create.model';
 import { State } from '../../reducers';
 import { ProblemEffects } from '../../../problems/effects/problem.effects';
-import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';
+import { CommitTransaction, RollbackTransaction } from '../../../features/transactions/actions/transaction.action';
+import { TransactionEffects } from '../../../features/transactions/effects/transaction.effects';
+import { TransactionsModule } from '../../../features/transactions/transactions.module';
 
 let httpMock: HttpTestingController;
 let component: SessionsCreateComponent;
@@ -64,13 +67,15 @@ describe('SessionsCreateComponent', () => {
                 FormsModule,
                 CoreModule,
                 SessionModule,
+                TransactionsModule,
                 ProblemsModule,
                 StoreModule.forRoot({}),
                 StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
                 StoreModule.forFeature('sessions', sessionReducers.reducers),
                 StoreModule.forFeature('judges', judgesReducers.reducers),
+                StoreModule.forFeature('transactions', transactionsReducers.reducers),
                 EffectsModule.forRoot([]),
-                EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects, ProblemEffects]),
+                EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects, ProblemEffects, TransactionEffects]),
                 BrowserAnimationsModule,
                 HttpClientTestingModule
             ],
