@@ -5,7 +5,7 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
-    AssignToSession,
+    AssignToSession, DeleteComplete,
     HearingPartActionTypes,
     Search,
     SearchComplete, SearchFailed
@@ -46,10 +46,10 @@ export class HearingPartEffects {
 
     @Effect()
     deleteHearing$: Observable<Action> = this.actions$.pipe(
-      ofType<any>(HearingPartActionTypes.DeleteListingRequest),
+      ofType<any>(HearingPartActionTypes.Delete),
       mergeMap(action =>
         this.hearingPartService.deleteHearingPart(action.payload).pipe(mergeMap(data => [
-
+          new DeleteComplete(action.payload),
         ]), catchError( (err: HttpErrorResponse) => of(new SearchFailed(err.error)) ))
       )
     );

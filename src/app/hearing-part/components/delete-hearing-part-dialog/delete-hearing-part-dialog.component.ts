@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { Store } from '@ngrx/store';
 import { State } from '../../reducers';
-import { DeleteListingRequest } from '../../actions/hearing-part.action';
+import { Delete } from '../../actions/hearing-part.action';
 
 @Component({
   selector: 'app-delete-hearing-part-dialog',
@@ -20,7 +20,7 @@ export class DeleteHearingPartDialogComponent extends DraggableDialog {
   }
 
   onYesClick(hearingPart: HearingPartViewModel) {
-    this.store.dispatch(new DeleteListingRequest(hearingPart.id));
+    this.store.dispatch(new Delete(hearingPart.id));
 
     this.dialogRef.close();
   }

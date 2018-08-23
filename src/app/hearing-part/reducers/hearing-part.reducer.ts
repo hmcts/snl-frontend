@@ -29,6 +29,7 @@ export function reducer(state: State = initialState, action) {
         return {...state, ...adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload),
                 {...state, loading: false})};
     }
+    case HearingPartActionTypes.Delete:
     case HearingPartActionTypes.Create: {
         return {...state, loading: true};
     }
@@ -47,6 +48,9 @@ export function reducer(state: State = initialState, action) {
             } as Update<HearingPart>;
         });
         return {...state, ...adapter.upsertMany(updatedCollection, {...state, loading: false})};
+    }
+    case HearingPartActionTypes.DeleteComplete: {
+        return {...state, loading: false, ...adapter.removeOne(action.payload, state)}
     }
     default:
         return state;
