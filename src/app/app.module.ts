@@ -83,6 +83,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
             logOnly: environment.production, // Restrict extension to log-only mode
+            name: 'snl-frontend'
         }),
         EffectsModule.forRoot([]),
         HttpClientModule,

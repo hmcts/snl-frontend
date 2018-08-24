@@ -5,6 +5,7 @@ import { CalendarComponent } from './callendar/components/calendar.component';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 import { TransactionBackendService } from './services/transaction-backend.service';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
+import { ReferenceDataModule } from './reference/reference-data.module';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -16,6 +17,7 @@ export const COMPONENTS = [
     imports: [
         CommonModule,
         FullCalendarModule,
+        ReferenceDataModule
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
