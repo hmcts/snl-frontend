@@ -19,8 +19,8 @@ export class DeleteHearingPartDialogComponent extends DraggableDialog {
     super(dialogRef);
   }
 
-  onYesClick(hearingPart: HearingPartViewModel) {
-    this.store.dispatch(new Delete(hearingPart.id));
+  onYesClick() {
+    this.store.dispatch(new Delete(this.hearingPart.id));
 
     this.dialogRef.close();
   }
