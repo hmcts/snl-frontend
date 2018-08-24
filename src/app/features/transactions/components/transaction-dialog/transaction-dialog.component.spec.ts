@@ -96,11 +96,6 @@ describe('TransactionDialogComponent', () => {
         expect(finished).toEqual(false);
       });
     });
-    it('should set buttonText', () => {
-      component.buttonText$.subscribe(buttonText => {
-        expect(buttonText).toEqual('Hide the dialog');
-      });
-    });
   });
 
   describe('onOkClick', () => {

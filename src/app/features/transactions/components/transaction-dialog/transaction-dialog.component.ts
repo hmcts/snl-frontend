@@ -23,7 +23,6 @@ export class TransactionDialogComponent {
   problemsLoaded$: Observable<boolean>;
   finished$: Observable<boolean>;
   conflicted$: Observable<boolean>;
-  buttonText$: Observable<string>;
   okAction: Action;
   transactionId: string;
 
@@ -39,11 +38,14 @@ export class TransactionDialogComponent {
       this.transactionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.finished$ = combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
           (s, p, c) => { return (s && p) || c; });
-      this.buttonText$ = this.finished$.pipe(map(finished => finished ? 'Accept' : 'Hide the dialog'));
   }
 
   onOkClick(): void {
     this.dispatchAndClose(this.okAction);
+  }
+
+  onHideDialogClick(): void {
+    this.dialogRef.close();
   }
 
   onDeleteClick(): void {

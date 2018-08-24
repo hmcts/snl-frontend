@@ -45,7 +45,8 @@
     Please confirm what action you’d like to take
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-    <button id="okButton" mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
+    <button *ngIf="(finished$ | async)" id="okButton" mat-button (click)="onOkClick()">Accept</button>
+    <button *ngIf="!(finished$ | async)" id="hideDialogButton" mat-button (click)="onHideDialogClick()">Hide the dialog</button>
     <button *ngIf="(finished$ | async) && (problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Rollback</button>
   </div>
 
