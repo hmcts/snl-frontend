@@ -35,9 +35,9 @@ export class HearingPartService {
                 query);
     }
 
-    createListing(query: HearingPart): Observable<string> {
+    createListing(query: HearingPart): Observable<HearingPart> {
         return this.http
-            .put<string>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
+            .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }

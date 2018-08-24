@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
@@ -39,6 +39,8 @@ export class ListingCreateComponent implements OnInit {
     }
 
     @Input() isBeingEdited: boolean;
+
+    @Output() onSave = new EventEmitter();
 
     listingCreate: FormGroup;
 
@@ -85,6 +87,8 @@ export class ListingCreateComponent implements OnInit {
         if (!this.isBeingEdited) {
             this.initiateListing();
         }
+
+        this.onSave.emit();
     }
 
     updateDuration(durationValue) {

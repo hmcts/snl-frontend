@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ListingCreate } from '../../models/listing-create';
 
 @Component({
@@ -8,7 +8,12 @@ import { ListingCreate } from '../../models/listing-create';
 })
 export class ListingEditOrCreateDialogComponent {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: ListingCreate) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: ListingCreate,
+                private readonly dialogRef: MatDialogRef<ListingEditOrCreateDialogComponent>) {
+    }
+
+    onSave() {
+        this.dialogRef.close();
     }
 
 }
