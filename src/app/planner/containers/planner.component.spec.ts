@@ -9,8 +9,8 @@ import * as moment from 'moment';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { SearchForDates, UpdateComplete, UpdateFailed } from '../../sessions/actions/session.action';
 import { Observable } from '../../../../node_modules/rxjs/Observable';
-import { TransactionConflicted } from '../../sessions/actions/transaction.action';
-import { EntityTransaction } from '../../sessions/models/transaction-status.model';
+import { TransactionConflicted } from '../../features/transactions/actions/transaction.action';
+import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as sessionReducers from '../../sessions/reducers';
 
 let component: PlannerComponent;
@@ -55,7 +55,7 @@ describe('PlannerComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         StoreModule.forRoot({}),
-        StoreModule.forFeature('sessions', sessionReducers.reducers)
+        StoreModule.forFeature('sessions', sessionReducers.reducers),
       ],
       providers: [
         ActionsSubject,
@@ -96,7 +96,9 @@ describe('PlannerComponent', () => {
     });
 
     it('should call openSummaryDialog when Session.UpdateComplete has been dispatched', () => {
-      store.dispatch(new UpdateComplete());
+        matDialogSpy.open.and.returnValue(openDialogMockObj);
+
+        store.dispatch(new UpdateComplete());
       expect(matDialogSpy.open).toHaveBeenCalled();
     });
 

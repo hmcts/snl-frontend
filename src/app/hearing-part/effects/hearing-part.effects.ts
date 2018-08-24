@@ -15,7 +15,7 @@ import { HearingPartService } from '../services/hearing-part-service';
 import * as sessionActions from '../../sessions/actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
-import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
+import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import * as notesActions from '../../notes/actions/notes.action';
 
 @Injectable()

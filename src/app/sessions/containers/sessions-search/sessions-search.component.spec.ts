@@ -1,6 +1,7 @@
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionReducers from '../../reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
@@ -22,7 +23,7 @@ import { Session } from '../../models/session.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
@@ -101,6 +102,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('sessions', sessionReducers.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
+        StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
       providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
