@@ -22,7 +22,7 @@ export function reducer(state: State = initialState, action) {
             return {...state, loading: false, error: action.payload};
         }
         case JudgeActionTypes.GetComplete: {
-            return adapter.addMany( action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
+            return adapter.addAll(action.payload === undefined ? [] : Object.values(action.payload), {...state, loading: false});
         }
         default:
             return state;
