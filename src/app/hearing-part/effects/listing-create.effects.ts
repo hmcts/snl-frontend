@@ -10,6 +10,7 @@ import { HearingPartService } from '../services/hearing-part-service';
 import { LISTING_REQUEST_CREATED } from '../models/hearing-part-notifications';
 import * as fromNotifications  from '../../features/notification/actions/notification.action';
 import * as fromNotes from '../../notes/actions/notes.action';
+import { HearingPart } from '../models/hearing-part';
 
 @Injectable()
 export class ListingCreateEffects {
@@ -19,9 +20,9 @@ export class ListingCreateEffects {
         ofType<CreateListingRequest>(HearingPartActionTypes.CreateListingRequest),
         mergeMap(action =>
             this.hearingPartService.createListing(action.payload.hearingPart).pipe(
-                concatMap(() => [
+                concatMap((hp: HearingPart) => [
                     new fromNotes.CreateMany(action.payload.notes),
-                    new UpsertOne(action.payload.hearingPart),
+                    new UpsertOne(hp),
                     new fromNotifications.Notify(LISTING_REQUEST_CREATED)]),
                 catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
             )
