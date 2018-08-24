@@ -150,7 +150,7 @@ describe('ListingCreateComponent', () => {
           userTransactionId: undefined
       } as ListingCreate;
 
-      component.create();
+      component.save();
 
       expect(storeSpy).toHaveBeenCalledTimes(3);
 
@@ -171,7 +171,7 @@ describe('ListingCreateComponent', () => {
 
     it('with default inputs should dispatch proper action', () => {
       let defaultListing = component.listing;
-      component.create();
+      component.save();
 
       expect(storeSpy).toHaveBeenCalledTimes(3);
 
@@ -186,7 +186,7 @@ describe('ListingCreateComponent', () => {
     it('with some notes it should set default notes post-creation', () => {
       component.listing.notes = [{ ...note, content: 'custom content' }];
 
-      component.create();
+      component.save();
 
       expect(component.listing.notes).toEqual(
         listingCreateNoteConfig.defaultNotes()
@@ -195,7 +195,7 @@ describe('ListingCreateComponent', () => {
       it('should fail when start date is after end date', () => {
         component.listing.hearingPart.scheduleStart = moment();
         component.listing.hearingPart.scheduleEnd = moment().subtract(10, 'day');
-        component.create();
+        component.save();
 
         expect(component.success).toBe(false);
         expect(component.listing).toBeDefined();
@@ -210,7 +210,7 @@ describe('ListingCreateComponent', () => {
         component.listing.hearingPart.scheduleStart = undefined;
         component.listing.hearingPart.scheduleEnd = moment();
 
-        component.create();
+        component.save();
 
         expect(storeSpy).toHaveBeenCalledTimes(3);
         expect(component.errors).toEqual('');
@@ -220,7 +220,7 @@ describe('ListingCreateComponent', () => {
         component.listing.hearingPart.scheduleStart = moment();
         component.listing.hearingPart.scheduleEnd = undefined;
 
-        component.create();
+        component.save();
 
         expect(storeSpy).toHaveBeenCalledTimes(3);
         expect(component.errors).toEqual('');
@@ -229,7 +229,7 @@ describe('ListingCreateComponent', () => {
       it('should succeed when start date is before end date', () => {
         component.listing.hearingPart.scheduleStart = moment();
         component.listing.hearingPart.scheduleEnd = moment().add(10, 'day');
-        component.create();
+        component.save();
 
         const createFailed = storeSpy.calls.mostRecent()
           .args[0] as CreateFailed;
@@ -242,7 +242,7 @@ describe('ListingCreateComponent', () => {
     });
     describe('should prepare notes', () => {
       it('should dispatch proper action', () => {
-        component.create();
+        component.save();
 
         expect(storeSpy).toHaveBeenCalledTimes(3);
 
@@ -263,7 +263,7 @@ describe('ListingCreateComponent', () => {
 
     it('should prepare listing request with id', () => {
 
-        component.create();
+        component.save();
 
         expect(storeSpy).toHaveBeenCalledTimes(3);
 
@@ -285,9 +285,9 @@ describe('ListingCreateComponent', () => {
           secondNote
         ]);
 
-        component.isBeingEdited = true;
+        component.editMode = true;
 
-        component.create();
+        component.save();
 
         createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
         createdListing = createListingAction.payload;
