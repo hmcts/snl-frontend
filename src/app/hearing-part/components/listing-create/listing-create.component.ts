@@ -40,7 +40,7 @@ export class ListingCreateComponent implements OnInit {
         this.initiateForm();
     }
 
-    @Input() isBeingEdited: boolean;
+    @Input() editMode = false;
 
     @Output() onSave = new EventEmitter();
 
@@ -75,25 +75,36 @@ export class ListingCreateComponent implements OnInit {
         this.store.dispatch(new JudgeActions.Get());
     }
 
-    create() {
-        if (!this.isBeingEdited) {
-            this.listing.hearingPart.id = uuid();
+    save() {
+        if (this.editMode) {
+            this.edit();
+        } else {
+            this.create();
         }
-        let modifiedNotes = this.notePreparerService.prepare(
+    }
+
+    edit() {
+        this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
+        this.openDialog();
+
+        this.onSave.emit();
+    }
+
+    create() {
+        this.listing.hearingPart.id = uuid();
+
+        this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
+        this.openDialog();
+
+        this.initiateListing();
+    }
+
+    prepareNotes() {
+        return this.notePreparerService.prepare(
             this.noteList.getModifiedNotes(),
             this.listing.hearingPart.id,
             this.listingNotesConfig.entityName
         );
-
-        this.hearingPartModificationService.createListingRequest(this.listing, modifiedNotes);
-
-        if (!this.isBeingEdited) {
-            this.initiateListing();
-        }
-
-        this.openDialog();
-
-        this.onSave.emit();
     }
 
     updateDuration(durationValue) {

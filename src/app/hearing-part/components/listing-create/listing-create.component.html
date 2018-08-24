@@ -5,7 +5,7 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingCreate" novalidate (ngSubmit)="create();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>

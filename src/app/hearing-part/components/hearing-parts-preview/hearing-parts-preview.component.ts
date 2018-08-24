@@ -6,8 +6,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HearingPartViewModel, mapToHearingPart } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
-import { ListingEditOrCreateDialogComponent } from '../listing-create-dialog/listing-edit-or-create-dialog';
 import { ListingCreate } from '../../models/listing-create';
+import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -90,7 +90,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     openEditDialog(hearingPart: HearingPartViewModel) {
-        this.dialog.open(ListingEditOrCreateDialogComponent, {
+        this.dialog.open(ListingCreateDialogComponent, {
             data: {
                 hearingPart: mapToHearingPart(hearingPart),
                 notes: hearingPart.notes
