@@ -20,6 +20,7 @@ import { v4 as uuid } from 'uuid';
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
+import * as fromNotes from '../../../notes/actions/notes.action';
 
 const DURATION_UNIT = 'minute';
 
@@ -94,9 +95,14 @@ export class ListingCreateComponent implements OnInit {
         this.listing.hearingPart.id = uuid();
 
         this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
-        this.openDialog();
+        this.openDialog().afterClosed().subscribe((confirmed) => {
+            if(confirmed) { this.createNotes() };
+            this.initiateListing();
+        });
+    }
 
-        this.initiateListing();
+    createNotes() {
+        this.store.dispatch(new fromNotes.CreateMany(this.prepareNotes()));
     }
 
     prepareNotes() {

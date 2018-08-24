@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import * as moment from 'moment';
+import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 
 @Injectable()
 export class HearingPartService {
@@ -35,9 +36,9 @@ export class HearingPartService {
                 query);
     }
 
-    createListing(query: HearingPart): Observable<HearingPart> {
+    createListing(query: HearingPart): Observable<Transaction> {
         return this.http
-            .put<HearingPart>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/create`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }

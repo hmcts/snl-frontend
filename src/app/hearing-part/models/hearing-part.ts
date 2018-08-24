@@ -15,4 +15,6 @@ export interface HearingPart {
     priority: Priority;
     reservedJudgeId: string;
     communicationFacilitator: string;
+    userTransactionId: string;
+
 }

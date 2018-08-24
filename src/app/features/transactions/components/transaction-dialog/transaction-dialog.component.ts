@@ -41,21 +41,18 @@ export class TransactionDialogComponent {
   }
 
   onOkClick(): void {
-    this.dispatchAndClose(this.okAction);
+    if (this.okAction !== null) {
+        this.store.dispatch(this.okAction);
+    }
+    this.dialogRef.close(true);
   }
 
   onHideDialogClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   onDeleteClick(): void {
-    this.dispatchAndClose(new RollbackTransaction(this.transactionId));
-  }
-
-  private dispatchAndClose(action: Action) {
-      if (action !== null) {
-          this.store.dispatch(action);
-      }
-      this.dialogRef.close();
+    this.store.dispatch(new RollbackTransaction(this.transactionId));
+    this.dialogRef.close(false);
   }
 }
