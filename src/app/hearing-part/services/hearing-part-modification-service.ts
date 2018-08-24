@@ -26,7 +26,7 @@ export class HearingPartModificationService {
 
         this.store.dispatch(new CreateListingRequest({...listing, notes: notes}));
         this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.id, listing.userTransactionId)))
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.hearingPart.id, listing.userTransactionId)))
     }
 
     private createTransaction(id, transactionId): EntityTransaction {

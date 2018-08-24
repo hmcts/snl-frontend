@@ -18,6 +18,8 @@ import { HearingPart } from '../../models/hearing-part';
 import { getHearingPartsError } from '../../reducers';
 import { v4 as uuid } from 'uuid';
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
 
 const DURATION_UNIT = 'minute';
 
@@ -55,6 +57,7 @@ export class ListingCreateComponent implements OnInit {
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
+                public dialog: MatDialog,
                 private readonly notePreparerService: NotesPreparerService,
                 private readonly hearingPartModificationService: HearingPartModificationService,
                 private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
@@ -87,6 +90,8 @@ export class ListingCreateComponent implements OnInit {
         if (!this.isBeingEdited) {
             this.initiateListing();
         }
+
+        this.openDialog();
 
         this.onSave.emit();
     }
@@ -161,5 +166,13 @@ export class ListingCreateComponent implements OnInit {
                 targetTo: new FormControl(this.listing.hearingPart.scheduleEnd),
             }, this.targetDatesValidator)
         })
+    }
+
+    private openDialog() {
+        return this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }
