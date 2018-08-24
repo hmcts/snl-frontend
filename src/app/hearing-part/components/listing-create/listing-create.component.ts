@@ -3,8 +3,6 @@ import { Store, select } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
-import { v4 as uuid } from 'uuid';
-import { CreateListingRequest } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
@@ -18,6 +16,10 @@ import { map } from 'rxjs/operators';
 import { asArray } from '../../../utils/array-utils';
 import { HearingPart } from '../../models/hearing-part';
 import { getHearingPartsError } from '../../reducers';
+import { v4 as uuid } from 'uuid';
+import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
 
 const DURATION_UNIT = 'minute';
 
@@ -55,7 +57,9 @@ export class ListingCreateComponent implements OnInit {
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
+                public dialog: MatDialog,
                 private readonly notePreparerService: NotesPreparerService,
+                private readonly hearingPartModificationService: HearingPartModificationService,
                 private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
@@ -81,10 +85,13 @@ export class ListingCreateComponent implements OnInit {
             this.listingNotesConfig.entityName
         );
 
-        this.store.dispatch(new CreateListingRequest({...this.listing, notes: modifiedNotes}));
+        this.hearingPartModificationService.createListingRequest(this.listing, modifiedNotes);
+
         if (!this.isBeingEdited) {
             this.initiateListing();
         }
+
+        this.openDialog();
 
         this.onSave.emit();
     }
@@ -142,7 +149,8 @@ export class ListingCreateComponent implements OnInit {
             reservedJudgeId: undefined,
             communicationFacilitator: undefined
         } as HearingPart,
-            notes: this.listingNotesConfig.defaultNotes()
+            notes: this.listingNotesConfig.defaultNotes(),
+            userTransactionId: undefined
         } as ListingCreate;
     }
 
@@ -158,5 +166,13 @@ export class ListingCreateComponent implements OnInit {
                 targetTo: new FormControl(this.listing.hearingPart.scheduleEnd),
             }, this.targetDatesValidator)
         })
+    }
+
+    private openDialog() {
+        return this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 }

@@ -21,8 +21,12 @@ import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import { Priority } from '../../models/priority-model';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Judge } from '../../../judges/models/judge.model';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
+import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -44,6 +48,7 @@ describe('ListingCreateComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
+        StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
       declarations: [
@@ -51,14 +56,23 @@ describe('ListingCreateComponent', () => {
         NoteComponent,
         NoteListComponent,
         DurationFormatPipe,
-        DurationAsMinutesPipe
+        DurationAsMinutesPipe,
+        TransactionDialogComponent
       ],
       providers: [
         NoteListComponent,
         NotesPreparerService,
-        ListingCreateNotesConfiguration
+        ListingCreateNotesConfiguration,
+        HearingPartModificationService
       ]
     });
+
+    TestBed.overrideModule(BrowserDynamicTestingModule, {
+        set: {
+            entryComponents: [TransactionDialogComponent]
+        }
+    });
+
     fixture = TestBed.createComponent(ListingCreateComponent);
     component = fixture.componentInstance;
     listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
@@ -132,12 +146,13 @@ describe('ListingCreateComponent', () => {
             reservedJudgeId: undefined,
             communicationFacilitator: undefined
         },
-          notes: []
+          notes: [],
+          userTransactionId: undefined
       } as ListingCreate;
 
       component.create();
 
-      expect(storeSpy).toHaveBeenCalledTimes(1);
+      expect(storeSpy).toHaveBeenCalledTimes(3);
 
       const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
       const createdListing = createListingAction.payload;
@@ -158,7 +173,7 @@ describe('ListingCreateComponent', () => {
       let defaultListing = component.listing;
       component.create();
 
-      expect(storeSpy).toHaveBeenCalledTimes(1);
+      expect(storeSpy).toHaveBeenCalledTimes(3);
 
       const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
 
@@ -197,7 +212,7 @@ describe('ListingCreateComponent', () => {
 
         component.create();
 
-        expect(storeSpy).toHaveBeenCalledTimes(1);
+        expect(storeSpy).toHaveBeenCalledTimes(3);
         expect(component.errors).toEqual('');
       });
 
@@ -207,7 +222,7 @@ describe('ListingCreateComponent', () => {
 
         component.create();
 
-        expect(storeSpy).toHaveBeenCalledTimes(1);
+        expect(storeSpy).toHaveBeenCalledTimes(3);
         expect(component.errors).toEqual('');
       });
 
@@ -229,7 +244,7 @@ describe('ListingCreateComponent', () => {
       it('should dispatch proper action', () => {
         component.create();
 
-        expect(storeSpy).toHaveBeenCalledTimes(1);
+        expect(storeSpy).toHaveBeenCalledTimes(3);
 
         const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
 
@@ -250,7 +265,7 @@ describe('ListingCreateComponent', () => {
 
         component.create();
 
-        expect(storeSpy).toHaveBeenCalledTimes(1);
+        expect(storeSpy).toHaveBeenCalledTimes(3);
 
         const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
         const createdListing = createListingAction.payload;
