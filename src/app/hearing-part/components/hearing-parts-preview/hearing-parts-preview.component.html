@@ -72,9 +72,7 @@
   <ng-container matColumnDef="delete">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span [class.clickable]="true" (click)="openDeleteDialog(element)">
-        Delete
-      </span>
+      <span [class.clickable]="true" (click)="openDeleteDialog(element)">Delete</span>
     </mat-cell>
   </ng-container>
 
