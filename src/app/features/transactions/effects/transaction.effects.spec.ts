@@ -27,7 +27,7 @@ describe('Transaction Effects', () => {
     let transaction = {
         id: transactionId,
         rulesProcessingStatus: RulesProcessingStatuses.COMPLETE,
-        status: TransactionStatuses.STARTED
+        status: TransactionStatuses.CONFLICT
     } as Transaction;
 
     beforeEach(() => {
@@ -67,18 +67,6 @@ describe('Transaction Effects', () => {
             spyOn(transactionBackendService, 'rollbackTransaction').and.returnValue(Observable.of(transaction));
 
             const action = new fromTransactionActions.RollbackTransaction(transactionId);
-            const expectedAction = new fromTransactionActions.TransactionRolledBack(transactionId);
-
-            actions = hot('--a-', { a: action });
-            const expected = cold('--b', { b: expectedAction });
-
-            expect(effects.rollbackTransaction).toBeObservable(expected);
-        });
-    })
-
-    describe('IfTransactionConflicted', () => {
-        it('it should call return \'TransactionConfliced\' action', () => {
-            const action = new fromTransactionActions.UpdateTransaction(transaction);
             const expectedAction = new fromTransactionActions.TransactionRolledBack(transactionId);
 
             actions = hot('--a-', { a: action });

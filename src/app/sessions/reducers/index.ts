@@ -52,7 +52,6 @@ export const getRecentlyCreatedSessionId = createSelector(
     }
 );
 
-
 export const getSessionsLoading = createSelector(
     getSessionsEntitiesState,
     state => state.loading
