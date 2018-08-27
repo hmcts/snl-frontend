@@ -8,9 +8,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NoteComponent } from '../../../notes/components/note/note.component';
 import {
-  CreateFailed,
-  CreateListingRequest,
-  HearingPartActionTypes
+    CreateFailed,
+    CreateListingRequest,
+    HearingPartActionTypes, UpdateListingRequest
 } from '../../actions/hearing-part.action';
 import { Note } from '../../../notes/models/note.model';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
@@ -242,8 +242,7 @@ describe('ListingCreateComponent', () => {
         expect(component.listing).toBeDefined();
         expect(component.success).toBe(true);
       });
-    });
-    describe('should prepare notes', () => {
+
       it('should dispatch proper action', () => {
         component.save();
 
@@ -256,20 +255,19 @@ describe('ListingCreateComponent', () => {
         );
       });
 
-    it('should prepare listing request with id', () => {
+      it('should prepare listing request with id', () => {
+          component.save();
 
-        component.save();
+          expect(storeSpy).toHaveBeenCalledTimes(3);
 
-        expect(storeSpy).toHaveBeenCalledTimes(3);
+          const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+          const createdListing = createListingAction.payload;
 
-        const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
-        const createdListing = createListingAction.payload;
-
-        expect(createdListing.hearingPart.id).toBeDefined();
-      });
+          expect(createdListing.hearingPart.id).toBeDefined();
+        });
     });
 
-    describe('should prepare notes', () => {
+      describe('should prepare notes', () => {
       let createListingAction;
       let createdListing;
 
@@ -279,7 +277,7 @@ describe('ListingCreateComponent', () => {
           note,
           secondNote
         ]);
-        
+
         component.save();
 
         createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
@@ -305,5 +303,29 @@ describe('ListingCreateComponent', () => {
         expect(createdListing.notes[1].entityType).toEqual('ListingRequest');
       });
     });
+
+      describe('save with edit mode', () => {
+
+        beforeEach(() => {
+          component.editMode = true;
+        });
+
+        it('should call proper action', () => {
+            component.save();
+
+            const updateListingAction = storeSpy.calls.argsFor(0)[0] as UpdateListingRequest;
+
+            expect(updateListingAction.type).toEqual(
+                HearingPartActionTypes.UpdateListingRequest
+            );
+        });
+
+        it('should emit save', () => {
+            let emitSpy = spyOn(component.onSave, 'emit');
+
+            component.save();
+            expect(emitSpy).toHaveBeenCalled();
+        });
+      });
   });
 });

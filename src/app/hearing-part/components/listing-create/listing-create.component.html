@@ -1,7 +1,8 @@
 <div style="display:flex">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Create a new listing request</mat-card-title>
+            <mat-card-title *ngIf="editMode">Edit listing request</mat-card-title>
+            <mat-card-title *ngIf="!editMode">Create a new listing request</mat-card-title>
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
