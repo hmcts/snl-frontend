@@ -40,7 +40,7 @@ describe('DeleteHearingPartDialogComponent', () => {
 
   describe('clicking Yes', () => {
     it('should dispatch Delete action', () => {
-      component.onYesClick(createHearingPartViewModel());
+      component.onYesClick();
       const deleteAction = storeSpy.calls.argsFor(0)[0] as Delete;
 
       expect(deleteAction.type).toEqual(HearingPartActionTypes.Delete);
@@ -49,7 +49,7 @@ describe('DeleteHearingPartDialogComponent', () => {
   });
 });
 
-function createHearingPartViewModel() {
+function createHearingPartViewModel(): HearingPartViewModel {
   return {
     id: ID
   } as HearingPartViewModel

@@ -14,7 +14,7 @@ import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { SnackBar } from '../components/snack-bar';
-import { browser, protractor } from 'protractor';
+import { browser } from 'protractor';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -31,19 +31,6 @@ const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCas
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
 const listingCreatedNoteText = 'Listing request created!'
-
-const origFn = browser.driver.controlFlow().execute;
-
-browser.driver.controlFlow().execute = function() {
-    const args = arguments;
-
-    // queue 100ms wait
-    origFn.call(browser.driver.controlFlow(), function() {
-        return protractor.promise.delayed(100);
-    });
-
-    return origFn.apply(browser.driver.controlFlow(), args);
-};
 
 const listingCreationForm: ListingCreationForm = {
   caseNumber,

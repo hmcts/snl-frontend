@@ -4,8 +4,6 @@ import { SessionSearchPage } from '../pages/session-search.po'
 import { ListingCreationPage } from '../pages/listing-creation.po'
 import { DeleteHearingPartDialogPage } from '../pages/delete-hearing-part-dialog.po'
 
-require('../utils/driver-setup.ts')
-
 import { listingCreationForm, caseNumber } from '../models/data/listing-creation-form-data';
 
 const loginFlow = new LoginFlow()

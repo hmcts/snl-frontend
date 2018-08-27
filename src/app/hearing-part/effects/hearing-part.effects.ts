@@ -5,7 +5,8 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
-    AssignToSession, DeleteComplete,
+    AssignToSession,
+    DeleteComplete,
     HearingPartActionTypes,
     Search,
     SearchComplete, SearchFailed
