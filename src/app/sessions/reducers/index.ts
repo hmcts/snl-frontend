@@ -132,7 +132,7 @@ export const getFullSessionPropositions = createSelector(getSessionsPropositions
                 startTime: moment(sessionProposition.start).format('HH:mm'),
                 endTime: moment(sessionProposition.end).format('HH:mm'),
                 date: moment(sessionProposition.start).format('DD MMM YYYY'),
-                availibility: moment.duration(sessionProposition.end.diff(sessionProposition.start)).humanize(),
+                availability: moment.duration(moment(sessionProposition.end).diff(moment(sessionProposition.start))).humanize(),
                 room: rooms[sessionProposition.roomId],
                 judge: judges[sessionProposition.judgeId],
             };
