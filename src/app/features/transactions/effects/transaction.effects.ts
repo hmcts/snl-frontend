@@ -18,7 +18,8 @@ export class TransactionEffects {
     @Effect()
     ifTransactionConflicted$: Observable<Action> = this.actions$.pipe(
         ofType<transactionActions.UpdateTransaction>(transactionActions.EntityTransactionActionTypes.UpdateTransaction),
-        filter((t: any) => t.payload.status === TransactionStatuses.CONFLICT),
+        filter((t: any) => t.payload.status === TransactionStatuses.CONFLICT ||
+            t.payload.status === TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT),
         mergeMap(action => [new transactionActions.TransactionConflicted(action.payload.id)])
     );
 
@@ -33,7 +34,9 @@ export class TransactionEffects {
     @Effect()
     ifTransactionNotStartedOrConflict$: Observable<Action> = this.actions$.pipe(
         ofType<transactionActions.UpdateTransaction>(transactionActions.EntityTransactionActionTypes.UpdateTransaction),
-        filter((t: any) => t.payload.status !== TransactionStatuses.STARTED && t.payload.status !== TransactionStatuses.CONFLICT),
+        filter((t: any) => t.payload.status !== TransactionStatuses.STARTED &&
+            t.payload.status !== TransactionStatuses.CONFLICT &&
+            t.payload.status !== TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT),
         mergeMap(action => [new transactionActions.GetTransactionUntilStartedOrConflict(action.payload)])
     );
 
@@ -44,7 +47,9 @@ export class TransactionEffects {
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
-                    if (transcation.status !== TransactionStatuses.STARTED &&
+                    console.log(transcation);
+                    if (transcation !== null &&
+                        transcation.status !== TransactionStatuses.STARTED &&
                         transcation.status !== TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT &&
                         transcation.status !== TransactionStatuses.CONFLICT) {
                         throw new Error('Transaction not started...');

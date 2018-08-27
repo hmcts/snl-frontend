@@ -24,7 +24,13 @@
   </div>
 
   <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="conflicted$ | async">
-      Transaction Conflict!
+      <div>
+        Operation failed!
+      </div>
+
+      <div>
+        Some of the modified resources are being or have been modified in the meantime. Please, reload the page and try again.
+      </div>
   </div>
 
   <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
