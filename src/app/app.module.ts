@@ -122,6 +122,11 @@ export class AppModule {
             'in the browser' : 'on the server';
         console.log(`Running ${platform} with appId=${appId}`);
 
-        moment.locale(localeId);
+        // @ts-ignore is better than defining default format as const we need to pass to every format() call
+        moment.defaultFormat = 'DD/MM/YYYY';
+
+        moment.locale(localeId, {
+            invalidDate: ''
+        });
     }
 }

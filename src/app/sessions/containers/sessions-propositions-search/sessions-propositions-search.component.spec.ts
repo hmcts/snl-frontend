@@ -39,7 +39,7 @@ const sessionPropositionViewsMock: SessionPropositionView[] = [
     startTime: moment(sessionPropositions[0].start).format('HH:mm'),
     endTime: moment(sessionPropositions[0].end).format('HH:mm'),
     date: moment(sessionPropositions[0].start).format('DD MMM YYYY'),
-    availibility: moment
+    availability: moment
       .duration(
         moment(sessionPropositions[0].end).diff(
           moment(sessionPropositions[0].start)

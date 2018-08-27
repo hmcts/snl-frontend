@@ -45,7 +45,10 @@ let mockedFullSession: SessionViewModel = {
   caseType: caseType,
   hearingParts: [],
   jurisdiction: 'some jurisdiction',
-  version: 0
+  version: 0,
+  allocated: moment.duration('P0D'),
+  utilization: 0,
+  available: moment.duration('PT0.03S')
 };
 
 describe('RoomPlannerComponent', () => {

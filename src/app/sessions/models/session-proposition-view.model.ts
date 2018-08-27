@@ -5,7 +5,7 @@ export interface SessionPropositionView {
     date: string,
     startTime: string,
     endTime: string,
-    availibility: string,
+    availability: string,
     judge: Judge,
     room: Room
 }

@@ -18,11 +18,15 @@ import {
     MatSidenavModule,
     MatSnackBarModule,
     MatTableModule,
-    MatToolbarModule, MatMenuModule, MatProgressSpinnerModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS
+    MatToolbarModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    DateAdapter,
+    MAT_DATE_LOCALE,
+    MAT_DATE_FORMATS,
+    MatSortModule
 } from '@angular/material';
-import {
-  MomentDateAdapter,
-  MAT_MOMENT_DATE_FORMATS } from '../../node_modules/@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '../../node_modules/@angular/material-moment-adapter';
 import { AppConfig } from '../app/app.config';
 
 @NgModule({
@@ -48,7 +52,8 @@ import { AppConfig } from '../app/app.config';
     MatDialogModule,
     MatMenuModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule
   ],
   exports: [
     MatCardModule,
@@ -70,13 +75,21 @@ import { AppConfig } from '../app/app.config';
     MatRadioModule,
     MatMenuModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSortModule
   ],
   declarations: [],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: AppConfig.locale},
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
-    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+    {provide: MAT_DATE_FORMATS, useValue: {...MAT_MOMENT_DATE_FORMATS,
+        display: {
+          monthYearLabel: 'MMM YYYY',
+        },
+        parse: {
+          dateInput: 'DD/MM/YYYY'
+        }
+    }},
   ]
 })
 export class AngularMaterialModule { }

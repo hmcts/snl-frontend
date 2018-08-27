@@ -35,7 +35,8 @@ export class HearingPartEffects {
     @Effect()
     searchHearing$: Observable<Action> = this.actions$.pipe(
         ofType<Search>(HearingPartActionTypes.Search),
-        mergeMap(() => this.hearingPartService.searchHearingParts().pipe(mergeMap(data => [
+        mergeMap(action =>
+          this.hearingPartService.searchHearingParts(action.payload).pipe(mergeMap(data => [
             new SearchComplete(data.entities.hearingParts),
             new sessionActions.UpsertMany(data.entities.sessions),
             new notesActions.GetByEntities(Object.keys(data.entities.hearingParts))
