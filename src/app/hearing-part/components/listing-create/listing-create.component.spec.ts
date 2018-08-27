@@ -144,7 +144,8 @@ describe('ListingCreateComponent', () => {
             version: 0,
             priority: undefined,
             reservedJudgeId: undefined,
-            communicationFacilitator: undefined
+            communicationFacilitator: undefined,
+            userTransactionId: 'uti'
         },
           notes: [],
           userTransactionId: undefined

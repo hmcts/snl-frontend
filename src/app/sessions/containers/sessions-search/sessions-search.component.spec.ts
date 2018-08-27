@@ -27,7 +27,7 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
-import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToHearingPart } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 
 let storeSpy: jasmine.Spy;
@@ -126,7 +126,7 @@ describe('SessionsSearchComponent', () => {
       expect(component).toBeDefined();
     });
     it('should fetch hearingParts', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts.map(mapToHearingPart)));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
@@ -147,7 +147,7 @@ describe('SessionsSearchComponent', () => {
       });
     });
     it('should fetch full sessions', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts.map(mapToHearingPart)));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));
@@ -380,7 +380,7 @@ function defaultFullMockedSession(): SessionViewModel {
     room: mockedRooms[0],
     person: mockedJudges[0],
     caseType: caseType,
-    hearingParts: [mockedListedHearingParts[0]],
+    hearingParts: [mapToHearingPart(mockedListedHearingParts[0])],
     jurisdiction: 'some jurisdiction',
     version: 1,
     allocated: moment.duration('PT0.03S'),

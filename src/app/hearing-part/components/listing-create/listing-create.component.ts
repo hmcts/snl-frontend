@@ -188,10 +188,22 @@ export class ListingCreateComponent implements OnInit {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
-        }).afterClosed().subscribe((confirmed) => {
-            if (confirmed) { this.createNotes() };
-            this.store.dispatch(new GetById(this.listing.hearingPart.id));
-            this.initiateListing();
-        });
+        }).afterClosed().subscribe((confirmed) => {this.afterClosed(confirmed)});
+    }
+
+    afterClosed(confirmed) {
+        if (confirmed) {
+            this.createNotes()
+        };
+        if (this.editMode) { this.afterEdit() } else { this.afterCreate() };
+    }
+
+    afterEdit() {
+        this.store.dispatch(new GetById(this.listing.hearingPart.id));
+        this.initiateListing();
+    }
+
+    afterCreate() {
+        this.initiateListing();
     }
 }
