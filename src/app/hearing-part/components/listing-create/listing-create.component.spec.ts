@@ -256,14 +256,6 @@ describe('ListingCreateComponent', () => {
         );
       });
 
-    //   it('with some notes it should set default notes post-creation', () => {
-    //     component.listing.notes = [{...note, content: 'custom content'}];
-    //
-    //     component.create();
-    //
-    //     expect(component.listing.notes).toEqual(listingCreateNoteConfig.defaultNotes());
-    // });
-
     it('should prepare listing request with id', () => {
 
         component.save();
@@ -287,9 +279,7 @@ describe('ListingCreateComponent', () => {
           note,
           secondNote
         ]);
-
-        component.editMode = true;
-
+        
         component.save();
 
         createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
@@ -306,8 +296,8 @@ describe('ListingCreateComponent', () => {
       });
 
       it('with properly generated parentIds', () => {
-        expect(createdListing.notes[0].entityId).toEqual(createdListing.id);
-        expect(createdListing.notes[1].entityId).toEqual(createdListing.id);
+        expect(createdListing.notes[0].entityId).toEqual(createdListing.hearingPart.id);
+        expect(createdListing.notes[1].entityId).toEqual(createdListing.hearingPart.id);
       });
 
       it('with properly generated entityType names', () => {

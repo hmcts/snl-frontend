@@ -147,7 +147,7 @@ describe('SessionsSearchComponent', () => {
       });
     });
     it('should fetch full sessions', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts.map(mapToHearingPart)));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts.map(mapToHearingPart)));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));

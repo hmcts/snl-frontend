@@ -21,7 +21,8 @@ export class ListingCreateEffects {
     create$: Observable<Action> = this.actions$.pipe(
         ofType<CreateListingRequest>(HearingPartActionTypes.CreateListingRequest),
         mergeMap(action =>
-            this.hearingPartService.createListing({...action.payload.hearingPart, userTransactionId: action.payload.userTransactionId}).pipe(
+            this.hearingPartService.createListing({...action.payload.hearingPart,
+                userTransactionId: action.payload.userTransactionId}).pipe(
                 mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
                 catchError((err: HttpErrorResponse) => of(new CreateFailed(err.error)))
             )
@@ -32,7 +33,8 @@ export class ListingCreateEffects {
     update$: Observable<Action> = this.actions$.pipe(
         ofType<UpdateListingRequest>(HearingPartActionTypes.UpdateListingRequest),
         mergeMap(action =>
-            this.hearingPartService.updateListing({...action.payload.hearingPart, userTransactionId: action.payload.userTransactionId}).pipe(
+            this.hearingPartService.updateListing({...action.payload.hearingPart,
+                userTransactionId: action.payload.userTransactionId}).pipe(
                 mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
                 catchError((err: any) => {
                     if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
