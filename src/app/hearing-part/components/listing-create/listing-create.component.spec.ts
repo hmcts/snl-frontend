@@ -78,6 +78,7 @@ describe('ListingCreateComponent', () => {
     listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
     store = TestBed.get(Store);
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
+    component.editMode = false;
   });
 
   describe('Initial state ', () => {
@@ -188,6 +189,7 @@ describe('ListingCreateComponent', () => {
       component.listing.notes = [{ ...note, content: 'custom content' }];
 
       component.save();
+      component.afterCreate();
 
       expect(component.listing.notes).toEqual(
         listingCreateNoteConfig.defaultNotes()
