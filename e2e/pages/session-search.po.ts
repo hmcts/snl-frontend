@@ -1,7 +1,7 @@
 import { FilterSessionsComponentForm } from './../models/filter-sessions-component-form';
 import { Judges } from '../enums/judges';
 import { Rooms } from '../enums/rooms';
-import { element, by } from 'protractor';
+import { element, by, promise } from 'protractor';
 import { CaseTypes } from '../enums/case-types';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
@@ -30,6 +30,14 @@ export class SessionSearchPage {
     async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes,
         targetScheduleFrom: string, targetScheduleTo: string) {
         this.selectCheckBoxInRowWithValues(this.listingRequestsTable, caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
+    }
+
+    isListingRequestDisplayed(...values: string[]): promise.Promise<boolean> {
+        return this.listingRequestsTable.rowThatContains(...values).isDisplayed()
+    }
+
+    editListingRequestWithValues(...values: string[]) {
+        this.listingRequestsTable.rowThatContains(...values).element(by.cssContainingText('.clickable', 'edit')).click()
     }
 
     private selectCheckBoxInRowWithValues(table: Table, ...values: string[]) {
