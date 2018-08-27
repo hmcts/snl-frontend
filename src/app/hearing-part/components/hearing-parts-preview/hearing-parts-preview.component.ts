@@ -3,10 +3,12 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToHearingPart } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
 import { DeleteHearingPartDialogComponent } from '../delete-hearing-part-dialog/delete-hearing-part-dialog.component';
+import { ListingCreate } from '../../models/listing-create';
+import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -37,6 +39,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'scheduleStart',
       'scheduleEnd',
       'delete'
+      'editor'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -92,6 +95,17 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       this.dialog.open(DeleteHearingPartDialogComponent, {
         data: hearingPart
       })
+    }
+
+    openEditDialog(hearingPart: HearingPartViewModel) {
+        this.dialog.open(ListingCreateDialogComponent, {
+            data: {
+                hearingPart: mapToHearingPart(hearingPart),
+                notes: hearingPart.notes
+            } as ListingCreate,
+            hasBackdrop: true,
+            height: '60%'
+        })
     }
 
     toggleHearing(hearing) {

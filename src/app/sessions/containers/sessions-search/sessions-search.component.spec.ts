@@ -1,6 +1,7 @@
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionReducers from '../../reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
@@ -22,11 +23,11 @@ import { Session } from '../../models/session.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
-import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToHearingPart } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 
 let storeSpy: jasmine.Spy;
@@ -34,7 +35,6 @@ let component: SessionsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
-const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const caseType = 'some-case-type';
@@ -61,8 +61,8 @@ const mockedUnlistedHearingPart: HearingPartViewModel = {
     caseType: 'some-case-type',
     hearingType: 'some-hearing-type',
     duration: moment.duration(sessionDuration),
-    scheduleStart: now,
-    scheduleEnd: now,
+    scheduleStart: nowMoment,
+    scheduleEnd: nowMoment,
     version: 2,
     priority: Priority.Low,
     notes: mockedNotes,
@@ -102,6 +102,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('sessions', sessionReducers.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
+        StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
       providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
@@ -125,7 +126,7 @@ describe('SessionsSearchComponent', () => {
       expect(component).toBeDefined();
     });
     it('should fetch hearingParts', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts.map(mapToHearingPart)));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
@@ -146,7 +147,7 @@ describe('SessionsSearchComponent', () => {
       });
     });
     it('should fetch full sessions', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts.map(mapToHearingPart)));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));
@@ -379,7 +380,7 @@ function defaultFullMockedSession(): SessionViewModel {
     room: mockedRooms[0],
     person: mockedJudges[0],
     caseType: caseType,
-    hearingParts: [mockedListedHearingParts[0]],
+    hearingParts: [mapToHearingPart(mockedListedHearingParts[0])],
     jurisdiction: 'some jurisdiction',
     version: 1,
     allocated: moment.duration('PT0.03S'),

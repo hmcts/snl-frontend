@@ -17,12 +17,15 @@ import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
 import { DeleteHearingPartDialogComponent } from './components/delete-hearing-part-dialog/delete-hearing-part-dialog.component';
+import { ListingCreateDialogComponent } from './components/listing-create-dialog/listing-create-dialog';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
     ListingCreateComponent,
     DraggableHearingPartComponent,
     DeleteHearingPartDialogComponent,
+    DraggableHearingPartComponent,
+    ListingCreateDialogComponent
 ];
 
 @NgModule({
@@ -41,5 +44,8 @@ export const COMPONENTS = [
   exports: COMPONENTS,
   providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
   entryComponents: [DeleteHearingPartDialogComponent],
+  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
+  entryComponents: [ListingCreateDialogComponent, HearingPartsPreviewComponent],
+
 })
 export class HearingPartModule { }

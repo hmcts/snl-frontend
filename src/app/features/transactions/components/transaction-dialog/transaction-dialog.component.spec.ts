@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromProblems from '../../../problems/reducers';
+import * as fromHearingParts from '../../../../hearing-part/reducers/index';
+import * as fromProblems from '../../../../problems/reducers/index';
 import { MatDialogRef } from '@angular/material';
-import * as sessionReducers from '../../reducers';
+import * as sessionReducers from '../../../../sessions/reducers/index';
+import * as fromTransactions from '../../reducers/index';
 import { TransactionDialogComponent } from './transaction-dialog.component';
-import * as problemActions from '../../../problems/actions/problem.action';
-import { Problem } from '../../../problems/models/problem.model';
+import * as problemActions from '../../../../problems/actions/problem.action';
+import { Problem } from '../../../../problems/models/problem.model';
 import * as sessionTransactionActions from '../../actions/transaction.action';
 import { EntityTransaction } from '../../models/transaction-status.model';
 import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';
@@ -42,7 +43,8 @@ describe('TransactionDialogComponent', () => {
       imports: [
         StoreModule.forRoot({}),
         StoreModule.forFeature('problems', fromProblems.reducers),
-        StoreModule.forFeature('sessions', sessionReducers.reducers)
+        StoreModule.forFeature('sessions', sessionReducers.reducers),
+        StoreModule.forFeature('transactions', fromTransactions.reducers)
       ],
       providers: [
         TransactionDialogComponent,
@@ -92,11 +94,6 @@ describe('TransactionDialogComponent', () => {
     it('should set finished', () => {
       component.finished$.subscribe(finished => {
         expect(finished).toEqual(false);
-      });
-    });
-    it('should set buttonText', () => {
-      component.buttonText$.subscribe(buttonText => {
-        expect(buttonText).toEqual('Hide the dialog');
       });
     });
   });

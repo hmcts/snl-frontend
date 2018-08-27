@@ -1,58 +1,53 @@
 <div style="display:flex">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Create a new listing request</mat-card-title>
+            <mat-card-title *ngIf="editMode">Edit listing request</mat-card-title>
+            <mat-card-title *ngIf="!editMode">Create a new listing request</mat-card-title>
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingCreate" novalidate (ngSubmit)="create();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
-                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.caseNumber" matInput placeholder="Case number *" type="text">
+                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearingPart.caseNumber" matInput placeholder="Case number *" type="text">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.caseTitle" matInput placeholder="Case title *" type="text" >
+                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearingPart.caseTitle" matInput placeholder="Case title *" type="text" >
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *" [(ngModel)]="listing.caseType">
+                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *" [(ngModel)]="listing.hearingPart.caseType">
                         <mat-option *ngFor="let case of caseTypes" selected="case == caseTypes[0]" [value]="case">{{case}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectHearingPart" formControlName="hearingType" placeholder="Hearing type *" [(ngModel)]="listing.hearingType" >
+                    <mat-select id="selectHearingPart" formControlName="hearingType" placeholder="Hearing type *" [(ngModel)]="listing.hearingPart.hearingType" >
                         <mat-option *ngFor="let hearing of hearings" selected="hearing == hearings[0]" [value]="hearing">{{hearing}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="duration" formControlName="duration" [ngModel]="listing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
+                    <input id="duration" formControlName="duration" [ngModel]="listing.hearingPart.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
                     <span matSuffix>Minutes</span>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput [matDatepicker]="createdAt" formControlName="createdAt" [(ngModel)]="listing.createdAt" placeholder="Created at:">
-                    <mat-datepicker-toggle matSuffix [for]="createdAt"></mat-datepicker-toggle>
-                    <mat-datepicker #createdAt></mat-datepicker>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select placeholder="Priority level" [(value)]="listing.priority" required>
+                    <mat-select placeholder="Priority level" [(value)]="listing.hearingPart.priority" required>
                         <mat-option *ngFor="let priority of priorityValues" value="{{priority}}">{{priority}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.communicationFacilitator">
+                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearingPart.communicationFacilitator">
                         <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.reservedJudgeId">
+                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearingPart.reservedJudgeId">
                         <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -63,13 +58,13 @@
                         <i>Target from</i> must be before <i>Target to</i>!
                     </div>
                     <mat-form-field class="date-picker-element">
-                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom"  [(ngModel)]="listing.scheduleStart" placeholder="From:" re>
+                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom"  [(ngModel)]="listing.hearingPart.scheduleStart" placeholder="From:" re>
                         <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                         <mat-datepicker #pickerStart></mat-datepicker>
                     </mat-form-field>
 
                     <mat-form-field class="date-picker-element">
-                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.scheduleEnd" placeholder="To:">
+                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.hearingPart.scheduleEnd" placeholder="To:">
                         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                         <mat-datepicker #pickerEnd></mat-datepicker>
                     </mat-form-field>

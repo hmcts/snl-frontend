@@ -24,7 +24,13 @@
   </div>
 
   <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="conflicted$ | async">
-      Transaction Conflict!
+      <div>
+        Operation failed!
+      </div>
+
+      <div>
+        Some of the modified resources are being or have been modified in the meantime. Please, reload the page and try again.
+      </div>
   </div>
 
   <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
@@ -45,7 +51,8 @@
     Please confirm what action you’d like to take
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-    <button id="okButton" mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
+    <button *ngIf="(finished$ | async)" id="okButton" mat-button (click)="onOkClick()">Accept</button>
+    <button *ngIf="!(finished$ | async)" id="hideDialogButton" mat-button (click)="onHideDialogClick()">Hide the dialog</button>
     <button *ngIf="(finished$ | async) && (problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Rollback</button>
   </div>
 

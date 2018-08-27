@@ -18,7 +18,7 @@ import * as moment from 'moment';
 import { SessionEditOrCreateDialogComponent } from '../../components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { SessionCreate } from '../../models/session-create.model';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { asArray } from '../../../utils/array-utils';
 
