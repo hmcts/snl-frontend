@@ -8,7 +8,7 @@ import {
     AssignToSession, GetById,
     HearingPartActionTypes,
     Search,
-    SearchComplete, SearchFailed, UpsertOne
+    SearchFailed, UpsertMany, UpsertOne
 } from '../actions/hearing-part.action';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
@@ -48,7 +48,7 @@ export class HearingPartEffects {
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(action =>
           this.hearingPartService.searchHearingParts(action.payload).pipe(mergeMap(data => [
-            new SearchComplete(data.entities.hearingParts),
+            new UpsertMany(data.entities.hearingParts),
             new sessionActions.UpsertMany(data.entities.sessions),
             new notesActions.GetByEntities(Object.keys(data.entities.hearingParts))
         ]), catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error))))
