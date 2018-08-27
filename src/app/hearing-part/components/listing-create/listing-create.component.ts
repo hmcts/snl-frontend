@@ -21,6 +21,7 @@ import { HearingPartModificationService } from '../../services/hearing-part-modi
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import * as fromNotes from '../../../notes/actions/notes.action';
+import { GetById } from '../../actions/hearing-part.action';
 
 const DURATION_UNIT = 'minute';
 
@@ -85,7 +86,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     edit() {
-        this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
+        this.hearingPartModificationService.updateListingRequest(this.listing, this.prepareNotes());
         this.openDialog();
 
         this.onSave.emit();
@@ -95,10 +96,7 @@ export class ListingCreateComponent implements OnInit {
         this.listing.hearingPart.id = uuid();
 
         this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
-        this.openDialog().afterClosed().subscribe((confirmed) => {
-            if(confirmed) { this.createNotes() };
-            this.initiateListing();
-        });
+        this.openDialog();
     }
 
     createNotes() {
@@ -119,7 +117,7 @@ export class ListingCreateComponent implements OnInit {
         }
     }
 
-    targetDatesValidator(control: AbstractControl): {[key: string]: boolean} {
+    validateTargetDates(control: AbstractControl): {[key: string]: boolean} {
         const targetFrom = control.get('targetFrom').value as moment.Moment;
         const targetTo = control.get('targetTo').value as moment.Moment;
 
@@ -181,15 +179,19 @@ export class ListingCreateComponent implements OnInit {
             targetDates: new FormGroup({
                 targetFrom: new FormControl(this.listing.hearingPart.scheduleStart),
                 targetTo: new FormControl(this.listing.hearingPart.scheduleEnd),
-            }, this.targetDatesValidator)
+            }, this.validateTargetDates)
         })
     }
 
     private openDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
+        this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
+        }).afterClosed().subscribe((confirmed) => {
+            if (confirmed) { this.createNotes() };
+            this.store.dispatch(new GetById(this.listing.hearingPart.id));
+            this.initiateListing();
         });
     }
 }

@@ -21,6 +21,7 @@ export enum TransactionStatuses {
     COMMITTED = 'COMMITTED',
     ROLLEDBACK = 'ROLLEDBACK',
     CONFLICT = 'CONFLICT',
+    OPTIMISTIC_LOCK_CONFLICT = 'OPTIMISTIC_LOCK_CONFLICT'
 }
 
 export interface Transaction {

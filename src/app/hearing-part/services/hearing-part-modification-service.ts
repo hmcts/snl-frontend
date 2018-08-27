@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../reducers';
 import { SessionAssignment } from '../models/session-assignment';
-import { AssignToSession, CreateListingRequest } from '../actions/hearing-part.action';
+import { AssignToSession, CreateListingRequest, UpdateListingRequest } from '../actions/hearing-part.action';
 import { InitializeTransaction } from '../../features/transactions/actions/transaction.action';
 import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as ProblemsActions from '../../problems/actions/problem.action';
@@ -25,6 +25,14 @@ export class HearingPartModificationService {
         listing.userTransactionId = uuid();
 
         this.store.dispatch(new CreateListingRequest({...listing, notes: notes}));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.hearingPart.id, listing.userTransactionId)))
+    }
+
+    updateListingRequest(listing: ListingCreate, notes: Note[]) {
+        listing.userTransactionId = uuid();
+
+        this.store.dispatch(new UpdateListingRequest({...listing, notes: notes}));
         this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.hearingPart.id, listing.userTransactionId)))
     }

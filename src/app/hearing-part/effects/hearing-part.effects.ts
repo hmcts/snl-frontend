@@ -5,10 +5,10 @@ import { catchError, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
-    AssignToSession,
+    AssignToSession, GetById,
     HearingPartActionTypes,
     Search,
-    SearchComplete, SearchFailed
+    SearchComplete, SearchFailed, UpsertOne
 } from '../actions/hearing-part.action';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
@@ -27,6 +27,17 @@ export class HearingPartEffects {
         mergeMap(action =>
             this.hearingPartService.assignToSession(action.payload).pipe(
                 mergeMap(data => [new sessionTransactionActs.UpdateTransaction(data)]),
+                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status])))
+            )
+        )
+    );
+
+    @Effect()
+    getById$: Observable<Action> = this.actions$.pipe(
+        ofType<GetById>(HearingPartActionTypes.GetById),
+        mergeMap(action =>
+            this.hearingPartService.getById(action.payload).pipe(
+                mergeMap(data => [new UpsertOne(data.entities.hearingParts[action.payload])]),
                 catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status])))
             )
         )

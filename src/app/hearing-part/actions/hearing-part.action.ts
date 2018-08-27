@@ -4,11 +4,13 @@ import { SessionAssignment } from '../models/session-assignment';
 import { ListingCreate } from '../models/listing-create';
 
 export enum HearingPartActionTypes {
+  GetById = '[HearingPart] Get by id',
   Search = '[HearingPart] Search',
   SearchComplete = '[HearingPart] Search Complete',
   SearchFailed = '[HearingPart] Search Failed',
   Create = '[HearingPart] Create',
   CreateListingRequest = '[HearingPart] Create Listing Request',
+  UpdateListingRequest = '[HearingPart] Update Listing Request',
   CreateComplete = '[HearingPart] Create Complete',
   CreateFailed = '[HearingPart] Create Failed',
   AssignToSession = '[HearingPart] Assign to session',
@@ -28,6 +30,12 @@ export class Search implements Action {
   readonly type = HearingPartActionTypes.Search;
 
   constructor(public payload?: object) {}
+}
+
+export class GetById implements Action {
+  readonly type = HearingPartActionTypes.GetById;
+
+  constructor(public payload: string) {}
 }
 
 export class SearchComplete implements Action {
@@ -50,6 +58,12 @@ export class Create implements Action {
 
 export class CreateListingRequest implements Action {
     readonly type = HearingPartActionTypes.CreateListingRequest;
+
+    constructor(public payload: ListingCreate) {}
+}
+
+export class UpdateListingRequest implements Action {
+    readonly type = HearingPartActionTypes.UpdateListingRequest;
 
     constructor(public payload: ListingCreate) {}
 }

@@ -44,7 +44,9 @@ export class TransactionEffects {
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
-                    if (transcation.status !== TransactionStatuses.STARTED && transcation.status !== TransactionStatuses.CONFLICT) {
+                    if (transcation.status !== TransactionStatuses.STARTED &&
+                        transcation.status !== TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT &&
+                        transcation.status !== TransactionStatuses.CONFLICT) {
                         throw new Error('Transaction not started...');
                     } else {
                         return transcation;
