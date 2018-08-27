@@ -1,9 +1,13 @@
 import * as fromCaseType from './case-type.reducer';
 import * as fromHearingType from './hearing-type.reducer';
+import * as fromRoomType from './room-type.reducer';
+import * as fromSessionType from './session-type.reducer';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export const fromCaseTypesState = createFeatureSelector<fromCaseType.CaseTypeState>('caseTypes');
 export const fromHearingTypesState = createFeatureSelector<fromHearingType.HearingTypeState>('hearingTypes');
+export const fromRoomTypesState = createFeatureSelector<fromRoomType.RoomTypeState>('roomTypes');
+export const fromSessionTypesState = createFeatureSelector<fromSessionType.SessionTypeState>('sessionTypes');
 
 export const selectCaseTypes = createSelector(
     fromCaseTypesState,
@@ -13,4 +17,14 @@ export const selectCaseTypes = createSelector(
 export const selectHearingTypes = createSelector(
     fromHearingTypesState,
     fromHearingType.selectAll
+);
+
+export const selectRoomTypes = createSelector(
+    fromRoomTypesState,
+    fromRoomType.selectAll
+);
+
+export const selectSessionTypes = createSelector(
+    fromSessionTypesState,
+    fromSessionType.selectAll
 );

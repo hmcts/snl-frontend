@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SecurityService } from '../../security/services/security.service';
 import { Store } from '@ngrx/store';
-import { GetAllCaseType, GetAllHearingType } from '../reference/actions/reference-data.action';
+import { GetAllCaseType, GetAllHearingType, GetAllRoomType, GetAllSessionType } from '../reference/actions/reference-data.action';
 import { State } from '../index';
 
 @Component({
@@ -28,5 +28,7 @@ export class HomeComponent implements OnInit {
     ngOnInit(): void {
         this.store.dispatch(new GetAllCaseType());
         this.store.dispatch(new GetAllHearingType());
+        this.store.dispatch(new GetAllRoomType());
+        this.store.dispatch(new GetAllSessionType());
     }
 }

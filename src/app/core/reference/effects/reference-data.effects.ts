@@ -11,6 +11,10 @@ import {
     GetAllCaseTypeComplete,
     GetAllHearingType,
     GetAllHearingTypeComplete,
+    GetAllRoomType,
+    GetAllRoomTypeComplete,
+    GetAllSessionType,
+    GetAllSessionTypeComplete,
     ReferenceDataActionTypes
 } from '../actions/reference-data.action';
 import { REFERENCE_DATA_DIALOGS } from '../models/reference-data-dialog-contents';
@@ -35,6 +39,28 @@ export class ReferenceDataEffects {
         mergeMap(action =>
             this.referenceDataService.getHearingTypes().pipe(
                 mergeMap(data => [new GetAllHearingTypeComplete(data)]),
+                catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
+            )
+        )
+    );
+
+    @Effect()
+    getRoomTypes$: Observable<Action> = this.actions$.pipe(
+        ofType<GetAllRoomType>(ReferenceDataActionTypes.GetAllRoomType),
+        mergeMap(action =>
+            this.referenceDataService.getRoomTypes().pipe(
+                mergeMap(data => [new GetAllRoomTypeComplete(data)]),
+                catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
+            )
+        )
+    );
+
+    @Effect()
+    getSessionTypes$: Observable<Action> = this.actions$.pipe(
+        ofType<GetAllSessionType>(ReferenceDataActionTypes.GetAllSessionType),
+        mergeMap(action =>
+            this.referenceDataService.getSessionTypes().pipe(
+                mergeMap(data => [new GetAllSessionTypeComplete(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
             )
         )

@@ -4,6 +4,8 @@ import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs/Observable';
 import { CaseType } from '../models/case-type';
 import { HearingType } from '../models/hearing-type';
+import { RoomType } from '../models/room-type';
+import { SessionType } from '../models/session-type';
 
 @Injectable()
 export class ReferenceDataService {
@@ -11,11 +13,19 @@ export class ReferenceDataService {
     }
 
     getCaseTypes(): Observable<CaseType[]> {
-        return this.getReferenceDataFor<CaseType[]>('/caseType/all');
+        return this.getReferenceDataFor<CaseType[]>('/case-types');
     }
 
     getHearingTypes(): Observable<HearingType[]> {
-        return this.getReferenceDataFor<HearingType[]>('/hearingType/all');
+        return this.getReferenceDataFor<HearingType[]>('/hearing-types');
+    }
+
+    getRoomTypes(): Observable<RoomType[]> {
+        return this.getReferenceDataFor<RoomType[]>('/room-types');
+    }
+
+    getSessionTypes(): Observable<SessionType[]> {
+        return this.getReferenceDataFor<SessionType[]>('/session-types');
     }
 
     private getReferenceDataFor<T>(urlSuffix: string): Observable<T> {
