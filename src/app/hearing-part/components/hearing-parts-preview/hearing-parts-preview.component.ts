@@ -9,6 +9,9 @@ import { priorityValue } from '../../models/priority-model';
 import { DeleteHearingPartDialogComponent } from '../delete-hearing-part-dialog/delete-hearing-part-dialog.component';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
+import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -38,11 +41,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'notes',
       'scheduleStart',
       'scheduleEnd',
-      'delete'
+      'delete',
       'editor'
     ];
 
-    constructor(public dialog: MatDialog) {
+    constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
         this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
     }
 
@@ -94,7 +97,25 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     openDeleteDialog(hearingPart: HearingPartViewModel) {
       this.dialog.open(DeleteHearingPartDialogComponent, {
         data: hearingPart
+      }).afterClosed().subscribe((confirmed) => {
+          this.afterDeleteClosed(confirmed, hearingPart)
       })
+    }
+
+    afterDeleteClosed(confirmed, hearingPart) {
+        if (confirmed) {
+            this.hearingPartService.deleteHearingPart({
+                hearingPartId: hearingPart.id,
+                hearingPartVersion: hearingPart.version,
+                userTransactionId: undefined
+            });
+
+            this.openTransactionDialog().afterClosed().subscribe((accepted) => {
+                if (accepted) {
+                    this.hearingPartService.removeFromState(hearingPart.id)
+                }
+            })
+        }
     }
 
     openEditDialog(hearingPart: HearingPartViewModel) {
@@ -106,6 +127,14 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             hasBackdrop: true,
             height: '60%'
         })
+    }
+
+    private openTransactionDialog() {
+        return this.dialog.open(TransactionDialogComponent, {
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 
     toggleHearing(hearing) {

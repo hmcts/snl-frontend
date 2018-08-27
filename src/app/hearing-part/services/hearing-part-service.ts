@@ -9,6 +9,7 @@ import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import * as moment from 'moment';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
+import { HearingPartDeletion } from '../models/hearing-part-deletion';
 
 @Injectable()
 export class HearingPartService {
@@ -62,9 +63,10 @@ export class HearingPartService {
             });
     }
 
-    deleteHearingPart(hearingPartId: string): Observable<any> {
-        return this.http.delete(`${this.config.getApiUrl()}/hearing-part/${hearingPartId}`, {
-          headers: {'Content-Type': 'application/json'}
+    deleteHearingPart(hearingPartDeletion: HearingPartDeletion): Observable<any> {
+        return this.http.post(`${this.config.getApiUrl()}/hearing-part/${hearingPartDeletion.hearingPartId}`,
+            JSON.stringify(hearingPartDeletion), {
+            headers: {'Content-Type': 'application/json'}
         });
     }
 

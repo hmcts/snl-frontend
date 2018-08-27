@@ -43,9 +43,6 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
-  entryComponents: [DeleteHearingPartDialogComponent],
-  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
-  entryComponents: [ListingCreateDialogComponent, HearingPartsPreviewComponent],
-
+  entryComponents: [DeleteHearingPartDialogComponent, ListingCreateDialogComponent]
 })
 export class HearingPartModule { }

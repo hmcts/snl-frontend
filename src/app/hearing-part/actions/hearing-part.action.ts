@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
 import { SessionAssignment } from '../models/session-assignment';
 import { ListingCreate } from '../models/listing-create';
+import { HearingPartDeletion } from '../models/hearing-part-deletion';
 
 export enum HearingPartActionTypes {
   GetById = '[HearingPart] Get by id',
@@ -103,7 +104,7 @@ export class UpsertOne implements Action {
 export class Delete implements Action {
   readonly  type = HearingPartActionTypes.Delete;
 
-  constructor(public payload: any) {}
+  constructor(public payload: HearingPartDeletion) {}
 }
 
 export class DeleteComplete implements Action {
