@@ -5926,6 +5926,12 @@ protractor-beautiful-reporter@^1.2.1:
     mkdirp "~0.3.5"
     underscore "~1.6.0"
 
+protractor-http-client@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/protractor-http-client/-/protractor-http-client-1.0.4.tgz#f8eeaf273ec13e28d75b9630268b00715cb8fca6"
+  dependencies:
+    request "^2.83.0"
+
 protractor@^5.1.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/protractor/-/protractor-5.3.1.tgz#b8b8ac4ad2278bb7a461b99a34d79532095f14b8"

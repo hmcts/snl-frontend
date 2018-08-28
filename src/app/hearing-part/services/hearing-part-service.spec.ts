@@ -108,7 +108,7 @@ const hearingPart = {
     userTransactionId: null
 } as HearingPart;
 
-fdescribe('HearingPartService', () => {
+describe('HearingPartService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
