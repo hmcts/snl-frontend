@@ -62,7 +62,7 @@ export class ListingCreateComponent implements OnInit {
                 public dialog: MatDialog,
                 private readonly notePreparerService: NotesPreparerService,
                 private readonly hearingPartModificationService: HearingPartModificationService,
-                private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
+                readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;

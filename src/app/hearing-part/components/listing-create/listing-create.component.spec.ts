@@ -36,7 +36,30 @@ let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 
 let note;
 let secondNote;
+
+const now = moment();
 const mockedJudges: Judge[] = [{ id: 'judge-id', name: 'some-judge-name' }];
+const listingCreate = {
+    hearingPart: {
+        id: undefined,
+        session: undefined,
+        caseNumber: 'number',
+        caseTitle: 'title',
+        caseType: 'case type',
+        hearingType: 'hearing type',
+        duration: moment.duration(30, 'minute'),
+        scheduleStart: now,
+        scheduleEnd: now,
+        createdAt: now,
+        version: 0,
+        priority: undefined,
+        reservedJudgeId: undefined,
+        communicationFacilitator: undefined,
+        userTransactionId: 'uti'
+    },
+    notes: [],
+    userTransactionId: undefined
+} as ListingCreate;
 
 describe('ListingCreateComponent', () => {
   beforeEach(() => {
@@ -129,28 +152,7 @@ describe('ListingCreateComponent', () => {
     });
 
     it('with custom inputs should dispatch proper action', () => {
-      let now = moment();
-      component.listing = {
-        hearingPart: {
-            id: undefined,
-            session: undefined,
-            caseNumber: 'number',
-            caseTitle: 'title',
-            caseType: 'case type',
-            hearingType: 'hearing type',
-            duration: moment.duration(30, 'minute'),
-            scheduleStart: now,
-            scheduleEnd: now,
-            createdAt: now,
-            version: 0,
-            priority: undefined,
-            reservedJudgeId: undefined,
-            communicationFacilitator: undefined,
-            userTransactionId: 'uti'
-        },
-          notes: [],
-          userTransactionId: undefined
-      } as ListingCreate;
+      component.listing = listingCreate;
 
       component.save();
 
@@ -327,5 +329,19 @@ describe('ListingCreateComponent', () => {
             expect(emitSpy).toHaveBeenCalled();
         });
       });
+
+      describe('set data', () => {
+        it('should set listingrequest', () => {
+          component.data = listingCreate;
+
+          expect(component.listing).toEqual(listingCreate);
+        });
+
+        it('should set default notes if there are no notes in listing', () => {
+          component.data = listingCreate;
+
+          expect(component.listing.notes).toEqual(component.listingNotesConfig.defaultNotes());
+        });
+      })
   });
 });
