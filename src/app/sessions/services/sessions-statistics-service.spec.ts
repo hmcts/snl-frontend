@@ -33,7 +33,10 @@ describe('SessionsStatisticsService', () => {
                     version: undefined
                 }] as [HearingPart],
                 jurisdiction: undefined,
-                version: undefined
+                version: undefined,
+                allocated: undefined,
+                utilization: undefined,
+                available: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT20M'));
@@ -82,7 +85,10 @@ describe('SessionsStatisticsService', () => {
                     version: undefined
                 }] as HearingPart[],
                 jurisdiction: undefined,
-                version: undefined
+                version: undefined,
+                allocated: undefined,
+                utilization: undefined,
+                available: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT1H30M'));
@@ -98,7 +104,10 @@ describe('SessionsStatisticsService', () => {
                 caseType: undefined,
                 hearingParts: [] as [HearingPart],
                 jurisdiction: undefined,
-                version: undefined
+                version: undefined,
+                allocated: undefined,
+                utilization: undefined,
+                available: undefined
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration(0));
@@ -131,12 +140,12 @@ describe('SessionsStatisticsService', () => {
     describe('calculateAvailableDuration', () => {
         it('should give 0 when not available',  () => {
             expect(sessionsStatisticsService.calculateAvailableDuration(moment.duration('PT1H'), moment.duration('PT2H')))
-                .toEqual(0);
+                .toEqual(moment.duration('PT0H'));
         });
 
         it('should give correct value when available', () => {
             expect(sessionsStatisticsService.calculateAvailableDuration(moment.duration('PT1H'), moment.duration('PT30M')))
-                .toEqual(30);
+                .toEqual(moment.duration('PT30M'));
         });
 
         it('should throw error when params are undefined', () => {

@@ -16,7 +16,7 @@ export class SessionsPropositionsTableComponent implements OnChanges {
         'date',
         'startTime',
         'endTime',
-        'availibility',
+        'availability',
         'judge',
         'room',
         'actions'

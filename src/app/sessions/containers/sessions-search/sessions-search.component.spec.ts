@@ -24,7 +24,6 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
@@ -53,10 +52,10 @@ const mockedNotes: Note[] = [
         entityId: 'some-id',
         entityType: 'ListingRequest'
     }];
-const mockedHearingParts: HearingPart[] = [
-  {
+
+const mockedUnlistedHearingPart: HearingPartViewModel = {
     id: 'some-id',
-    session: 'some-session-id',
+    session: undefined,
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
     caseType: 'some-case-type',
@@ -66,16 +65,18 @@ const mockedHearingParts: HearingPart[] = [
     scheduleEnd: now,
     version: 2,
     priority: Priority.Low,
+    notes: mockedNotes,
+    reservedJudge: mockedJudges[0],
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter'
-  }];
-const mockedHearingPart = mockedHearingParts[0];
-const mockedHearingPartsViewModel: HearingPartViewModel[] = [
-    {
-        ...mockedHearingPart,
-        notes: mockedNotes,
-        reservedJudge: mockedJudges[0]
-    }];
+};
+
+const mockedUnlistedHearingParts: HearingPartViewModel[] = [mockedUnlistedHearingPart];
+
+// same as unlisted, but with session set to matching id in Session
+let mockedListedHearingPart = { ...mockedUnlistedHearingPart, session: 'some-session-id' };
+const mockedListedHearingParts: HearingPartViewModel[] = [mockedListedHearingPart];
+
 const mockedSessions: Session[] = [
   {
     id: 'some-session-id',
@@ -124,12 +125,12 @@ describe('SessionsSearchComponent', () => {
       expect(component).toBeDefined();
     });
     it('should fetch hearingParts', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearingParts$.subscribe(hearingParts => {
-      expect(hearingParts).toEqual(mockedHearingPartsViewModel);
+        expect(hearingParts).toEqual(mockedUnlistedHearingParts);
       });
     });
     it('should fetch rooms', () => {
@@ -145,7 +146,7 @@ describe('SessionsSearchComponent', () => {
       });
     });
     it('should fetch full sessions', () => {
-      store.dispatch(new hearingPartActions.SearchComplete(mockedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));
@@ -280,15 +281,15 @@ describe('SessionsSearchComponent', () => {
 
   describe('selectHearingPart', () => {
     it('should set selectedHearingPart', () => {
-      component.selectHearingPart(mockedHearingPart);
-      expect(component.selectedHearingPart).toEqual(mockedHearingPart);
+      component.selectHearingPart(mockedUnlistedHearingPart);
+      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingPart);
     });
   });
 
   describe('assignToSession', () => {
     it('should dispatch AssignToSession action', () => {
       component.selectedSession = mockedFullSession[0];
-      component.selectedHearingPart = mockedHearingPart;
+      component.selectedHearingPart = mockedUnlistedHearingPart;
       component.assignToSession();
 
       const passedObj = storeSpy.calls.first().args[0];
@@ -298,10 +299,10 @@ describe('SessionsSearchComponent', () => {
         passedObj instanceof hearingPartActions.AssignToSession
       ).toBeTruthy();
       expect(sessionAssignmentPayload.hearingPartId).toEqual(
-        mockedHearingPart.id
+        mockedUnlistedHearingPart.id
       );
       expect(sessionAssignmentPayload.hearingPartVersion).toEqual(
-          mockedHearingPart.version
+          mockedUnlistedHearingPart.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
       expect(sessionAssignmentPayload.sessionId).toEqual(
@@ -327,14 +328,14 @@ describe('SessionsSearchComponent', () => {
     describe('when selectedHearingPart is not null and selectedSession is set', () => {
       it('should return true ', () => {
         component.selectedSession = mockedFullSession[0];
-        component.selectedHearingPart = mockedHearingPart;
+        component.selectedHearingPart = mockedUnlistedHearingPart;
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
     describe('when either selectedHearingPart is not null or selectedSession is not set', () => {
       it('should return false ', () => {
         component.selectedSession = {};
-        component.selectedHearingPart = mockedHearingPart;
+        component.selectedHearingPart = mockedUnlistedHearingPart;
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {
@@ -378,9 +379,12 @@ function defaultFullMockedSession(): SessionViewModel {
     room: mockedRooms[0],
     person: mockedJudges[0],
     caseType: caseType,
-    hearingParts: [mockedHearingParts[0]],
+    hearingParts: [mockedListedHearingParts[0]],
     jurisdiction: 'some jurisdiction',
-    version: 1
+    version: 1,
+    allocated: moment.duration('PT0.03S'),
+    utilization: 100,
+    available: moment.duration('PT0M')
   };
 }
 
