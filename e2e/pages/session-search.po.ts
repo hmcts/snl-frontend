@@ -5,6 +5,7 @@ import { element, by } from 'protractor';
 import { CaseTypes } from '../enums/case-types';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
+import { By } from 'selenium-webdriver';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
@@ -33,6 +34,25 @@ export class SessionSearchPage {
     }
 
     private selectCheckBoxInRowWithValues(table: Table, ...values: string[]) {
-        table.rowThatContains(...values).element(by.css('mat-checkbox')).click()
+        this.clickElementInRowWithValues(table, by.css('mat-checkbox'), ...values)
     }
+
+
+    public isListingRequestPresent(...values) {
+        return this.listingRequestsTable.rowThatContains(...values).isPresent()
+    }
+
+
+    private clickElementInRowWithValues(table: Table, selector: By, ...values: string[]) {
+      table.rowThatContains(...values).element(selector).click()
+    }
+
+  async clickDeleteListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes,
+                                  targetScheduleFrom: string, targetScheduleTo: string) {
+    this.clickElementInRowWithValues(this.listingRequestsTable, by.css('.mat-column-delete .clickable'), caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
+  }
+
+  async clickDeleteListingRequestByCaseNumber(caseNumber: string) {
+    this.clickElementInRowWithValues(this.listingRequestsTable, by.css('.mat-column-delete .clickable'), caseNumber)
+  }
 }
