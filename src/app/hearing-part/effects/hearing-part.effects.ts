@@ -6,19 +6,23 @@ import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
     AssignToSession,
-    DeleteComplete,
-    AssignToSession, GetById,
+    GetById,
     HearingPartActionTypes,
     Search,
     SearchFailed, UpsertMany, UpsertOne
 } from '../actions/hearing-part.action';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
+import * as transactionActions from '../../features/transactions/actions/transaction.action';
 import * as sessionActions from '../../sessions/actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
 import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import * as notesActions from '../../notes/actions/notes.action';
+import {
+  RulesProcessingStatuses, Transaction,
+  TransactionStatuses
+} from '../../features/transactions/services/transaction-backend.service';
 
 @Injectable()
 export class HearingPartEffects {
@@ -61,9 +65,23 @@ export class HearingPartEffects {
     deleteHearing$: Observable<Action> = this.actions$.pipe(
       ofType<any>(HearingPartActionTypes.Delete),
       mergeMap(action =>
-        this.hearingPartService.deleteHearingPart(action.payload).pipe(mergeMap(data => [
-          new DeleteComplete(action.payload),
-        ]), catchError( (err: HttpErrorResponse) => of(new SearchFailed(err.error)) ))
+        this.hearingPartService.deleteHearingPart(action.payload).pipe(
+          mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
+          catchError((err) => {
+            return of(new notificationActions.OpenDialog(err.status));
+
+              if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
+                return of(new transactionActions.UpdateTransaction({
+                  id: action.payload.userTransactionId,
+                  rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
+                  status: TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT
+                }))
+              } else {
+                return of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status]));
+              }
+            }
+          )
+        )
       )
     );
 
