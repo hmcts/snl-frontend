@@ -33,15 +33,19 @@ const userTransactionId = uuid();
 const hearingType = HearingParts.TRIAL;
 const otherHearingType = HearingParts.PRELIMINARY;
 
-const listingRequest = {
-  id,
+const displayedListingRequestData = {
   caseNumber,
   caseTitle,
   caseType,
+  hearingType,
+};
+
+const listingRequest = {
+  id,
   duration,
-  priority,
   userTransactionId,
-  hearingType
+  priority, // move priority to displayedListingRequestData when bug with displaying priority will be fixed
+  ...displayedListingRequestData
 };
 
 describe('Amend Listing Request', () => {
@@ -51,6 +55,7 @@ describe('Amend Listing Request', () => {
       API.createListingRequest(listingRequest).then((response: ResponsePromise) => {
         expect(response.statusCode).toEqual(200);
         done();
+        navigationFlow.goToListHearingsPage();
       });
     });
   });
@@ -58,7 +63,7 @@ describe('Amend Listing Request', () => {
     it('created listing request should be visible on list', () => {
       navigationFlow.goToListHearingsPage();
       sessionSearchPage.changeMaxItemsPerPage('100');
-      const isListingRequestDisplayed = sessionSearchPage.isListingRequestDisplayed(...Object.values(listingRequest));
+      const isListingRequestDisplayed = sessionSearchPage.isListingRequestDisplayed(...Object.values(displayedListingRequestData));
       expect(isListingRequestDisplayed).toBeTruthy();
     });
   });
