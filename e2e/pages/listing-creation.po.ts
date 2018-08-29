@@ -3,7 +3,7 @@ import { element, by } from 'protractor';
 import { ListingCreationForm } from '../models/listing-creation-form';
 
 export class ListingCreationPage {
-  private parentElement = element(by.className('sessions-create-container'))
+  private parentElement = element(by.css('app-listing-create'))
   private caseNumberInput = this.parentElement.element(by.id('caseNumber'));
   private caseTitleInput = this.parentElement.element(by.id('caseTitle'));
   private selectCaseTypeSelectOption = this.parentElement.element(by.id('selectCaseType'));
