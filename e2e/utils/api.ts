@@ -3,7 +3,7 @@ import { ResponsePromise } from 'protractor-http-client/dist/promisewrappers';
 import { promise } from 'protractor';
 import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
-import { CONFIG } from '../../server';
+import { CONFIG } from '../../url-config';
 
 export class API {
     private static http = new HttpClient(CONFIG.apiUrl);
