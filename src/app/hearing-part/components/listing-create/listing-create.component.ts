@@ -34,9 +34,6 @@ export class ListingCreateComponent implements OnInit {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
     @Input() set data(value: ListingCreate) {
-        if (value === undefined || value == null) {
-            return;
-        }
         this.listing = value;
         this.listing.notes = this.setNotesIfExist(value);
         this.initiateForm();
@@ -67,10 +64,11 @@ export class ListingCreateComponent implements OnInit {
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;
         });
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
         this.initiateListing();
         this.initiateForm();
+
+        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
     }
 
     ngOnInit() {
@@ -121,7 +119,11 @@ export class ListingCreateComponent implements OnInit {
         const targetFrom = control.get('targetFrom').value as moment.Moment;
         const targetTo = control.get('targetTo').value as moment.Moment;
 
-        if (targetFrom === null || targetTo === null) {
+        function isLogicallyUndefined(property: any) {
+            return (property === undefined) || (property === '') || (property === null)
+        }
+
+        if (isLogicallyUndefined(targetFrom) || isLogicallyUndefined(targetTo)) {
             return null;
         }
 
