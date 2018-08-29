@@ -6,11 +6,11 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { HearingPartViewModel, mapToHearingPart } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
-import { DeleteHearingPartDialogComponent } from '../delete-hearing-part-dialog/delete-hearing-part-dialog.component';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -95,8 +95,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     openDeleteDialog(hearingPart: HearingPartViewModel) {
-      this.dialog.open(DeleteHearingPartDialogComponent, {
-        data: hearingPart
+      this.dialog.open(DialogWithActionsComponent, {
+        data: { message: `Do you want to remove the listing request for case number ${hearingPart.caseNumber} ?`}
       }).afterClosed().subscribe((confirmed) => {
           this.afterDeleteClosed(confirmed, hearingPart)
       })
@@ -131,6 +131,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     private openTransactionDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Deleting hearing part',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

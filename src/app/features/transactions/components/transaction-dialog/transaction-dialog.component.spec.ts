@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import * as fromHearingParts from '../../../../hearing-part/reducers/index';
 import * as fromProblems from '../../../../problems/reducers/index';
-import { MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import * as sessionReducers from '../../../../sessions/reducers/index';
 import * as fromTransactions from '../../reducers/index';
 import { TransactionDialogComponent } from './transaction-dialog.component';
@@ -48,7 +48,8 @@ describe('TransactionDialogComponent', () => {
       ],
       providers: [
         TransactionDialogComponent,
-        { provide: MatDialogRef, useValue: matDialogRefSpy }
+        { provide: MatDialogRef, useValue: matDialogRefSpy },
+        { provide: MAT_DIALOG_DATA, useValue: {}}
       ]
     });
 

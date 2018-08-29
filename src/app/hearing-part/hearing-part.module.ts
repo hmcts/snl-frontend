@@ -16,14 +16,12 @@ import { DraggableHearingPartComponent } from './components/draggable-hearing-pa
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
-import { DeleteHearingPartDialogComponent } from './components/delete-hearing-part-dialog/delete-hearing-part-dialog.component';
 import { ListingCreateDialogComponent } from './components/listing-create-dialog/listing-create-dialog';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
     ListingCreateComponent,
     DraggableHearingPartComponent,
-    DeleteHearingPartDialogComponent,
     DraggableHearingPartComponent,
     ListingCreateDialogComponent
 ];
@@ -43,6 +41,6 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
-  entryComponents: [DeleteHearingPartDialogComponent, ListingCreateDialogComponent]
+  entryComponents: [ListingCreateDialogComponent]
 })
 export class HearingPartModule { }

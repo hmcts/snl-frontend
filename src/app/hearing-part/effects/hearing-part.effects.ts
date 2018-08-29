@@ -68,17 +68,13 @@ export class HearingPartEffects {
         this.hearingPartService.deleteHearingPart(action.payload).pipe(
           mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
           catchError((err) => {
-            return of(new notificationActions.OpenDialog(err.status));
-
               if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
                 return of(new transactionActions.UpdateTransaction({
                   id: action.payload.userTransactionId,
                   rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
                   status: TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT
                 }))
-              } else {
-                return of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status]));
-              }
+               }
             }
           )
         )

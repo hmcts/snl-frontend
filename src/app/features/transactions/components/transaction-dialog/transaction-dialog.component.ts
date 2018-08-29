@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -25,9 +25,11 @@ export class TransactionDialogComponent {
   conflicted$: Observable<boolean>;
   okAction: Action;
   transactionId: string;
+  actionTitle: string;
 
   constructor(
       private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: string,
       private readonly store: Store<State>) {
       this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentTransactionStatus));
@@ -38,6 +40,7 @@ export class TransactionDialogComponent {
       this.transactionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.finished$ = combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
           (s, p, c) => { return (s && p) || c; });
+      this.actionTitle = data;
   }
 
   onOkClick(): void {

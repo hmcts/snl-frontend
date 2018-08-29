@@ -150,6 +150,7 @@ export class SessionsSearchComponent implements OnInit {
 
     private openSummaryDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Assigning hearing part to session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

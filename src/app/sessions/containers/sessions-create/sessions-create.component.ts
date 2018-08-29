@@ -57,6 +57,7 @@ export class SessionsCreateComponent implements OnInit {
 
     private openDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Creating session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

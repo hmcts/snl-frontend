@@ -111,6 +111,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
 
     private openTransactionDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Creating adhoc session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

@@ -1,7 +1,7 @@
 <div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
   <div id="transactionBeingCreated" fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(transacted$ | async)">
     <p fxFlex>
-      Your session is being created...
+      {{actionTitle}}
     </p>
     <p fxFlex>
       Potential problems will be displayed below when computation finishes.
@@ -10,7 +10,7 @@
 
   <div id="sessionCreationSummary" fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="(transacted$ | async) && !(conflicted$ | async)">
     <div fxFlex>
-      Session creation summary
+      Action summary
     </div>
     <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...

@@ -65,7 +65,7 @@ export class ListingCreateComponent implements OnInit {
                 private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
-            this.errors = error.message;
+            if (error !== undefined) { this.errors = error.message };
         });
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
@@ -87,7 +87,7 @@ export class ListingCreateComponent implements OnInit {
 
     edit() {
         this.hearingPartModificationService.updateListingRequest(this.listing, this.prepareNotes());
-        this.openDialog();
+        this.openDialog('Editing listing request');
 
         this.onSave.emit();
     }
@@ -96,7 +96,7 @@ export class ListingCreateComponent implements OnInit {
         this.listing.hearingPart.id = uuid();
 
         this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
-        this.openDialog();
+        this.openDialog('Creating listing request');
     }
 
     createNotes() {
@@ -183,8 +183,9 @@ export class ListingCreateComponent implements OnInit {
         })
     }
 
-    private openDialog() {
+    private openDialog(actionTitle: string) {
         this.dialog.open(TransactionDialogComponent, {
+            data: actionTitle,
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
