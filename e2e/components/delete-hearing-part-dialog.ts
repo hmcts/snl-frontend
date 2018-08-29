@@ -2,7 +2,7 @@ import { element, by, ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class DeleteHearingPartDialogPage {
-  private yesButton = element(by.id('delete-hearing-part-yes'))
+  private yesButton = element(by.buttonText('Ok'))
 
   clickYesButton(): any {
     browser.wait(
