@@ -1190,6 +1190,10 @@ circular-json@^0.3.1:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
 
+circular-json@^0.5.1:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/circular-json/-/circular-json-0.5.5.tgz#64182ef359042d37cd8e767fc9de878b1e9447d3"
+
 clap@^1.0.9:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/clap/-/clap-1.2.3.tgz#4f36745b32008492557f46412d66d50cb99bce51"
@@ -2813,6 +2817,14 @@ fs-extra@^4.0.0:
     jsonfile "^4.0.0"
     universalify "^0.1.0"
 
+fs-extra@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-5.0.0.tgz#414d0110cdd06705734d055652c5411260c31abd"
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 fs-write-stream-atomic@^1.0.8:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/fs-write-stream-atomic/-/fs-write-stream-atomic-1.0.10.tgz#b47df53493ef911df75731e70a9ded0189db40c9"
@@ -4305,6 +4317,12 @@ klaw-sync@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/klaw-sync/-/klaw-sync-2.1.0.tgz#3d3bcd8600e7bfdef53231c739ff053aed560e44"
   optionalDependencies:
+    graceful-fs "^4.1.11"
+
+klaw-sync@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/klaw-sync/-/klaw-sync-3.0.2.tgz#bf3a5ca463af5aec007201dbe8be7088ef29d067"
+  dependencies:
     graceful-fs "^4.1.11"
 
 klaw@^1.0.0:
@@ -5932,6 +5950,20 @@ protractor-http-client@^1.0.4:
   dependencies:
     request "^2.83.0"
 
+protractor-screenshoter-plugin@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/protractor-screenshoter-plugin/-/protractor-screenshoter-plugin-0.10.1.tgz#0db218af99df381fce7254d47a2ebcaa307cf3f9"
+  dependencies:
+    circular-json "^0.5.1"
+    fs-extra "^5.0.0"
+    klaw-sync "^3.0.2"
+    lodash "^4.17.4"
+    mkdirp "^0.5.1"
+    moment "^2.20.1"
+    q "^1.5.1"
+    screenshoter-report-analyzer "^0.6"
+    uuid "^3.1.0"
+
 protractor@^5.1.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/protractor/-/protractor-5.3.1.tgz#b8b8ac4ad2278bb7a461b99a34d79532095f14b8"
@@ -6025,7 +6057,7 @@ q@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.4.1.tgz#55705bcd93c5f3673530c2c2cbc0c2b3addc286e"
 
-q@^1.1.2, q@^1.4.1:
+q@^1.1.2, q@^1.4.1, q@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
 
@@ -6573,6 +6605,10 @@ schema-utils@^0.4.0, schema-utils@^0.4.5:
   dependencies:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
+
+screenshoter-report-analyzer@^0.6:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/screenshoter-report-analyzer/-/screenshoter-report-analyzer-0.6.0.tgz#0a6f88d5f5d1ac16b6cf7262effba31fee48ed12"
 
 scss-tokenizer@^0.2.3:
   version "0.2.3"
