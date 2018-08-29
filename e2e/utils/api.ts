@@ -3,9 +3,10 @@ import { ResponsePromise } from 'protractor-http-client/dist/promisewrappers';
 import { promise } from 'protractor';
 import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
+import { CONFIG } from '../../server';
 
 export class API {
-    private static http = new HttpClient('http://localhost:8090');
+    private static http = new HttpClient(CONFIG.apiUrl);
     private static headers = { 'Authorization': '' }
 
     static async createListingRequest(body: CreateListingRequestBody): Promise<ResponsePromise> {
@@ -22,7 +23,7 @@ export class API {
             password: Credentials.ValidOfficerPassword
         };
 
-        return this.http.post('/security/signin', body, API.headers).then((response) => {
+        return this.http.post('/security/signin', body, API.headers).then((response: ResponsePromise|any) => {
             API.headers.Authorization = `${response.body.tokenType} ${response.body.accessToken}`;
             return response
         });
