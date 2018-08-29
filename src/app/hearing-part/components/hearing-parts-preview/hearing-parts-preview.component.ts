@@ -110,8 +110,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 userTransactionId: undefined
             });
 
-            this.openTransactionDialog().afterClosed().subscribe((accepted) => {
-                if (accepted) {
+            this.openTransactionDialog().afterClosed().subscribe((success) => {
+                if (success) {
                     this.hearingPartService.removeFromState(hearingPart.id)
                 }
             })

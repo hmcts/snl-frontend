@@ -101,14 +101,21 @@ describe('TransactionDialogComponent', () => {
 
   describe('onOkClick', () => {
     beforeEach(() => storeSpy.calls.reset())
-    it('should dispatch action when okAction is not null', () => {
-      component.okAction = new CommitTransaction(transactionId);
+    it('should dispatch action when succeed and okAction is not null', () => {
+      component.okAction = new CommitTransaction(transactionId)
+      component.success = true
       component.onOkClick()
       expect(storeSpy).toHaveBeenCalled()
     });
 
     it('should not dispatch action when okAction is null', () => {
-      component.okAction = null;
+      component.okAction = null
+      component.onOkClick()
+      expect(storeSpy).not.toHaveBeenCalled()
+    });
+
+    it('should not dispatch action when no success', () => {
+      component.success = false
       component.onOkClick()
       expect(storeSpy).not.toHaveBeenCalled()
     });

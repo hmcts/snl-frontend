@@ -26,6 +26,7 @@ export class TransactionDialogComponent {
   okAction: Action;
   transactionId: string;
   actionTitle: string;
+  success: boolean;
 
   constructor(
       private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
@@ -40,14 +41,16 @@ export class TransactionDialogComponent {
       this.transactionStatus$.subscribe((status) => {this.transactionId = status.id});
       this.finished$ = combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
           (s, p, c) => { return (s && p) || c; });
+      combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
+          (s, p, c) => { return (s && p && !c) }).subscribe(s => { this.success = s});
       this.actionTitle = data;
   }
 
   onOkClick(): void {
-    if (this.okAction !== null) {
+    if (this.okAction !== null && this.success) {
         this.store.dispatch(this.okAction);
     }
-    this.dialogRef.close(true);
+    this.dialogRef.close(this.success);
   }
 
   onHideDialogClick(): void {
