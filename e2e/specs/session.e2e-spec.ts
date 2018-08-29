@@ -109,7 +109,8 @@ describe('Create Session and Listing Request, assign them despite problem, check
     it('newly created session should be visible', async () => {
       navigationFlow.goToNewListingRequestPage()
       listingCreationPage.createListingRequest(listingCreationForm)
-      expect(snackBar.isNoteWithTextPresent(listingCreatedNoteText)).toBeTruthy()
+      transactionDialogPage.clickAcceptButton();
+      expect(transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
     });
   });
   describe('Go to list hearing page, find and select created session and listing', () => {
