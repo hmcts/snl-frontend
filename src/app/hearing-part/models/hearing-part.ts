@@ -16,5 +16,4 @@ export interface HearingPart {
     reservedJudgeId: string;
     communicationFacilitator: string;
     userTransactionId: string;
-
 }

@@ -22,9 +22,9 @@ export class HearingPartService {
               params: new HttpParams({ fromObject: params })
             })
           .pipe(map(data => data.map(hp => {
-              hp.scheduleEnd = moment(hp.scheduleEnd);
-              hp.scheduleStart = moment(hp.scheduleStart);
-              hp.duration = moment.duration(hp.duration);
+                  hp.scheduleEnd = (hp.scheduleEnd === null) ? null : moment(hp.scheduleEnd);
+                  hp.scheduleStart = (hp.scheduleStart === null) ? null : moment(hp.scheduleStart);
+                  hp.duration  = (hp.duration === null) ? null : moment.duration(hp.duration);
               return hp;
           })),
               map(data => {return normalize(data, hearingParts)}));

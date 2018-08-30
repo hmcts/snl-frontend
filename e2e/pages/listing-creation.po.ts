@@ -3,14 +3,15 @@ import { element, by } from 'protractor';
 import { ListingCreationForm } from '../models/listing-creation-form';
 
 export class ListingCreationPage {
-  private caseNumberInput = element(by.id('caseNumber'));
-  private caseTitleInput = element(by.id('caseTitle'));
-  private selectCaseTypeSelectOption = element(by.id('selectCaseType'));
-  private selectHearingPartSelectOption = element(by.id('selectHearingPart'));
-  private durationInput = element(by.id('duration'));
-  private fromDateInput = element(by.id('fromDate'));
-  private endDateInput = element(by.id('endDate'));
-  private saveButton = element(by.id('save'));
+  private parentElement = element(by.css('app-listing-create'))
+  private caseNumberInput = this.parentElement.element(by.id('caseNumber'));
+  private caseTitleInput = this.parentElement.element(by.id('caseTitle'));
+  private selectCaseTypeSelectOption = this.parentElement.element(by.id('selectCaseType'));
+  private selectHearingPartSelectOption = this.parentElement.element(by.id('selectHearingPart'));
+  private durationInput = this.parentElement.element(by.id('duration'));
+  private fromDateInput = this.parentElement.element(by.id('fromDate'));
+  private endDateInput = this.parentElement.element(by.id('endDate'));
+  private saveButton = this.parentElement.element(by.id('save'));
   private elementHelper = new ElementHelper();
 
   createListingRequest(listingCreationForm: ListingCreationForm) {

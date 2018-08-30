@@ -5,6 +5,7 @@ export class TopMenu {
   private parentElement = element(by.css('mat-toolbar-row'));
   private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
   private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
+  private logoutButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Logout'))
 
   openNewSessionPage() {
     this.openListingSubMenu('New Session');
@@ -25,6 +26,10 @@ export class TopMenu {
       'Cant find Calendar menu button'
     );
     this.parentElement.element(this.calendarButtonSelector).click();
+  }
+
+  clickOnLogoutButton() {
+    this.logoutButtonElement.click()
   }
 
   private openListingSubMenu(optionName: string) {

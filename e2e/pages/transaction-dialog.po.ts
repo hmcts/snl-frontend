@@ -16,6 +16,7 @@ export class TransactionDialogPage {
     const acceptButton = element(by.id('okButton'));
     browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal);
     acceptButton.click();
+    browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal);
   }
 
   isDisplayed(): promise.Promise<boolean> {

@@ -30,7 +30,21 @@ exports.config = {
         defaultTimeoutInterval: 130000,
         print: function () {}
     },
+    plugins: [{
+        package: 'protractor-screenshoter-plugin',
+        screenshotPath: './REPORTS/e2e',
+        screenshotOnExpect: 'failure+success',
+        screenshotOnSpec: 'none',
+        withLogs: true,
+        writeReportFreq: 'asap',
+        imageToAscii: 'none',
+        clearFoldersBeforeTest: true
+      }],
     onPrepare() {
+        // returning the promise makes protractor wait for the reporter config before executing tests
+        global.browser.getProcessedConfig().then(function(config) {
+            //it is ok to be empty
+        });
         require('ts-node').register({
             project: require('path').join(__dirname, './tsconfig.e2e.json')
         });
