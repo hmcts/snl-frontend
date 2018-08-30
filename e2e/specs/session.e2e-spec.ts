@@ -13,7 +13,6 @@ import { HearingParts } from '../enums/hearing-parts';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
-import { SnackBar } from '../components/snack-bar';
 import { browser } from 'protractor';
 
 const now = moment()
