@@ -34,17 +34,29 @@ export class SessionsCreateFormComponent {
 
     @Input() judges: Judge[];
     @Input() rooms: Room[];
-    @Input() caseTypes: CaseType[];
+
+    @Input() set caseTypes(values: CaseType[]) {
+        if (values === undefined || values.length === 0) {
+            return;
+        }
+        this.session.caseType = values[0].code;
+        this.localCaseTypes = values;
+    }
+
+    localCaseTypes: CaseType[];
+
     @Input() set roomsLoading(roomsLoading: boolean) {
         this.roomsPlaceholder = roomsLoading ?
             SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER :
             SessionsCreateFormComponent.SELECT_ROOM_PLACEHOLDER;
     };
+
     @Input() set judgesLoading(judgesLoading: boolean) {
         this.judgesPlaceholder = judgesLoading ?
             SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER :
             SessionsCreateFormComponent.SELECT_JUDGE_PLACEHOLDER;
     };
+
     @Output() createSessionAction = new EventEmitter();
     @Output() cancelAction = new EventEmitter();
 
@@ -52,7 +64,6 @@ export class SessionsCreateFormComponent {
 
         this.roomsPlaceholder = SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER;
         this.judgesPlaceholder = SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER;
-
         this.session = {
             userTransactionId: undefined,
             id: undefined,

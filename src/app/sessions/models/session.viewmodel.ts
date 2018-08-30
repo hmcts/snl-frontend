@@ -2,6 +2,7 @@ import { Judge } from '../../judges/models/judge.model';
 import { Room } from '../../rooms/models/room.model';
 import { HearingPart } from '../../hearing-part/models/hearing-part';
 import * as moment from 'moment';
+import { CaseType } from '../../core/reference/models/case-type';
 
 export interface SessionViewModel {
     id: string;
@@ -9,7 +10,7 @@ export interface SessionViewModel {
     duration: number;
     room: Room;
     person: Judge;
-    caseType: string;
+    caseType: CaseType;
     hearingParts: HearingPart[];
     jurisdiction: string;
     version: number;

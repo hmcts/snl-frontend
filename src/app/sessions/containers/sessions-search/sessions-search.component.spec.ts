@@ -28,6 +28,7 @@ import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
+import { CaseType } from '../../../core/reference/models/case-type';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
@@ -37,7 +38,7 @@ const nowMoment = moment();
 const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
-const caseType = 'some-case-type';
+const caseType = { code: 'some-case-type-code', description: 'some-case-type' } as CaseType;
 const sessionDuration = 30;
 const overListedDuration = 31;
 const notListedDuration = 0;
@@ -84,7 +85,7 @@ const mockedSessions: Session[] = [
     duration: sessionDuration,
     room: roomId,
     person: judgeId,
-    caseType: caseType,
+    caseType: caseType.code,
     hearingTypes: ['some-hearingTypes'],
     jurisdiction: 'some jurisdiction',
     version: 1
@@ -234,7 +235,7 @@ describe('SessionsSearchComponent', () => {
       computeAndVerifyFilteredSessionToBeEmptyArray(component, sessionFilter);
     });
     it('should filter sessions by existing case types', () => {
-      sessionFilter.caseTypes = [caseType];
+      sessionFilter.caseTypes = [caseType.code];
       computeAndVerifyFilteredSession(component, sessionFilter);
     });
     it('should filter sessions by not existing case types', () => {

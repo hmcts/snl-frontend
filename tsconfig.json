@@ -15,6 +15,11 @@
       "es2017",
       "dom"
     ],
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "paths": {
+      "@testing/*": [
+        "testing/*"
+      ]
+    }
   }
 }

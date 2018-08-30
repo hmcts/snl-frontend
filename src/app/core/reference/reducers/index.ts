@@ -14,6 +14,11 @@ export const selectCaseTypes = createSelector(
     fromCaseType.selectAll
 );
 
+export const selectCaseTypesDictionary = createSelector(
+    fromCaseTypesState,
+    fromCaseType.selectEntities
+);
+
 export const selectHearingTypes = createSelector(
     fromHearingTypesState,
     fromHearingType.selectAll

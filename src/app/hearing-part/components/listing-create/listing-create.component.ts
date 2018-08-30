@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
@@ -12,11 +12,12 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
-import { Observable } from 'rxjs';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import { map } from 'rxjs/operators';
-import { asArray } from '../../../utils/array-utils';
+import * as fromReferenceData from 'app/core/reference/reducers';
+import { CaseType } from '../../../core/reference/models/case-type';
+import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/combineLatest';
 
 const DURATION_UNIT = 'minute';
 
@@ -31,12 +32,12 @@ export class ListingCreateComponent implements OnInit {
     listingCreate: FormGroup;
 
     hearings: string[] = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
-    caseTypes: string[] = ['SCLAIMS', 'FTRACK', 'MTRACK'];
-    communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom']
+    communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
     success: boolean;
     priorityValues = Object.values(Priority);
-    judges$: Observable<Judge[]>;
+    judges: Judge[] = [];
+    caseTypes: CaseType[] = [];
 
     public listing: ListingCreate;
 
@@ -47,10 +48,16 @@ export class ListingCreateComponent implements OnInit {
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = error.message;
         });
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
-
-        this.initiateListing();
-        this.initiateForm();
+        this.store.select(fromJudges.getJudges).withLatestFrom(
+            this.store.select(fromReferenceData.selectCaseTypes)
+            , (judges, caseTypes) => {
+                this.judges = Object.values(judges);
+                this.caseTypes = caseTypes;
+            }
+        ).subscribe((data) => {
+            this.initiateListing();
+            this.initiateForm();
+        });
     }
 
     ngOnInit() {
@@ -71,11 +78,11 @@ export class ListingCreateComponent implements OnInit {
 
     updateDuration(durationValue) {
         if (durationValue !== undefined && durationValue !== null) {
-            this.listing.duration = moment.duration(durationValue, 'minute')
+            this.listing.duration = moment.duration(durationValue, 'minute');
         }
     }
 
-    targetDatesValidator(control: AbstractControl): {[key: string]: boolean} {
+    targetDatesValidator(control: AbstractControl): { [key: string]: boolean } {
         const targetFrom = control.get('targetFrom').value as moment.Moment;
         const targetTo = control.get('targetTo').value as moment.Moment;
 
@@ -83,7 +90,7 @@ export class ListingCreateComponent implements OnInit {
             return null;
         }
 
-        return targetFrom.isSameOrBefore(targetTo) ? null : { targetFromAfterTargetTo: true };
+        return targetFrom.isSameOrBefore(targetTo) ? null : {targetFromAfterTargetTo: true};
     }
 
     private initiateListing() {
@@ -92,7 +99,7 @@ export class ListingCreateComponent implements OnInit {
             id: undefined,
             caseNumber: `number-${now.toISOString()}`,
             caseTitle: `title-${now.toISOString()}`,
-            caseType: this.caseTypes[0],
+            caseType: this.caseTypes[0].code,
             hearingType: this.hearings[0],
             duration: moment.duration(30, DURATION_UNIT),
             scheduleStart: now,
@@ -117,6 +124,6 @@ export class ListingCreateComponent implements OnInit {
                 targetFrom: new FormControl(this.listing.scheduleStart),
                 targetTo: new FormControl(this.listing.scheduleEnd),
             }, this.targetDatesValidator)
-        })
+        });
     }
 }

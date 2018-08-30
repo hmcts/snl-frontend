@@ -7,7 +7,7 @@ export interface HearingPart {
     caseNumber: string;
     caseTitle: string;
     caseType: string;
-    hearingType: string
+    hearingType: string; // | HearingType // TODO implements this
     duration: moment.Duration
     scheduleStart: Date;
     scheduleEnd: Date;

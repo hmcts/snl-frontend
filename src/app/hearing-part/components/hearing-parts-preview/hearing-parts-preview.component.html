@@ -22,7 +22,7 @@
 
   <ng-container matColumnDef="caseType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">

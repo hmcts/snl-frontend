@@ -5,6 +5,8 @@ import * as SessionActions from '../../actions/session.action';
 import { State } from '../../../app.state';
 import { select, Store } from '@ngrx/store';
 import * as fromRooms from '../../../rooms/reducers';
+import * as fromReferenceData from 'app/core/reference/reducers';
+import { CaseType } from 'app/core/reference/models/case-type';
 import { Judge } from '../../../judges/models/judge.model';
 import { map } from 'rxjs/operators';
 import * as fromSessionIndex from '../../reducers';
@@ -33,6 +35,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     filterData: SessionPropositionQuery;
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
+    caseTypes$: Observable<CaseType[]>;
     sessionPropositions$: Observable<SessionPropositionView[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
@@ -46,6 +49,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     ) {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
+        this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
         this.sessionPropositions$ = this.store.pipe(
             select(fromSessionIndex.getFullSessionPropositions), map(asArray)
         ) as Observable<SessionPropositionView[]>;
@@ -102,6 +106,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 } as SessionCreate,
                 rooms$: this.rooms$,
                 judges$: this.judges$,
+                caseTypes$: this.caseTypes$,
                 onCreateSessionAction: session => this.dialogSessionCreateClicked(session),
                 onCancelAction: () => this.closeSessionCreateDialog()
             },
