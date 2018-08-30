@@ -5,7 +5,7 @@ import { HearingType } from '../models/hearing-type';
 export interface HearingTypeState extends EntityState<HearingType> {
 }
 
-export const adapter: EntityAdapter<HearingType> = createEntityAdapter<HearingType>();
+export const adapter: EntityAdapter<HearingType> = createEntityAdapter<HearingType>({selectId: (model) => model.code});
 
 export const initialHearingTypeState: HearingTypeState = adapter.getInitialState();
 

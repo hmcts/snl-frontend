@@ -106,7 +106,8 @@ export const {
 } = fromSessions.adapter.getSelectors(getSessionsEntitiesState);
 
 export const getFullSessions = createSelector(
-    getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getHearingParts, fromReferenceData.selectCaseTypesDictionary,
+    getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getFullHearingParts,
+    fromReferenceData.selectCaseTypesDictionary,
     (sessions, rooms, judges, inputHearingParts, caseTypes) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}

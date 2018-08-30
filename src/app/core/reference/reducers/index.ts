@@ -24,6 +24,11 @@ export const selectHearingTypes = createSelector(
     fromHearingType.selectAll
 );
 
+export const selectHearingTypesDictionary = createSelector(
+    fromHearingTypesState,
+    fromHearingType.selectEntities
+);
+
 export const selectRoomTypes = createSelector(
     fromRoomTypesState,
     fromRoomType.selectAll
