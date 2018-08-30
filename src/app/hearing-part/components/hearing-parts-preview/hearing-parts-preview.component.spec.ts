@@ -1,4 +1,4 @@
-import { Store, StoreModule } from '@ngrx/store';
+import {  StoreModule } from '@ngrx/store';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import * as fromHearingParts from '../../reducers';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
@@ -21,12 +21,15 @@ import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-const openDialogMockObj = {
-    afterClosed: (): Observable<boolean> => new Observable(() => {})
+const openDialogMockObjConfirmed = {
+    afterClosed: (): Observable<boolean> => Observable.of(true)
 };
-// let storeSpy: jasmine.Spy;
+
+const openDialogMockObjDeclined = {
+    afterClosed: (): Observable<boolean> => Observable.of(false)
+};
+let hpms: HearingPartModificationService;
 let component: HearingPartsPreviewComponent;
-// let store: Store<fromHearingParts.State>;
 let fixture: ComponentFixture<HearingPartsPreviewComponent>;
 
 describe('HearingPartPreviewComponent', () => {
@@ -68,6 +71,8 @@ describe('HearingPartPreviewComponent', () => {
     fixture = TestBed.createComponent(HearingPartsPreviewComponent);
     component = fixture.componentInstance;
     // store = TestBed.get(Store);
+    hpms = TestBed.get(HearingPartModificationService);
+    spyOn(hpms, 'deleteHearingPart');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
     component.hearingParts = [generateHearingParts('123')];
   });
@@ -78,33 +83,53 @@ describe('HearingPartPreviewComponent', () => {
     });
   });
 
-  describe('ngOnInit', () => {
-    it('should dispatch Get Judges ac ', () => {
+  describe('', () => {
+    it('should define datasource', () => {
         component.ngOnInit()
 
         expect(component.dataSource).toBeDefined();
     });
 
-    it('should dispatch Get Judg ction', () => {
+    it('has notes should properly verify notes of hearingparts', () => {
         let hasNotes = component.hasNotes(generateHearingParts('asd'));
 
         expect(hasNotes).toBeFalsy();
     });
 
-    it('should dispatch Get Judges action', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObj);
+    it('confirming on delete dialog should call service method', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
         component.openDeleteDialog({...generateHearingParts('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
+        expect(hpms.deleteHearingPart).toHaveBeenCalled();
     });
 
-    it('should dispatch Get Jusdsddges action', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObj);
+    it('confirming on edit dialog should call service method', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
         component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
+
+    });
+
+    it('declining on delete dialog should not call service method', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
+
+        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+
+        expect(matDialogSpy.open).toHaveBeenCalled();
+        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
+    });
+
+    it('declining on edit dialog should not call service method', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
+
+        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+
+        expect(matDialogSpy.open).toHaveBeenCalled();
+        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
     });
   });
 });
