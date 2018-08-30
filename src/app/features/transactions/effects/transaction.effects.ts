@@ -47,7 +47,6 @@ export class TransactionEffects {
         mergeMap(action =>
             this.transactionService.getUserTransaction(action.payload.id).pipe(
                 map(transcation => {
-                    console.log(transcation);
                     if (transcation !== null &&
                         transcation.status !== TransactionStatuses.STARTED &&
                         transcation.status !== TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT &&
