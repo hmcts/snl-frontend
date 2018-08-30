@@ -1,4 +1,4 @@
-import { Store, StoreModule } from '@ngrx/store';
+import { StoreModule } from '@ngrx/store';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import * as fromHearingParts from '../../reducers';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
