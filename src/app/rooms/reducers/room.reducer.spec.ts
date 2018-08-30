@@ -35,7 +35,7 @@ describe('RoomReducer', () => {
 });
 
 function stateWith(roomReducer): State {
-    return { sessions: { rooms: roomReducer, sessions: null, sessionTransaction: null }}
+    return { sessions: { rooms: roomReducer, sessions: null }}
 };
 
 function generateRoom(id: string): Room {
