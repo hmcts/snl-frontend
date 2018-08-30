@@ -48,7 +48,7 @@ const listingRequest = {
   ...displayedListingRequestData
 };
 
-describe('Amend Listing Request', () => {
+xdescribe('Amend Listing Request', () => {
   beforeAll(() => loginFlow.loginIfNeeded());
   describe('Create Listing Request via API', () => {
     it('should create listing request', (done) => {

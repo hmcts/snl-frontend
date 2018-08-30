@@ -13,7 +13,6 @@ import { HearingParts } from '../enums/hearing-parts';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
-import { SnackBar } from '../components/snack-bar';
 import { browser, protractor } from 'protractor';
 
 const now = moment()
@@ -30,7 +29,6 @@ const caseTitle = 'e2e Test'
 const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
-const listingCreatedNoteText = 'Listing request created!'
 
 const origFn = browser.driver.controlFlow().execute;
 
@@ -81,7 +79,6 @@ const transactionDialogPage = new TransactionDialogPage()
 const listingCreationPage = new ListingCreationPage()
 const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
-const snackBar = new SnackBar();
 let numberOfVisibleEvents: number;
 
 describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
