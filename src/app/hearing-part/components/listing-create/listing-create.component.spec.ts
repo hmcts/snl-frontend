@@ -1,4 +1,3 @@
-import { MockStore } from '@testing/utils';
 import { Store, StoreModule } from '@ngrx/store';
 import { ListingCreateComponent } from './listing-create.component';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
@@ -40,7 +39,7 @@ import { State } from '../../../app.state';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
-let store: MockStore<State>;
+let store: Store<State>;
 let fixture: ComponentFixture<ListingCreateComponent>;
 let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 

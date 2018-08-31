@@ -1,6 +1,6 @@
 import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
-import * as fromReferenceData from '../../../core/reference/reducers/index';
+import * as fromReferenceData from '../../core/reference/reducers/index';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { getNotes } from '../../notes/reducers';
 import { HearingPartViewModel } from '../models/hearing-part.viewmodel';

@@ -4,7 +4,7 @@ import * as fromHearingPartIndex from '../../hearing-part/reducers';
 import * as fromSessions from './session.reducer'
 import * as fromSessionTransaction from './transaction.reducer'
 import * as fromRoot from '../../app.state';
-import * as fromReferenceData from 'app/core/reference/reducers';
+import * as fromReferenceData from '../../core/reference/reducers';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
 import { Session } from '../models/session.model';
