@@ -50,7 +50,7 @@ const stubAppConfig = {getApiUrl: () => 'https://cosmitoniepasi'};
 const stubJudges: Judge[] = [{id: 'judge-id', name: 'some-judge-name'}];
 const stubCaseTypes: CaseType[] = [{code: 'case-type-code', description: 'case-type', hearingTypes: []}];
 
-fdescribe('ListingCreateComponent', () => {
+describe('ListingCreateComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [

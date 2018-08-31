@@ -13,6 +13,9 @@ import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.
 import * as moment from 'moment';
 import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
+import * as referenceDataActions from 'app/core/reference/actions/reference-data.action';
+import * as caseTypeReducers from 'app/core/reference/reducers/case-type.reducer';
+import * as hearingTypeReducers from 'app/core/reference/reducers/hearing-type.reducer';
 import * as judgesReducers from '../../../judges/reducers';
 import * as notesReducers from '../../../notes/reducers';
 
@@ -29,6 +32,8 @@ import { Note } from '../../../notes/models/note.model';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { HearingPart } from '../../../hearing-part/models/hearing-part';
+import { HearingType } from '../../../core/reference/models/hearing-type';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
@@ -38,7 +43,10 @@ const nowMoment = moment();
 const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
-const caseType = { code: 'some-case-type-code', description: 'some-case-type' } as CaseType;
+const stubCaseType = {code: 'some-case-type-code', description: 'some-case-type'} as CaseType;
+const stubCaseTypes = [stubCaseType];
+const stubHearingType = {code: 'some-hearing-type-code', description: 'some-hearing-type'} as HearingType;
+const stubHearingTypes = [stubHearingType];
 const sessionDuration = 30;
 const overListedDuration = 31;
 const notListedDuration = 0;
@@ -54,29 +62,37 @@ const mockedNotes: Note[] = [
         entityType: 'ListingRequest'
     }];
 
-const mockedUnlistedHearingPart: HearingPartViewModel = {
+const mockedUnlistedHearingPart: HearingPart = {
     id: 'some-id',
     session: undefined,
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
-    caseType: 'some-case-type',
-    hearingType: 'some-hearing-type',
+    caseType: stubCaseType.code,
+    hearingType: stubHearingType.code,
     duration: moment.duration(sessionDuration),
     scheduleStart: now,
     scheduleEnd: now,
     version: 2,
     priority: Priority.Low,
-    notes: mockedNotes,
-    reservedJudge: mockedJudges[0],
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter'
 };
+const mockedUnlistedHearingPartVM: HearingPartViewModel = {
+    ...mockedUnlistedHearingPart,
+    caseType: stubCaseType,
+    hearingType: stubHearingType,
+    notes: mockedNotes,
+    reservedJudge: mockedJudges[0]
+};
 
-const mockedUnlistedHearingParts: HearingPartViewModel[] = [mockedUnlistedHearingPart];
+const mockedUnlistedHearingPartsVM: HearingPartViewModel[] = [mockedUnlistedHearingPartVM];
+const mockedUnlistedHearingParts: HearingPart[] = [mockedUnlistedHearingPart];
 
 // same as unlisted, but with session set to matching id in Session
+let mockedListedHearingPartVM = { ...mockedUnlistedHearingPartVM, session: 'some-session-id' };
 let mockedListedHearingPart = { ...mockedUnlistedHearingPart, session: 'some-session-id' };
-const mockedListedHearingParts: HearingPartViewModel[] = [mockedListedHearingPart];
+const mockedListedHearingPartsVM: HearingPartViewModel[] = [mockedListedHearingPartVM];
+const mockedListedHearingParts: HearingPart[] = [mockedListedHearingPart];
 
 const mockedSessions: Session[] = [
   {
@@ -85,8 +101,8 @@ const mockedSessions: Session[] = [
     duration: sessionDuration,
     room: roomId,
     person: judgeId,
-    caseType: caseType.code,
-    hearingTypes: ['some-hearingTypes'],
+    caseType: stubCaseType.code,
+    hearingTypes: [stubHearingType.code],
     jurisdiction: 'some jurisdiction',
     version: 1
   }
@@ -103,6 +119,8 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('sessions', sessionReducers.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
+        StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+        StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
         BrowserAnimationsModule
       ],
       providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
@@ -126,12 +144,14 @@ describe('SessionsSearchComponent', () => {
       expect(component).toBeDefined();
     });
     it('should fetch hearingParts', () => {
+      store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
+      store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
       store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearingParts$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual(mockedUnlistedHearingParts);
+        expect(hearingParts).toEqual(mockedUnlistedHearingPartsVM);
       });
     });
     it('should fetch rooms', () => {
@@ -147,10 +167,14 @@ describe('SessionsSearchComponent', () => {
       });
     });
     it('should fetch full sessions', () => {
+      store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
+      store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
+      store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));
+
       component.sessions$.subscribe(sessions => {
         expect(sessions).toEqual(mockedFullSession);
       });
@@ -235,7 +259,7 @@ describe('SessionsSearchComponent', () => {
       computeAndVerifyFilteredSessionToBeEmptyArray(component, sessionFilter);
     });
     it('should filter sessions by existing case types', () => {
-      sessionFilter.caseTypes = [caseType.code];
+      sessionFilter.caseTypes = [stubCaseType.code];
       computeAndVerifyFilteredSession(component, sessionFilter);
     });
     it('should filter sessions by not existing case types', () => {
@@ -282,8 +306,8 @@ describe('SessionsSearchComponent', () => {
 
   describe('selectHearingPart', () => {
     it('should set selectedHearingPart', () => {
-      component.selectHearingPart(mockedUnlistedHearingPart);
-      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingPart);
+      component.selectHearingPart(mockedUnlistedHearingPartVM);
+      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingPartVM);
     });
   });
 
@@ -379,8 +403,8 @@ function defaultFullMockedSession(): SessionViewModel {
     duration: sessionDuration,
     room: mockedRooms[0],
     person: mockedJudges[0],
-    caseType: caseType,
-    hearingParts: [mockedListedHearingParts[0]],
+    caseType: stubCaseType,
+    hearingParts: mockedListedHearingPartsVM,
     jurisdiction: 'some jurisdiction',
     version: 1,
     allocated: moment.duration('PT0.03S'),
