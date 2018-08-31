@@ -29,20 +29,6 @@ const caseTitle = 'e2e Test'
 const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
-const listingCreatedNoteText = 'Listing request created!'
-
-const origFn = browser.driver.controlFlow().execute;
-
-browser.driver.controlFlow().execute = function() {
-    const args = arguments;
-
-    // queue 100ms wait
-    origFn.call(browser.driver.controlFlow(), function() {
-        return protractor.promise.delayed(100);
-    });
-
-    return origFn.apply(browser.driver.controlFlow(), args);
-};
 
 const listingCreationForm: ListingCreationForm = {
   caseNumber,
