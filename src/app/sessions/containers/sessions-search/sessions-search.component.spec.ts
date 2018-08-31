@@ -13,9 +13,9 @@ import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.
 import * as moment from 'moment';
 import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
-import * as referenceDataActions from 'app/core/reference/actions/reference-data.action';
-import * as caseTypeReducers from 'app/core/reference/reducers/case-type.reducer';
-import * as hearingTypeReducers from 'app/core/reference/reducers/hearing-type.reducer';
+import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
+import * as caseTypeReducers from '../../../core/reference/reducers/case-type.reducer';
+import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as judgesReducers from '../../../judges/reducers';
 import * as notesReducers from '../../../notes/reducers';
 

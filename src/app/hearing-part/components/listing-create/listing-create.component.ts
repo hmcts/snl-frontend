@@ -14,7 +14,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import * as fromReferenceData from 'app/core/reference/reducers';
+import * as fromReferenceData from '../../../core/reference/reducers';
 import { CaseType } from '../../../core/reference/models/case-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
@@ -52,7 +52,7 @@ export class ListingCreateComponent implements OnInit {
         });
         this.store.select(fromJudges.getJudges).withLatestFrom(
             this.store.select(fromReferenceData.selectCaseTypes)
-            , (judges, caseTypes) => {
+            , (judges, caseTypes: CaseType[]) => {
                 this.judges = Object.values(judges);
                 this.caseTypes = caseTypes;
             }
