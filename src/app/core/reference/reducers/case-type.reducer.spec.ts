@@ -24,7 +24,7 @@ describe('CaseTypeReducer', () => {
 
         it('the previous state entities should be replaced by new ones', () => {
             let state = reducer(initialState, new fromReferenceData.GetAllCaseTypeComplete([caseType]));
-            state = reducer(initialState, new fromReferenceData.GetAllCaseTypeComplete([caseTypeTwo]));
+            state = reducer(state, new fromReferenceData.GetAllCaseTypeComplete([caseTypeTwo]));
 
             expect(fromCaseType.selectEntities(state)).toEqual({[caseTypeTwo.code]: caseTypeTwo});
         });
