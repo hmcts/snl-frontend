@@ -27,7 +27,7 @@ describe('ReferenceDataService', () => {
         httpMock.verify();
     });
 
-    fdescribe('getCaseTypes', () => {
+    describe('getCaseTypes', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/reference/case-types`;
 
         it('should call proper url', () => {
@@ -37,7 +37,7 @@ describe('ReferenceDataService', () => {
             httpMock.expectOne(expectedUrl).flush([]);
         });
     });
-    fdescribe('getHearingTypes', () => {
+    describe('getHearingTypes', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/reference/hearing-types`;
 
         it('should call proper url', () => {
@@ -47,7 +47,7 @@ describe('ReferenceDataService', () => {
             httpMock.expectOne(expectedUrl).flush([]);
         });
     });
-    fdescribe('getSessionTypes', () => {
+    describe('getSessionTypes', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/reference/session-types`;
 
         it('should call proper url', () => {
@@ -57,7 +57,7 @@ describe('ReferenceDataService', () => {
             httpMock.expectOne(expectedUrl).flush([]);
         });
     });
-    fdescribe('getRoomTypes', () => {
+    describe('getRoomTypes', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/reference/room-types`;
 
         it('should call proper url', () => {
@@ -67,5 +67,4 @@ describe('ReferenceDataService', () => {
             httpMock.expectOne(expectedUrl).flush([]);
         });
     });
-
 });

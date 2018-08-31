@@ -55,7 +55,7 @@ describe('Reference Data Effects', () => {
             actions = hot('--a-', { a: action });
             const expected = cold('--b', { b: expectedAction });
 
-            expect(effects.getCaseTypes$).toBeObservable(expected);
+            expect(effects.getHearingTypes$).toBeObservable(expected);
         });
 
         it('with it should call service and call  \'GetAllSessionTypeComplete\' action', () => {
@@ -67,7 +67,7 @@ describe('Reference Data Effects', () => {
             actions = hot('--a-', { a: action });
             const expected = cold('--b', { b: expectedAction });
 
-            expect(effects.getCaseTypes$).toBeObservable(expected);
+            expect(effects.getSessionTypes$).toBeObservable(expected);
         });
 
         it('with it should call service and call  \'GetAllRoomTypeComplete\' action', () => {
@@ -79,7 +79,7 @@ describe('Reference Data Effects', () => {
             actions = hot('--a-', { a: action });
             const expected = cold('--b', { b: expectedAction });
 
-            expect(effects.getCaseTypes$).toBeObservable(expected);
+            expect(effects.getRoomTypes$).toBeObservable(expected);
         });
     });
 });
