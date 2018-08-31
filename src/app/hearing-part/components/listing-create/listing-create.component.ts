@@ -16,8 +16,10 @@ import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
 import * as fromReferenceData from '../../../core/reference/reducers';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
+import { MatSelectChange } from '@angular/material';
 
 const DURATION_UNIT = 'minute';
 
@@ -30,8 +32,7 @@ export class ListingCreateComponent implements OnInit {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
     listingCreate: FormGroup;
-
-    hearings: string[] = ['Preliminary Hearing', 'Trial Hearing', 'Adjourned Hearing'];
+    hearings: HearingType[] = []
     communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
     success: boolean;
@@ -95,14 +96,24 @@ export class ListingCreateComponent implements OnInit {
         return targetFrom.isSameOrBefore(targetTo) ? null : {targetFromAfterTargetTo: true};
     }
 
+    onCaseTypeChanged(event: MatSelectChange) {
+        let newHearings = []
+        if ( event.value !== undefined ) {
+            const selectedCode = event.value as string;
+            newHearings = this.caseTypes.find(ct => ct.code === selectedCode).hearingTypes;
+        }
+        this.hearings = newHearings;
+    }
+
     private initiateListing() {
         const now = moment();
+        this.hearings = this.caseTypes[0].hearingTypes;
         this.listing = {
             id: undefined,
             caseNumber: `number-${now.toISOString()}`,
             caseTitle: `title-${now.toISOString()}`,
             caseType: this.caseTypes[0].code,
-            hearingType: this.hearings[0],
+            hearingType: this.hearings[0].code,
             duration: moment.duration(30, DURATION_UNIT),
             scheduleStart: now,
             scheduleEnd: moment().add(30, 'day'),

@@ -17,14 +17,19 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *" [(ngModel)]="listing.caseType">
+                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *"
+                                [(ngModel)]="listing.caseType"
+                                (selectionChange)="onCaseTypeChanged($event)">
+                        <mat-option>None</mat-option>
                         <mat-option *ngFor="let case of caseTypes" selected="case.code === listing.caseType" [value]="case.code">{{case.description}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectHearingPart" formControlName="hearingType" placeholder="Hearing type *" [(ngModel)]="listing.hearingType" >
-                        <mat-option *ngFor="let hearing of hearings" selected="hearing == hearings[0]" [value]="hearing">{{hearing}}</mat-option>
+                    <mat-select id="selectHearingPart" formControlName="hearingType"
+                                placeholder="Hearing type *" [(ngModel)]="listing.hearingType">
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let hearing of hearings" selected="hearing.code == listing.hearingType" [value]="hearing.code">{{hearing.description}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 

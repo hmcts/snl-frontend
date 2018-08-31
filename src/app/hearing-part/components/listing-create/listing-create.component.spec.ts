@@ -36,6 +36,9 @@ import { CoreModule } from '../../../core/core.module';
 import { AppConfig } from '../../../app.config';
 import moment = require('moment');
 import { State } from '../../../app.state';
+import { HearingType } from '../../../core/reference/models/hearing-type';
+import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
+import * as notesReducers from '../../../notes/reducers';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -45,11 +48,16 @@ let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 
 let note;
 let secondNote;
-const stubAppConfig = {getApiUrl: () => 'https://cosmitoniepasi'};
+const stubAppConfig = {getApiUrl: () => 'https://fake.url'};
 const stubJudges: Judge[] = [{id: 'judge-id', name: 'some-judge-name'}];
-const stubCaseTypes: CaseType[] = [{code: 'case-type-code', description: 'case-type', hearingTypes: []}];
+const stubHearingTypes1: HearingType[] = [{code: 'hearing-type-code', description: 'hearing-type'}];
+const stubHearingTypes2: HearingType[] = [{code: 'hearing-type-code', description: 'hearing-type'}];
+const caseType = {code: 'case-type-code', description: 'case-type', hearingTypes: []};
+const caseTypeWht1 = {code: 'case-type-code1', description: 'case-type1', hearingTypes: stubHearingTypes1};
+const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearingTypes: stubHearingTypes2};
+const stubCaseTypes: CaseType[] = [caseType];
 
-describe('ListingCreateComponent', () => {
+fdescribe('ListingCreateComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -63,7 +71,9 @@ describe('ListingCreateComponent', () => {
                 StoreModule.forRoot({}),
                 StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
                 StoreModule.forFeature('judges', judgesReducers.reducers),
-                StoreModule.forFeature('caseTypes', fromCaseTypes.reducer),
+                StoreModule.forFeature('notes', notesReducers.reducers),
+                StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+                StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
                 EffectsModule.forRoot([]),
                 EffectsModule.forFeature([JudgeEffects, HearingPartEffects, ReferenceDataEffects]),
                 BrowserAnimationsModule,
@@ -324,6 +334,30 @@ describe('ListingCreateComponent', () => {
                 expect(createdListing.notes[0].entityType).toEqual('ListingRequest');
                 expect(createdListing.notes[1].entityType).toEqual('ListingRequest');
             });
+        });
+    });
+
+    describe('onCaseTypeChanged', () => {
+        it('should set hearings to caseType associated hearing types', () => {
+            storeSpy.calls.reset();
+
+            store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1, caseTypeWht2]));
+            component.listing.caseType = caseTypeWht2.code;
+            expect(component.hearings).toBe(stubHearingTypes2)
+
+            component.listing.caseType = caseTypeWht1.code
+            expect(component.hearings).toBe(stubHearingTypes1)
+        });
+
+        it('empty value should set hearings to empty array', () => {
+            storeSpy.calls.reset();
+            const onChangeSpy = spyOn(component, 'onCaseTypeChanged').and.callThrough();
+
+            store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1, caseTypeWht2]));
+            component.listing.caseType = null;
+            expect(component.hearings).toBe([]);
+
+            expect(onChangeSpy).toHaveBeenCalledTimes(1);
         });
     });
 });
