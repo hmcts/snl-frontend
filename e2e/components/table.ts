@@ -1,15 +1,17 @@
 import { ElementFinder, by } from 'protractor';
+import { filter } from 'p-iteration';
 
 export class Table {
   constructor(private parentElement: ElementFinder) {}
 
-  rowThatContains(...values: string[]): ElementFinder {
-    return this.parentElement
-      .all(by.css('mat-row'))
-      .filter(el => {
-        return el.getText().then(text => this.areValuesInText(text, values));
-      })
-      .first();
+  async rowThatContains(...values: string[]): Promise<ElementFinder> {
+    const rows = await this.parentElement.all(by.css('mat-row')).asElementFinders_()
+    const selectedRow = await filter(rows, async (row: ElementFinder): Promise<boolean> => {
+      const rowText = await row.getText()
+      return this.areValuesInText(rowText, values)
+    })
+
+    return selectedRow[0];
   }
 
   private areValuesInText(text: string, values: string[]): boolean {

@@ -1,4 +1,5 @@
-import { ElementFinder, Key, element, by, ElementArrayFinder } from 'protractor';
+import { ElementFinder, Key, element, by, ElementArrayFinder, ExpectedConditions, browser } from 'protractor';
+import { Wait } from '../enums/wait';
 
 export class ElementHelper {
   async clear(elem: ElementFinder, length?: number) {
@@ -8,36 +9,42 @@ export class ElementHelper {
     for (let i = 0; i < length; i++) {
       backspaceSeries += Key.BACK_SPACE;
     }
-    elem.sendKeys(backspaceSeries);
+    await elem.sendKeys(backspaceSeries);
   }
 
   async selectCheckbox(checkboxElement: ElementFinder, selected: boolean) {
     const isCheckboxSelected = await checkboxElement.isSelected();
     if (selected !== isCheckboxSelected) {
-      checkboxElement.click();
+      await checkboxElement.click();
     }
   }
 
-  typeValue(htmlElement: ElementFinder, value: any) {
-    this.clear(htmlElement);
-    htmlElement.sendKeys(value);
+  async typeValue(htmlElement: ElementFinder, value: any): Promise<void> {
+    await this.clear(htmlElement);
+    await htmlElement.sendKeys(value);
   }
 
-  typeDate(dateInput: ElementFinder, date: string) {
-    dateInput.click();
-    this.clear(dateInput);
-    dateInput.sendKeys(date);
+  async typeDate(dateInput: ElementFinder, date: string): Promise<void> {
+    await dateInput.click();
+    await this.clear(dateInput);
+    return await dateInput.sendKeys(date);
   }
 
-  selectValueFromSelectOption(
-    selectOptionLocator: ElementFinder,
-    textToSelect: string
-  ) {
-    selectOptionLocator.click();
-    element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
+  async selectValueFromSingleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string) {
+    await selectOptionLocator.click();
+    await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();
+  }
+
+  async selectValueFromMultipleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string, loseFocusLocator: ElementFinder) {
+    await browser.wait(ExpectedConditions.elementToBeClickable(selectOptionLocator), Wait.normal)
+    await selectOptionLocator.click();
+    const option = element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
+    await browser.wait(ExpectedConditions.elementToBeClickable(option), Wait.normal)
+    await option.click();
     // dismiss popover with options
-    element(by.css('body')).click();
+    await browser.wait(ExpectedConditions.elementToBeClickable(loseFocusLocator), Wait.normal)
+    return await loseFocusLocator.click();
   }
 
   elementThatContains(elements: ElementArrayFinder, ...values: string[]): ElementFinder {

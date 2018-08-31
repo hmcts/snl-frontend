@@ -1,17 +1,17 @@
 import { ElementHelper } from '../utils/element-helper';
-import { by, element, promise } from 'protractor';
+import { by, element } from 'protractor';
 
 export class SessionDetailsDialogPage {
   private elementHelper = new ElementHelper();
 
-  isDialogWithTextsDisplayed(...text: string[]): promise.Promise<boolean> {
+  async isDialogWithTextsDisplayed(...text: string[]): Promise<boolean> {
     const eventsWrapper = element.all(by.css('app-details-dialog'));
-      return this.elementHelper
+    return await this.elementHelper
       .elementThatContains(eventsWrapper, ...text)
       .isDisplayed();
   }
 
-  close() {
-    element(by.id('close')).click();
+  async close() {
+    await element(by.id('close')).click();
   }
 }

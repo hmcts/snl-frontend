@@ -1,6 +1,7 @@
 import { ElementHelper } from '../utils/element-helper';
-import { element, by } from 'protractor';
+import { element, by, browser, ExpectedConditions } from 'protractor';
 import { ListingCreationForm } from '../models/listing-creation-form';
+import { Wait } from '../enums/wait';
 
 export class ListingCreationPage {
   private parentElement = element(by.css('app-listing-create'))
@@ -14,14 +15,18 @@ export class ListingCreationPage {
   private saveButton = this.parentElement.element(by.id('save'));
   private elementHelper = new ElementHelper();
 
-  createListingRequest(listingCreationForm: ListingCreationForm) {
-    this.elementHelper.typeValue(this.caseNumberInput, listingCreationForm.caseNumber);
-    this.elementHelper.typeValue(this.caseTitleInput, listingCreationForm.caseTitle);
-    this.elementHelper.selectValueFromSelectOption(this.selectCaseTypeSelectOption, listingCreationForm.caseType);
-    this.elementHelper.selectValueFromSelectOption(this.selectHearingPartSelectOption, listingCreationForm.hearingType);
-    this.elementHelper.typeValue(this.durationInput, listingCreationForm.duration);
-    this.elementHelper.typeDate(this.fromDateInput, listingCreationForm.fromDate);
-    this.elementHelper.typeDate(this.endDateInput, listingCreationForm.endDate);
-    this.saveButton.click();
+  async createListingRequest(listingCreationForm: ListingCreationForm): Promise<void> {
+    await this.elementHelper.typeValue(this.caseNumberInput, listingCreationForm.caseNumber);
+    await this.elementHelper.typeValue(this.caseTitleInput, listingCreationForm.caseTitle);
+    await this.elementHelper.selectValueFromSingleSelectOption(this.selectCaseTypeSelectOption, listingCreationForm.caseType);
+    await this.elementHelper.selectValueFromSingleSelectOption(this.selectHearingPartSelectOption, listingCreationForm.hearingType);
+    await this.elementHelper.typeValue(this.durationInput, listingCreationForm.duration);
+    await this.elementHelper.typeDate(this.fromDateInput, listingCreationForm.fromDate);
+    await this.elementHelper.typeDate(this.endDateInput, listingCreationForm.endDate);
+    return await this.saveButton.click();
+  }
+
+  async waitUntilVisible() {
+    await browser.wait(ExpectedConditions.visibilityOf(this.parentElement), Wait.normal)
   }
 }

@@ -7,36 +7,37 @@ export class TransactionDialogPage {
   private sessionButtonSelector = this.parentElement.element(by.cssContainingText('.mat-button-wrapper', 'Sessions'));
   private problemsDiv = element(by.id('problems'));
 
-  openSessionCreatePage() {
-    this.sessionButtonSelector.click();
-    element(by.linkText('Create')).click();
+  async openSessionCreatePage() {
+    await this.sessionButtonSelector.click();
+    await element(by.linkText('Create')).click();
   }
 
-  clickAcceptButton(): any {
+  async clickAcceptButton(): Promise<any> {
     const acceptButton = element(by.id('okButton'));
-    browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal);
-    acceptButton.click();
-    browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal);
+    await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal);
+    await acceptButton.click();
+    await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal);
+    return await browser.waitForAngular()
   }
 
   isDisplayed(): promise.Promise<boolean> {
     return this.parentElement.isDisplayed();
   }
 
-  isSessionCreationSummaryDisplayed(): promise.Promise<boolean> {
-    browser.wait(
+  async isSessionCreationSummaryDisplayed(): Promise<boolean> {
+    await browser.wait(
       ExpectedConditions.visibilityOf(this.summaryCreationElement),
       Wait.normal
     );
-    return this.summaryCreationElement.isDisplayed();
+    return await this.summaryCreationElement.isDisplayed();
   }
 
   async isProblemWithTextDisplayed(problemText: string): Promise<boolean> {
-    browser.wait(
+    await browser.wait(
       ExpectedConditions.visibilityOf(this.problemsDiv),
       Wait.normal
     );
     const problemsDivText = await this.problemsDiv.getText();
-    return Promise.resolve(problemsDivText.indexOf(problemText) !== -1);
+    return await Promise.resolve(problemsDivText.indexOf(problemText) !== -1);
   }
 }
