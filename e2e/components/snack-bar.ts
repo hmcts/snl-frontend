@@ -1,4 +1,4 @@
-import { element, by, promise, ExpectedConditions, browser } from '../../node_modules/protractor';
+import { element, by, ExpectedConditions, browser } from '../../node_modules/protractor';
 import { Wait } from '../enums/wait';
 
 export class SnackBar {
