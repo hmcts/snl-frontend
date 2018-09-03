@@ -39,6 +39,7 @@ import { State } from '../../../app.state';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as notesReducers from '../../../notes/reducers';
+import { MatSelectChange } from '@angular/material';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -51,13 +52,11 @@ let secondNote;
 const stubAppConfig = {getApiUrl: () => 'https://fake.url'};
 const stubJudges: Judge[] = [{id: 'judge-id', name: 'some-judge-name'}];
 const stubHearingTypes1: HearingType[] = [{code: 'hearing-type-code', description: 'hearing-type'}];
-const stubHearingTypes2: HearingType[] = [{code: 'hearing-type-code', description: 'hearing-type'}];
-const caseType = {code: 'case-type-code', description: 'case-type', hearingTypes: []};
-const caseTypeWht1 = {code: 'case-type-code1', description: 'case-type1', hearingTypes: stubHearingTypes1};
-const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearingTypes: stubHearingTypes2};
-const stubCaseTypes: CaseType[] = [caseType];
+const stubHearingTypes2: HearingType[] = [{code: 'hearing-type-code2', description: 'hearing-type2'}];
+const caseTypeWht1 = {code: 'case-type-code1', description: 'case-type1', hearingTypes: stubHearingTypes1} as CaseType;
+const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearingTypes: stubHearingTypes2} as CaseType;
 
-fdescribe('ListingCreateComponent', () => {
+describe('ListingCreateComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -102,7 +101,7 @@ fdescribe('ListingCreateComponent', () => {
         store = TestBed.get(Store);
         storeSpy = spyOn(store, 'dispatch').and.callThrough();
 
-        store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
+        store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1]));
         store.dispatch(new JudgeActions.GetComplete(stubJudges));
 
         listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
@@ -123,7 +122,7 @@ fdescribe('ListingCreateComponent', () => {
         });
 
         it('should get caseTypes from store', () => {
-            expect(component.caseTypes).toEqual(stubCaseTypes);
+            expect(component.caseTypes).toEqual([caseTypeWht1]);
         });
     });
 
@@ -338,26 +337,27 @@ fdescribe('ListingCreateComponent', () => {
     });
 
     describe('onCaseTypeChanged', () => {
-        it('should set hearings to caseType associated hearing types', () => {
-            storeSpy.calls.reset();
-
+        beforeEach(() => {
             store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1, caseTypeWht2]));
-            component.listing.caseType = caseTypeWht2.code;
-            expect(component.hearings).toBe(stubHearingTypes2)
+            storeSpy.calls.reset();
+            fixture = TestBed.createComponent(ListingCreateComponent);
+            component = fixture.componentInstance;
+        });
 
-            component.listing.caseType = caseTypeWht1.code
+        it('should set hearings to caseType associated hearing types', () => {
+            component.onCaseTypeChanged(new MatSelectChange(null, caseTypeWht2.code));
+            expect(component.hearings).toBe(stubHearingTypes2);
+
+            component.onCaseTypeChanged(new MatSelectChange(null, caseTypeWht1.code));
             expect(component.hearings).toBe(stubHearingTypes1)
         });
 
         it('empty value should set hearings to empty array', () => {
-            storeSpy.calls.reset();
-            const onChangeSpy = spyOn(component, 'onCaseTypeChanged').and.callThrough();
+            component.onCaseTypeChanged(new MatSelectChange(null, null));
+            expect(component.hearings).toEqual([]);
 
-            store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1, caseTypeWht2]));
-            component.listing.caseType = null;
-            expect(component.hearings).toBe([]);
-
-            expect(onChangeSpy).toHaveBeenCalledTimes(1);
+            component.onCaseTypeChanged(new MatSelectChange(null, undefined));
+            expect(component.hearings).toEqual([]);
         });
     });
 });

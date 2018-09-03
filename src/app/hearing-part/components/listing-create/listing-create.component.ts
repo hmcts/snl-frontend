@@ -32,7 +32,7 @@ export class ListingCreateComponent implements OnInit {
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
     listingCreate: FormGroup;
-    hearings: HearingType[] = []
+    hearings: HearingType[] = [];
     communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
     success: boolean;
@@ -97,8 +97,8 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onCaseTypeChanged(event: MatSelectChange) {
-        let newHearings = []
-        if ( event.value !== undefined ) {
+        let newHearings = [];
+        if ( !(event.value === undefined || event.value === null) ) {
             const selectedCode = event.value as string;
             newHearings = this.caseTypes.find(ct => ct.code === selectedCode).hearingTypes;
         }
