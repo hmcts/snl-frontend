@@ -45,7 +45,9 @@ export class ListingCreateComponent implements OnInit {
                 private readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
-            this.errors = error.message;
+            if (error) {
+                this.errors = error.message;
+            }
         });
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
 
