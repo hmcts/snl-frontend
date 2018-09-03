@@ -36,6 +36,7 @@ module.exports = function (config) {
     browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 60000,
     flags: [
+      '--headless',
       '--disable-web-security',
       '--disable-gpu',
       '--no-sandbox'
