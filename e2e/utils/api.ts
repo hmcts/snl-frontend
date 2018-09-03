@@ -1,31 +1,26 @@
-import { HttpClient } from 'protractor-http-client'
-import { ResponsePromise } from 'protractor-http-client/dist/promisewrappers';
-import { promise } from 'protractor';
 import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import { CONFIG } from '../../url-config';
+import * as rm from 'typed-rest-client/HttpClient';
 
 export class API {
-    private static http = new HttpClient(CONFIG.apiUrl);
-    private static headers = { 'Authorization': '' }
+    private static headers = { 'Authorization': '', 'Content-Type': 'application/json' }
+    private static rest = new rm.HttpClient('e2e-tests', null, {headers: API.headers});
 
-    static async createListingRequest(body: CreateListingRequestBody): Promise<ResponsePromise> {
+    static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
-        const response = await this.http.put('/hearing-part/create', body, API.headers);
-        this.http.post(`/user-transaction/${body.userTransactionId}/commit`, body, API.headers);
-
-        return response;
+        const response = await this.rest.put(`${CONFIG.apiUrl}/hearing-part/create`, JSON.stringify(body), API.headers);
+        await this.rest.post(`${CONFIG.apiUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
+        return response.message.statusCode;
     }
 
-    private static login(): promise.Promise<any> {
+    private static async login() {
         const body = {
             username: Credentials.ValidOfficerUsername,
             password: Credentials.ValidOfficerPassword
         };
-
-        return this.http.post('/security/signin', body, API.headers).then((response: ResponsePromise|any) => {
-            API.headers.Authorization = `${response.body.tokenType} ${response.body.accessToken}`;
-            return response
-        });
+        const response = await API.rest.post(`${CONFIG.apiUrl}/security/signin`, JSON.stringify(body), API.headers)
+        const responseBody = JSON.parse(await response.readBody());
+        API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
     }
 }

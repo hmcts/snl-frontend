@@ -1,11 +1,11 @@
 import { FilterSessionsComponentForm } from './../models/filter-sessions-component-form';
 import { Judges } from '../enums/judges';
 import { Rooms } from '../enums/rooms';
-import { element, by, promise, browser, ExpectedConditions } from 'protractor';
+import { element, by, browser, ExpectedConditions } from 'protractor';
 import { CaseTypes } from '../enums/case-types';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
-import { By } from 'selenium-webdriver';
+import { Wait } from '../enums/wait';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
@@ -13,58 +13,61 @@ export class SessionSearchPage {
     private listingRequestsTable = new Table(element(by.css('app-hearing-parts-preview#hearing-part-preview')));
     public assignButton = element(by.id('assign'));
 
-    filterSession(formValues: FilterSessionsComponentForm) {
-        this.filterSessionComponent.filter(formValues);
+    async clickAssignButton() {
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
+        await this.assignButton.click()
+    }
+
+    async filterSession(formValues: FilterSessionsComponentForm) {
+        await this.filterSessionComponent.filter(formValues);
     }
 
     async selectSession(judge: Judges, date: string, time: string, room: Rooms, caseType: CaseTypes) {
-        this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, caseType)
+        await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, caseType)
     }
 
-    changeMaxItemsPerPage(value: string) {
-        element.all(by.css('.mat-paginator-page-size')).each(el => {
-            el.element(by.css('mat-select')).click();
+    async changeMaxItemsPerPage(value: string): Promise<any> {
+        await element.all(by.css('.mat-paginator-page-size')).reduce(async (prom, el) => {
+            await prom;
+            await el.element(by.css('mat-select')).click();
             const selectOpt = element(by.cssContainingText('.mat-option-text', value))
-            browser.wait(ExpectedConditions.elementToBeClickable(selectOpt), 3000)
-            selectOpt.click();
-        });
+            await browser.wait(
+                ExpectedConditions.elementToBeClickable(selectOpt),
+                Wait.normal,
+                `Option with text: ${value} is not clickable`
+            )
+            await selectOpt.click()
+            return await browser.wait(
+                ExpectedConditions.invisibilityOf(selectOpt),
+                Wait.normal,
+                `Option with text: ${value} wont disappear`
+            )
+        }, Promise.resolve());
     }
 
     async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes,
         targetScheduleFrom: string, targetScheduleTo: string) {
-        this.selectCheckBoxInRowWithValues(this.listingRequestsTable, caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
+        await this.selectCheckBoxInRowWithValues(this.listingRequestsTable,
+            caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
     }
 
-    isListingRequestDisplayed(...values: string[]): promise.Promise<boolean> {
-        const row = this.listingRequestsTable.rowThatContains(...values)
-        browser.wait(ExpectedConditions.visibilityOf(row), 3000)
-        return row.isDisplayed()
+    async isListingRequestDisplayed(...values: string[]): Promise<boolean> {
+        const row = await this.listingRequestsTable.rowThatContains(...values)
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+        return await row.isDisplayed()
     }
 
-    editListingRequestWithValues(...values: string[]) {
-        this.listingRequestsTable.rowThatContains(...values).element(by.cssContainingText('.clickable', 'edit')).click()
+    async editListingRequestWithValues(...values: string[]): Promise<void> {
+        const row = await this.listingRequestsTable.rowThatContains(...values)
+        await row.element(by.cssContainingText('.clickable', 'edit')).click()
     }
 
-    private selectCheckBoxInRowWithValues(table: Table, ...values: string[]) {
-        this.clickElementInRowWithValues(table, by.css('mat-checkbox'), ...values)
+    async waitUntilVisible() {
+        await browser.wait(ExpectedConditions.visibilityOf(this.assignButton), Wait.normal, 'Session search page is not visible')
     }
 
-
-    public isListingRequestPresent(...values) {
-        return this.listingRequestsTable.rowThatContains(...values).isPresent()
+    private async selectCheckBoxInRowWithValues(table: Table, ...values: string[]) {
+        const row = await table.rowThatContains(...values)
+        await row.element(by.css('mat-checkbox')).click()
     }
-
-
-    private clickElementInRowWithValues(table: Table, selector: By, ...values: string[]) {
-      table.rowThatContains(...values).element(selector).click()
-    }
-
-  async clickDeleteListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes,
-                                  targetScheduleFrom: string, targetScheduleTo: string) {
-    this.clickElementInRowWithValues(this.listingRequestsTable, by.css('.mat-column-delete .clickable'), caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
-  }
-
-  async clickDeleteListingRequestByCaseNumber(caseNumber: string) {
-    this.clickElementInRowWithValues(this.listingRequestsTable, by.css('.mat-column-delete .clickable'), caseNumber)
-  }
 }

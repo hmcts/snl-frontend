@@ -4,20 +4,20 @@ import { CalendarPage } from '../pages/calendar.po';
 export class NavigationFlow {
   topMenu = new TopMenu();
 
-  goToCalendarPage() {
-    this.topMenu.openCalendarPage();
-    new CalendarPage().openListView();
+  async goToCalendarPage() {
+    await this.topMenu.openCalendarPage();
+    await new CalendarPage().openListView();
   }
 
-  goToNewSessionPage() {
-    this.topMenu.openNewSessionPage();
+  async goToNewSessionPage() {
+    await this.topMenu.openNewSessionPage();
   }
 
-  goToNewListingRequestPage() {
-    this.topMenu.openNewListingRequestPage();
+  async goToNewListingRequestPage() {
+    await this.topMenu.openNewListingRequestPage();
   }
 
-  goToListHearingsPage() {
-    this.topMenu.openListHearingPage();
+  async goToListHearingsPage() {
+    await this.topMenu.openListHearingPage();
   }
 }

@@ -2,7 +2,6 @@ import { LoginFlow } from './../flows/login.flow';
 import { NavigationFlow } from './../flows/navigation.flow';
 import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
-import { ResponsePromise } from 'protractor-http-client/dist/promisewrappers';
 import { v4 as uuid } from 'uuid';
 import { HearingParts } from '../enums/hearing-parts';
 import { ListingCreationPage } from '../pages/listing-creation.po';
@@ -48,28 +47,27 @@ const listingRequest = {
   ...displayedListingRequestData
 };
 
-xdescribe('Amend Listing Request', () => {
-  beforeAll(() => loginFlow.loginIfNeeded());
+describe('Amend Listing Request', () => {
+  beforeAll(async () => {
+  await loginFlow.loginIfNeeded()
+  });
   describe('Create Listing Request via API', () => {
-    it('should create listing request', (done) => {
-      API.createListingRequest(listingRequest).then((response: ResponsePromise) => {
-        expect(response.statusCode).toEqual(200);
-        done();
-        navigationFlow.goToListHearingsPage();
-      });
+    it('should create listing request', async () => {
+      const statusCode = await API.createListingRequest(listingRequest)
+      expect(statusCode).toEqual(200);
     });
   });
   describe('Go to listing hearings page', () => {
-    it('created listing request should be visible on list', () => {
-      navigationFlow.goToListHearingsPage();
-      sessionSearchPage.changeMaxItemsPerPage('100');
-      const isListingRequestDisplayed = sessionSearchPage.isListingRequestDisplayed(...Object.values(displayedListingRequestData));
+    it('created listing request should be visible on list', async () => {
+      await navigationFlow.goToListHearingsPage();
+      await sessionSearchPage.changeMaxItemsPerPage('100');
+      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(displayedListingRequestData));
       expect(isListingRequestDisplayed).toBeTruthy();
     });
   });
   describe('Click on edit and change some values', () => {
-    it('new values should be visible on list', () => {
-      sessionSearchPage.editListingRequestWithValues(caseNumber);
+    it('new values should be visible on list', async () => {
+      await sessionSearchPage.editListingRequestWithValues(caseNumber);
       const newCaseNumber = `edited-${caseNumber}`;
       const newCaseTitle = `edited-${caseTitle}`;
       const listingForm: ListingCreationForm = {
@@ -81,9 +79,10 @@ xdescribe('Amend Listing Request', () => {
         fromDate: todayDate,
         endDate: tomorrowDate
       }
-      listingCreationPage.createListingRequest(listingForm)
-      transactionDialogPage.clickAcceptButton();
-      expect(sessionSearchPage.isListingRequestDisplayed(...Object.values(listingForm))).toBeTruthy()
+      await listingCreationPage.createListingRequest(listingForm)
+      await transactionDialogPage.clickAcceptButton();
+      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(listingForm));
+      expect(isListingRequestDisplayed).toBeTruthy()
     });
   });
 });
