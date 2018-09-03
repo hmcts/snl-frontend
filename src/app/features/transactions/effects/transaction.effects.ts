@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import { ProblemsService } from '../../../problems/services/problems.service';
-import { TransactionBackendService, TransactionStatuses } from '../services/transaction-backend.service';
+import { RulesProcessingStatuses, TransactionBackendService, TransactionStatuses } from '../services/transaction-backend.service';
 
 @Injectable()
 export class TransactionEffects {
@@ -96,6 +96,22 @@ export class TransactionEffects {
             )
         ),
         catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(err.error)))
+    );
+
+    @Effect()
+    transactionFailure$: Observable<Action> = this.actions$.pipe(
+        ofType<transactionActions.TransactionFailure>(transactionActions.EntityTransactionActionTypes.TransactionFailure),
+        mergeMap((action: any) => {
+                if (action.payload.err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException' ||
+                    action.payload.err.error.exception === 'org.springframework.web.client.HttpServerErrorException') {
+                    return of(new transactionActions.UpdateTransaction({
+                        id: action.payload.userTransactionId,
+                        rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
+                        status: TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT
+                    }))
+                }
+            }
+        ),
     );
 
     constructor(private readonly transactionService: TransactionBackendService,

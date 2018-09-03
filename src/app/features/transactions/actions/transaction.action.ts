@@ -97,5 +97,5 @@ export class TransactionCommitted implements Action {
 export class TransactionFailure implements Action {
     readonly type = EntityTransactionActionTypes.TransactionFailure;
 
-    constructor(public payload: string) {}
+    constructor(public payload: any) {}
 }
