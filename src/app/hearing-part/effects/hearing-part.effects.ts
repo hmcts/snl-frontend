@@ -68,7 +68,8 @@ export class HearingPartEffects {
         this.hearingPartService.deleteHearingPart(action.payload).pipe(
           mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
           catchError((err) => {
-              if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
+              if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException' ||
+                    err.error.exception === 'org.springframework.web.client.HttpServerErrorException') {
                 return of(new transactionActions.UpdateTransaction({
                   id: action.payload.userTransactionId,
                   rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
