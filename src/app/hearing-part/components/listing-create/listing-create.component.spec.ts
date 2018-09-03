@@ -15,7 +15,7 @@ import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers';
 import * as fromHearingParts from '../../reducers';
-import * as fromCaseTypes from '../../../core/reference/reducers/case-type.reducer';
+import * as caseTypeReducers from '../../../core/reference/reducers/case-type.reducer';
 import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
 import { Judge } from '../../../judges/models/judge.model';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
