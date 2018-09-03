@@ -13,6 +13,11 @@ export class SessionSearchPage {
     private listingRequestsTable = new Table(element(by.css('app-hearing-parts-preview#hearing-part-preview')));
     public assignButton = element(by.id('assign'));
 
+    async clickAssignButton() {
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
+        await this.assignButton.click()
+    }
+
     async filterSession(formValues: FilterSessionsComponentForm) {
         await this.filterSessionComponent.filter(formValues);
     }
@@ -26,9 +31,17 @@ export class SessionSearchPage {
             await prom;
             await el.element(by.css('mat-select')).click();
             const selectOpt = element(by.cssContainingText('.mat-option-text', value))
-            await browser.wait(ExpectedConditions.elementToBeClickable(selectOpt), Wait.normal)
+            await browser.wait(
+                ExpectedConditions.elementToBeClickable(selectOpt),
+                Wait.normal,
+                `Option with text: ${value} is not clickable`
+            )
             await selectOpt.click()
-            return await browser.wait(ExpectedConditions.invisibilityOf(selectOpt), Wait.normal)
+            return await browser.wait(
+                ExpectedConditions.invisibilityOf(selectOpt),
+                Wait.normal,
+                `Option with text: ${value} wont disappear`
+            )
         }, Promise.resolve());
     }
 
@@ -40,7 +53,7 @@ export class SessionSearchPage {
 
     async isListingRequestDisplayed(...values: string[]): Promise<boolean> {
         const row = await this.listingRequestsTable.rowThatContains(...values)
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal)
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
         return await row.isDisplayed()
     }
 
@@ -50,7 +63,7 @@ export class SessionSearchPage {
     }
 
     async waitUntilVisible() {
-        await browser.wait(ExpectedConditions.visibilityOf(this.assignButton), Wait.normal)
+        await browser.wait(ExpectedConditions.visibilityOf(this.assignButton), Wait.normal, 'Session search page is not visible')
     }
 
     private async selectCheckBoxInRowWithValues(table: Table, ...values: string[]) {

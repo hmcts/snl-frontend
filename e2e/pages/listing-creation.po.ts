@@ -27,6 +27,6 @@ export class ListingCreationPage {
   }
 
   async waitUntilVisible() {
-    await browser.wait(ExpectedConditions.visibilityOf(this.parentElement), Wait.normal)
+    await browser.wait(ExpectedConditions.visibilityOf(this.parentElement), Wait.normal, `Listing Create page is not visible`)
   }
 }

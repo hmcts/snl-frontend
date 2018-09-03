@@ -37,18 +37,22 @@ export class ElementHelper {
   }
 
   async selectValueFromMultipleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string, loseFocusLocator: ElementFinder) {
-    await browser.wait(ExpectedConditions.elementToBeClickable(selectOptionLocator), Wait.normal)
+    await browser.wait(
+      ExpectedConditions.elementToBeClickable(selectOptionLocator),
+      Wait.normal,
+      `Select option element is not clickable: ${selectOptionLocator}`
+    )
     await selectOptionLocator.click();
     const option = element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
-    await browser.wait(ExpectedConditions.elementToBeClickable(option), Wait.normal)
+    await browser.wait(ExpectedConditions.elementToBeClickable(option), Wait.normal, `Element with text: ${textToSelect} is not visible`)
     await option.click();
     // dismiss popover with options
-    await browser.wait(ExpectedConditions.elementToBeClickable(loseFocusLocator), Wait.normal)
+    await browser.wait(ExpectedConditions.elementToBeClickable(loseFocusLocator), Wait.normal, `Element to lose focus is not clickable`)
     return await loseFocusLocator.click();
   }
 
-  elementThatContains(elements: ElementArrayFinder, ...values: string[]): ElementFinder {
-    return elements
+  async elementThatContains(elements: ElementArrayFinder, ...values: string[]): Promise<ElementFinder> {
+    return await elements
       .filter(el => {
         return el.getText().then(text => {
           const isRowContainsPassedValues = values.reduce(

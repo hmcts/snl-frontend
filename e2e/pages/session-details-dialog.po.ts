@@ -6,9 +6,8 @@ export class SessionDetailsDialogPage {
 
   async isDialogWithTextsDisplayed(...text: string[]): Promise<boolean> {
     const eventsWrapper = element.all(by.css('app-details-dialog'));
-    return await this.elementHelper
-      .elementThatContains(eventsWrapper, ...text)
-      .isDisplayed();
+    const elementWithValues = await this.elementHelper.elementThatContains(eventsWrapper, ...text);
+    return await elementWithValues.isDisplayed();
   }
 
   async close() {

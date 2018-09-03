@@ -26,6 +26,6 @@ export class SessionCreationPage {
   }
 
   async waitUntilVisible() {
-    await browser.wait(ExpectedConditions.visibilityOf(this.startDateInput), Wait.normal)
+    await browser.wait(ExpectedConditions.visibilityOf(this.startDateInput), Wait.normal, 'Session Create screen not visible')
   }
 }

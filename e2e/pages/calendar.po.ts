@@ -22,5 +22,7 @@ export class CalendarPage {
 
   async clickOnEventWith(startTime: string) {
     await element.all(by.cssContainingText('.fc-list-item-time', startTime)).last().click()
+    const dialog = element(by.css('mat-dialog-container'))
+    await browser.wait(ExpectedConditions.visibilityOf(dialog), Wait.normal, `Event with start time: ${startTime} haven't appear`)
   }
 }

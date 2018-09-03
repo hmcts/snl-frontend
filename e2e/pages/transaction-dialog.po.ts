@@ -1,4 +1,4 @@
-import { element, by, promise, ExpectedConditions, browser } from 'protractor';
+import { element, by, ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class TransactionDialogPage {
@@ -14,20 +14,17 @@ export class TransactionDialogPage {
 
   async clickAcceptButton(): Promise<any> {
     const acceptButton = element(by.id('okButton'));
-    await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal);
+    await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal, 'Accept button is not visible');
     await acceptButton.click();
-    await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal);
+    await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal, 'Accept button wont disappear');
     return await browser.waitForAngular()
-  }
-
-  isDisplayed(): promise.Promise<boolean> {
-    return this.parentElement.isDisplayed();
   }
 
   async isSessionCreationSummaryDisplayed(): Promise<boolean> {
     await browser.wait(
       ExpectedConditions.visibilityOf(this.summaryCreationElement),
-      Wait.normal
+      Wait.normal,
+      'Session Creation Summary is not visible'
     );
     return await this.summaryCreationElement.isDisplayed();
   }
@@ -35,7 +32,8 @@ export class TransactionDialogPage {
   async isProblemWithTextDisplayed(problemText: string): Promise<boolean> {
     await browser.wait(
       ExpectedConditions.visibilityOf(this.problemsDiv),
-      Wait.normal
+      Wait.normal,
+      `Problem with text: ${problemText} is not visible`
     );
     const problemsDivText = await this.problemsDiv.getText();
     return await Promise.resolve(problemsDivText.indexOf(problemText) !== -1);

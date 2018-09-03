@@ -26,7 +26,7 @@ export class LoginFlow {
     const isLoginPageDisplayed = await this.loginPage.isPresent();
     if (!isLoginPageDisplayed) {
       await this.topMenu.clickOnLogoutButton()
-      await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal)
+      await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL havent appear')
     }
   }
 }
