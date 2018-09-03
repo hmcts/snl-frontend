@@ -19,10 +19,7 @@ import * as notificationActions from '../../features/notification/actions/notifi
 import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
 import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import * as notesActions from '../../notes/actions/notes.action';
-import {
-  RulesProcessingStatuses, Transaction,
-  TransactionStatuses
-} from '../../features/transactions/services/transaction-backend.service';
+import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 
 @Injectable()
 export class HearingPartEffects {
@@ -70,7 +67,6 @@ export class HearingPartEffects {
           catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(
               {err: err, id: action.payload.userTransactionId}))))
         )
-      )
     );
 
     constructor(private readonly hearingPartService: HearingPartService, private readonly actions$: Actions) {

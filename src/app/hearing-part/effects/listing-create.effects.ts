@@ -9,9 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as transactionActions from '../../features/transactions/actions/transaction.action';
 import {
-    RulesProcessingStatuses,
-    Transaction,
-    TransactionStatuses
+    Transaction
 } from '../../features/transactions/services/transaction-backend.service';
 
 @Injectable()
@@ -36,14 +34,8 @@ export class ListingCreateEffects {
             this.hearingPartService.updateListing({...action.payload.hearingPart,
                 userTransactionId: action.payload.userTransactionId}).pipe(
                 mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
-                catchError((err: any) => {
-                    if (err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
-                        return of(new transactionActions.UpdateTransaction({
-                            id: action.payload.userTransactionId,
-                            rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
-                            status: TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT
-                        }))
-                    }}
+                catchError((err: any) => of(new transactionActions.TransactionFailure(
+                    {err: err, id: action.payload.userTransactionId}))
                 )
             )
         )

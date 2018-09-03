@@ -105,7 +105,7 @@ export class TransactionEffects {
                 if (action.payload.err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException' ||
                     action.payload.err.error.exception === 'org.springframework.web.client.HttpServerErrorException') {
                     return of(new transactionActions.UpdateTransaction({
-                        id: action.payload.userTransactionId,
+                        id: action.payload.id,
                         rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,
                         status: TransactionStatuses.OPTIMISTIC_LOCK_CONFLICT
                     }))
