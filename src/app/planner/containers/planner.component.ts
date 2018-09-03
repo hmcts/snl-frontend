@@ -15,6 +15,7 @@ import * as sessionTransactionActs from '../../sessions/actions/transaction.acti
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
+import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 @Component({
     selector: 'app-planner',
@@ -136,7 +137,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private buildSessionUpdate(event) {
-        let [resourceType, resourceId] = event.detail.event.resourceId.split(/-(.+)/);
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(`(${Separator})(.+)`);
         resourceType += 'Id';
 
         return {

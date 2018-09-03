@@ -58,6 +58,7 @@
 
                 <mat-form-field>
                     <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.reservedJudgeId">
+                        <mat-option>None</mat-option>
                         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>

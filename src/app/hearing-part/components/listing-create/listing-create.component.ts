@@ -107,20 +107,22 @@ export class ListingCreateComponent implements OnInit {
 
     private initiateListing() {
         const now = moment();
-        this.hearings = this.caseTypes[0].hearingTypes;
-        this.listing = {
-            id: undefined,
-            caseNumber: `number-${now.toISOString()}`,
-            caseTitle: `title-${now.toISOString()}`,
-            caseType: this.caseTypes[0].code,
-            hearingType: this.hearings[0].code,
-            duration: moment.duration(30, DURATION_UNIT),
-            scheduleStart: now,
-            scheduleEnd: moment().add(30, 'day'),
-            createdAt: now,
-            notes: this.listingNotesConfig.defaultNotes(),
-            priority: Priority.Low
-        } as ListingCreate;
+        if (this.caseTypes !== undefined && this.caseTypes.length > 0) {
+            this.hearings = this.caseTypes[0].hearingTypes;
+            this.listing = {
+                id: undefined,
+                caseNumber: `number-${now.toISOString()}`,
+                caseTitle: `title-${now.toISOString()}`,
+                caseType: this.caseTypes[0].code,
+                hearingType: this.hearings[0].code,
+                duration: moment.duration(30, DURATION_UNIT),
+                scheduleStart: now,
+                scheduleEnd: moment().add(30, 'day'),
+                createdAt: now,
+                notes: this.listingNotesConfig.defaultNotes(),
+                priority: Priority.Low
+            } as ListingCreate;
+        }
         this.errors = '';
         this.success = false;
     }
