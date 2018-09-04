@@ -6,5 +6,5 @@ export enum Judges {
   DJ_MICHAELS = 'DJ Michaels',
   DJ_SMITH = 'DJ Smith',
   DJ_WATSON = 'DJ Watson',
-  JOHN_HARRIS = 'Judge Linda'
+  JUDGE_LINDA = 'Judge Linda'
 }

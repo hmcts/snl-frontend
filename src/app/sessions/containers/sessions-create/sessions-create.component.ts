@@ -33,7 +33,6 @@ export class SessionsCreateComponent implements OnInit {
     dialogRef: any;
     sessionId: string;
 
-
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService) {
