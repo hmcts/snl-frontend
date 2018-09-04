@@ -2,7 +2,7 @@ import * as fromRooms from '../../rooms/reducers/room.reducer'
 import * as fromJudgesIndex from '../../judges/reducers';
 import * as fromHearingPartIndex from '../../hearing-part/reducers';
 import * as fromSessions from './session.reducer'
-import * as fromSessionTransaction from './transaction.reducer'
+import * as fromTransactions from '../../features/transactions/reducers/transaction.reducer'
 import * as fromRoot from '../../app.state';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
@@ -12,11 +12,11 @@ import { SessionPropositionView } from '../models/session-proposition-view.model
 import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
+import { getRecentTransactionId, getTransactionsEntitiesState } from '../../features/transactions/reducers';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
     readonly rooms: fromRooms.State;
-    readonly sessionTransaction: fromSessionTransaction.State;
 }
 
 export interface State extends fromRoot.State {
@@ -26,7 +26,6 @@ export interface State extends fromRoot.State {
 export const reducers: ActionReducerMap<SessionsState> = {
     sessions: fromSessions.reducer,
     rooms: fromRooms.reducer,
-    sessionTransaction: fromSessionTransaction.reducer
 };
 
 export const getSessionsState = createFeatureSelector<SessionsState>('sessions');
@@ -45,34 +44,11 @@ export const getSessionsEntitiesState = createSelector(
     state => state.sessions
 );
 
-export const getSessionTransactionState = createSelector(
-    getSessionsState,
-    state => state.sessionTransaction
-);
-
-export const getSessionTransactionEntitiesState = createSelector(
-    getSessionTransactionState,
-    state => state.entities
-);
-
-export const getRecentlyCreatedTransactionId = createSelector(
-    getSessionTransactionState,
-    fromSessionTransaction.getRecent,
-);
-
 export const getRecentlyCreatedSessionId = createSelector(
-    getRecentlyCreatedTransactionId,
-    getSessionTransactionEntitiesState,
+    getRecentTransactionId,
+    getTransactionsEntitiesState,
     (transactionId, transactions) => {
         return transactions[transactionId].entityId;
-    }
-);
-
-export const getRecentlyCreatedSessionStatus = createSelector(
-    getSessionTransactionEntitiesState,
-    getRecentlyCreatedTransactionId,
-    (sessionTransactionEntities, recentlyCreatedTransactionId) => {
-        return sessionTransactionEntities[recentlyCreatedTransactionId];
     }
 );
 
@@ -174,7 +150,7 @@ export const getSessionById = (id: string) => createSelector(getSessionEntities,
 
 export const getRecentlyCreatedSession = createSelector(
     getAllSessions,
-    fromSessionTransaction.getRecent,
+    fromTransactions.getRecent,
     (sessions, recentlyCreatedSessionId) => {
         return sessions[recentlyCreatedSessionId];
     }

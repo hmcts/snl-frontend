@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { EntityTransaction } from '../models/transaction-status.model';
-import { Transaction } from '../../core/services/transaction-backend.service';
+import { Transaction } from '../services/transaction-backend.service';
 
 export enum EntityTransactionActionTypes {
   InitializeTransaction = '[EntityTransaction] Initialize Transaction',
@@ -16,6 +16,7 @@ export enum EntityTransactionActionTypes {
   GetTransactionUntilStartedOrConflict = '[EntityTransaction] Get Transaction until',
   GetProblemsForTransaction = '[EntityTransaction] Get problems for session',
   ProblemsLoaded = '[EntityTransaction] Problems Loaded',
+  TransactionFailure = '[EntityTransaction] Transaction Failure',
 }
 
 /**
@@ -91,4 +92,10 @@ export class TransactionCommitted implements Action {
     readonly type = EntityTransactionActionTypes.TransactionCommitted;
 
     constructor(public payload: string) {}
+}
+
+export class TransactionFailure implements Action {
+    readonly type = EntityTransactionActionTypes.TransactionFailure;
+
+    constructor(public payload: any) {}
 }

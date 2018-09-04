@@ -1,20 +1,32 @@
+import { TopMenu } from './../pages/top-menu.po';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';
+import { ExpectedConditions, browser } from 'protractor';
+import { Wait } from '../enums/wait';
 
 export class LoginFlow {
   loginPage = new LoginPage();
+  topMenu = new TopMenu();
 
-  login() {
-    this.loginPage.login(
+  async login() {
+    await this.loginPage.login(
       Credentials.ValidOfficerUsername,
       Credentials.ValidOfficerPassword
     );
   }
 
-  async loginIfNeeded() {
-    const isLoginPageDisplayed = await this.loginPage.isDisplayed();
+  async loginIfNeeded(): Promise<void> {
+    const isLoginPageDisplayed = await this.loginPage.isPresent();
     if (isLoginPageDisplayed) {
-      this.login();
+      await this.login();
+    }
+  }
+
+  async logoutIfNeeded() {
+    const isLoginPageDisplayed = await this.loginPage.isPresent();
+    if (!isLoginPageDisplayed) {
+      await this.topMenu.clickOnLogoutButton()
+      await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL havent appear')
     }
   }
 }
