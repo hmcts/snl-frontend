@@ -74,7 +74,9 @@ export class ListingCreateComponent implements OnInit {
                 this.caseTypes = caseTypes;
             }
         ).subscribe((data) => {
-            this.initiateListing();
+            if (!this.editMode) {
+                this.initiateListing();
+            }
             this.initiateForm();
         });
     }

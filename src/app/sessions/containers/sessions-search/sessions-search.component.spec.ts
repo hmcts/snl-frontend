@@ -82,7 +82,6 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
 
 const mockedUnlistedHearingPart: HearingPart = {
     ...mapToHearingPart(mockedUnlistedHearingPartVM),
-    userTransactionId: undefined
 };
 
 const mockedUnlistedHearingPartsVM: HearingPartViewModel[] = [mockedUnlistedHearingPartVM];
@@ -140,7 +139,7 @@ describe('SessionsSearchComponent', () => {
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
 
-  fdescribe('constructor', () => {
+  describe('constructor', () => {
     it('should be defined', () => {
       expect(component).toBeDefined();
     });

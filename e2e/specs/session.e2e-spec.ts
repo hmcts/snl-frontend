@@ -22,11 +22,11 @@ const startTime = now.format('HH:mm')
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
 const sessionCaseType = CaseTypes.FTRACK
-const room = Rooms.ROOM_B
+const room = Rooms.COURT_4
 const judge = Judges.JOHN_HARRIS
 const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
-const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
+const listingRequestCaseType = CaseTypes.SCLAIMS // must be other than sessionCaseType
 const hearingType = HearingParts.ADJOURNED
 const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
 

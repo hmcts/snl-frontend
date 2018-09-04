@@ -4,7 +4,7 @@ import * as rm from 'typed-rest-client/HttpClient';
 
 export class API {
     private static baseUrl = (process.env.TEST_URL !== undefined) ?
-    'http://snl-api-aat.service.core-compute-aat.internal' : 'http://localhost:3451/';
+    'http://snl-api-aat.service.core-compute-aat.internal' : 'http://localhost:8090';
     private static headers = { 'Authorization': '', 'Content-Type': 'application/json' }
     private static rest = new rm.HttpClient('e2e-tests', null, {headers: API.headers});
 

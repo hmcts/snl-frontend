@@ -26,11 +26,11 @@ const caseType: string = CaseTypes.SCLAIMS;
 const otherCaseType = CaseTypes.FTRACK;
 const duration = 'PT30M';
 const otherDuration = 45;
-const priority = 'Low'
+const priority = 'Low';
 const id = uuid();
 const userTransactionId = uuid();
 const hearingType = HearingParts.TRIAL;
-const otherHearingType = HearingParts.PRELIMINARY;
+const otherHearingType = HearingParts.ADJOURNED;
 
 const displayedListingRequestData = {
   caseNumber,
@@ -47,13 +47,17 @@ const listingRequest = {
   ...displayedListingRequestData
 };
 
+const listingRequestCreate = {
+    ...listingRequest, caseType: 'small-claims',  hearingType: 'trial'
+}
+
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
   await loginFlow.loginIfNeeded()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
-      const statusCode = await API.createListingRequest(listingRequest)
+      const statusCode = await API.createListingRequest(listingRequestCreate)
       expect(statusCode).toEqual(200);
     });
   });
