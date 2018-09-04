@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SessionCreate } from '../models/session-create.model';
-import * as SessionCreationActions from '../actions/transaction.action';
-import { EntityTransaction } from '../models/transaction-status.model';
+import * as SessionCreationActions from '../../features/transactions/actions/transaction.action';
+import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as SessionActions from '../actions/session.action';
 import * as ProblemsActions from '../../problems/actions/problem.action';
 import { Store } from '@ngrx/store';
@@ -10,10 +10,15 @@ import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class SessionsCreationService {
+
+    private recentSessionId;
+
     constructor(private readonly store: Store<State>) {
     }
 
     create(session: SessionCreate) {
+        this.recentSessionId = session.id;
+
         const transactionId = uuid();
 
         session.userTransactionId = transactionId;
@@ -25,6 +30,8 @@ export class SessionsCreationService {
     }
 
     update(session: any) {
+        this.recentSessionId = session.id;
+
         const transactionId = uuid();
 
         session.userTransactionId = transactionId;
@@ -33,6 +40,10 @@ export class SessionsCreationService {
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Update(session));
         this.store.dispatch(new ProblemsActions.RemoveAll());
+    }
+
+    fetchUpdatedEntities() {
+        this.store.dispatch(new SessionActions.Get(this.recentSessionId));
     }
 
     private createTransaction(sessionId, transactionId): EntityTransaction {

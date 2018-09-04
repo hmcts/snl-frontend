@@ -1,24 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, concatMap, distinctUntilChanged, filter, map, mergeMap, retryWhen, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as notificationActions from '../../features/notification/actions/notification.action';
-import * as sessionTransactionActs from '../actions/transaction.action';
+import * as transactionActions from '../../features/transactions/actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
-import * as problemActions from '../../problems/actions/problem.action';
-import * as fromSessionIndex from '../reducers';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
-import { ProblemsService } from '../../problems/services/problems.service';
-import { TransactionBackendService, TransactionStatuses } from '../../core/services/transaction-backend.service';
 import { CoreNotification } from '../../features/notification/model/core-notification';
+import { State } from '../../app.state';
+import * as fromSessionIndex from '../reducers/index';
 
 @Injectable()
 export class SessionEffects {
@@ -43,7 +41,7 @@ export class SessionEffects {
         ofType<sessionActions.Create>(sessionActions.SessionActionTypes.Create),
         mergeMap(action =>
             this.sessionsService.createSession(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
+                mergeMap((data) => [new transactionActions.UpdateTransaction(data)]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
             )
         )
@@ -53,7 +51,7 @@ export class SessionEffects {
     update$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
         distinctUntilChanged(),
-        withLatestFrom(this.store, (action, state) => {
+        withLatestFrom(this.store, (action, state: fromSessionIndex.State) => {
             return {
                 ...action, payload: {
                     ...action.payload,
@@ -64,7 +62,7 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.updateSession(action.payload, action.payload.version).pipe(
                 mergeMap((data) => [
-                    new sessionTransactionActs.UpdateTransaction(data),
+                    new transactionActions.UpdateTransaction(data),
                     new sessionActions.UpdateComplete()
                 ]),
                 catchError((err) => of(new sessionActions.UpdateFailed(err.error)))
@@ -73,88 +71,10 @@ export class SessionEffects {
     );
 
     @Effect()
-    ifTransactionConflicted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
-        filter((t: any) => t.payload.status === TransactionStatuses.CONFLICT),
-        mergeMap(action => [new sessionTransactionActs.TransactionConflicted(action.payload.id)])
-    );
-
-    @Effect()
-    ifTransactionStarted$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
-        filter((t: any) => t.payload.status === TransactionStatuses.STARTED),
-        concatMap(action => [new sessionTransactionActs.GetProblemsForTransaction(action.payload.id),
-            new sessionTransactionActs.TransactionComplete(action.payload.id)])
-    );
-
-    @Effect()
-    ifTransactionNotStartedOrConflict$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.UpdateTransaction>(sessionTransactionActs.EntityTransactionActionTypes.UpdateTransaction),
-        filter((t: any) => t.payload.status !== TransactionStatuses.STARTED && t.payload.status !== TransactionStatuses.CONFLICT),
-        mergeMap(action => [new sessionTransactionActs.GetTransactionUntilStartedOrConflict(action.payload)])
-    );
-
-    @Effect()
-    checkIfCreated: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetTransactionUntilStartedOrConflict>(
-            sessionTransactionActs.EntityTransactionActionTypes.GetTransactionUntilStartedOrConflict),
-        mergeMap(action =>
-            this.transactionService.getUserTransaction(action.payload.id).pipe(
-                map(transcation => {
-                    if (transcation.status !== TransactionStatuses.STARTED && transcation.status !== TransactionStatuses.CONFLICT) {
-                        throw new Error('Transaction not started...');
-                    } else {
-                        return transcation;
-                    }
-                }),
-                retryWhen(errors => errors.mergeMap(() => Observable.timer(5000))),
-                concatMap((data) => [new sessionTransactionActs.UpdateTransaction(data)]),
-            )
-        ),
-        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
-    );
-
-    @Effect()
-    getProblemsForTransaction$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.GetProblemsForTransaction>(
-            sessionTransactionActs.EntityTransactionActionTypes.GetProblemsForTransaction),
-        mergeMap(action =>
-            this.problemsService.getForTransaction(action.payload).pipe(
-                mergeMap((data) => [new problemActions.UpsertMany(data.entities.problems),
-                    new sessionTransactionActs.ProblemsLoaded(action.payload)]),
-            )
-        ),
-        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
-    );
-
-    @Effect()
-    rollbackTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.RollbackTransaction>(sessionTransactionActs.EntityTransactionActionTypes.RollbackTransaction),
-        mergeMap(action =>
-            this.transactionService.rollbackTransaction(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.TransactionRolledBack(data.id)]),
-            )
-        ),
-        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
-    );
-
-    @Effect()
-    commitTransaction: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.CommitTransaction>(sessionTransactionActs.EntityTransactionActionTypes.CommitTransaction),
-        mergeMap(action =>
-            this.transactionService.commitTransaction(action.payload).pipe(
-                mergeMap((data) => [new sessionTransactionActs.TransactionCommitted(data.id)]),
-            )
-        ),
-        catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
-    );
-
-    @Effect()
-    getSessionAfterCommit: Observable<Action> = this.actions$.pipe(
-        ofType<sessionTransactionActs.TransactionCommitted>(sessionTransactionActs.EntityTransactionActionTypes.TransactionCommitted),
-        withLatestFrom(this.store, (action, state) => state.sessions.sessionTransaction.entities[action.payload].entityId),
-        mergeMap(action => this.sessionsService.getSession(action).pipe(
-            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action]), new hearingPartsActions.Search()])),
+    getSession: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.Get>(sessionActions.SessionActionTypes.Get),
+        mergeMap(action => this.sessionsService.getSession(action.payload).pipe(
+            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action.payload])])),
         )),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );
@@ -230,9 +150,7 @@ export class SessionEffects {
     );
 
     constructor(private readonly sessionsService: SessionsService,
-                private readonly transactionService: TransactionBackendService,
-                private readonly problemsService: ProblemsService,
-                private readonly store: Store<fromSessionIndex.State>,
+                private readonly store: Store<State>,
                 private readonly actions$: Actions) {
     }
 }

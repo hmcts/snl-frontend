@@ -22,7 +22,7 @@ export class ProblemEffects {
     );
 
     @Effect()
-    searchForSession$: Observable<Action> = this.actions$.pipe(
+    getForTransaction$: Observable<Action> = this.actions$.pipe(
         ofType<GetForSession>(ProblemActionTypes.GetForSession),
         mergeMap(action =>
             this.problemsService.getForTransaction(action.payload).pipe(

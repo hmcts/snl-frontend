@@ -10,11 +10,12 @@ import * as fromSessions from '../../sessions/reducers';
 import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
-import { TransactionDialogComponent } from '../../sessions/components/transaction-dialog/transaction-dialog.component';
-import * as sessionTransactionActs from '../../sessions/actions/transaction.action';
+import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
+import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 @Component({
@@ -44,7 +45,10 @@ export class PlannerComponent implements OnInit {
                     break;
                 }
                 case SessionActionTypes.UpdateComplete: {
-                    this.openSummaryDialog();
+                    this.openSummaryDialog().afterClosed().subscribe(() => {
+                        this.fetchModifiedEntities();
+                    });
+
                     this.latestEvent = undefined;
                     break;
                 }
@@ -80,6 +84,10 @@ export class PlannerComponent implements OnInit {
         }
         this.store.dispatch(new SearchForDates(query));
         this.lastSearchDateRange = query;
+    }
+
+    public fetchModifiedEntities() {
+        this.sessionCreationService.fetchUpdatedEntities();
     }
 
     public eventClick(eventId) {
@@ -126,7 +134,10 @@ export class PlannerComponent implements OnInit {
                         sessionId: selectedSessionId,
                         start: null
                     } as SessionAssignment);
-                    this.openSummaryDialog();
+
+                    this.openSummaryDialog().afterClosed().subscribe(() => {
+                        this.store.dispatch(new fromHearingPartsActions.Search());
+                    });
                 }
             });
         }
@@ -168,7 +179,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

@@ -35,7 +35,6 @@ const mockedSessions: Session[] = [
     room: roomId,
     person: judgeId,
     caseType: caseType.code,
-    hearingTypes: [],
     jurisdiction: 'some jurisdiction',
     version: 0
   }

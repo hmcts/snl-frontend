@@ -1,6 +1,7 @@
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionReducers from '../../reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
@@ -25,11 +26,11 @@ import { Session } from '../../models/session.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
-import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToHearingPart } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
@@ -40,7 +41,6 @@ let component: SessionsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
-const now = nowMoment.toDate();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const stubCaseType = {code: 'some-case-type-code', description: 'some-case-type'} as CaseType;
@@ -62,27 +62,27 @@ const mockedNotes: Note[] = [
         entityType: 'ListingRequest'
     }];
 
-const mockedUnlistedHearingPart: HearingPart = {
+const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
     session: undefined,
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
-    caseType: stubCaseType.code,
-    hearingType: stubHearingType.code,
+    caseType: stubCaseType,
+    hearingType: stubHearingType,
     duration: moment.duration(sessionDuration),
-    scheduleStart: now,
-    scheduleEnd: now,
+    scheduleStart: nowMoment,
+    scheduleEnd: nowMoment,
     version: 2,
     priority: Priority.Low,
     reservedJudgeId: judgeId,
-    communicationFacilitator: 'interpreter'
-};
-const mockedUnlistedHearingPartVM: HearingPartViewModel = {
-    ...mockedUnlistedHearingPart,
-    caseType: stubCaseType,
-    hearingType: stubHearingType,
+    communicationFacilitator: 'interpreter',
     notes: mockedNotes,
     reservedJudge: mockedJudges[0]
+};
+
+const mockedUnlistedHearingPart: HearingPart = {
+    ...mapToHearingPart(mockedUnlistedHearingPartVM),
+    userTransactionId: undefined
 };
 
 const mockedUnlistedHearingPartsVM: HearingPartViewModel[] = [mockedUnlistedHearingPartVM];
@@ -102,7 +102,7 @@ const mockedSessions: Session[] = [
     room: roomId,
     person: judgeId,
     caseType: stubCaseType.code,
-    hearingTypes: [stubHearingType.code],
+    // hearingTypes: [stubHearingType.code],
     jurisdiction: 'some jurisdiction',
     version: 1
   }
@@ -121,6 +121,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('notes', notesReducers.reducers),
         StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
         StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
+        StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
       providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
@@ -139,7 +140,7 @@ describe('SessionsSearchComponent', () => {
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
 
-  describe('constructor', () => {
+  fdescribe('constructor', () => {
     it('should be defined', () => {
       expect(component).toBeDefined();
     });

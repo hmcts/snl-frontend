@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
@@ -105,7 +105,9 @@ export class SessionsSearchComponent implements OnInit {
             start: null // this.calculateStartOfHearing(this.selectedSession)
         } as SessionAssignment);
 
-        this.openSummaryDialog();
+        this.openSummaryDialog().afterClosed().subscribe(() => {
+            this.store.dispatch(new fromHearingPartsActions.Search());
+        });
     }
 
     selectSession(session: SessionViewModel) {
@@ -151,7 +153,8 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
+            data: 'Assigning hearing part to session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

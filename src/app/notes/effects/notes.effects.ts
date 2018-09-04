@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, distinctUntilChanged, filter, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -47,9 +47,7 @@ export class NotesEffects {
     @Effect()
     error$: Observable<Action> = this.actions$.pipe(
         ofType<Error>(NoteActionTypes.Error),
-        distinctUntilChanged(),
-        tap(console.log)
-    );
+        distinctUntilChanged());
 
     constructor(private readonly notesService: NotesService, private readonly actions$: Actions) {}
 }

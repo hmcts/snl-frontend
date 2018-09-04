@@ -8,8 +8,9 @@ import * as fromRooms from '../../../rooms/reducers';
 import * as fromJudges from '../../../judges/reducers';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
+import * as SessionActions from '../../actions/session.action';
 import * as fromSessionIndex from '../../reducers';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
@@ -28,8 +29,10 @@ export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
-    dialogRef: any;
     caseTypes$: Observable<CaseType[]>;
+    dialogRef: any;
+    sessionId: string;
+
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -47,12 +50,19 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
+        this.sessionId = session.id;
         this.sessionCreationService.create(session);
-        this.dialogRef = this.openDialog(session);
+        this.dialogRef = this.openDialog();
+        this.dialogRef.afterClosed().subscribe(() => this.getCreatedSession(this.sessionId));
     }
 
-    private openDialog(session) {
+    public getCreatedSession(sessionId: string) {
+        this.store.dispatch(new SessionActions.Get(sessionId));
+    }
+
+    private openDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Creating session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
