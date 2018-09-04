@@ -21,4 +21,8 @@ withPipeline("angular", product, app) {
     error 'This is PoC project for Scheduling and Listing therefore the prod environment will not be built'
   }
 
+  after('functionalTest:${environment}') {
+    archiveArtifacts artifacts: 'REPORTS/**/*.*'
+  }
+
 }
