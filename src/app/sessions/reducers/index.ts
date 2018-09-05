@@ -15,6 +15,7 @@ import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
 import { getRecentTransactionId, getTransactionsEntitiesState } from '../../features/transactions/reducers';
 import { CaseType } from '../../core/reference/models/case-type';
+import { SessionType } from '../../core/reference/models/session-type';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -92,7 +93,7 @@ export const getFullSessions = createSelector(
             const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.session === sessionData.id);
             const allocated = calculateAllocated(hearingParts);
             const sessionType = (sessionTypes[sessionData.sessionTypeCode] === undefined) ?
-                {code: 'N/A', description: 'N/A'} as CaseType :
+                {code: 'N/A', description: 'N/A'} as SessionType :
                 sessionTypes[sessionData.sessionTypeCode];
 
             return {
