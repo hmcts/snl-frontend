@@ -7,7 +7,6 @@ import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as fromSessions from '../../reducers';
 import * as fromJudges from '../../../judges/reducers';
 import * as fromReferenceData from '../../../core/reference/reducers';
-import { CaseType } from '../../../core/reference/models/case-type';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -27,6 +26,7 @@ import { SessionAssignment } from '../../../hearing-part/models/session-assignme
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
 import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 @Component({
     selector: 'app-sessions-search',
@@ -45,7 +45,7 @@ export class SessionsSearchComponent implements OnInit {
     selectedHearingPart;
     filteredSessions$: Observable<SessionViewModel[]>;
     filters$ = new Subject<SessionFilters>();
-    caseTypes$: Observable<CaseType[]>;
+    sessionTypes$: Observable<SessionType[]>;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsStatsService: SessionsStatisticsService,
@@ -59,7 +59,7 @@ export class SessionsSearchComponent implements OnInit {
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
-        this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
+        this.sessionTypes$ = this.store.pipe(select(fromReferenceData.selectSessionTypes));
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
@@ -87,7 +87,7 @@ export class SessionsSearchComponent implements OnInit {
 
         return sessions.filter(s => this.filterByProperty(s.person, filters.judges))
             .filter(s => this.filterByProperty(s.room, filters.rooms))
-            .filter(s => this.filterByCaseType(s, filters))
+            .filter(s => this.filterBySessionType(s, filters))
             .filter(s => this.filterByUtilization(s, filters.utilization));
     }
 
@@ -118,8 +118,8 @@ export class SessionsSearchComponent implements OnInit {
         return !!((this.selectedHearingPart.id) && (this.selectedSession.id));
     }
 
-    private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {
-        return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType.code);
+    private filterBySessionType(s: SessionViewModel, filters: SessionFilters) {
+        return filters.sessionTypes.length === 0 ? true : filters.sessionTypes.includes(s.sessionType.code);
     }
 
     private filterByUtilization(session: SessionViewModel, filters) {

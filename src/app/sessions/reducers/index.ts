@@ -84,16 +84,16 @@ export const {
 export const getFullSessions = createSelector(
     getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getFullHearingParts,
     fromReferenceData.selectCaseTypesDictionary,
-    (sessions, rooms, judges, inputHearingParts, caseTypes) => {
+    (sessions, rooms, judges, inputHearingParts, sessionTypes) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
             const sessionData: Session = sessions[sessionKey];
             const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.session === sessionData.id);
             const allocated = calculateAllocated(hearingParts);
-            const caseType = (caseTypes[sessionData.caseType] === undefined) ?
+            const sessionType = (sessionTypes[sessionData.sessionTypeCode] === undefined) ?
                 {code: 'N/A', description: 'N/A'} as CaseType :
-                caseTypes[sessionData.caseType];
+                sessionTypes[sessionData.sessionTypeCode];
 
             return {
                 id: sessionData.id,
@@ -101,7 +101,8 @@ export const getFullSessions = createSelector(
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
-                caseType: caseType,
+                caseType: undefined,
+                sessionType: sessionType,
                 hearingParts: hearingParts,
                 jurisdiction: sessionData.jurisdiction,
                 version: sessionData.version,

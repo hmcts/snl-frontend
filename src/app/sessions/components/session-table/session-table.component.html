@@ -28,9 +28,9 @@
     <mat-cell *matCellDef="let element"> {{element.room?.name}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseType">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Case type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType.description}} </mat-cell>
+  <ng-container matColumnDef="sessionType">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Session type </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.sessionType?.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="date">

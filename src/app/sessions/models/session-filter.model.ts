@@ -1,7 +1,7 @@
 import * as moment from 'moment'
 
 export interface SessionFilters {
-    caseTypes: string[];
+    sessionTypes: string[];
     rooms: string[];
     judges: string[];
     startDate: moment.Moment;
