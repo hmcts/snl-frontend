@@ -51,6 +51,7 @@ function generateHearingParts(id: string): HearingPart {
         version: null,
         priority: null,
         reservedJudgeId: null,
-        communicationFacilitator: null
+        communicationFacilitator: null,
+        userTransactionId: null
     }
 };

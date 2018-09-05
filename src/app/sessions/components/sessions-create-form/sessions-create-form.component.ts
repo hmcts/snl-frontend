@@ -4,6 +4,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { CaseType } from '../../../core/reference/models/case-type';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -19,7 +20,6 @@ export class SessionsCreateFormComponent {
 
     session: SessionCreate;
     durationInMinutes: number;
-    caseTypes: string[];
     time: string;
     roomsPlaceholder: string;
     judgesPlaceholder: string;
@@ -34,25 +34,36 @@ export class SessionsCreateFormComponent {
 
     @Input() judges: Judge[];
     @Input() rooms: Room[];
+
+    @Input() set caseTypes(values: CaseType[]) {
+        if (values === undefined || values.length === 0) {
+            return;
+        }
+        this.session.caseType = values[0].code;
+        this.localCaseTypes = values;
+    }
+
+    localCaseTypes: CaseType[];
+
     @Input() set roomsLoading(roomsLoading: boolean) {
         this.roomsPlaceholder = roomsLoading ?
             SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER :
             SessionsCreateFormComponent.SELECT_ROOM_PLACEHOLDER;
     };
+
     @Input() set judgesLoading(judgesLoading: boolean) {
         this.judgesPlaceholder = judgesLoading ?
             SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER :
             SessionsCreateFormComponent.SELECT_JUDGE_PLACEHOLDER;
     };
+
     @Output() createSessionAction = new EventEmitter();
     @Output() cancelAction = new EventEmitter();
 
     constructor() {
-        this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
 
         this.roomsPlaceholder = SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER;
         this.judgesPlaceholder = SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER;
-
         this.session = {
             userTransactionId: undefined,
             id: undefined,
@@ -60,7 +71,7 @@ export class SessionsCreateFormComponent {
             duration: 1800,
             roomId: null,
             personId: null,
-            caseType: this.caseTypes[0],
+            caseType: null,
         } as SessionCreate;
         this.recalculateViewData();
     }

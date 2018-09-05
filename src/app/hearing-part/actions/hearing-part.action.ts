@@ -2,19 +2,24 @@ import { Action } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
 import { SessionAssignment } from '../models/session-assignment';
 import { ListingCreate } from '../models/listing-create';
+import { HearingPartDeletion } from '../models/hearing-part-deletion';
 
 export enum HearingPartActionTypes {
+  GetById = '[HearingPart] Get by id',
   Search = '[HearingPart] Search',
   SearchComplete = '[HearingPart] Search Complete',
   SearchFailed = '[HearingPart] Search Failed',
   Create = '[HearingPart] Create',
   CreateListingRequest = '[HearingPart] Create Listing Request',
+  UpdateListingRequest = '[HearingPart] Update Listing Request',
   CreateComplete = '[HearingPart] Create Complete',
   CreateFailed = '[HearingPart] Create Failed',
   AssignToSession = '[HearingPart] Assign to session',
   UpsertMany = '[HearingPart] Upsert Many',
   UpsertOne = '[HearingPart] Upsert One',
-  AssignFailed = '[HearingPart] Assign Failed'
+  AssignFailed = '[HearingPart] Assign Failed',
+  Delete = '[HearingPart] Delete',
+  DeleteComplete = '[HearingPart] Delete Complete',
 }
 
 /**
@@ -28,6 +33,12 @@ export class Search implements Action {
   readonly type = HearingPartActionTypes.Search;
 
   constructor(public payload?: object) {}
+}
+
+export class GetById implements Action {
+  readonly type = HearingPartActionTypes.GetById;
+
+  constructor(public payload: string) {}
 }
 
 export class SearchComplete implements Action {
@@ -50,6 +61,12 @@ export class Create implements Action {
 
 export class CreateListingRequest implements Action {
     readonly type = HearingPartActionTypes.CreateListingRequest;
+
+    constructor(public payload: ListingCreate) {}
+}
+
+export class UpdateListingRequest implements Action {
+    readonly type = HearingPartActionTypes.UpdateListingRequest;
 
     constructor(public payload: ListingCreate) {}
 }
@@ -82,4 +99,16 @@ export class UpsertOne implements Action {
     readonly type = HearingPartActionTypes.UpsertOne;
 
     constructor(public payload: any) {}
+}
+
+export class Delete implements Action {
+  readonly  type = HearingPartActionTypes.Delete;
+
+  constructor(public payload: HearingPartDeletion) {}
+}
+
+export class DeleteComplete implements Action {
+  readonly  type = HearingPartActionTypes.DeleteComplete;
+
+  constructor(public payload: any) {}
 }

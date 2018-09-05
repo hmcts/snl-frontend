@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { CalendarContainerComponent } from './callendar/containers/calendar-container.component';
 import { CalendarComponent } from './callendar/components/calendar.component';
 import { DurationFormatPipe } from './pipes/duration-format.pipe';
-import { TransactionBackendService } from './services/transaction-backend.service';
+import { TransactionBackendService } from '../features/transactions/services/transaction-backend.service';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
+import { ReferenceDataModule } from './reference/reference-data.module';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 
 export const COMPONENTS = [
@@ -18,6 +19,7 @@ export const COMPONENTS = [
     imports: [
         CommonModule,
         FullCalendarModule,
+        ReferenceDataModule
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,

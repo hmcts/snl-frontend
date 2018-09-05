@@ -35,8 +35,8 @@ describe('SessionReducer', () => {
 });
 
 function stateWith(sessionReducer): State {
-    return { sessions: { sessions: sessionReducer, rooms: null, sessionTransaction: null }}
-};
+    return { sessions: { sessions: sessionReducer, rooms: null }}
+}
 
 function generateSession(id: string): Session {
     return {
@@ -46,7 +46,6 @@ function generateSession(id: string): Session {
         room: null,
         person: null,
         caseType: null,
-        hearingTypes: [],
         jurisdiction: 'some jurisdiction',
         version: 0
     }

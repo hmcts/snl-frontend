@@ -5,21 +5,23 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as fromSessions from '../../reducers';
-import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
+import * as fromJudges from '../../../judges/reducers';
+import * as fromReferenceData from '../../../core/reference/reducers';
+import { CaseType } from '../../../core/reference/models/case-type';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import * as RoomActions from '../../../rooms/actions/room.action';
 import * as JudgeActions from '../../../judges/actions/judge.action';
+import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
-import * as fromJudges from '../../../judges/reducers';
 import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
@@ -43,6 +45,7 @@ export class SessionsSearchComponent implements OnInit {
     selectedHearingPart;
     filteredSessions$: Observable<SessionViewModel[]>;
     filters$ = new Subject<SessionFilters>();
+    caseTypes$: Observable<CaseType[]>;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsStatsService: SessionsStatisticsService,
@@ -56,6 +59,7 @@ export class SessionsSearchComponent implements OnInit {
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
+        this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
@@ -101,7 +105,9 @@ export class SessionsSearchComponent implements OnInit {
             start: null // this.calculateStartOfHearing(this.selectedSession)
         } as SessionAssignment);
 
-        this.openSummaryDialog();
+        this.openSummaryDialog().afterClosed().subscribe(() => {
+            this.store.dispatch(new fromHearingPartsActions.Search());
+        });
     }
 
     selectSession(session: SessionViewModel) {
@@ -113,7 +119,7 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     private filterByCaseType(s: SessionViewModel, filters: SessionFilters) {
-        return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType);
+        return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(s.caseType.code);
     }
 
     private filterByUtilization(session: SessionViewModel, filters) {
@@ -147,7 +153,8 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open(TransactionDialogComponent, {
+            data: 'Assigning hearing part to session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

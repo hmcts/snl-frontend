@@ -36,6 +36,7 @@ import { AuthorizationHeaderName } from './security/models/access-token';
 import { getLocalStorage } from './utils/storage';
 import { ReportModule } from './features/reports/report.module';
 import { NotesModule } from './notes/notes.module';
+import { TransactionsModule } from './features/transactions/transactions.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -83,6 +84,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
             logOnly: environment.production, // Restrict extension to log-only mode
+            name: 'snl-frontend'
         }),
         EffectsModule.forRoot([]),
         HttpClientModule,
@@ -102,7 +104,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         ProblemsModule,
         PlannerModule,
         ReportModule,
-        NotesModule
+        NotesModule,
+        TransactionsModule
     ],
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},

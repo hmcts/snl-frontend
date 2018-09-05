@@ -18,13 +18,13 @@ export function reducer(state: State = initialState, action) {
         return {...state, ...adapter.addOne(action.payload, {...state, recent: action.payload.id})}
     }
     case EntityTransactionActionTypes.TransactionComplete: {
-        return upsertSession(state, action, false, true, false);
+        return upsertTransaction(state, action, false, true, false);
     }
     case EntityTransactionActionTypes.TransactionConflicted: {
-        return upsertSession(state, action, false,  true, true);
+        return upsertTransaction(state, action, false,  true, true);
     }
     case EntityTransactionActionTypes.ProblemsLoaded: {
-        return upsertSession(state, action, true,  true, false);
+        return upsertTransaction(state, action, true,  true, false);
     }
     case EntityTransactionActionTypes.CommitTransaction:
     case EntityTransactionActionTypes.RollbackTransaction: {
@@ -35,8 +35,8 @@ export function reducer(state: State = initialState, action) {
   }
 }
 
-function upsertSession(state, action, problemsLoaded: boolean, completed: boolean, conflicted: boolean) {
-    const updatedSession = {
+function upsertTransaction(state, action, problemsLoaded: boolean, completed: boolean, conflicted: boolean) {
+    const transaction = {
         id: action.payload,
         changes: {
             problemsLoaded,
@@ -44,7 +44,7 @@ function upsertSession(state, action, problemsLoaded: boolean, completed: boolea
             conflicted
         }
     } as Update<EntityTransaction>;
-    return {...state, ...adapter.upsertOne(updatedSession, state)};
+    return {...state, ...adapter.upsertOne(transaction, state)};
 }
 
 export const getRecent = (state: State) => state.recent;

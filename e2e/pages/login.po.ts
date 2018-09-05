@@ -1,20 +1,20 @@
-import { element, by, browser, promise } from 'protractor';
+import { element, by, browser } from 'protractor';
 import { ElementHelper } from '../utils/element-helper';
 
 export class LoginPage {
+  loginButton = element(by.id('login'));
   private username = element(by.id('username'));
   private password = element(by.id('password'));
-  private loginButton = element(by.id('login'));
   private elementHelper = new ElementHelper();
 
-  login(username: string, password: string) {
-    this.elementHelper.typeValue(this.username, username);
-    this.elementHelper.typeValue(this.password, password);
-    this.loginButton.click();
-    browser.waitForAngular();
+  async login(username: string, password: string) {
+    await this.elementHelper.typeValue(this.username, username);
+    await this.elementHelper.typeValue(this.password, password);
+    await this.loginButton.click();
+    await browser.waitForAngular();
   }
 
-  isDisplayed(): promise.Promise<boolean> {
-    return this.username.isPresent();
+  async isPresent(): Promise<boolean> {
+    return await this.username.isPresent();
   }
 }
