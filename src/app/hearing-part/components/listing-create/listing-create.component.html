@@ -18,14 +18,19 @@
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *" [(ngModel)]="listing.hearingPart.caseType">
-                        <mat-option *ngFor="let case of caseTypes" selected="case == caseTypes[0]" [value]="case">{{case}}</mat-option>
+                    <mat-select id="selectCaseType" formControlName="caseType" placeholder="Case type *"
+                                [(ngModel)]="listing.hearingPart.caseType"
+                                (selectionChange)="onCaseTypeChanged($event)">
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let case of caseTypes" selected="case.code === listing.hearingPart.caseType" [value]="case.code">{{case.description}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="selectHearingPart" formControlName="hearingType" placeholder="Hearing type *" [(ngModel)]="listing.hearingPart.hearingType" >
-                        <mat-option *ngFor="let hearing of hearings" selected="hearing == hearings[0]" [value]="hearing">{{hearing}}</mat-option>
+                    <mat-select id="selectHearingPart" formControlName="hearingType"
+                                placeholder="Hearing type *" [(ngModel)]="listing.hearingPart.hearingType">
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let hearing of hearings" selected="hearing.code == listing.hearingPart.hearingType" [value]="hearing.code">{{hearing.description}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
@@ -48,7 +53,8 @@
 
                 <mat-form-field>
                     <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearingPart.reservedJudgeId">
-                        <mat-option *ngFor="let judge of judges$ | async" value="{{judge.id}}">{{judge.name}}</mat-option>
+                        <mat-option>None</mat-option>
+                        <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 

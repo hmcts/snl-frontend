@@ -8,9 +8,14 @@ import { SearchComplete } from '../../../sessions/actions/session.action';
 import { Session } from '../../../sessions/models/session.model';
 import * as judgesReducers from '../../../judges/reducers';
 import * as fromHearingParts from '../../../hearing-part/reducers';
+import * as notesReducers from '../../../notes/reducers';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import * as moment from 'moment';
+import { CaseType } from '../../../core/reference/models/case-type';
+import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
+import * as caseTypeReducers from '../../../core/reference/reducers/case-type.reducer';
+import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
 
 let component: RoomPlannerComponent;
 let store: Store<State>;
@@ -19,7 +24,7 @@ let storeSpy: jasmine.Spy;
 const now = moment();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
-const caseType = 'some-case-type';
+const caseType = { code: 'some-case-type-code', description: 'some-case-type' } as CaseType;
 const sessionDuration = 30;
 const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
 const mockedSessions: Session[] = [
@@ -29,8 +34,7 @@ const mockedSessions: Session[] = [
     duration: sessionDuration,
     room: roomId,
     person: judgeId,
-    caseType: caseType,
-    hearingTypes: [],
+    caseType: caseType.code,
     jurisdiction: 'some jurisdiction',
     version: 0
   }
@@ -58,7 +62,10 @@ describe('RoomPlannerComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('sessions', sessionReducers.reducers),
-        StoreModule.forFeature('judges', judgesReducers.reducers)
+        StoreModule.forFeature('judges', judgesReducers.reducers),
+        StoreModule.forFeature('notes', notesReducers.reducers),
+        StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+        StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
       ],
       providers: [RoomPlannerComponent]
     });
@@ -97,6 +104,7 @@ describe('RoomPlannerComponent', () => {
 
   describe('ngOnInit', () => {
     it('should fetch sessions', () => {
+      store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseType]));
       store.dispatch(new SearchComplete(mockedSessions));
       component.ngOnInit();
       component.sessions$.subscribe(session => {

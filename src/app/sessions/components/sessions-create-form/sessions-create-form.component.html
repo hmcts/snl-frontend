@@ -20,7 +20,8 @@
 
     <mat-form-field>
       <mat-select id="selectCaseType" placeholder="Select the case type" [(value)]="session.caseType">
-        <mat-option *ngFor="let case of caseTypes" value="{{case}}">{{case}}</mat-option>
+        <mat-option *ngFor="let case of localCaseTypes" selected="case.code === session.caseType"
+                    value="{{case.code}}">{{case.description}}</mat-option>
       </mat-select>
     </mat-form-field>
 

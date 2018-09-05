@@ -7,6 +7,7 @@ import * as judgeActions from '../../../judges/actions/judge.action';
 import * as judgesReducers from '../../../judges/reducers';
 import { JudgePlannerComponent } from './judge-planner.component';
 import { Judge } from '../../../judges/models/judge.model';
+import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 let store: Store<fromHearingParts.State>;
 let storeSpy: jasmine.Spy;
@@ -58,13 +59,13 @@ describe('JudgePlannerComponent', () => {
       it('the resources should be generated person-wise', () => {
         store.dispatch(new judgeActions.GetComplete(mockedJudges));
         component.configureJudgeView();
-        let judge = component.resources.find(r => r.id === 'person-judge-id');
+        let judge = component.resources.find(r => r.id === `person${Separator}judge-id`);
         expect(judge).toBeDefined()
       });
       it('the first resource should be for the "not allocated" slot', () => {
           store.dispatch(new judgeActions.GetComplete(mockedJudges));
           component.configureJudgeView();
-          let judge = component.resources.find(r => r.id === 'person-empty');
+          let judge = component.resources.find(r => r.id === `person${Separator}empty`);
           expect(judge).toBeDefined()
       });
     });
