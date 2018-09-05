@@ -22,7 +22,7 @@
 
   <ng-container matColumnDef="caseType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType.description}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType?.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">
@@ -42,7 +42,7 @@
 
   <ng-container matColumnDef="hearingType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.hearingType.description}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="duration">
