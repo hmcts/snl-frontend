@@ -18,6 +18,9 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
     after('checkout') {
         echo '==================== CUSTOM TERRAFORM VARS ========================='
 
+        sh 'pwd'
+        sh 'ls'
+
         echo '== Input parameters =='
         echo params.CUSTOM_VARS
 
