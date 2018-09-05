@@ -1,7 +1,7 @@
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from './icalendar-transformer';
 import * as moment from 'moment';
-import { EventsColorsForCasetype } from '../model/events-colors-for-casetype';
+// import { EventsColorsForCasetype } from '../model/events-colors-for-casetype';
 
 export class DefaultDataTransformer implements IcalendarTransformer<SessionViewModel> {
 
@@ -13,15 +13,15 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
         }
         const judgeName = (session.person) ? session.person.name : 'No Judge';
         const roomName = (session.room) ? session.room.name : 'No Room';
-        const caseType = (session.caseType) ? session.caseType.description : 'No Case type';
+        const sessionType = (session.sessionType) ? session.sessionType.description : 'No Session type';
 
         return {
-            title: `${roomName} - ${judgeName} - ${caseType}`,
+            title: `${roomName} - ${judgeName} - ${sessionType}`,
             start: moment(session.start),
             end: moment(moment(session.start).add(moment.duration(session.duration))),
             id: session.id,
             hearingParts: session.hearingParts,
-            color: EventsColorsForCasetype[caseType] || 'gray'
+            color: 'gray' // EventsColorsForCasetype[sessionType] ||
         };
     }
 
