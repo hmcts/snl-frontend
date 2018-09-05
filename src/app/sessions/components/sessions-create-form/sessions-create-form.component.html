@@ -43,5 +43,10 @@
       <button id="create" mat-raised-button color="accent" fxFlexAlign="center" (click)="create()">Create</button>
       <button *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
     </div>
+      <mat-form-field>
+        <mat-select id="selectSessionType" formControlName="sessionTypeCode" placeholder="Select the session type" [(value)]="session.sessionTypeCode">
+          <mat-option *ngFor="let sessionType of sessionTypes" value="{{sessionType.code}}">{{sessionType.description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
   </mat-card-content>
 </mat-card>

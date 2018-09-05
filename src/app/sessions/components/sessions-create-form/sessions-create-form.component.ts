@@ -5,6 +5,7 @@ import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -34,6 +35,7 @@ export class SessionsCreateFormComponent {
 
     @Input() judges: Judge[];
     @Input() rooms: Room[];
+    @Input() sessionTypes: SessionType[];
 
     @Input() set caseTypes(values: CaseType[]) {
         if (values === undefined || values.length === 0) {
@@ -61,7 +63,6 @@ export class SessionsCreateFormComponent {
     @Output() cancelAction = new EventEmitter();
 
     constructor() {
-
         this.roomsPlaceholder = SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER;
         this.judgesPlaceholder = SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER;
         this.session = {
@@ -72,6 +73,7 @@ export class SessionsCreateFormComponent {
             roomId: null,
             personId: null,
             caseType: null,
+            sessionTypeCode: null
         } as SessionCreate;
         this.recalculateViewData();
     }
