@@ -19,6 +19,8 @@ import { HearingPartsPreviewComponent } from './hearing-parts-preview.component'
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { CaseType } from '../../../core/reference/models/case-type';
+import { HearingType } from '../../../core/reference/models/hearing-type';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const openDialogMockObjConfirmed = {
@@ -140,8 +142,8 @@ function generateHearingParts(id: string): HearingPartViewModel {
         session: null,
         caseNumber: null,
         caseTitle: null,
-        caseType: null,
-        hearingType: null,
+        caseType: { code: '', description: '' } as CaseType,
+        hearingType: { code: '', description: '' } as HearingType,
         duration: null,
         scheduleStart: null,
         scheduleEnd: null,

@@ -2,6 +2,8 @@ import * as moment from 'moment'
 import { Note } from '../../notes/models/note.model';
 import { Priority } from './priority-model';
 import { Judge } from '../../judges/models/judge.model';
+import { HearingType } from '../../core/reference/models/hearing-type';
+import { CaseType } from '../../core/reference/models/case-type';
 import { HearingPart } from './hearing-part';
 
 export interface HearingPartViewModel {
@@ -9,8 +11,8 @@ export interface HearingPartViewModel {
     session: string;
     caseNumber: string;
     caseTitle: string;
-    caseType: string;
-    hearingType: string;
+    caseType: CaseType;
+    hearingType: HearingType;
     duration: moment.Duration;
     scheduleStart: moment.Moment;
     scheduleEnd: moment.Moment;
@@ -28,8 +30,8 @@ export function mapToHearingPart(hpvm: HearingPartViewModel) {
         session: hpvm.session,
         caseNumber: hpvm.caseNumber,
         caseTitle: hpvm.caseTitle,
-        caseType: hpvm.caseType,
-        hearingType: hpvm.hearingType,
+        caseType: hpvm.caseType.code,
+        hearingType: hpvm.hearingType.code,
         duration: hpvm.duration,
         scheduleStart: hpvm.scheduleStart,
         scheduleEnd: hpvm.scheduleEnd,

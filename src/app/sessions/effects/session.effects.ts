@@ -29,7 +29,7 @@ export class SessionEffects {
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.UpsertMany(data.entities.rooms),
-                    new judgeActions.GetComplete(data.entities.persons),
+                    new judgeActions.UpsertMany(data.entities.persons),
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
@@ -88,7 +88,7 @@ export class SessionEffects {
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.UpsertMany(data.entities.rooms),
-                    new judgeActions.GetComplete(data.entities.persons),
+                    new judgeActions.UpsertMany(data.entities.persons),
                     new hearingPartsActions.UpsertMany(data.entities.hearingParts)
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
@@ -106,7 +106,7 @@ export class SessionEffects {
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
-                    new judgeActions.GetComplete(data.entities.persons)
+                    new judgeActions.UpsertMany(data.entities.persons)
                 ]),
                 // If request fails, dispatch failed action
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed('Error: ' + err.error)))
@@ -123,7 +123,7 @@ export class SessionEffects {
                 mergeMap(data => [
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
-                    new judgeActions.GetComplete(data.entities.persons),
+                    new judgeActions.UpsertMany(data.entities.persons),
                     new hearingPartsActions.SearchComplete(data.entities.hearingParts)
                 ]),
                 // If request fails, dispatch failed action
