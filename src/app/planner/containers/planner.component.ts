@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionsSubject, select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
-import { SearchForDates, SessionActionTypes, } from '../../sessions/actions/session.action';
+import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -16,6 +16,7 @@ import { SessionAssignment } from '../../hearing-part/models/session-assignment'
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
 import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import * as fromHearingParts from '../../hearing-part/reducers/index';
 
 @Component({
     selector: 'app-planner',
@@ -29,6 +30,8 @@ export class PlannerComponent implements OnInit {
     private confirmationDialogOpen;
     private selectedSessionId;
     private latestEvent: any;
+    public sessions: any[];
+    public hearingParts: any[];
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -43,28 +46,20 @@ export class PlannerComponent implements OnInit {
                     this.loadDataForAllJudges(this.lastSearchDateRange);
                     break;
                 }
-                case SessionActionTypes.UpdateComplete: {
-                    this.openSummaryDialog().afterClosed().subscribe(() => {
-                        this.fetchModifiedEntities();
-                    });
-
-                    this.latestEvent = undefined;
-                    break;
-                }
-                case SessionActionTypes.UpdateFailed: {
-                    this.revertLatestEvent();
-                    this.store.select(fromSessions.getSessionsError).subscribe(error => {
-                        this.openCreationFailedDialog(error);
-                    }).unsubscribe();
-                    this.latestEvent = undefined;
-                    break;
-                }
             }
         });
     }
 
     ngOnInit() {
         this.setRoomView();
+
+        this.store.select(fromSessions.getFullSessions).subscribe(sessions => {
+            this.sessions = sessions;
+        });
+
+        this.store.select(fromHearingParts.getFullHearingParts).subscribe(hearingParts => {
+            this.hearingParts = hearingParts;
+        });
     }
 
     public setRoomView() {
@@ -127,15 +122,19 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
                 if (confirmed) {
+                    let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
                     this.hearingModificationService.assignHearingPartWithSession({
-                        hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
+                        hearingPartId: hearingPartId,
+                        hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
                         sessionId: selectedSessionId,
+                        sessionVersion: this.sessions.find(hp => hp.id === selectedSessionId).version,
                         start: null
                     } as SessionAssignment);
 
                     this.openSummaryDialog().afterClosed().subscribe(() => {
-                        this.store.dispatch(new fromHearingPartsActions.Search());
+                        this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
+                        this.fetchModifiedEntities();
                     });
                 }
             });
@@ -182,19 +181,6 @@ export class PlannerComponent implements OnInit {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
-        });
-    }
-
-    private openCreationFailedDialog(error: any) {
-        this.dialog.open(DialogWithActionsComponent, {
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true,
-            data: {
-                message: 'This session has been changed by another user since you first loaded the calendar, ' +
-                         'please reload the page and try again',
-                hideDecline: true
-            }
         });
     }
 }

@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
-import * as fromReducer from '../../../sessions/reducers';
 import * as judgeReducers from '../../../judges/reducers';
-import { Observable } from 'rxjs/Observable';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { ResourceList } from '../../../core/callendar/model/resource-list';
@@ -22,7 +20,6 @@ export class JudgePlannerComponent implements OnInit {
     columns: any[];
     resources: any[];
     dataTransformer: IcalendarTransformer<SessionViewModel>;
-    sessions$: Observable<any[]>;
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
@@ -31,6 +28,7 @@ export class JudgePlannerComponent implements OnInit {
     @Output() drop = new EventEmitter();
     @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
+    @Input() sessions: any[];
 
     constructor(private readonly store: Store<State>) {
         this.defaultView = 'timelineWeek';
@@ -51,7 +49,6 @@ export class JudgePlannerComponent implements OnInit {
 
     ngOnInit() {
         this.configureJudgeView();
-        this.sessions$ = this.store.select(fromReducer.getFullSessions);
         this.store.dispatch(new judgeActions.Get());
     }
 
