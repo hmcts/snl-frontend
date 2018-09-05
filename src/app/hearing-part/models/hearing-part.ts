@@ -7,7 +7,7 @@ export interface HearingPart {
     caseNumber: string;
     caseTitle: string;
     caseType: string;
-    hearingType: string
+    hearingType: string;
     duration: moment.Duration
     scheduleStart: moment.Moment;
     scheduleEnd: moment.Moment;
