@@ -7,12 +7,33 @@ properties([
         string(name: 'APP', defaultValue: 'frontend', description: ''),
         string(name: 'TYPE', defaultValue: 'angular', description: ''),
         string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be build and deployed'),
-        choice(name: 'SUBSCRIPTION', choices: 'sandbox', description: 'Azure subscriptions available to build in')
+        choice(name: 'SUBSCRIPTION', choices: 'sandbox', description: 'Azure subscriptions available to build in'),
+        string(name: 'CUSTOM_VARS', defaultValue: '', description: 'Custom terraform variables. ie: KEY="VALUE";KEY="VALUE";'),
     ]),
     [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend.git'],
     pipelineTriggers([[$class: 'GitHubPushTrigger']])
 ])
 
 withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+    after('checkout') {
+        echo '==================== CUSTOM TERRAFORM VARS ========================='
 
+        echo '== Input parameters =='
+        echo params.CUSTOM_VARS
+
+        def command = "./generate-tfvars.sh \"./infrastructure/${params.ENVIRONMENT}.tfvars\" \"${params.CUSTOM_VARS}\""
+        echo '== Shell command to execute =='
+        echo command
+
+        echo '== Command execution =='
+        sh command
+
+
+        dir('./infrastructure') {
+            sh 'pwd'
+            sh 'ls'
+        }
+
+        echo '==================== CUSTOM TERRAFORM VARS ========================='
+    }
 }
