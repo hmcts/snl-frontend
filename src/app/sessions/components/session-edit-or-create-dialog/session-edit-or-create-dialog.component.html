@@ -2,6 +2,7 @@
   <app-sessions-create-form [judges]="data.judges$ | async"
                             [rooms]="data.rooms$ | async"
                             [caseTypes]="data.caseTypes$ | async"
+                            [sessionTypes]="sessionTypes$ | async"
                             (createSessionAction)="data.onCreateSessionAction($event)"
                             (cancelAction)="data.onCancelAction($event)"
                             [sessionData]="data.sessionData"
