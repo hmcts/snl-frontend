@@ -4,7 +4,7 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 
-const isHeadlessModeEnabled = false;
+const isHeadlessModeEnabled = true;
 
 const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
 
