@@ -14,7 +14,6 @@ import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
 import { getRecentTransactionId, getTransactionsEntitiesState } from '../../features/transactions/reducers';
-import { CaseType } from '../../core/reference/models/case-type';
 import { SessionType } from '../../core/reference/models/session-type';
 
 export interface SessionsState {
@@ -84,7 +83,7 @@ export const {
 
 export const getFullSessions = createSelector(
     getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getFullHearingParts,
-    fromReferenceData.selectCaseTypesDictionary,
+    fromReferenceData.selectSessionTypesDictionary,
     (sessions, rooms, judges, inputHearingParts, sessionTypes) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}

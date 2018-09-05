@@ -32,6 +32,7 @@ export class SessionsFilterComponent implements OnInit {
   ngOnInit() {
       this.filters = {
           sessionTypes: [],
+          caseTypes: [],
           rooms: [],
           judges: [],
           startDate: this.startDate,
