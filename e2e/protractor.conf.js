@@ -4,7 +4,7 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 
-const isHeadlessModeEnabled = true;
+const isHeadlessModeEnabled = false;
 
 const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
 
@@ -20,7 +20,7 @@ exports.config = {
         'acceptInsecureCerts': true,
         chromeOptions: {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
-            binary: puppeteer.executablePath(),
+           // binary: puppeteer.executablePath(),
         }
     },
     directConnect: true,
