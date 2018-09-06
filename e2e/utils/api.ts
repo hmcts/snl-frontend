@@ -1,10 +1,11 @@
 import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import * as rm from 'typed-rest-client/HttpClient';
+import { CONFIG } from './../../url-config'
 
 export class API {
     private static baseUrl = (process.env.TEST_URL !== undefined) ?
-    'http://snl-api-aat.service.core-compute-aat.internal' : 'http://localhost:8090';
+    'http://snl-api-aat.service.core-compute-aat.internal' : CONFIG.apiUrl;
     private static headers = { 'Authorization': '', 'Content-Type': 'application/json' }
     private static rest = new rm.HttpClient('e2e-tests', null, {headers: API.headers});
 
