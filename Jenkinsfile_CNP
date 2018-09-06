@@ -2,7 +2,12 @@
 
 properties(
     [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend/'],
-     pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+     pipelineTriggers([[$class: 'GitHubPushTrigger']])],
+    parameters([
+            string(name: 'CUSTOM_VARS', defaultValue: '',
+                    description: 'Custom terraform variables. ie: KEY="VALUE";KEY="VALUE",' +
+                            'Applies only to PR builds'),
+    ]),
 )
 
 @Library("Infrastructure")
@@ -15,6 +20,20 @@ withPipeline("angular", product, app) {
 
   afterCheckout {
     sh "yarn cache clean"
+
+    if(currentBuild.displayName.contains("PR")) {
+      echo '==================== CUSTOM TERRAFORM VARS ========================='
+
+      def command = "bash ./generate-tfvars.sh \"./infrastructure/preview.tfvars\" \"${params.CUSTOM_VARS}\""
+      echo '== Shell command to execute =='
+      echo command
+
+      echo '== Command execution =='
+      sh command
+
+      echo '==================== CUSTOM TERRAFORM VARS ========================='
+    }
+
   }
 
   before('buildinfra:prod') {

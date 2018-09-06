@@ -18,9 +18,6 @@ withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.E
     after('checkout') {
         echo '==================== CUSTOM TERRAFORM VARS ========================='
 
-        echo '== Input parameters =='
-        echo params.CUSTOM_VARS
-
         def command = "bash ./generate-tfvars.sh \"./infrastructure/${params.ENVIRONMENT}.tfvars\" \"${params.CUSTOM_VARS}\""
         echo '== Shell command to execute =='
         echo command
