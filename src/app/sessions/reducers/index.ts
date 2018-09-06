@@ -4,6 +4,7 @@ import * as fromHearingPartIndex from '../../hearing-part/reducers';
 import * as fromSessions from './session.reducer'
 import * as fromTransactions from '../../features/transactions/reducers/transaction.reducer'
 import * as fromRoot from '../../app.state';
+import * as fromReferenceData from '../../core/reference/reducers';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
 import { Session } from '../models/session.model';
@@ -13,6 +14,7 @@ import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
 import { getRecentTransactionId, getTransactionsEntitiesState } from '../../features/transactions/reducers';
+import { CaseType } from '../../core/reference/models/case-type';
 
 export interface SessionsState {
     readonly sessions: fromSessions.State;
@@ -79,14 +81,19 @@ export const {
     selectTotal: getTotalSessions,
 } = fromSessions.adapter.getSelectors(getSessionsEntitiesState);
 
-export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getHearingParts,
-    (sessions, rooms, judges, inputHearingParts) => {
+export const getFullSessions = createSelector(
+    getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getFullHearingParts,
+    fromReferenceData.selectCaseTypesDictionary,
+    (sessions, rooms, judges, inputHearingParts, caseTypes) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
             const sessionData: Session = sessions[sessionKey];
             const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.session === sessionData.id);
             const allocated = calculateAllocated(hearingParts);
+            const caseType = (caseTypes[sessionData.caseType] === undefined) ?
+                {code: 'N/A', description: 'N/A'} as CaseType :
+                caseTypes[sessionData.caseType];
 
             return {
                 id: sessionData.id,
@@ -94,7 +101,7 @@ export const getFullSessions = createSelector(getAllSessions, getRooms, fromJudg
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
-                caseType: sessionData.caseType,
+                caseType: caseType,
                 hearingParts: hearingParts,
                 jurisdiction: sessionData.jurisdiction,
                 version: sessionData.version,

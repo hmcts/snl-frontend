@@ -46,7 +46,6 @@ function generateSession(id: string): Session {
         room: null,
         person: null,
         caseType: null,
-        hearingTypes: [],
         jurisdiction: 'some jurisdiction',
         version: 0
     }

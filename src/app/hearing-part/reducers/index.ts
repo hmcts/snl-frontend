@@ -1,5 +1,6 @@
 import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
+import * as fromReferenceData from '../../core/reference/reducers/index';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { getNotes } from '../../notes/reducers';
 import { HearingPartViewModel } from '../models/hearing-part.viewmodel';
@@ -37,12 +38,15 @@ export const {
 } = fromHearingParts.adapter.getSelectors(getHearingPartsEntitiesState);
 
 export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, getJudgesEntities,
-    (hearingParts, notes, judges) => {
+    fromReferenceData.selectHearingTypesDictionary, fromReferenceData.selectCaseTypesDictionary,
+    (hearingParts, notes, judges, hearingTypes, caseTypes) => {
         let finalHearingParts: HearingPartViewModel[];
         if (hearingParts === undefined) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
             return {
                 ...hearingPart,
+                caseType: caseTypes[hearingPart.caseType],
+                hearingType: hearingTypes[hearingPart.hearingType],
                 reservedJudge: judges[hearingPart.reservedJudgeId],
                 notes: Object.values(notes).filter(note => note.entityId === hearingPart.id),
             };

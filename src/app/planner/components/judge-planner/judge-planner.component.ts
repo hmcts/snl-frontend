@@ -8,6 +8,7 @@ import { ResourceList } from '../../../core/callendar/model/resource-list';
 import { Judge } from '../../../judges/models/judge.model';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 import * as judgeActions from '../../../judges/actions/judge.action';
+import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 @Component({
     selector: 'app-judge-planner',
@@ -63,7 +64,7 @@ export class JudgePlannerComponent implements OnInit {
         this.store.pipe(select(judgeReducers.getJudges)).subscribe(elements => {
             let newResourceList = new ResourceList('person'); // NOSONAR not const
             Object.values(elements).forEach((judge: Judge) => {
-                newResourceList.add('person-' + judge.id, judge.name);
+                newResourceList.add(`person${Separator}${judge.id}`, judge.name);
             });
             this.resources = newResourceList.get();
         });

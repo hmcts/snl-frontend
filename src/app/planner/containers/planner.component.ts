@@ -17,6 +17,7 @@ import { HearingPartModificationService } from '../../hearing-part/services/hear
 import { v4 as uuid } from 'uuid';
 import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import * as fromHearingParts from '../../hearing-part/reducers/index';
+import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 @Component({
     selector: 'app-planner',
@@ -150,7 +151,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private buildSessionUpdate(event) {
-        let [resourceType, resourceId] = event.detail.event.resourceId.split(/-(.+)/);
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(`(${Separator})(.+)`);
         resourceType += 'Id';
 
         return {

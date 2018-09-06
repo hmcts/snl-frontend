@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { EventsColorsForCasetype } from '../model/events-colors-for-casetype';
 import { DefaultDataTransformer } from './default-data-transformer';
 import { IcalendarTransformer } from './icalendar-transformer';
+import { CaseType } from '../../reference/models/case-type';
 
 let session = {
     id: 'id',
@@ -10,18 +11,18 @@ let session = {
     duration: 60,
     room: { name: 'room' },
     person: { name: 'person' },
-    caseType: 'SCLAIMS',
+    caseType: { code: 'SCLAIMS', description: 'SCLAIMS' } as CaseType,
     hearingParts: [],
     jurisdiction: ''
 } as SessionViewModel;
 
 let expectedEvent = {
-    title: `${session.room.name} - ${session.person.name} - ${session.caseType}`,
+    title: `${session.room.name} - ${session.person.name} - ${session.caseType.description}`,
     start: session.start,
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
-    color: EventsColorsForCasetype[session.caseType]
+    color: EventsColorsForCasetype[session.caseType.code]
 };
 
 let sessionWithoutJudgeAndRoomAndCasetype = {

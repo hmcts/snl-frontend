@@ -13,7 +13,7 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
         }
         const judgeName = (session.person) ? session.person.name : 'No Judge';
         const roomName = (session.room) ? session.room.name : 'No Room';
-        const caseType = (session.caseType) ? session.caseType : 'No Case type';
+        const caseType = (session.caseType) ? session.caseType.description : 'No Case type';
 
         return {
             title: `${roomName} - ${judgeName} - ${caseType}`,

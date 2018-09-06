@@ -114,7 +114,7 @@ export class CalendarComponent implements OnInit {
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
             el.append(hearing.caseTitle);
-            el.append('  -  ' + hearing.hearingType);
+            el.append('  -  ' + hearing.hearingType.description);
             el.append(`  -   ${formatDuration(moment.duration(hearing.duration))}`);
         });
 
