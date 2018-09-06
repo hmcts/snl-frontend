@@ -160,8 +160,8 @@ export class CalendarComponent implements OnInit {
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
-        event.detail.event.start = moment(event.detail.event.start);
-        event.detail.event.end = moment(event.detail.event.end);
+        event.detail.event.start = moment(event.detail.event.start.format());
+        event.detail.event.end = moment(event.detail.event.end.format());
 
         eventCallback.emit(event);
     }

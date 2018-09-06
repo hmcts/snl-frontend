@@ -17,8 +17,8 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
 
         return {
             title: `${roomName} - ${judgeName} - ${caseType}`,
-            start: moment(session.start).toISOString(),
-            end: moment(moment(session.start).add(moment.duration(session.duration))).toISOString(),
+            start: moment(session.start),
+            end: moment(moment(session.start).add(moment.duration(session.duration))),
             id: session.id,
             hearingParts: session.hearingParts,
             color: EventsColorsForCasetype[caseType] || 'gray'
