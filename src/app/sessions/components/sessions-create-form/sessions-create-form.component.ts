@@ -5,6 +5,8 @@ import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Moment } from 'moment';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -18,18 +20,35 @@ export class SessionsCreateFormComponent {
     public static SELECT_ROOM_PLACEHOLDER = 'Select the room';
     public static SELECT_JUDGE_PLACEHOLDER = 'Select the judge';
 
-    session: SessionCreate;
+    sessionCreate: SessionCreate;
     durationInMinutes: number;
     time: string;
     roomsPlaceholder: string;
     judgesPlaceholder: string;
 
+    form: FormGroup;
+
     @Input() set sessionData(value: SessionCreate) {
         if (value === undefined || value == null) {
-            return;
+            this.initEmptySessionCreate()
+        } else {
+            this.sessionCreate = value
         }
-        this.session = value;
-        this.recalculateViewData();
+
+        this.recalculateViewData()
+        this.initForm()
+    }
+
+    private initEmptySessionCreate() {
+        this.sessionCreate = {
+            userTransactionId: undefined,
+            id: undefined,
+            start: moment(),
+            duration: 1800,
+            roomId: null,
+            personId: null,
+            caseType: null,
+        } as SessionCreate
     }
 
     @Input() judges: Judge[];
@@ -39,7 +58,7 @@ export class SessionsCreateFormComponent {
         if (values === undefined || values.length === 0) {
             return;
         }
-        this.session.caseType = values[0].code;
+        this.sessionCreate.caseType = values[0].code;
         this.localCaseTypes = values;
     }
 
@@ -64,36 +83,53 @@ export class SessionsCreateFormComponent {
 
         this.roomsPlaceholder = SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER;
         this.judgesPlaceholder = SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER;
-        this.session = {
-            userTransactionId: undefined,
-            id: undefined,
-            start: moment(),
-            duration: 1800,
-            roomId: null,
-            personId: null,
-            caseType: null,
-        } as SessionCreate;
+
+        this.initEmptySessionCreate()
         this.recalculateViewData();
+        this.initForm()
+    }
+
+    private initForm() {
+        this.form = new FormGroup( {
+            startDate: new FormControl(
+                this.getDateFromMoment(this.sessionCreate.start), Validators.required
+            ),
+            startTime: new FormControl(
+                this.getTimeFromMoment(this.sessionCreate.start), Validators.required
+            ),
+            duration: new FormControl(this.sessionCreate.duration, Validators.required),
+            room: new FormControl(this.sessionCreate.roomId, Validators.required),
+            judge: new FormControl(this.sessionCreate.personId, Validators.required),
+            caseType: new FormControl(this.sessionCreate.caseType, Validators.required),
+        })
+    }
+
+    private getTimeFromMoment(moment: Moment): string {
+        return moment.format('HH:ss')
+    }
+
+    private getDateFromMoment(moment: Moment): string {
+        return '10:10'
     }
 
     private recalculateViewData() {
-        if (this.session.duration !== undefined) {
-            this.durationInMinutes = Math.floor(this.session.duration / 60);
+        if (this.sessionCreate.duration !== undefined) {
+            this.durationInMinutes = Math.floor(this.sessionCreate.duration / 60);
         } else {
             this.durationInMinutes = 0;
         }
-        this.time = moment(this.session.start).format('HH:mm');
+        this.time = moment(this.sessionCreate.start).format('HH:mm');
     }
 
     create() {
-        this.session.id = (this.session.id === undefined) ? uuid() : this.session.id;
+        this.sessionCreate.id = (this.sessionCreate.id === undefined) ? uuid() : this.sessionCreate.id;
         const timeArr = this.time.split(':');
-        this.session.start.set('hours', +timeArr[0]);
-        this.session.start.set('minutes', +timeArr[1]);
-        this.session.duration = this.durationInMinutes.valueOf() * 60;
+        this.sessionCreate.start.set('hours', +timeArr[0]);
+        this.sessionCreate.start.set('minutes', +timeArr[1]);
+        this.sessionCreate.duration = this.durationInMinutes.valueOf() * 60;
 
-        this.createSessionAction.emit(this.session);
-        this.session.id = undefined;
+        this.createSessionAction.emit(this.sessionCreate);
+        this.sessionCreate.id = undefined;
     }
 
     cancel() {
