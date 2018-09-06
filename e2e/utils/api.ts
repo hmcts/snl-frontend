@@ -2,6 +2,7 @@ import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import * as rm from 'typed-rest-client/HttpClient';
 import { CONFIG } from './../../url-config'
+
 export class API {
     private static baseUrl = (process.env.TEST_URL !== undefined) ?
     'http://snl-api-aat.service.core-compute-aat.internal' : CONFIG.apiUrl;
