@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionsSubject, select, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
@@ -11,7 +11,6 @@ import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
@@ -37,18 +36,8 @@ export class PlannerComponent implements OnInit {
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
-                public hearingModificationService: HearingPartModificationService,
-                public actionListener$: ActionsSubject) {
+                public hearingModificationService: HearingPartModificationService) {
         this.confirmationDialogOpen = false;
-
-        this.actionListener$.subscribe(data => {
-            switch (data.type) {
-                case sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted: {
-                    this.loadDataForAllJudges(this.lastSearchDateRange);
-                    break;
-                }
-            }
-        });
     }
 
     ngOnInit() {
@@ -151,7 +140,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private buildSessionUpdate(event) {
-        let [resourceType, resourceId] = event.detail.event.resourceId.split(`(${Separator})(.+)`);
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(`${Separator}`);
         resourceType += 'Id';
 
         return {
