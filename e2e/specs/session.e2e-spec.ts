@@ -14,6 +14,7 @@ import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { browser } from 'protractor';
+import { SessionTypes } from '../enums/session-types';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -21,7 +22,8 @@ const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
-const sessionCaseType = CaseTypes.FTRACK
+const sessionType = SessionTypes.NONE
+const caseType = CaseTypes.MTRACK
 const room = Rooms.COURT_4
 const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
@@ -42,7 +44,7 @@ const listingCreationForm: ListingCreationForm = {
 const formValues: FilterSessionsComponentForm = {
     startDate: todayDate,
     endDate: tomorrowDate,
-    caseType: sessionCaseType,
+    sessionType: undefined,
     room: room,
     judge: judge,
     listingDetailsOptions: {
@@ -77,7 +79,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
     it('Transaction dialog should be displayed ', async () => {
       numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
       await navigationFlow.goToNewSessionPage()
-      await sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
+      await sessionCreationPage.createSession(todayDate, startTime, duration, caseType, room, judge)
       expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
       await transactionDialogPage.clickAcceptButton()
     });
@@ -102,7 +104,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
       await sessionSearchPage.changeMaxItemsPerPage('100');
-      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType);
+      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, CaseTypes.NONE);
       await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate);
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
@@ -121,7 +123,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await browser.waitForAngular();
       await calendarPage.clickOnEventWith(startTimeAMFormat)
       const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
-        sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType
+        sessionType, judge, room, todayDate, startTime, caseTitle, hearingType
       )
       expect(idDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
