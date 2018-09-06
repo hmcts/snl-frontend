@@ -100,6 +100,10 @@ export class PlannerComponent implements OnInit {
     public eventModifyConfirmationClosed = (confirmed: boolean) => {
         if (confirmed) {
             this.sessionCreationService.update(this.buildSessionUpdate(this.latestEvent));
+
+            this.openSummaryDialog().afterClosed().subscribe(() => {
+                this.fetchModifiedEntities();
+            });
         } else {
             this.revertLatestEvent();
         }
