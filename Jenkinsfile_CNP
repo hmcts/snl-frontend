@@ -1,14 +1,14 @@
 #!groovy
 
-properties(
-    [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend/'],
-     pipelineTriggers([[$class: 'GitHubPushTrigger']])],
+properties([
     parameters([
             string(name: 'CUSTOM_VARS', defaultValue: '',
                     description: 'Custom terraform variables. ie: KEY="VALUE";KEY="VALUE",' +
                             'Applies only to PR builds'),
     ]),
-)
+    [[$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend/'],
+      pipelineTriggers([[$class: 'GitHubPushTrigger']])]
+])
 
 @Library("Infrastructure")
 
