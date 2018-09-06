@@ -97,7 +97,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await transactionDialogPage.clickAcceptButton();
     });
   });
-  describe('Go to list hearing page, find and select created session and listing', () => {
+  xdescribe('Go to list hearing page, find and select created session and listing', () => {
     it('assign button should be enabled', async () => {
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
@@ -107,7 +107,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
   });
-  describe('Click on "assign" button,', () => {
+  xdescribe('Click on "assign" button,', () => {
     it('transaction dialog with problem that case types are different should be displayed', async () => {
       await sessionSearchPage.clickAssignButton()
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypeProblemText)
@@ -115,7 +115,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await transactionDialogPage.clickAcceptButton();
     });
   });
-  describe('Go to calendar, click on created session', () => {
+  xdescribe('Go to calendar, click on created session', () => {
     it('despite problem it should assign listing request to session and display its details', async () => {
       await navigationFlow.goToCalendarPage()
       await browser.waitForAngular();
