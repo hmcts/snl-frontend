@@ -26,7 +26,7 @@ module "snl-frontend" {
     # REDIS_PASSWORD               = "${module.redis-cache.access_key}"
     # RECIPE_BACKEND_URL = "http://snl-recipe-backend-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
 
-    SNL_API_URL = "${local.api_url}"
-    SNL_NOTES_URL = "${local.notes_url}"
+    SNL_API_URL = "${var.api_url}"
+    SNL_NOTES_URL = "${var.notes_url}"
   }
 }

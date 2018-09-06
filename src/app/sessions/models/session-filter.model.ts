@@ -1,6 +1,7 @@
 import * as moment from 'moment'
 
 export interface SessionFilters {
+    sessionTypes: string[];
     caseTypes: string[];
     rooms: string[];
     judges: string[];
