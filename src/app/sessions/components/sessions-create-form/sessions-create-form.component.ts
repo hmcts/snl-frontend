@@ -4,7 +4,6 @@ import { Room } from '../../../rooms/models/room.model';
 import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { CaseType } from '../../../core/reference/models/case-type';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { safe } from '../../../utils/js-extensions';
@@ -17,7 +16,6 @@ import * as Mapper from '../../mappers/create-session-form-session-create';
     styleUrls: ['./sessions-create-form.component.scss']
 })
 export class SessionsCreateFormComponent {
-
     public static LOADING_ROOMS_PLACEHOLDER = 'Loading the rooms...';
     public static LOADING_JUDGES_PLACEHOLDER = 'Loading the judges...';
     public static SELECT_ROOM_PLACEHOLDER = 'Select the room';
@@ -28,7 +26,6 @@ export class SessionsCreateFormComponent {
     roomsPlaceholder: string;
     judgesPlaceholder: string;
     sessionCreateFormGroup: FormGroup;
-    localCaseTypes: CaseType[];
 
     @Input() set sessionData(value: SessionCreate) {
         if (value === undefined || value == null) {
@@ -41,14 +38,6 @@ export class SessionsCreateFormComponent {
     @Input() judges: Judge[];
     @Input() rooms: Room[];
     @Input() sessionTypes: SessionType[];
-
-    @Input() set caseTypes(values: CaseType[]) {
-        if (values === undefined || values.length === 0) {
-            return;
-        }
-        this.createSessionForm.caseType = values[0].code;
-        this.localCaseTypes = values;
-    }
 
     @Input() set roomsLoading(roomsLoading: boolean) {
         this.roomsPlaceholder = roomsLoading ?
@@ -74,7 +63,6 @@ export class SessionsCreateFormComponent {
             durationInMinutes: 30,
             roomId: null,
             personId: null,
-            caseType: null,
             sessionTypeCode: null
         };
         this.initiateFormGroup();

@@ -3,14 +3,14 @@ import { SessionCreate } from '../models/session-create.model';
 import { CreateSessionForm } from '../models/create-session-form.model';
 
 export const SessionCreateToCreateSessionForm = (sessionCreate: SessionCreate): CreateSessionForm => {
-    const {personId, roomId, caseType, sessionTypeCode, start} = sessionCreate
+    const {personId, roomId, sessionTypeCode, start} = sessionCreate
     const durationInMinutes = Math.floor(sessionCreate.duration / 60)
     const startTime = moment(sessionCreate.start).format('HH:mm');
-    return {personId, roomId, caseType, sessionTypeCode, durationInMinutes, startDate: start, startTime}
+    return {personId, roomId, sessionTypeCode, durationInMinutes, startDate: start, startTime}
 }
 
 export const CreateSessionFormToSessionCreate = (createSessionForm: CreateSessionForm): SessionCreate => {
-    const {personId, roomId, caseType, sessionTypeCode} = createSessionForm
+    const {personId, roomId, sessionTypeCode} = createSessionForm
     const durationInSeconds = Math.floor(createSessionForm.durationInMinutes.valueOf() * 60)
     const startDateWithTime = createSessionForm.startDate
     const timeArr = createSessionForm.startTime.split(':');
@@ -20,7 +20,7 @@ export const CreateSessionFormToSessionCreate = (createSessionForm: CreateSessio
     return {
         personId,
         roomId,
-        caseType,
+        caseType: null,
         sessionTypeCode,
         duration: durationInSeconds,
         start: startDateWithTime,

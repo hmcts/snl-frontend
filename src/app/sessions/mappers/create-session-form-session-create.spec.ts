@@ -28,15 +28,12 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
             const expectedCreateSessionForm: CreateSessionForm = {
                 personId,
                 roomId,
-                caseType,
                 sessionTypeCode,
                 startDate: now,
                 startTime: now.format('HH:mm'),
                 durationInMinutes
             }
 
-            console.log(JSON.stringify(SessionCreateToCreateSessionForm(sessionCreate), null, 2));
-            console.log(expectedCreateSessionForm)
             expect(SessionCreateToCreateSessionForm(sessionCreate)).toEqual(expectedCreateSessionForm)
         });
     });
@@ -46,7 +43,6 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
             const createSessionForm: CreateSessionForm = {
                 personId,
                 roomId,
-                caseType,
                 sessionTypeCode,
                 startDate: now,
                 startTime: now.format('HH:mm'),
@@ -58,7 +54,7 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
                 userTransactionId: undefined,
                 personId,
                 roomId,
-                caseType,
+                caseType: null,
                 sessionTypeCode,
                 duration: durationInSeconds,
                 start: now

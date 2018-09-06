@@ -5,7 +5,6 @@ export interface CreateSessionForm {
     startTime: string,
     durationInMinutes: number,
     sessionTypeCode: string,
-    caseType: string,
     roomId: string,
     personId: string
 }

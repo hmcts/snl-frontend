@@ -16,7 +16,6 @@ import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { asArray } from '../../../utils/array-utils';
 import * as refData from '../../../core/reference/reducers/index';
-import { CaseType } from '../../../core/reference/models/case-type';
 import { SessionType } from '../../../core/reference/models/session-type';
 
 @Component({
@@ -30,7 +29,6 @@ export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
-    caseTypes$: Observable<CaseType[]>;
     sessionTypes$: Observable<SessionType[]>;
     dialogRef: any;
     sessionId: string;
@@ -42,7 +40,6 @@ export class SessionsCreateComponent implements OnInit {
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
-        this.caseTypes$ = this.store.pipe(select(refData.selectCaseTypes));
         this.sessionTypes$ = this.store.pipe(select(refData.selectSessionTypes));
     }
 
