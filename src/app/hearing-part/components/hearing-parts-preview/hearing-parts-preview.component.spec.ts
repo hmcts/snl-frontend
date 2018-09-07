@@ -133,6 +133,30 @@ describe('HearingPartPreviewComponent', () => {
         expect(matDialogSpy.open).toHaveBeenCalled();
         expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
     });
+
+    fdescribe('Implementation check of sortingDataAccessor on caseType ', () => {
+        it('should return null if property value is undefined', () => {
+            let hp = generateHearingParts('1');
+            hp.caseType = undefined;
+            const expected = undefined;
+
+            fixture.detectChanges();
+            const result = component.dataSource.sortingDataAccessor.apply(hp, ['caseType']);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('should return description if property value is defined', () => {
+            let hp = generateHearingParts('1');
+            hp.caseType = { code: 'sample', description: 'sample-description' } as CaseType;
+            const expected = 'sample-description';
+
+            fixture.detectChanges();
+            const result = component.dataSource.sortingDataAccessor.apply(hp, ['caseType']);
+
+            expect(result).toEqual(expected);
+        })
+    });
   });
 });
 

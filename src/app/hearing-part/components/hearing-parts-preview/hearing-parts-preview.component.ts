@@ -64,6 +64,12 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 case 'reservedJudge':
                     return item[property] === undefined ? null : item[property].name;
 
+                case 'caseType':
+                    return item[property] === undefined ? null : item[property].description;
+
+                case 'hearingType':
+                    return item[property] === undefined ? null : item[property].description;
+
                 case 'priority':
                     return priorityValue(item[property]);
 

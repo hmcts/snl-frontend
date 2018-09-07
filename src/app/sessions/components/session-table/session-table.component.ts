@@ -69,6 +69,8 @@ export class SessionTableComponent implements OnChanges {
                       return getPropertyMemberOrNull(item, property, 'name');
                   case 'room':
                       return getPropertyMemberOrNull(item, property, 'name');
+                  case 'caseType':
+                      return item[property] === undefined ? null : item[property].description;
                   case 'hearingParts':
                       return getPropertyMemberOrNull(item, property, 'length');
                   case 'time':
