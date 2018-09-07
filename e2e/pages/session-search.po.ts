@@ -22,8 +22,9 @@ export class SessionSearchPage {
         await this.filterSessionComponent.filter(formValues);
     }
 
-    async selectSession(judge: Judges, date: string, time: string, room: Rooms, caseType: CaseTypes) {
-        await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, caseType)
+    // TODO add session type
+    async selectSession(judge: Judges, date: string, time: string, room: Rooms) {
+        await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room)
     }
 
     async changeMaxItemsPerPage(value: string): Promise<any> {
