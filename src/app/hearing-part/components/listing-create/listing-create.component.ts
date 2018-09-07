@@ -63,7 +63,7 @@ export class ListingCreateComponent implements OnInit {
                 readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
-            if (error !== undefined) {
+            if (error) {
                 this.errors = error.message;
             }
         });
