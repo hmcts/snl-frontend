@@ -16,6 +16,7 @@ import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
 import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
 import * as caseTypeReducers from '../../../core/reference/reducers/case-type.reducer';
+import * as sessionTypeReducers from '../../../core/reference/reducers/session-type.reducer';
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as judgesReducers from '../../../judges/reducers';
 import * as notesReducers from '../../../notes/reducers';
@@ -35,6 +36,7 @@ import { Priority } from '../../../hearing-part/models/priority-model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { HearingType } from '../../../core/reference/models/hearing-type';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsSearchComponent;
@@ -45,6 +47,8 @@ const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const stubCaseType = {code: 'some-case-type-code', description: 'some-case-type'} as CaseType;
 const stubCaseTypes = [stubCaseType];
+const stubSessionType = {code: 'some-session-type-code', description: 'some-session-type'} as SessionType;
+const stubSessionTypes = [stubSessionType];
 const stubHearingType = {code: 'some-hearing-type-code', description: 'some-hearing-type'} as HearingType;
 const stubHearingTypes = [stubHearingType];
 const sessionDuration = 30;
@@ -101,6 +105,7 @@ const mockedSessions: Session[] = [
     room: roomId,
     person: judgeId,
     caseType: stubCaseType.code,
+    sessionTypeCode: stubSessionType.code,
     // hearingTypes: [stubHearingType.code],
     jurisdiction: 'some jurisdiction',
     version: 1
@@ -119,6 +124,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
         StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+        StoreModule.forFeature('sessionTypes', sessionTypeReducers.reducer),
         StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
         StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
@@ -169,6 +175,7 @@ describe('SessionsSearchComponent', () => {
     it('should fetch full sessions', () => {
       store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
+      store.dispatch(new referenceDataActions.GetAllSessionTypeComplete(stubSessionTypes));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
@@ -258,12 +265,12 @@ describe('SessionsSearchComponent', () => {
       sessionFilter.rooms = ['not-existing-id'];
       computeAndVerifyFilteredSessionToBeEmptyArray(component, sessionFilter);
     });
-    it('should filter sessions by existing case types', () => {
-      sessionFilter.caseTypes = [stubCaseType.code];
+    it('should filter sessions by existing session types', () => {
+      sessionFilter.sessionTypes = [stubSessionType.code];
       computeAndVerifyFilteredSession(component, sessionFilter);
     });
-    it('should filter sessions by not existing case types', () => {
-      sessionFilter.caseTypes = ['not-existing-id'];
+    it('should filter sessions by not existing session types', () => {
+      sessionFilter.sessionTypes = ['not-existing-id'];
       computeAndVerifyFilteredSessionToBeEmptyArray(component, sessionFilter);
     });
     it('should filter sessions by utilization', () => {
@@ -403,7 +410,8 @@ function defaultFullMockedSession(): SessionViewModel {
     duration: sessionDuration,
     room: mockedRooms[0],
     person: mockedJudges[0],
-    caseType: stubCaseType,
+    caseType: undefined,
+    sessionType: stubSessionType,
     hearingParts: mockedListedHearingPartsVM,
     jurisdiction: 'some jurisdiction',
     version: 1,
@@ -416,6 +424,7 @@ function defaultFullMockedSession(): SessionViewModel {
 function defaultSessionFilter(): SessionFilters {
   return {
     caseTypes: [],
+    sessionTypes: [],
     rooms: [],
     judges: [],
     startDate: moment(),

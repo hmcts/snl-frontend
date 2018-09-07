@@ -27,7 +27,7 @@ export class SessionTableComponent implements OnChanges {
       'date',
       'duration',
       'room',
-      'caseType',
+      'sessionType',
       'hearingParts',
       'allocated',
       'utilization',
