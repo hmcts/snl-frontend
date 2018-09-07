@@ -78,4 +78,46 @@ describe('SessionsCreateFormComponent', () => {
             expect(component.judgesPlaceholder).toEqual(SessionsCreateFormComponent.SELECT_JUDGE_PLACEHOLDER);
         });
     });
+
+    describe('Form validations', () => {
+        it('on init form invalid', () => {
+            expect(component.sessionCreateFormGroup.valid).toBeFalsy()
+        });
+
+        it('on init form invalid', () => {
+            expect(component.sessionCreateFormGroup.valid).toBeFalsy()
+        });
+
+        describe('Require validators', () => {
+            const propertiesNames = ['startDate', 'startTime', 'durationInMinutes', 'sessionTypeCode']
+
+            propertiesNames.forEach((propertyName) => {
+                it(`${propertyName} field validity`, () => {
+                    let errors = {};
+                    let formGroupProperty = component.sessionCreateFormGroup.controls[propertyName];
+                    formGroupProperty.setValue('');
+                    errors = formGroupProperty.errors || {};
+                    expect(errors['required']).toBeTruthy()
+                });
+            })
+        });
+
+        describe('Min value validator', () => {
+            it('duration should be invalid when equal to zero', () => {
+                let errors = {};
+                let formGroupProperty = component.sessionCreateFormGroup.controls['durationInMinutes'];
+                formGroupProperty.setValue('0');
+                errors = formGroupProperty.errors || {};
+                expect(errors['min']).toBeTruthy()
+            });
+
+            it('duration should be valid when grater then zero', () => {
+                let errors = {};
+                let formGroupProperty = component.sessionCreateFormGroup.controls['durationInMinutes'];
+                formGroupProperty.setValue('1');
+                errors = formGroupProperty.errors || {};
+                expect(errors['min']).toBeFalsy()
+            });
+        });
+    });
 });
