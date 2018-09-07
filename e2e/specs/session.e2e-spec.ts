@@ -30,7 +30,6 @@ const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
 const listingRequestCaseType = CaseTypes.SCLAIMS // must be other than sessionCaseType
 const hearingType = HearingParts.TRIAL;
-const caseTypeProblemText = 'Hearing case type does not match the session type - Warn'
 
 const listingCreationForm: ListingCreationForm = {
   caseNumber,
