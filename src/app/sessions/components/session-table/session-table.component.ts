@@ -69,8 +69,13 @@ export class SessionTableComponent implements OnChanges {
                       return getPropertyMemberOrNull(item, property, 'name');
                   case 'room':
                       return getPropertyMemberOrNull(item, property, 'name');
-                  case 'caseType':
-                      return item[property] === undefined ? null : item[property].description;
+                  case 'sessionType':
+                      const description = getPropertyMemberOrNull(item, property, 'description');
+                      if (description === 'N/A') {
+                          return null;
+                      } else {
+                        return description;
+                      }
                   case 'hearingParts':
                       return getPropertyMemberOrNull(item, property, 'length');
                   case 'time':
@@ -94,5 +99,5 @@ export class SessionTableComponent implements OnChanges {
 }
 
 function getPropertyMemberOrNull(item: object, property: string, key: string) {
-    return item[property] !== undefined ? item[property][key] : null;
+    return (item[property] === undefined || item[property] === null) ? null : item[property][key];
 }

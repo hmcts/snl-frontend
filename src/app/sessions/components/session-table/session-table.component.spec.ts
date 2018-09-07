@@ -13,10 +13,10 @@ import * as transactionsReducers from '../../../features/transactions/reducers';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { CaseType } from '../../../core/reference/models/case-type';
 import * as moment from 'moment';
 import { SessionTableComponent } from './session-table.component';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 const now = moment();
 let component: SessionTableComponent;
@@ -66,7 +66,7 @@ describe('SessionTableComponent', () => {
             duration: 1000,
             room: {name: 'room-name'},
             person: {name: 'judge-name'},
-            caseType: {code: 'ct-code', description: 'ct-description'} as CaseType,
+            sessionType: {code: 'st-code', description: 'st-description'} as SessionType,
             hearingParts: [],
             jurisdiction: '',
             version: 0,
@@ -76,17 +76,17 @@ describe('SessionTableComponent', () => {
         } as SessionViewModel;
 
         const displayedColumnsExpectedValues = [
-            {columnName: 'select session', expected: undefined },
-            {columnName: 'person', expected: sampleSessionViewModel.person.name },
-            {columnName: 'time', expected: sampleSessionViewModel.start.unix() },
-            {columnName: 'date', expected: sampleSessionViewModel.start.unix() },
-            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds() },
-            {columnName: 'room', expected: sampleSessionViewModel.room.name },
-            {columnName: 'caseType', expected: sampleSessionViewModel.caseType.description },
-            {columnName: 'hearingParts', expected: 0 },
-            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds() },
-            {columnName: 'utilization', expected: 0 },
-            {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds() },
+            {columnName: 'select session', expected: undefined},
+            {columnName: 'person', expected: sampleSessionViewModel.person.name},
+            {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
+            {columnName: 'date', expected: sampleSessionViewModel.start.unix()},
+            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
+            {columnName: 'room', expected: sampleSessionViewModel.room.name},
+            {columnName: 'sessionType', expected: sampleSessionViewModel.sessionType.description},
+            {columnName: 'hearingParts', expected: 0},
+            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
+            {columnName: 'utilization', expected: 0},
+            {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
         ];
 
         beforeEach(() => {
@@ -108,5 +108,19 @@ describe('SessionTableComponent', () => {
                 expect(result).toBe(expected);
             });
         }
+
+        it (' should return null when sessionType is with N/A description', () => {
+            const testSamle = {
+                ...sampleSessionViewModel,
+                sessionType: {code: 'N/A', description: 'N/A'} as SessionType,
+            };
+
+            const expected = null;
+
+            component.ngOnChanges();
+            const result = component.dataSource.sortingDataAccessor(testSamle, 'caseType');
+
+            expect(result).toBe(expected);
+        })
     });
 });
