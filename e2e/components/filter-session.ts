@@ -32,7 +32,8 @@ export class FilterSessionComponent {
 
     await selectOptionPairs.reduce(async (prom, pair) => {
       await prom;
-      return await this.elementHelper.selectValueFromMultipleSelectOption(pair[0], pair[1], this.body)
+      return await pair[1] === undefined ?
+          Promise.resolve() : this.elementHelper.selectValueFromMultipleSelectOption(pair[0], pair[1], this.body)
     }, Promise.resolve())
 
     const checkBoxPairs: [ElementFinder, boolean][] = [

@@ -23,6 +23,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { asArray } from '../../../utils/array-utils';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 @Component({
     selector: 'app-sessions-propositions-search',
@@ -36,6 +37,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     judges$: Observable<Judge[]>;
     rooms$: Observable<Room[]>;
     caseTypes$: Observable<CaseType[]>;
+    sessionTypes$: Observable<SessionType[]>;
     sessionPropositions$: Observable<SessionPropositionView[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
@@ -50,6 +52,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
         this.rooms$ = this.store.pipe(select(fromSessionIndex.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
+        this.sessionTypes$ = this.store.pipe(select(fromReferenceData.selectSessionTypes));
         this.sessionPropositions$ = this.store.pipe(
             select(fromSessionIndex.getFullSessionPropositions), map(asArray)
         ) as Observable<SessionPropositionView[]>;
@@ -107,6 +110,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 rooms$: this.rooms$,
                 judges$: this.judges$,
                 caseTypes$: this.caseTypes$,
+                sessionTypes$: this.sessionTypes$,
                 onCreateSessionAction: session => this.dialogSessionCreateClicked(session),
                 onCancelAction: () => this.closeSessionCreateDialog()
             },
