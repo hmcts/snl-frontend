@@ -23,7 +23,7 @@ export class SessionSearchPage {
         await this.filterSessionComponent.filter(formValues);
     }
 
-    async selectSession(judge: Judges, date: string, time: string, room: Rooms, sessionType: SessionTypes) {
+    async selectSession(judge: Judges, date: string, time: string, room: Rooms, sessionType?: SessionTypes) {
         await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, sessionType)
     }
 
