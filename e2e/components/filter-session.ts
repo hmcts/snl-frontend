@@ -6,7 +6,7 @@ export class FilterSessionComponent {
   private body = element(by.css('body'));
   private startDateInput = element(by.id('startDate'));
   private endDateInput = element(by.id('endDate'));
-  private selectCaseTypeSelectOption = element(by.id('selectCaseType'));
+  private selectSessionTypeSelectOption = element(by.id('selectSessionType'));
   private selectRoomSelectOption = element(by.id('selectRoom'));
   private selectJudgeSelectOption = element(by.id('selectJudge'));
   private unlistedCheckboxInput = element(by.id('unlistedCheckbox-input'));
@@ -24,7 +24,7 @@ export class FilterSessionComponent {
     await this.elementHelper.typeDate(this.endDateInput, formValues.endDate);
 
     const selectOptionPairs: [ElementFinder, string][] = [
-      [this.selectCaseTypeSelectOption, formValues.caseType],
+      [this.selectSessionTypeSelectOption, formValues.sessionType],
       [this.selectRoomSelectOption, formValues.room],
       [this.selectJudgeSelectOption, formValues.judge],
       [this.selectJudgeSelectOption, formValues.judge]

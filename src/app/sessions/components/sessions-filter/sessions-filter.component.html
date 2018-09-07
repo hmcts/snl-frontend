@@ -18,9 +18,9 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select id="selectCaseType" placeholder="Select the case type" multiple [(value)] = "filters.caseTypes">
-        <mat-option *ngFor="let case of caseTypes" selected="case.code === filters.caseType"
-                    value="{{case.code}}">{{case.description}}</mat-option>
+      <mat-select id="selectSessionType" placeholder="Select the session type" multiple [(value)] = "filters.sessionTypes">
+        <mat-option *ngFor="let sessionType of sessionTypes" selected="sessionType.code === filters.sessionType"
+                    value="{{sessionType.code}}">{{sessionType.description}}</mat-option>
       </mat-select>
     </mat-form-field>
 
