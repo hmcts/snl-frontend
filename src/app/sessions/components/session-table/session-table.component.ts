@@ -82,15 +82,13 @@ export class SessionTableComponent implements OnChanges {
                   case 'date':
                       return item['start'].unix();
                   case 'duration':
-                      return moment.duration(item[property]).asMilliseconds();
                   case 'allocated':
-                      return moment.duration(item[property]).asMilliseconds();
                   case 'available':
                       return moment.duration(item[property]).asMilliseconds();
                   default:
                       return item[property];
               }
-          }
+          };
 
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -98,6 +96,6 @@ export class SessionTableComponent implements OnChanges {
   }
 }
 
-function getPropertyMemberOrNull(item: object, property: string, key: string) {
-    return (item[property] === undefined || item[property] === null) ? null : item[property][key];
+function getPropertyMemberOrNull(item: object, property: string, key: string ) {
+    return (item[property]) ? item[property][key] : null;
 }

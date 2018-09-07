@@ -73,10 +73,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
                 case 'scheduleStart':
                 case 'scheduleEnd':
-                    return (item[property] === undefined || item[property] === null) ? null : item[property].unix();
+                    return (item[property]) ? item[property].unix() : null;
 
                 case 'notes':
-                    return item[property].length > 0 ? 'Yes' : 'No';
+                    return (item[property] && item[property].length > 0) ? 'Yes' : 'No';
 
                 default:
                     return item[property];
@@ -155,6 +155,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     private getPropertyMemberOrNull(item: object, property: string, key: string ) {
-        return (item[property] === undefined || item[property] === null) ? null : item[property][key];
+        return (item[property]) ? item[property][key] : null;
     }
 }
