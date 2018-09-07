@@ -103,7 +103,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
       await sessionSearchPage.changeMaxItemsPerPage('100');
-      await sessionSearchPage.selectSession(judge, todayDate, startTime, room);
+      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
       await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate);
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
@@ -121,10 +121,9 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToCalendarPage()
       await browser.waitForAngular();
       await calendarPage.clickOnEventWith(startTimeAMFormat)
-      // TODO add sessionType
       const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
-        judge, room, todayDate, startTime, caseTitle, hearingType
-      )
+        sessionType, judge, room, todayDate, startTime, caseTitle, hearingType
+      );
       expect(idDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
     });
