@@ -20,10 +20,11 @@ const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
+console.log(startTime)
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
-const sessionType = SessionTypes.NONE
-const caseType = CaseTypes.MTRACK
+// const sessionCaseType = CaseTypes.FTRACK
+const sessionType = SessionTypes.FTRACK
 const room = Rooms.COURT_4
 const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
@@ -79,7 +80,9 @@ describe('Create Session and Listing Request, assign them despite problem, check
     it('Transaction dialog should be displayed ', async () => {
       numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
       await navigationFlow.goToNewSessionPage()
-      await sessionCreationPage.createSession(todayDate, startTime, duration, caseType, room, judge)
+      // tslint:disable-next-line:no-debugger
+      debugger;
+      await sessionCreationPage.createSession(todayDate, startTime, duration, sessionType, room, judge)
       expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
       await transactionDialogPage.clickAcceptButton()
     });
@@ -104,7 +107,9 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
       await sessionSearchPage.changeMaxItemsPerPage('100');
-      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, CaseTypes.NONE);
+      // tslint:disable-next-line:no-debugger
+      debugger;
+      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
       await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate);
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
@@ -124,7 +129,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await calendarPage.clickOnEventWith(startTimeAMFormat)
       const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
         sessionType, judge, room, todayDate, startTime, caseTitle, hearingType
-      )
+      );
       expect(idDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
     });

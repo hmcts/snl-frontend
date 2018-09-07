@@ -6,6 +6,7 @@ import { CaseTypes } from '../enums/case-types';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
 import { Wait } from '../enums/wait';
+import { SessionTypes } from '../enums/session-types';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
@@ -22,8 +23,8 @@ export class SessionSearchPage {
         await this.filterSessionComponent.filter(formValues);
     }
 
-    async selectSession(judge: Judges, date: string, time: string, room: Rooms, caseType: CaseTypes) {
-        await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, caseType)
+    async selectSession(judge: Judges, date: string, time: string, room: Rooms, sessionType: SessionTypes) {
+        await this.selectCheckBoxInRowWithValues(this.sessionsTable, judge, date, time, room, sessionType)
     }
 
     async changeMaxItemsPerPage(value: string): Promise<any> {
