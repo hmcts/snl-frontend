@@ -1,7 +1,7 @@
 <div class="sessions-create-container">
   <app-sessions-create-form [judges]="data.judges$ | async"
                             [rooms]="data.rooms$ | async"
-                            [sessionTypes]="sessionTypes$ | async"
+                            [sessionTypes]="data.sessionTypes$ | async"
                             (createSessionAction)="data.onCreateSessionAction($event)"
                             (cancelAction)="data.onCancelAction($event)"
                             [sessionData]="data.sessionData"
