@@ -62,22 +62,18 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                     return moment.duration(item[property]).asMilliseconds();
 
                 case 'reservedJudge':
-                    return item[property] === undefined ? null : item[property].name;
+                    return this.getPropertyMemberOrNull(item, property, 'name');
 
                 case 'caseType':
-                    return item[property] === undefined ? null : item[property].description;
-
                 case 'hearingType':
-                    return item[property] === undefined ? null : item[property].description;
+                    return this.getPropertyMemberOrNull(item, property, 'description');
 
                 case 'priority':
                     return priorityValue(item[property]);
 
                 case 'scheduleStart':
-                    return item[property].toString();
-
                 case 'scheduleEnd':
-                    return item[property].toString();
+                    return (item[property] === undefined || item[property] === null) ? null : item[property].unix();
 
                 case 'notes':
                     return item[property].length > 0 ? 'Yes' : 'No';
@@ -156,5 +152,9 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     toggleHearing(hearing) {
         this.selectedHearingPart.toggle(hearing);
         this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {});
+    }
+
+    private getPropertyMemberOrNull(item: object, property: string, key: string ) {
+        return (item[property] === undefined || item[property] === null) ? null : item[property][key];
     }
 }

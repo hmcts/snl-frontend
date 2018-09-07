@@ -166,8 +166,8 @@ describe('HearingPartPreviewComponent', () => {
             { columnName: 'priority', expected: priorityValue(sampleHearingPart.priority) },
             { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
             { columnName: 'notes', expected: 'No' },
-            { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.toString() },
-            { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.toString() },
+            { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.unix() },
+            { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.unix() },
             { columnName: 'delete', expected: undefined },
             { columnName: 'editor', expected: undefined },
         ];
