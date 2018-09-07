@@ -170,6 +170,7 @@ export class ListingCreateComponent implements OnInit {
         const now = moment();
         if (this.caseTypes !== undefined && this.caseTypes.length > 0) {
             this.hearings = this.caseTypes[0].hearingTypes;
+            const defaultHearingTypeCode = (this.hearings[0] !== undefined) ? this.hearings[0].code : null;
             return {
                 hearingPart: {
                     id: undefined,
@@ -177,7 +178,7 @@ export class ListingCreateComponent implements OnInit {
                     caseNumber: `number-${now.toISOString()}`,
                     caseTitle: `title-${now.toISOString()}`,
                     caseType: this.caseTypes[0].code,
-                    hearingType: this.hearings[0].code,
+                    hearingType: defaultHearingTypeCode,
                     duration: moment.duration(30, DURATION_UNIT),
                     scheduleStart: now,
                     scheduleEnd: moment().add(30, 'day'),
