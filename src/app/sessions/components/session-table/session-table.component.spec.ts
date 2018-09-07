@@ -1,0 +1,112 @@
+import { StoreModule } from '@ngrx/store';
+import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
+import * as fromHearingParts from '../../reducers';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { NoteComponent } from '../../../notes/components/note/note.component';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
+import * as judgesReducers from '../../../judges/reducers';
+import * as transactionsReducers from '../../../features/transactions/reducers';
+import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { CaseType } from '../../../core/reference/models/case-type';
+import * as moment from 'moment';
+import { SessionTableComponent } from './session-table.component';
+import { SessionViewModel } from '../../models/session.viewmodel';
+
+const now = moment();
+let component: SessionTableComponent;
+let fixture: ComponentFixture<SessionTableComponent>;
+
+describe('SessionTableComponent', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                AngularMaterialModule,
+                ReactiveFormsModule,
+                FormsModule,
+                StoreModule.forRoot({}),
+                StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
+                StoreModule.forFeature('judges', judgesReducers.reducers),
+                StoreModule.forFeature('transactions', transactionsReducers.reducers),
+                BrowserAnimationsModule
+            ],
+            declarations: [
+                SessionTableComponent,
+                NoteComponent,
+                NoteListComponent,
+                DurationFormatPipe,
+                DurationAsMinutesPipe,
+                TransactionDialogComponent
+            ],
+            providers: [
+                NoteListComponent,
+                NotesPreparerService
+            ]
+        });
+
+        TestBed.overrideModule(BrowserDynamicTestingModule, {
+            set: {
+                entryComponents: [TransactionDialogComponent]
+            }
+        });
+
+        fixture = TestBed.createComponent(SessionTableComponent);
+        component = fixture.componentInstance;
+    });
+
+    describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
+        const sampleSessionViewModel = {
+            id: '-1',
+            start: now,
+            duration: 1000,
+            room: {name: 'room-name'},
+            person: {name: 'judge-name'},
+            caseType: {code: 'ct-code', description: 'ct-description'} as CaseType,
+            hearingParts: [],
+            jurisdiction: '',
+            version: 0,
+            allocated: moment.duration('PT10M'),
+            utilization: 0,
+            available: moment.duration('PT10H'),
+        } as SessionViewModel;
+
+        const displayedColumnsExpectedValues = [
+            {columnName: 'select session', expected: undefined },
+            {columnName: 'person', expected: sampleSessionViewModel.person.name },
+            {columnName: 'time', expected: sampleSessionViewModel.start.unix() },
+            {columnName: 'date', expected: sampleSessionViewModel.start.unix() },
+            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds() },
+            {columnName: 'room', expected: sampleSessionViewModel.room.name },
+            {columnName: 'caseType', expected: sampleSessionViewModel.caseType.description },
+            {columnName: 'hearingParts', expected: 0 },
+            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds() },
+            {columnName: 'utilization', expected: 0 },
+            {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds() },
+        ];
+
+        beforeEach(() => {
+            component.sessions = [sampleSessionViewModel];
+        });
+
+        it(' tested columns should equal component displayedColumns field', () => {
+            const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
+            expect(component.displayedColumns).toEqual(columnsArray);
+        });
+
+        for (let testCase of displayedColumnsExpectedValues) {
+            it(`${testCase.columnName} should return proper value`, () => {
+                const expected = testCase.expected;
+
+                component.ngOnChanges();
+                const result = component.dataSource.sortingDataAccessor(sampleSessionViewModel, testCase.columnName);
+
+                expect(result).toBe(expected);
+            });
+        }
+    });
+});

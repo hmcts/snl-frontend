@@ -73,6 +73,15 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 case 'priority':
                     return priorityValue(item[property]);
 
+                case 'scheduleStart':
+                    return item[property].toString();
+
+                case 'scheduleEnd':
+                    return item[property].toString();
+
+                case 'notes':
+                    return item[property].length > 0 ? 'Yes' : 'No';
+
                 default:
                     return item[property];
             }

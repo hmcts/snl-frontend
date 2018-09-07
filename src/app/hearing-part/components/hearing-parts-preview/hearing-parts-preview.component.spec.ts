@@ -21,12 +21,14 @@ import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
+import * as moment from 'moment';
+import { Priority, priorityValue } from '../../models/priority-model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
 };
-
+const now = moment();
 const openDialogMockObjDeclined = {
     afterClosed: (): Observable<boolean> => Observable.of(false)
 };
@@ -134,28 +136,57 @@ describe('HearingPartPreviewComponent', () => {
         expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
     });
 
-    fdescribe('Implementation check of sortingDataAccessor on caseType ', () => {
-        it('should return null if property value is undefined', () => {
-            let hp = generateHearingParts('1');
-            hp.caseType = undefined;
-            const expected = undefined;
+    describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
+        const sampleHearingPart = {
+            id: '-1',
+            session: null,
+            caseNumber: 'cn-123',
+            caseTitle: 'ctitle-123',
+            caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
+            hearingType: { code: 'ht-code', description: 'ht-description' } as HearingType,
+            duration: moment.duration('PT10M'),
+            scheduleStart: now,
+            scheduleEnd: now,
+            version: 0,
+            priority: Priority.Low,
+            reservedJudgeId: '0',
+            reservedJudge: { name: 'judge-name'},
+            communicationFacilitator: 'cf',
+            notes: []
+        } as HearingPartViewModel;
 
-            fixture.detectChanges();
-            const result = component.dataSource.sortingDataAccessor.apply(hp, ['caseType']);
+        const displayedColumnsExpectedValues = [
+            { columnName: 'selectHearing', expected: undefined },
+            { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
+            { columnName: 'caseTitle', expected: sampleHearingPart.caseTitle },
+            { columnName: 'caseType', expected: sampleHearingPart.caseType.description },
+            { columnName: 'hearingType', expected: sampleHearingPart.hearingType.description },
+            { columnName: 'duration', expected: sampleHearingPart.duration.asMilliseconds() },
+            { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
+            { columnName: 'priority', expected: priorityValue(sampleHearingPart.priority) },
+            { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
+            { columnName: 'notes', expected: 'No' },
+            { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.toString() },
+            { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.toString() },
+            { columnName: 'delete', expected: undefined },
+            { columnName: 'editor', expected: undefined },
+        ];
 
-            expect(result).toEqual(expected);
+        it(' tested columns should equal component displayedColumns field', () => {
+            const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
+            expect(component.displayedColumns).toEqual(columnsArray);
         });
 
-        it('should return description if property value is defined', () => {
-            let hp = generateHearingParts('1');
-            hp.caseType = { code: 'sample', description: 'sample-description' } as CaseType;
-            const expected = 'sample-description';
+        for (let testCase of displayedColumnsExpectedValues) {
+            it(`${testCase.columnName} should return proper value`, () => {
+                const expected = testCase.expected;
 
-            fixture.detectChanges();
-            const result = component.dataSource.sortingDataAccessor.apply(hp, ['caseType']);
+                component.ngOnChanges();
+                const result = component.dataSource.sortingDataAccessor(sampleHearingPart, testCase.columnName);
 
-            expect(result).toEqual(expected);
-        })
+                expect(result).toBe(expected);
+            });
+        }
     });
   });
 });

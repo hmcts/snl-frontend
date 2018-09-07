@@ -77,7 +77,11 @@ export class SessionTableComponent implements OnChanges {
                   case 'date':
                       return item['start'].unix();
                   case 'duration':
-                      return moment.duration(item[property]);
+                      return moment.duration(item[property]).asMilliseconds();
+                  case 'allocated':
+                      return moment.duration(item[property]).asMilliseconds();
+                  case 'available':
+                      return moment.duration(item[property]).asMilliseconds();
                   default:
                       return item[property];
               }
