@@ -118,7 +118,7 @@ describe('SessionTableComponent', () => {
             const expected = null;
 
             component.ngOnChanges();
-            const result = component.dataSource.sortingDataAccessor(testSamle, 'caseType');
+            const result = component.dataSource.sortingDataAccessor(testSamle, 'sessionType');
 
             expect(result).toBe(expected);
         })
