@@ -7,6 +7,7 @@ import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
 import { Wait } from '../enums/wait';
 import { SessionTypes } from '../enums/session-types';
+import { HearingTypes } from '../enums/hearing-types';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
@@ -46,10 +47,10 @@ export class SessionSearchPage {
         }, Promise.resolve());
     }
 
-    async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes,
+    async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes, hearingType: HearingTypes,
         targetScheduleFrom: string, targetScheduleTo: string) {
         await this.selectCheckBoxInRowWithValues(this.listingRequestsTable,
-            caseNumber, caseTitle, caseType, targetScheduleFrom, targetScheduleTo)
+            caseNumber, caseTitle, caseType, hearingType, targetScheduleFrom, targetScheduleTo)
     }
 
     async isListingRequestDisplayed(...values: string[]): Promise<boolean> {
