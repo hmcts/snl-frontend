@@ -69,17 +69,26 @@ export class SessionTableComponent implements OnChanges {
                       return getPropertyMemberOrNull(item, property, 'name');
                   case 'room':
                       return getPropertyMemberOrNull(item, property, 'name');
+                  case 'sessionType':
+                      const description = getPropertyMemberOrNull(item, property, 'description');
+                      if (description === 'N/A') {
+                          return null;
+                      } else {
+                        return description;
+                      }
                   case 'hearingParts':
                       return getPropertyMemberOrNull(item, property, 'length');
                   case 'time':
                   case 'date':
                       return item['start'].unix();
                   case 'duration':
-                      return moment.duration(item[property]);
+                  case 'allocated':
+                  case 'available':
+                      return moment.duration(item[property]).asMilliseconds();
                   default:
                       return item[property];
               }
-          }
+          };
 
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -87,6 +96,6 @@ export class SessionTableComponent implements OnChanges {
   }
 }
 
-function getPropertyMemberOrNull(item: object, property: string, key: string) {
-    return item[property] !== undefined ? item[property][key] : null;
+function getPropertyMemberOrNull(item: object, property: string, key: string ) {
+    return (item[property]) ? item[property][key] : null;
 }
