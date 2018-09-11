@@ -70,7 +70,7 @@ const sessionDetailsDialogPage = new SessionDetailsDialogPage()
 let numberOfVisibleEvents: number;
 
 // Disabled due changes in rules
-xdescribe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {x
+xdescribe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
   beforeAll(async () => {
     await loginFlow.loginIfNeeded();
     await navigationFlow.goToCalendarPage()
