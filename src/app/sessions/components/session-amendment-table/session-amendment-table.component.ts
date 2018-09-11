@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
-import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
 
 @Component({
@@ -12,16 +11,11 @@ import { SessionViewModel } from '../../models/session.viewmodel';
 })
 export class SessionAmendmentTableComponent implements OnChanges {
 
-  @Output()
-  selectSession = new EventEmitter();
-
   @Input() sessions: SessionViewModel[];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  selectedSesssion;
   displayedColumns = [
-      'select session',
       'person',
       'time',
       'date',
@@ -38,10 +32,6 @@ export class SessionAmendmentTableComponent implements OnChanges {
   tableVisible;
 
   constructor() {
-    this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
-
-    this.tableVisible = false;
-
     this.dataSource = new MatTableDataSource(this.sessions);
   }
 
@@ -53,14 +43,14 @@ export class SessionAmendmentTableComponent implements OnChanges {
       return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
   }
 
-  toggleSession(session: SessionViewModel) {
-    this.selectedSesssion.toggle(session);
-    this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
-  }
-
   ngOnChanges() {
       if (this.sessions) {
+          if (this.sessions.length === 0) {
+              this.tableVisible = false;
+              return;
+          }
           this.tableVisible = true;
+
           this.dataSource = new MatTableDataSource(this.sessions);
 
           this.dataSource.sortingDataAccessor = (item, property) => {

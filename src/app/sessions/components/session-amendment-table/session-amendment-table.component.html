@@ -6,18 +6,8 @@
   </mat-card>
 </div>
 
-<mat-table id="sessions-table" *ngIf="dataSource && tableVisible" #table [dataSource]="dataSource" matSort>
+<mat-table id="sessions-table" *ngIf="tableVisible" #table [dataSource]="dataSource" matSort>
   <!-- Position Column -->
-  <ng-container matColumnDef="select session">
-    <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
-    <mat-cell *matCellDef="let element">
-      <mat-checkbox (click)="$event.stopPropagation()"
-                    (change)="$event ? toggleSession(element) : null"
-                    [checked]="selectedSesssion.isSelected(element)">&nbsp;
-      </mat-checkbox>
-    </mat-cell>
-  </ng-container>
-
   <ng-container matColumnDef="person">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
@@ -73,4 +63,4 @@
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="tableVisible" [length]="sessions.length" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
