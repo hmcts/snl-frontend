@@ -28,7 +28,7 @@ export class PlannerComponent implements OnInit {
     public lastSearchDateRange: SessionQueryForDates;
     private confirmationDialogRef;
     private confirmationDialogOpen;
-    private selectedSessionId;
+    public selectedSessionId;
     private latestEvent: any;
     public sessions: any[];
     public hearingParts: any[];
@@ -122,7 +122,7 @@ export class PlannerComponent implements OnInit {
                         hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
                         sessionId: selectedSessionId,
-                        sessionVersion: this.sessions.find(hp => hp.id === selectedSessionId).version,
+                        sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version,
                         start: null
                     } as SessionAssignment);
 
