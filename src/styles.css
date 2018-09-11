@@ -16,3 +16,7 @@ html * {
 .primary-colored-background {
     background-color: #673ab7;
 }
+
+mat-dialog-container {
+    max-height: 90vh;
+}

@@ -7,17 +7,17 @@
     <form [formGroup]="sessionCreateFormGroup" novalidate (ngSubmit)="create()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
-        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" placeholder="Choose date *" [(ngModel)]="createSessionForm.startDate"> <!--  -->
+        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" placeholder="Choose date *" [(ngModel)]="createSessionForm.startDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field>
-        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time">
+        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="createSessionForm.startTime">
       </mat-form-field>
 
       <mat-form-field>
-        <input id="duration" formControlName="durationInMinutes" type="number" matInput placeholder="Duration *">
+        <input id="duration" formControlName="durationInMinutes" type="number" matInput placeholder="Duration *" [(ngModel)]="createSessionForm.durationInMinutes">
       </mat-form-field>
 
       <mat-form-field>

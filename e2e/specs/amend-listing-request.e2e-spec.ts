@@ -3,7 +3,7 @@ import { NavigationFlow } from './../flows/navigation.flow';
 import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { v4 as uuid } from 'uuid';
-import { HearingParts } from '../enums/hearing-parts';
+import { HearingTypes } from '../enums/hearing-types';
 import { ListingCreationPage } from '../pages/listing-creation.po';
 import * as moment from 'moment';
 import { ListingCreationForm } from '../models/listing-creation-form';
@@ -29,21 +29,21 @@ const otherDuration = 45;
 const priority = 'Low';
 const id = uuid();
 const userTransactionId = uuid();
-const hearingType = HearingParts.TRIAL;
-const otherHearingType = HearingParts.ADJOURNED;
+const hearingType = HearingTypes.TRIAL;
+const otherHearingType = HearingTypes.ADJOURNED;
 
 const displayedListingRequestData = {
   caseNumber,
   caseTitle,
   caseType,
   hearingType,
+  priority
 };
 
 const listingRequest = {
   id,
   duration,
   userTransactionId,
-  priority, // move priority to displayedListingRequestData when bug with displaying priority will be fixed
   ...displayedListingRequestData
 };
 
@@ -53,7 +53,7 @@ const listingRequestCreate = {
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
-  await loginFlow.loginIfNeeded()
+    await loginFlow.loginIfNeeded()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
