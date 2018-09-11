@@ -191,7 +191,12 @@ describe('PlannerComponent', () => {
               person: undefined,
               caseType: undefined,
               jurisdiction: 'some jurisdiction',
-              version: 1
+              version: 1,
+              sessionType: undefined,
+              hearingParts: undefined,
+              allocated: undefined,
+              utilization: undefined,
+              available: undefined
           }
       ];
 

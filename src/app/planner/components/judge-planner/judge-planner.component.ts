@@ -29,7 +29,7 @@ export class JudgePlannerComponent implements OnInit {
     @Output() drop = new EventEmitter();
     @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
-    @Input() sessions: any[];
+    @Input() sessions: SessionViewModel[];
 
     constructor(private readonly store: Store<State>) {
         this.defaultView = 'timelineWeek';

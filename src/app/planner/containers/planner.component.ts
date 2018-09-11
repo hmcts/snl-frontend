@@ -17,6 +17,7 @@ import { v4 as uuid } from 'uuid';
 import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import * as fromHearingParts from '../../hearing-part/reducers/index';
 import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
+import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 
 @Component({
     selector: 'app-planner',
@@ -30,7 +31,7 @@ export class PlannerComponent implements OnInit {
     private confirmationDialogOpen;
     public selectedSessionId;
     private latestEvent: any;
-    public sessions: any[];
+    public sessions: SessionViewModel[];
     public hearingParts: any[];
 
     constructor(private readonly store: Store<State>,
