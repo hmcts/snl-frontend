@@ -198,22 +198,10 @@ export class ListingCreateComponent implements OnInit {
 
     private initiateForm() {
         this.listingCreate = new FormGroup({
-            caseNumber: new FormControl(
-                this.listing.hearingPart.caseNumber,
-                [Validators.required, Validators.maxLength(this.caseNumberMaxLength)]
-            ),
-            caseTitle: new FormControl(
-                this.listing.hearingPart.caseTitle,
-                [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
-            ),
-            caseType: new FormControl(
-                this.listing.hearingPart.caseType,
-                [Validators.required]
-            ),
-            hearingType: new FormControl(
-                this.listing.hearingPart.hearingType,
-                [Validators.required]
-            ),
+            caseNumber: new FormControl(this.listing.hearingPart.caseNumber, [Validators.required]),
+            caseTitle: new FormControl(this.listing.hearingPart.caseTitle, [Validators.required]),
+            caseType: new FormControl(this.listing.hearingPart.caseType, [Validators.required]),
+            hearingType: new FormControl(this.listing.hearingPart.hearingType, [Validators.required]),
             duration: new FormControl(
                 this.listing.hearingPart.duration.asMinutes(),
                 [Validators.required, Validators.min(1)]
