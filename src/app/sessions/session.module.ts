@@ -10,7 +10,7 @@ import { SessionTableComponent } from './components/session-table/session-table.
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SessionsService } from './services/sessions-service';
 import { reducers } from './reducers';
 import { JudgeEffects } from '../judges/effects/judge.effects';
@@ -50,6 +50,7 @@ export const COMPONENTS = [
     AngularMaterialModule,
       FlexLayoutModule,
       FormsModule,
+      ReactiveFormsModule,
       HearingPartModule,
       TransactionsModule,
       CoreModule,

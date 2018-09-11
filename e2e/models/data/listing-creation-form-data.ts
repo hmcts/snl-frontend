@@ -1,6 +1,6 @@
 import { ListingCreationForm } from '../listing-creation-form';
 import * as moment from 'moment';
-import { HearingParts } from '../../enums/hearing-parts';
+import { HearingTypes } from '../../enums/hearing-types';
 import { CaseTypes } from '../../enums/case-types';
 
 const now = moment()
@@ -10,7 +10,7 @@ const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const duration = 15
 const caseTitle = 'e2e Test'
 const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
-const hearingType = HearingParts.ADJOURNED
+const hearingType = HearingTypes.ADJOURNED
 
 export const listingCreationForm: ListingCreationForm = {
   caseNumber,

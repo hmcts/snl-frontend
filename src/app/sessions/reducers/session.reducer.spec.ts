@@ -46,6 +46,7 @@ function generateSession(id: string): Session {
         room: null,
         person: null,
         caseType: null,
+        sessionTypeCode: null,
         jurisdiction: 'some jurisdiction',
         version: 0
     }

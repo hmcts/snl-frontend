@@ -14,6 +14,7 @@ import * as notesReducers from '../../notes/reducers';
 import * as judgesReducers from '../../judges/reducers';
 import * as fromSessions from '../../sessions/reducers';
 import * as caseTypeReducers from '../../core/reference/reducers/case-type.reducer';
+import * as sessionTypeReducers from '../../core/reference/reducers/session-type.reducer';
 import * as hearingTypeReducers from '../../core/reference/reducers/hearing-type.reducer';
 import { Priority } from '../../hearing-part/models/priority-model';
 
@@ -65,6 +66,7 @@ describe('PlannerComponent', () => {
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
         StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+        StoreModule.forFeature('sessionTypes', sessionTypeReducers.reducer),
         StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer)
       ],
       providers: [

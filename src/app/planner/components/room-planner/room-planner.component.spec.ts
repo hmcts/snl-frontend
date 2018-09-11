@@ -10,6 +10,7 @@ import * as notesReducers from '../../../notes/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as caseTypeReducers from '../../../core/reference/reducers/case-type.reducer';
+import * as sessionTypeReducers from '../../../core/reference/reducers/session-type.reducer';
 
 let component: RoomPlannerComponent;
 let store: Store<State>;
@@ -25,6 +26,7 @@ describe('RoomPlannerComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('sessions', sessionReducers.reducers),
+        StoreModule.forFeature('sessionTypes', sessionTypeReducers.reducer),
         StoreModule.forFeature('judges', judgesReducers.reducers),
         StoreModule.forFeature('notes', notesReducers.reducers),
         StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),

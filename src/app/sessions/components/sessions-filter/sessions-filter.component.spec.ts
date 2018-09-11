@@ -25,6 +25,7 @@ describe('SessionsFilterComponent', () => {
     it('should emit filters', () => {
       const mockedFilters: SessionFilters = {
         caseTypes: [],
+        sessionTypes: [],
         rooms: [],
         judges: [],
         startDate: moment(),

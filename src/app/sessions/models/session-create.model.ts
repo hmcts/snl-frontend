@@ -8,4 +8,5 @@ export interface SessionCreate {
     duration: number;
     start: moment.Moment;
     caseType: string;
+    sessionTypeCode: string;
 }

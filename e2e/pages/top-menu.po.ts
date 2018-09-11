@@ -30,7 +30,7 @@ export class TopMenu {
 
   async openCalendarPage() {
     await browser.wait(
-      ExpectedConditions.presenceOf(element(this.calendarButtonSelector)),
+      ExpectedConditions.elementToBeClickable(element(this.calendarButtonSelector)),
       Wait.normal,
       'Cant find Calendar menu button'
     );

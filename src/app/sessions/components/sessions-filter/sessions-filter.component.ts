@@ -16,12 +16,13 @@ export class SessionsFilterComponent implements OnInit {
 
   @Input() rooms: Room[];
   @Input() judges: Judge[];
+  @Input() sessionTypes: CaseType[];
   @Input() startDate: moment.Moment;
   @Input() endDate: moment.Moment;
+
   roomsPlaceholder: string;
   judgesPlaceholder: string;
   filters: SessionFilters;
-  @Input() caseTypes: CaseType[];
 
   constructor() {
       this.roomsPlaceholder = 'Select the room';
@@ -30,6 +31,7 @@ export class SessionsFilterComponent implements OnInit {
 
   ngOnInit() {
       this.filters = {
+          sessionTypes: [],
           caseTypes: [],
           rooms: [],
           judges: [],
