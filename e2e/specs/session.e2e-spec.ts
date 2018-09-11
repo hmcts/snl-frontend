@@ -69,7 +69,8 @@ const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
 let numberOfVisibleEvents: number;
 
-describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
+// Disabled due changes in rules
+xdescribe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {x
   beforeAll(async () => {
     await loginFlow.loginIfNeeded();
     await navigationFlow.goToCalendarPage()
