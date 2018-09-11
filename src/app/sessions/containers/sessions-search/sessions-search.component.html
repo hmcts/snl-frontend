@@ -4,10 +4,9 @@
             (filter)="filters$.next($event)"
             [rooms]="rooms$ | async"
             [judges]="judges$ | async"
-            [caseTypes]="caseTypes$ | async"
+            [sessionTypes]="sessionTypes$ | async"
             [startDate]="startDate"
             [endDate]="endDate">
-
     </app-sessions-filter>
   </div>
   <div fxFlex>

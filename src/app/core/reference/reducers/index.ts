@@ -38,3 +38,8 @@ export const selectSessionTypes = createSelector(
     fromSessionTypesState,
     fromSessionType.selectAll
 );
+
+export const selectSessionTypesDictionary = createSelector(
+    fromSessionTypesState,
+    fromSessionType.selectEntities
+);

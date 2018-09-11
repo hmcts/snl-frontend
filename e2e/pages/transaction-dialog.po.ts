@@ -14,6 +14,7 @@ export class TransactionDialogPage {
 
   async clickAcceptButton(): Promise<any> {
     const acceptButton = element(by.id('okButton'));
+    await browser.executeScript('arguments[0].scrollIntoView();', acceptButton.getWebElement());
     await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.normal, 'Accept button is not visible');
     await acceptButton.click();
     await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.normal, 'Accept button wont disappear');
