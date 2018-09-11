@@ -54,8 +54,8 @@ export class ListingCreateComponent implements OnInit {
     judges: Judge[] = [];
     caseTypes: CaseType[] = [];
 
-    caseTitleMaxLength = 10;
-    caseNumberMaxLength = 10;
+    caseTitleMaxLength = 200;
+    caseNumberMaxLength = 200;
 
     public listing: ListingCreate;
 
