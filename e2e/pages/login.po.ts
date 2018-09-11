@@ -1,4 +1,4 @@
-import { element, by, browser } from 'protractor';
+import { element, by, browser, ExpectedConditions } from 'protractor';
 import { ElementHelper } from '../utils/element-helper';
 
 export class LoginPage {
@@ -16,5 +16,9 @@ export class LoginPage {
 
   async isPresent(): Promise<boolean> {
     return await this.username.isPresent();
+  }
+
+  async waitUntilLoaded() {
+    return await browser.wait(ExpectedConditions.elementToBeClickable(this.username))
   }
 }
