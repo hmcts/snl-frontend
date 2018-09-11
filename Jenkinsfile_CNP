@@ -22,7 +22,7 @@ withPipeline("angular", product, app) {
   }
 
   after('functionalTest') {
-    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'REPORTS/**/*.*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/e2e/**'
   }
 
 }
