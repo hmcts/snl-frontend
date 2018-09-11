@@ -3,9 +3,10 @@ import { element, by, ElementFinder } from 'protractor';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 
 export class FilterSessionComponent {
+  private body = element(by.css('body'));
   private startDateInput = element(by.id('startDate'));
   private endDateInput = element(by.id('endDate'));
-  private selectCaseTypeSelectOption = element(by.id('selectCaseType'));
+  private selectSessionTypeSelectOption = element(by.id('selectSessionType'));
   private selectRoomSelectOption = element(by.id('selectRoom'));
   private selectJudgeSelectOption = element(by.id('selectJudge'));
   private unlistedCheckboxInput = element(by.id('unlistedCheckbox-input'));
@@ -18,17 +19,22 @@ export class FilterSessionComponent {
   private filterButton = element(by.id('filter'));
   private elementHelper = new ElementHelper();
 
-  filter(formValues: FilterSessionsComponentForm) {
-    this.elementHelper.typeDate(this.startDateInput, formValues.startDate);
-    this.elementHelper.typeDate(this.endDateInput, formValues.endDate);
+  async filter(formValues: FilterSessionsComponentForm) {
+    await this.elementHelper.typeDate(this.startDateInput, formValues.startDate);
+    await this.elementHelper.typeDate(this.endDateInput, formValues.endDate);
 
     const selectOptionPairs: [ElementFinder, string][] = [
-      [this.selectCaseTypeSelectOption, formValues.caseType],
+      [this.selectSessionTypeSelectOption, formValues.sessionType],
       [this.selectRoomSelectOption, formValues.room],
       [this.selectJudgeSelectOption, formValues.judge],
       [this.selectJudgeSelectOption, formValues.judge]
     ];
-    selectOptionPairs.forEach(pair => this.elementHelper.selectValueFromSelectOption(pair[0], pair[1]));
+
+    await selectOptionPairs.reduce(async (prom, pair) => {
+      await prom;
+      return await pair[1] === undefined ?
+          Promise.resolve() : this.elementHelper.selectValueFromMultipleSelectOption(pair[0], pair[1], this.body)
+    }, Promise.resolve())
 
     const checkBoxPairs: [ElementFinder, boolean][] = [
       [this.unlistedCheckboxInput, formValues.listingDetailsOptions.unlisted],
@@ -37,15 +43,17 @@ export class FilterSessionComponent {
       [this.overListedCheckboxCheckboxInput, formValues.listingDetailsOptions.overListed],
       [this.customCheckboxInput, formValues.listingDetailsOptions.customListed.checked]
     ];
-    checkBoxPairs.forEach(pair =>
-      this.elementHelper.selectCheckbox(pair[0], pair[1])
-    );
+
+    await checkBoxPairs.reduce(async (prom, pair) => {
+      await prom;
+      return await this.elementHelper.selectCheckbox(pair[0], pair[1])
+    }, Promise.resolve());
 
     if (formValues.listingDetailsOptions.customListed.checked) {
-      this.elementHelper.typeValue(this.customFromInput, formValues.listingDetailsOptions.customListed.from);
-      this.elementHelper.typeValue(this.customToInput, formValues.listingDetailsOptions.customListed.to);
+      await this.elementHelper.typeValue(this.customFromInput, formValues.listingDetailsOptions.customListed.from);
+      await this.elementHelper.typeValue(this.customToInput, formValues.listingDetailsOptions.customListed.to);
     }
 
-    this.filterButton.click();
+    await this.filterButton.click();
   }
 }

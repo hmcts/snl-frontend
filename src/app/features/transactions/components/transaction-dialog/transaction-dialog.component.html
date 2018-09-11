@@ -1,7 +1,7 @@
 <div class="container" fxLayout="column" fxLayoutGap="5%" fxLayoutAlign="center center">
   <div id="transactionBeingCreated" fxFlex fxLayout="column" fxLayoutAlign="center center" *ngIf="!(transacted$ | async)">
     <p fxFlex>
-      Your session is being created...
+      {{actionTitle}}
     </p>
     <p fxFlex>
       Potential problems will be displayed below when computation finishes.
@@ -10,7 +10,7 @@
 
   <div id="sessionCreationSummary" fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="(transacted$ | async) && !(conflicted$ | async)">
     <div fxFlex>
-      Session creation summary
+      Action summary
     </div>
     <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...
@@ -24,7 +24,13 @@
   </div>
 
   <div fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="conflicted$ | async">
-      Transaction Conflict!
+      <div>
+        Operation failed!
+      </div>
+
+      <div>
+        Some of the modified resources are being or have been modified in the meantime. Please, reload the page and try again.
+      </div>
   </div>
 
   <mat-spinner *ngIf="!(finished$ | async)" fxFlex></mat-spinner>
@@ -45,7 +51,8 @@
     Please confirm what action you’d like to take
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-    <button id="okButton" mat-button (click)="onOkClick()">{{buttonText$ | async}}</button>
+    <button *ngIf="(finished$ | async)" id="okButton" mat-button (click)="onOkClick()">Accept</button>
+    <button *ngIf="!(finished$ | async)" id="hideDialogButton" mat-button (click)="onHideDialogClick()">Hide the dialog</button>
     <button *ngIf="(finished$ | async) && (problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Rollback</button>
   </div>
 

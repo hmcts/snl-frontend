@@ -1,8 +1,8 @@
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment';
-import { EventsColorsForCasetype } from '../model/events-colors-for-casetype';
 import { DefaultDataTransformer } from './default-data-transformer';
 import { IcalendarTransformer } from './icalendar-transformer';
+import { SessionType } from '../../reference/models/session-type';
 
 let session = {
     id: 'id',
@@ -10,30 +10,30 @@ let session = {
     duration: 60,
     room: { name: 'room' },
     person: { name: 'person' },
-    caseType: 'SCLAIMS',
+    sessionType: { code: 'session-type-code', description: 'session-type-description' } as SessionType,
     hearingParts: [],
     jurisdiction: ''
 } as SessionViewModel;
 
 let expectedEvent = {
-    title: `${session.room.name} - ${session.person.name} - ${session.caseType}`,
+    title: `${session.room.name} - ${session.person.name} - ${session.sessionType.description}`,
     start: session.start,
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
-    color: EventsColorsForCasetype[session.caseType]
+    color: 'gray'
 };
 
-let sessionWithoutJudgeAndRoomAndCasetype = {
+let sessionWithoutJudgeAndRoomAndSessiontype = {
     ...session,
     person: undefined,
     room: undefined,
-    caseType: undefined,
+    sessionType: undefined,
 } as SessionViewModel;
 
-let expectedEventWithoutJudgeAndRoomAndCasetype = {
+let expectedEventWithoutJudgeAndRoomAndSessiontype = {
     ...expectedEvent,
-    title: `No Room - No Judge - No Case type`,
+    title: `No Room - No Judge - No Session type`,
     color: 'gray'
 }
 
@@ -50,9 +50,9 @@ let tests = [
         session: session,
         expectedEvent: expectedEvent
     }, {
-        name: 'without judge, room and casetype',
-        session: sessionWithoutJudgeAndRoomAndCasetype,
-        expectedEvent: expectedEventWithoutJudgeAndRoomAndCasetype
+        name: 'without judge, room and Sessiontype',
+        session: sessionWithoutJudgeAndRoomAndSessiontype,
+        expectedEvent: expectedEventWithoutJudgeAndRoomAndSessiontype
     }, {
         name: 'with undefined id',
         session: sessionWithIdUndefined,

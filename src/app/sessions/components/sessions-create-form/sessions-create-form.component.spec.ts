@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { SessionsCreateFormComponent } from './sessions-create-form.component';
 import { SessionCreate } from '../../models/session-create.model';
@@ -11,7 +11,7 @@ let component: SessionsCreateFormComponent;
 describe('SessionsCreateFormComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [AngularMaterialModule, FormsModule],
+            imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule],
             declarations: [SessionsCreateFormComponent]
         });
         fixture = TestBed.createComponent(SessionsCreateFormComponent);
@@ -43,9 +43,7 @@ describe('SessionsCreateFormComponent', () => {
 
     describe('Providing session data as input', () => {
         it('should make the view data recalculate', () => {
-
-            expect(component.durationInMinutes).toEqual(30);
-
+            expect(component.createSessionForm.durationInMinutes).toEqual(30);
             component.sessionData = {
                 userTransactionId: 'uti',
                 id: 'id',
@@ -56,8 +54,9 @@ describe('SessionsCreateFormComponent', () => {
                 caseType: 'CaseType',
             } as SessionCreate;
 
-            expect(component.durationInMinutes).toEqual(15);
-            expect(component.time).toBeDefined();
+            expect(component.createSessionForm.durationInMinutes).toEqual(15);
+            expect(component.createSessionForm.startDate).toBeDefined();
+            expect(component.createSessionForm.startTime).toBeDefined();
         });
     });
 
@@ -77,6 +76,48 @@ describe('SessionsCreateFormComponent', () => {
             component.judgesLoading = false;
 
             expect(component.judgesPlaceholder).toEqual(SessionsCreateFormComponent.SELECT_JUDGE_PLACEHOLDER);
+        });
+    });
+
+    describe('Form validations', () => {
+        it('on init form invalid', () => {
+            expect(component.sessionCreateFormGroup.valid).toBeFalsy()
+        });
+
+        it('on init form invalid', () => {
+            expect(component.sessionCreateFormGroup.valid).toBeFalsy()
+        });
+
+        describe('Require validators', () => {
+            const propertiesNames = ['startDate', 'startTime', 'durationInMinutes', 'sessionTypeCode']
+
+            propertiesNames.forEach((propertyName) => {
+                it(`${propertyName} field validity`, () => {
+                    let errors = {};
+                    let formGroupProperty = component.sessionCreateFormGroup.controls[propertyName];
+                    formGroupProperty.setValue('');
+                    errors = formGroupProperty.errors || {};
+                    expect(errors['required']).toBeTruthy()
+                });
+            })
+        });
+
+        describe('Min value validator', () => {
+            it('duration should be invalid when equal to zero', () => {
+                let errors = {};
+                let formGroupProperty = component.sessionCreateFormGroup.controls['durationInMinutes'];
+                formGroupProperty.setValue('0');
+                errors = formGroupProperty.errors || {};
+                expect(errors['min']).toBeTruthy()
+            });
+
+            it('duration should be valid when grater then zero', () => {
+                let errors = {};
+                let formGroupProperty = component.sessionCreateFormGroup.controls['durationInMinutes'];
+                formGroupProperty.setValue('1');
+                errors = formGroupProperty.errors || {};
+                expect(errors['min']).toBeFalsy()
+            });
         });
     });
 });

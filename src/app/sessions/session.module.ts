@@ -10,7 +10,7 @@ import { SessionTableComponent } from './components/session-table/session-table.
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SessionsService } from './services/sessions-service';
 import { reducers } from './reducers';
 import { JudgeEffects } from '../judges/effects/judge.effects';
@@ -22,13 +22,13 @@ import { SessionsFilterComponent } from './components/sessions-filter/sessions-f
 import { DetailsDialogComponent } from './components/details-dialog/details-dialog.component';
 import { SessionsStatisticsService } from './services/sessions-statistics-service';
 import { CoreModule } from '../core/core.module';
-import { TransactionDialogComponent } from './components/transaction-dialog/transaction-dialog.component';
 import { SessionsCreateFormComponent } from './components/sessions-create-form/sessions-create-form.component';
 import { SessionsCreationService } from './services/sessions-creation.service';
 import { SessionsPropositionsSearchComponent } from './containers/sessions-propositions-search/sessions-propositions-search.component';
 import { SessionsPropositionsTableComponent } from './components/sessions-propositions-table/sessions-propositions-table.component';
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
+import { TransactionsModule } from '../features/transactions/transactions.module';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -37,7 +37,6 @@ export const COMPONENTS = [
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
-    TransactionDialogComponent,
     SessionsCreateFormComponent,
     SessionEditOrCreateDialogComponent,
     SessionsPropositionsSearchComponent,
@@ -51,7 +50,9 @@ export const COMPONENTS = [
     AngularMaterialModule,
       FlexLayoutModule,
       FormsModule,
+      ReactiveFormsModule,
       HearingPartModule,
+      TransactionsModule,
       CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
@@ -73,7 +74,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, TransactionDialogComponent, SessionEditOrCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]

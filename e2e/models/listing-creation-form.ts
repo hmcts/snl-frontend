@@ -1,11 +1,11 @@
 import { CaseTypes } from '../enums/case-types';
-import { HearingParts } from '../enums/hearing-parts';
+import { HearingTypes } from '../enums/hearing-types';
 
 export interface ListingCreationForm {
   caseNumber: string;
   caseTitle: string;
   caseType: CaseTypes;
-  hearingType: HearingParts;
+  hearingType: HearingTypes;
   duration: number;
   fromDate: string;
   endDate: string;

@@ -8,12 +8,15 @@ import * as fromRooms from '../../../rooms/reducers';
 import * as fromJudges from '../../../judges/reducers';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
+import * as SessionActions from '../../actions/session.action';
 import * as fromSessionIndex from '../../reducers';
-import { TransactionDialogComponent } from '../../components/transaction-dialog/transaction-dialog.component';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { map } from 'rxjs/operators';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { asArray } from '../../../utils/array-utils';
+import * as refData from '../../../core/reference/reducers/index';
+import { SessionType } from '../../../core/reference/models/session-type';
 
 @Component({
     selector: 'app-sessions-create',
@@ -26,7 +29,9 @@ export class SessionsCreateComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judgesLoading$: Observable<boolean>;
     roomsLoading$: Observable<boolean>;
+    sessionTypes$: Observable<SessionType[]>;
     dialogRef: any;
+    sessionId: string;
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -35,6 +40,7 @@ export class SessionsCreateComponent implements OnInit {
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.roomsLoading$ = this.store.pipe(select(fromRooms.getRoomsLoading));
         this.judgesLoading$ = this.store.pipe(select(fromJudges.getJudgesLoading));
+        this.sessionTypes$ = this.store.pipe(select(refData.selectSessionTypes));
     }
 
     ngOnInit() {
@@ -43,12 +49,19 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     create(session) {
+        this.sessionId = session.id;
         this.sessionCreationService.create(session);
-        this.dialogRef = this.openDialog(session);
+        this.dialogRef = this.openDialog();
+        this.dialogRef.afterClosed().subscribe(() => this.getCreatedSession(this.sessionId));
     }
 
-    private openDialog(session) {
+    public getCreatedSession(sessionId: string) {
+        this.store.dispatch(new SessionActions.Get(sessionId));
+    }
+
+    private openDialog() {
         return this.dialog.open(TransactionDialogComponent, {
+            data: 'Creating session',
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

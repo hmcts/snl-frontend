@@ -3,9 +3,15 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToHearingPart } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
+import { ListingCreate } from '../../models/listing-create';
+import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
+import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+
 @Component({
   selector: 'app-hearing-parts-preview',
   templateUrl: './hearing-parts-preview.component.html',
@@ -35,9 +41,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       'notes',
       'scheduleStart',
       'scheduleEnd',
+      'delete',
+      'editor'
     ];
 
-    constructor(public dialog: MatDialog) {
+    constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
         this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
     }
 
@@ -54,10 +62,21 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                     return moment.duration(item[property]).asMilliseconds();
 
                 case 'reservedJudge':
-                    return item[property] === undefined ? null : item[property].name;
+                    return this.getPropertyMemberOrNull(item, property, 'name');
+
+                case 'caseType':
+                case 'hearingType':
+                    return this.getPropertyMemberOrNull(item, property, 'description');
 
                 case 'priority':
                     return priorityValue(item[property]);
+
+                case 'scheduleStart':
+                case 'scheduleEnd':
+                    return (item[property]) ? item[property].unix() : null;
+
+                case 'notes':
+                    return (item[property] && item[property].length > 0) ? 'Yes' : 'No';
 
                 default:
                     return item[property];
@@ -86,8 +105,56 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
     }
 
+    openDeleteDialog(hearingPart: HearingPartViewModel) {
+      this.dialog.open(DialogWithActionsComponent, {
+        data: { message: `Do you want to remove the listing request for case number ${hearingPart.caseNumber} ?`}
+      }).afterClosed().subscribe((confirmed) => {
+          this.afterDeleteClosed(confirmed, hearingPart)
+      })
+    }
+
+    afterDeleteClosed(confirmed, hearingPart) {
+        if (confirmed) {
+            this.hearingPartService.deleteHearingPart({
+                hearingPartId: hearingPart.id,
+                hearingPartVersion: hearingPart.version,
+                userTransactionId: undefined
+            });
+
+            this.openTransactionDialog().afterClosed().subscribe((success) => {
+                if (success) {
+                    this.hearingPartService.removeFromState(hearingPart.id)
+                }
+            })
+        }
+    }
+
+    openEditDialog(hearingPart: HearingPartViewModel) {
+        this.dialog.open(ListingCreateDialogComponent, {
+            data: {
+                hearingPart: mapToHearingPart(hearingPart),
+                notes: hearingPart.notes
+            } as ListingCreate,
+            hasBackdrop: true,
+            height: '60%'
+        })
+    }
+
+    private openTransactionDialog() {
+        return this.dialog.open(TransactionDialogComponent, {
+            data: 'Deleting hearing part',
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
+    }
+
     toggleHearing(hearing) {
         this.selectedHearingPart.toggle(hearing);
         this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {});
+    }
+
+    private getPropertyMemberOrNull(item: object, property: string, key: string ) {
+        return (item[property]) ? item[property][key] : null;
     }
 }

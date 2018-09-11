@@ -7,5 +7,6 @@ export interface SessionCreate {
     roomId: string;
     duration: number;
     start: moment.Moment;
-    caseType: string
+    caseType: string;
+    sessionTypeCode: string;
 }

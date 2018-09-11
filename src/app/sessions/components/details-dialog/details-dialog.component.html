@@ -4,7 +4,7 @@
   <div fxFlex fxLayout="column" fxLayoutGap="5%" mat-dialog-content>
     <div fxFlex fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="row" fxLayoutAlign="space-between">
-        <span fxFlex>{{(sessionDetails.session | async).caseType  || '(No case type)'}}</span>
+        <span fxFlex>{{(sessionDetails.session | async).sessionType?.description}}</span>
         <span fxFlex>{{(sessionDetails.session | async).person?.name || '(No judge)'}}</span>
         <span fxFlex>{{(sessionDetails.session| async).room?.name  || '(No room)'}}</span>
       </div>

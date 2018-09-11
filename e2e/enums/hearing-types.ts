@@ -1,5 +1,5 @@
-export enum HearingParts {
+export enum HearingTypes {
   PRELIMINARY = 'Preliminary Hearing',
-  TRIAL = 'Trial Hearing',
+  TRIAL = 'Trial',
   ADJOURNED = 'Adjourned Hearing'
 }

@@ -9,6 +9,7 @@ import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
 import { Observable } from 'rxjs/Observable';
 import { State } from '../../../app.state';
+import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 
 @Component({
     selector: 'app-room-planner',
@@ -65,7 +66,7 @@ export class RoomPlannerComponent implements OnInit {
         this.store.pipe(select(fromSessions.getRooms)).subscribe(elements => {
             let newResourceList = new ResourceList('room'); // NOSONAR not const
             Object.values(elements).forEach((room: Room) => {
-                newResourceList.add('room-' + room.id, room.name);
+                newResourceList.add(`room${Separator}${room.id}`, room.name);
             });
             this.resources = newResourceList.get();
         });

@@ -3,6 +3,7 @@ import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import * as moment from 'moment'
+import { CaseType } from '../../../core/reference/models/case-type';
 
 @Component({
   selector: 'app-sessions-filter',
@@ -15,21 +16,22 @@ export class SessionsFilterComponent implements OnInit {
 
   @Input() rooms: Room[];
   @Input() judges: Judge[];
+  @Input() sessionTypes: CaseType[];
   @Input() startDate: moment.Moment;
   @Input() endDate: moment.Moment;
+
   roomsPlaceholder: string;
   judgesPlaceholder: string;
   filters: SessionFilters;
-  caseTypes;
 
   constructor() {
-      this.caseTypes = ['SCLAIMS', 'FTRACK', 'MTRACK'];
       this.roomsPlaceholder = 'Select the room';
       this.judgesPlaceholder = 'Select the judge';
   }
 
   ngOnInit() {
       this.filters = {
+          sessionTypes: [],
           caseTypes: [],
           rooms: [],
           judges: [],

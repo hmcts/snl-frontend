@@ -22,7 +22,7 @@
 
   <ng-container matColumnDef="caseType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseType?.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">
@@ -42,7 +42,7 @@
 
   <ng-container matColumnDef="hearingType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.hearingType}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="duration">
@@ -66,6 +66,20 @@
       <span [class.clickable]="hasNotes(element)" (click)="openNotesDialog(element)">
         {{hasNotes(element) ? "Yes" : "No"}}
       </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span [class.clickable]="true" (click)="openDeleteDialog(element)">Delete</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="editor">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span class="clickable" (click)="openEditDialog(element)">edit</span>
     </mat-cell>
   </ng-container>
 

@@ -1,10 +1,31 @@
 import { SessionsStatisticsService } from './sessions-statistics-service';
 import { SessionViewModel } from '../models/session.viewmodel';
 import * as moment from 'moment';
-import { HearingPart } from '../../hearing-part/models/hearing-part';
+import { Priority } from '../../hearing-part/models/priority-model';
+import { HearingPartViewModel } from '../../hearing-part/models/hearing-part.viewmodel';
 
 let sessionsStatisticsService: SessionsStatisticsService;
 let session: SessionViewModel;
+
+function createHearingPart(duration: moment.Duration = moment.duration('PT20M')) {
+    return {
+        id: undefined,
+        session: undefined,
+        caseNumber: undefined,
+        caseTitle: undefined,
+        caseType: undefined,
+        hearingType: undefined,
+        duration: duration,
+        scheduleStart: undefined,
+        scheduleEnd: undefined,
+        notes: [],
+        version: undefined,
+        priority: Priority.Low,
+        reservedJudgeId: undefined,
+        reservedJudge: undefined,
+        communicationFacilitator: undefined
+    } as HearingPartViewModel;
+}
 
 describe('SessionsStatisticsService', () => {
     beforeAll(() => {
@@ -20,18 +41,8 @@ describe('SessionsStatisticsService', () => {
                 room: undefined,
                 person: undefined,
                 caseType: undefined,
-                hearingParts: [{
-                    id: undefined,
-                    session: undefined,
-                    caseNumber: undefined,
-                    caseTitle: undefined,
-                    caseType: undefined,
-                    hearingType: undefined,
-                    duration: moment.duration('PT20M'),
-                    scheduleStart: undefined,
-                    scheduleEnd: undefined,
-                    version: undefined
-                }] as [HearingPart],
+                sessionType: undefined,
+                hearingParts: [createHearingPart()],
                 jurisdiction: undefined,
                 version: undefined,
                 allocated: undefined,
@@ -49,41 +60,13 @@ describe('SessionsStatisticsService', () => {
                 duration: 10,
                 room: undefined,
                 person: undefined,
+                sessionType: undefined,
                 caseType: undefined,
-                hearingParts: [{
-                    id: undefined,
-                    session: undefined,
-                    caseNumber: undefined,
-                    caseTitle: undefined,
-                    caseType: undefined,
-                    hearingType: undefined,
-                    duration: moment.duration('PT20M'),
-                    scheduleStart: undefined,
-                    scheduleEnd: undefined,
-                    version: undefined
-                }, {
-                    id: undefined,
-                    session: undefined,
-                    caseNumber: undefined,
-                    caseTitle: undefined,
-                    caseType: undefined,
-                    hearingType: undefined,
-                    duration: moment.duration('PT10M'),
-                    scheduleStart: undefined,
-                    scheduleEnd: undefined,
-                    version: undefined
-                }, {
-                    id: undefined,
-                    session: undefined,
-                    caseNumber: undefined,
-                    caseTitle: undefined,
-                    caseType: undefined,
-                    hearingType: undefined,
-                    duration: moment.duration('PT1H'),
-                    scheduleStart: undefined,
-                    scheduleEnd: undefined,
-                    version: undefined
-                }] as HearingPart[],
+                hearingParts: [
+                    createHearingPart(moment.duration('PT20M')),
+                    createHearingPart(moment.duration('PT10M')),
+                    createHearingPart(moment.duration('PT1H'))
+                ],
                 jurisdiction: undefined,
                 version: undefined,
                 allocated: undefined,
@@ -101,8 +84,9 @@ describe('SessionsStatisticsService', () => {
                 duration: 10,
                 room: undefined,
                 person: undefined,
+                sessionType: undefined,
                 caseType: undefined,
-                hearingParts: [] as [HearingPart],
+                hearingParts: [] as [HearingPartViewModel],
                 jurisdiction: undefined,
                 version: undefined,
                 allocated: undefined,
@@ -132,13 +116,13 @@ describe('SessionsStatisticsService', () => {
 
         it('should throw error when params are undefined', () => {
             expect(() => {
-                sessionsStatisticsService.calculateUtilizedDuration(undefined, undefined)
+                sessionsStatisticsService.calculateUtilizedDuration(undefined, undefined);
             }).toThrow();
         });
     });
 
     describe('calculateAvailableDuration', () => {
-        it('should give 0 when not available',  () => {
+        it('should give 0 when not available', () => {
             expect(sessionsStatisticsService.calculateAvailableDuration(moment.duration('PT1H'), moment.duration('PT2H')))
                 .toEqual(moment.duration('PT0H'));
         });
@@ -150,8 +134,8 @@ describe('SessionsStatisticsService', () => {
 
         it('should throw error when params are undefined', () => {
             expect(() => {
-                sessionsStatisticsService.calculateAvailableDuration(undefined, undefined)
+                sessionsStatisticsService.calculateAvailableDuration(undefined, undefined);
             }).toThrow();
-        })
+        });
     });
 });

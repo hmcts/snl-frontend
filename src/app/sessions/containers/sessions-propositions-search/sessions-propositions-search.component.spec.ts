@@ -179,7 +179,7 @@ describe('SessionsPropositionsSearchComponent', () => {
         roomId: roomId,
         personId: judgeId,
         caseType: undefined
-      };
+      } as SessionCreate;
 
       expect(passedData.rooms$).toBe(component.rooms$);
       expect(passedData.judges$).toBe(component.judges$);
@@ -208,7 +208,8 @@ describe('SessionsPropositionsSearchComponent', () => {
           roomId: 'some-room-id',
           duration: 30,
           start: moment(),
-          caseType: 'some-case-type'
+          caseType: 'some-case-type',
+          sessionTypeCode: 'some-session-type-code'
         };
 
         component.dialogSessionCreateClicked(dummySession);

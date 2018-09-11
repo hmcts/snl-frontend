@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AppConfig } from '../../app.config';
+import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 
@@ -21,6 +21,7 @@ export enum TransactionStatuses {
     COMMITTED = 'COMMITTED',
     ROLLEDBACK = 'ROLLEDBACK',
     CONFLICT = 'CONFLICT',
+    OPTIMISTIC_LOCK_CONFLICT = 'OPTIMISTIC_LOCK_CONFLICT'
 }
 
 export interface Transaction {

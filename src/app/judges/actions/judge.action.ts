@@ -4,6 +4,7 @@ import { Judge } from '../models/judge.model';
 export enum JudgeActionTypes {
   Get = '[Judge] Get',
   GetComplete = '[Judge] Get Complete',
+  UpsertMany = '[Judge] Upsert Many',
   GetFailed = '[Judge] Get Failed'
 }
 
@@ -22,6 +23,12 @@ export class Get implements Action {
 
 export class GetComplete implements Action {
     readonly type = JudgeActionTypes.GetComplete;
+
+    constructor(public payload: Judge[]) {}
+}
+
+export class UpsertMany implements Action {
+    readonly type = JudgeActionTypes.UpsertMany;
 
     constructor(public payload: Judge[]) {}
 }

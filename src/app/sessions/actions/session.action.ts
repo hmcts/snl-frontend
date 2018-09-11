@@ -6,6 +6,7 @@ import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
+  Get = '[Session] Get',
   SearchForDates = '[Session] Search for given dates',
   SearchForJudge = '[Session] Search for judge',
   SearchForJudgeWithHearings = '[Session] Search for judge with hearings',
@@ -72,6 +73,12 @@ export class Create implements Action {
     readonly type = SessionActionTypes.Create;
 
     constructor(public payload: SessionCreate) {}
+}
+
+export class Get implements Action {
+    readonly type = SessionActionTypes.Get;
+
+    constructor(public payload: string) {}
 }
 
 export class Update implements Action {

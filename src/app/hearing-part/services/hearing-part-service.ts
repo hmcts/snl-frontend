@@ -5,9 +5,11 @@ import { AppConfig } from '../../app.config';
 import { SessionAssignment } from '../models/session-assignment';
 import { HearingPart } from '../models/hearing-part';
 import { map } from 'rxjs/operators';
-import { hearingParts } from '../../core/schemas/data.schema';
+import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
-import { ListingCreate } from '../models/listing-create';
+import * as moment from 'moment';
+import { Transaction } from '../../features/transactions/services/transaction-backend.service';
+import { HearingPartDeletion } from '../models/hearing-part-deletion';
 
 @Injectable()
 export class HearingPartService {
@@ -19,7 +21,25 @@ export class HearingPartService {
             .get<HearingPart[]>(`${this.config.getApiUrl()}/hearing-part`, {
               params: new HttpParams({ fromObject: params })
             })
-          .pipe(map(data => {return normalize(data, hearingParts)}));
+          .pipe(map(data => data.map(hp => {
+                  hp.scheduleEnd = (hp.scheduleEnd === null) ? null : moment(hp.scheduleEnd);
+                  hp.scheduleStart = (hp.scheduleStart === null) ? null : moment(hp.scheduleStart);
+                  hp.duration  = (hp.duration === null) ? null : moment.duration(hp.duration);
+              return hp;
+          })),
+              map(data => {return normalize(data, hearingParts)}));
+
+    }
+
+    getById(id: string): Observable<any> {
+        return this.http
+            .get<HearingPart>(`${this.config.getApiUrl()}/hearing-part/${id}`)
+                .pipe(map(hp => {
+                    hp.scheduleEnd = moment(hp.scheduleEnd);
+                    hp.scheduleStart = moment(hp.scheduleStart);
+                    hp.duration = moment.duration(hp.duration);
+                    return hp;
+                }), map(data => {return normalize(data, hearingPart)}));
 
     }
 
@@ -29,9 +49,23 @@ export class HearingPartService {
                 query);
     }
 
-    createListing(query: ListingCreate): Observable<string> {
+    createListing(query: HearingPart): Observable<Transaction> {
         return this.http
-            .put<string>(`${this.config.getApiUrl()}/hearing-part`, JSON.stringify(query), {
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/create`, JSON.stringify(query), {
+                headers: {'Content-Type': 'application/json'}
+            });
+    }
+
+    updateListing(query: HearingPart): Observable<Transaction> {
+        return this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/update`, JSON.stringify(query), {
+                headers: {'Content-Type': 'application/json'}
+            });
+    }
+
+    deleteHearingPart(query: HearingPartDeletion): Observable<any> {
+        return this.http
+            .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }

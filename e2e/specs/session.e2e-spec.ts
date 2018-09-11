@@ -9,12 +9,12 @@ import { Rooms } from '../enums/rooms';
 import { Judges } from '../enums/judges';
 import { CalendarPage } from '../pages/calendar.po';
 import { ListingCreationPage } from '../pages/listing-creation.po';
-import { HearingParts } from '../enums/hearing-parts';
+import { HearingTypes } from '../enums/hearing-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
-import { SnackBar } from '../components/snack-bar';
-import { browser, protractor } from 'protractor';
+import { browser } from 'protractor';
+import { SessionTypes } from '../enums/session-types';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -22,34 +22,20 @@ const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
-const sessionCaseType = CaseTypes.FTRACK
-const room = Rooms.ROOM_B
-const judge = Judges.JOHN_HARRIS
+const sessionType = SessionTypes.FTRACK_TRIAL_ONLY
+const room = Rooms.COURT_4
+const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
-const listingRequestCaseType = CaseTypes.MTRACK // must be other than sessionCaseType
-const hearingType = HearingParts.ADJOURNED
-const caseTypeProblemText = 'Hearing case type does not match the session case type - Warn'
-const listingCreatedNoteText = 'Listing request created!'
-
-const origFn = browser.driver.controlFlow().execute;
-
-browser.driver.controlFlow().execute = function() {
-    const args = arguments;
-
-    // queue 100ms wait
-    origFn.call(browser.driver.controlFlow(), function() {
-        return protractor.promise.delayed(100);
-    });
-
-    return origFn.apply(browser.driver.controlFlow(), args);
-};
+const listingRequestCaseType = CaseTypes.SCLAIMS // must be other than sessionCaseType
+const listingRequestHearingType = HearingTypes.TRIAL;
+const caseTypesInvalidMsg = 'The case type on the listing request does not match a case type associated to the session type of the session'
 
 const listingCreationForm: ListingCreationForm = {
-  caseNumber,
+    caseNumber,
     caseTitle,
     caseType: listingRequestCaseType,
-    hearingType: hearingType,
+    hearingType: listingRequestHearingType,
     duration: duration,
     fromDate: todayDate,
     endDate: tomorrowDate
@@ -57,7 +43,7 @@ const listingCreationForm: ListingCreationForm = {
 const formValues: FilterSessionsComponentForm = {
     startDate: todayDate,
     endDate: tomorrowDate,
-    caseType: sessionCaseType,
+    sessionType: sessionType,
     room: room,
     judge: judge,
     listingDetailsOptions: {
@@ -81,64 +67,67 @@ const transactionDialogPage = new TransactionDialogPage()
 const listingCreationPage = new ListingCreationPage()
 const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
-const snackBar = new SnackBar();
 let numberOfVisibleEvents: number;
 
-describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
-  beforeAll(() => {
-    loginFlow.loginIfNeeded();
-    navigationFlow.goToCalendarPage()
+// Disabled due changes in rules
+xdescribe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
+  beforeAll(async () => {
+    await loginFlow.loginIfNeeded();
+    await navigationFlow.goToCalendarPage()
   });
   describe('Remember number of visible events in calendar, Go to new session page and create session', () => {
     it('Transaction dialog should be displayed ', async () => {
       numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
-      navigationFlow.goToNewSessionPage()
-      sessionCreationPage.createSession(todayDate, startTime, duration, sessionCaseType, room, judge)
-      expect(transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
-      transactionDialogPage.clickAcceptButton()
+      await navigationFlow.goToNewSessionPage()
+      await sessionCreationPage.createSession(todayDate, startTime, duration, sessionType, room, judge)
+      expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
+      await transactionDialogPage.clickAcceptButton()
     });
   });
   describe('Go back to calendar page ', () => {
     it('newly created session should be visible', async () => {
-      navigationFlow.goToCalendarPage();
+      await navigationFlow.goToCalendarPage();
       const numberOfVisibleEventsAfterSessionCreation = await calendarPage.getNumberOfVisibleEvents()
       expect(numberOfVisibleEvents + 1).toEqual(numberOfVisibleEventsAfterSessionCreation)
     });
   });
-  describe('Go to  new listing request page, create listing with different case type', () => {
-    it('newly created session should be visible', async () => {
-      navigationFlow.goToNewListingRequestPage()
-      listingCreationPage.createListingRequest(listingCreationForm)
-      expect(snackBar.isNoteWithTextPresent(listingCreatedNoteText)).toBeTruthy()
+  describe('Go to new listing request page, create listing with different case type', () => {
+    it('newly created listing request should be visible', async () => {
+      await navigationFlow.goToNewListingRequestPage()
+      await listingCreationPage.createListingRequest(listingCreationForm)
+      expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
+      await transactionDialogPage.clickAcceptButton();
     });
   });
   describe('Go to list hearing page, find and select created session and listing', () => {
     it('assign button should be enabled', async () => {
-      navigationFlow.goToListHearingsPage();
-      sessionSearchPage.filterSession(formValues);
-      sessionSearchPage.changeMaxItemsPerPage('100');
-      sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionCaseType);
-      sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType, todayDate, tomorrowDate);
-      expect(sessionSearchPage.assignButton.isEnabled()).toEqual(true);
+      await navigationFlow.goToListHearingsPage();
+      await sessionSearchPage.filterSession(formValues);
+      await sessionSearchPage.changeMaxItemsPerPage('100');
+      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
+      await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType,
+        listingRequestHearingType, todayDate, tomorrowDate);
+      expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
     });
   });
   describe('Click on "assign" button,', () => {
     it('transaction dialog with problem that case types are different should be displayed', async () => {
-      sessionSearchPage.assignButton.click()
-      const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypeProblemText)
+      await sessionSearchPage.clickAssignButton()
+      const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypesInvalidMsg)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
-      transactionDialogPage.clickAcceptButton();
+      await transactionDialogPage.clickAcceptButton();
     });
   });
   describe('Go to calendar, click on created session', () => {
     it('despite problem it should assign listing request to session and display its details', async () => {
-      navigationFlow.goToCalendarPage()
-      browser.waitForAngular();
-      calendarPage.clickOnEventWith(startTimeAMFormat)
-        expect(sessionDetailsDialogPage
-        .isDialogWithTextsDisplayed(sessionCaseType, judge, room, todayDate, startTime, caseTitle, hearingType))
-      .toBeTruthy()
-      sessionDetailsDialogPage.close()
+      await navigationFlow.goToCalendarPage()
+      await browser.waitForAngular();
+      await calendarPage.clickOnEventWith(startTimeAMFormat)
+      const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
+        sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType
+      );
+      expect(idDialogDisplayed).toBeTruthy()
+      await sessionDetailsDialogPage.close()
     });
   });
 });

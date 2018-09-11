@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromProblems from '../../../problems/reducers';
-import { MatDialogRef } from '@angular/material';
-import * as sessionReducers from '../../reducers';
+import * as fromHearingParts from '../../../../hearing-part/reducers/index';
+import * as fromProblems from '../../../../problems/reducers/index';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import * as sessionReducers from '../../../../sessions/reducers/index';
+import * as fromTransactions from '../../reducers/index';
 import { TransactionDialogComponent } from './transaction-dialog.component';
-import * as problemActions from '../../../problems/actions/problem.action';
-import { Problem } from '../../../problems/models/problem.model';
+import * as problemActions from '../../../../problems/actions/problem.action';
+import { Problem } from '../../../../problems/models/problem.model';
 import * as sessionTransactionActions from '../../actions/transaction.action';
 import { EntityTransaction } from '../../models/transaction-status.model';
 import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';
@@ -42,11 +43,13 @@ describe('TransactionDialogComponent', () => {
       imports: [
         StoreModule.forRoot({}),
         StoreModule.forFeature('problems', fromProblems.reducers),
-        StoreModule.forFeature('sessions', sessionReducers.reducers)
+        StoreModule.forFeature('sessions', sessionReducers.reducers),
+        StoreModule.forFeature('transactions', fromTransactions.reducers)
       ],
       providers: [
         TransactionDialogComponent,
-        { provide: MatDialogRef, useValue: matDialogRefSpy }
+        { provide: MatDialogRef, useValue: matDialogRefSpy },
+        { provide: MAT_DIALOG_DATA, useValue: {}}
       ]
     });
 
@@ -94,23 +97,25 @@ describe('TransactionDialogComponent', () => {
         expect(finished).toEqual(false);
       });
     });
-    it('should set buttonText', () => {
-      component.buttonText$.subscribe(buttonText => {
-        expect(buttonText).toEqual('Hide the dialog');
-      });
-    });
   });
 
   describe('onOkClick', () => {
     beforeEach(() => storeSpy.calls.reset())
-    it('should dispatch action when okAction is not null', () => {
-      component.okAction = new CommitTransaction(transactionId);
+    it('should dispatch action when succeed and okAction is not null', () => {
+      component.okAction = new CommitTransaction(transactionId)
+      component.success = true
       component.onOkClick()
       expect(storeSpy).toHaveBeenCalled()
     });
 
     it('should not dispatch action when okAction is null', () => {
-      component.okAction = null;
+      component.okAction = null
+      component.onOkClick()
+      expect(storeSpy).not.toHaveBeenCalled()
+    });
+
+    it('should not dispatch action when no success', () => {
+      component.success = false
       component.onOkClick()
       expect(storeSpy).not.toHaveBeenCalled()
     });

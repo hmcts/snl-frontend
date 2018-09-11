@@ -7,7 +7,7 @@ export interface Session {
   room: string;
   person: string;
   caseType: string;
-  hearingTypes: string[];
+  sessionTypeCode: string;
   jurisdiction: string;
   version: number;
 }
