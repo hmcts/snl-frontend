@@ -1,47 +1,23 @@
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
-  <div fxFlex="25%">
-    <app-sessions-filter
-            (filter)="filters$.next($event)"
-            [rooms]="rooms$ | async"
-            [judges]="judges$ | async"
-            [sessionTypes]="sessionTypes$ | async"
-            [startDate]="startDate"
-            [endDate]="endDate">
-    </app-sessions-filter>
-  </div>
-  <div fxFlex>
-    <div class="heading">
-      Listing Requests:
+    <div fxFlex="25%">
+        <app-sessions-filter
+                (filter)="filters$.next($event)"
+                [rooms]="rooms$ | async"
+                [judges]="judges$ | async"
+                [sessionTypes]="sessionTypes$ | async"
+                [startDate]="startDate"
+                [endDate]="endDate">
+        </app-sessions-filter>
     </div>
+    <div fxFlex>
+        <div class="heading">
+            Sessions:
+        </div>
 
-    <div>
-      <app-hearing-parts-preview id="hearing-part-preview"
-              [hearingParts]="hearingParts$ | async"
-              [sessions]="sessions$ | async"
-              (selectHearingPart)="selectHearingPart($event)">
-      </app-hearing-parts-preview>
+        <div>
+            <app-session-amendment-table
+                    [sessions] = "filteredSessions$ | async">
+            </app-session-amendment-table>
+        </div>
     </div>
-
-    <div class="heading">
-      Actions:
-    </div>
-
-    <button [disabled]="!assignButtonEnabled()" mat-raised-button
-            color="accent"
-            fxFlexAlign="center"
-            (click)="assignToSession()"
-            class="get-sessions-button"
-            id="assign">List Hearing</button>
-
-    <div class="heading">
-      Sessions:
-    </div>
-
-    <div>
-      <app-session-table
-              (selectSession)="selectSession($event)"
-              [sessions] = "filteredSessions$ | async">
-      </app-session-table>
-    </div>
-  </div>
 </div>

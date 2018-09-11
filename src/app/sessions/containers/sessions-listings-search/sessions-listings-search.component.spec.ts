@@ -5,7 +5,7 @@ import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { SessionsSearchComponent } from './sessions-search.component';
+import { SessionsListingsSearchComponent } from './sessions-listings-search.component';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
@@ -39,7 +39,7 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SessionType } from '../../../core/reference/models/session-type';
 
 let storeSpy: jasmine.Spy;
-let component: SessionsSearchComponent;
+let component: SessionsListingsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
@@ -112,7 +112,7 @@ const mockedSessions: Session[] = [
   }
 ];
 
-describe('SessionsSearchComponent', () => {
+describe('SessionsListingsSearchComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -129,7 +129,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
-      providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
+      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
       declarations: [TransactionDialogComponent]
     });
 
@@ -140,7 +140,7 @@ describe('SessionsSearchComponent', () => {
     });
 
     mockedFullSession = [defaultFullMockedSession()];
-    component = TestBed.get(SessionsSearchComponent);
+    component = TestBed.get(SessionsListingsSearchComponent);
     store = TestBed.get(Store);
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
@@ -382,7 +382,7 @@ describe('SessionsSearchComponent', () => {
 // Helpers
 
 function computeAndVerifyFilteredSession(
-  sessionSearchComponent: SessionsSearchComponent,
+  sessionSearchComponent: SessionsListingsSearchComponent,
   sessionFilter: SessionFilters
 ): void {
   const expectedFilteredSessions = sessionSearchComponent.filterSessions(
@@ -393,7 +393,7 @@ function computeAndVerifyFilteredSession(
 }
 
 function computeAndVerifyFilteredSessionToBeEmptyArray(
-  sessionSearchComponent: SessionsSearchComponent,
+  sessionSearchComponent: SessionsListingsSearchComponent,
   sessionFilter: SessionFilters
 ): void {
   const filteredSessions = sessionSearchComponent.filterSessions(
