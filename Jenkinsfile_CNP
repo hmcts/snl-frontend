@@ -22,7 +22,7 @@ withPipeline("angular", product, app) {
   }
 
   after('functionalTest:${environment}') {
-    archiveArtifacts artifacts: 'REPORTS/**/*.*'
+    steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'REPORTS/**/*.*'
   }
 
 }
