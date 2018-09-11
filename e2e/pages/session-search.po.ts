@@ -31,7 +31,11 @@ export class SessionSearchPage {
     async changeMaxItemsPerPage(value: string): Promise<any> {
         await element.all(by.css('.mat-paginator-page-size')).reduce(async (prom, el) => {
             await prom;
-            await el.element(by.css('mat-select')).click();
+            const selectOption = el.element(by.css('mat-select'));
+            await browser.executeScript('arguments[0].scrollIntoView();', selectOption.getWebElement());
+            await browser.wait(ExpectedConditions.elementToBeClickable(selectOption))
+            await selectOption.click();
+            await browser.waitForAngular();
             const selectOpt = element(by.cssContainingText('.mat-option-text', value))
             await browser.wait(
                 ExpectedConditions.elementToBeClickable(selectOpt),
