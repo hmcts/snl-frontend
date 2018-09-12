@@ -1,5 +1,5 @@
 import { LoginFlow } from './../flows/login.flow';
-import { browser } from 'protractor';
+import { browser, ExpectedConditions } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';
 import { Wait } from '../enums/wait';
@@ -19,6 +19,7 @@ describe('Login', () => {
   describe('When login using valid credentials', () => {
     it('should change URL to calendar', async () => {
       await loginPage.login(Credentials.ValidOfficerUsername, Credentials.ValidOfficerPassword);
+      await browser.wait(ExpectedConditions.urlContains('/home/calendar'), Wait.normal);
       expect(await browser.getCurrentUrl()).toContain('/home/calendar');
     });
   });
