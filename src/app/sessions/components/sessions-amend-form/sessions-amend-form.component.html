@@ -1,0 +1,35 @@
+<mat-card class="sessions-create-container">
+  <mat-card-header>
+    <mat-card-subtitle>Create session</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="inputs-container">
+    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="create()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+      
+      <mat-form-field class="date-picker-element">
+        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" placeholder="Choose date *" [(ngModel)]="amendSessionForm.startDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="amendSessionForm.startTime">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input id="duration" formControlName="durationInMinutes" type="number" matInput placeholder="Duration *" [(ngModel)]="amendSessionForm.durationInMinutes">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select id="selectSessionType" formControlName="sessionTypeCode" placeholder="Select the session type *" [(value)]="amendSessionForm.sessionTypeCode">
+          <mat-option *ngFor="let sessionType of sessionTypes" value="{{sessionType.code}}">{{sessionType.description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
+        <button type="submit" id="create" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Create</button>
+        <button type="button" *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
