@@ -93,15 +93,16 @@ export class PlannerComponent implements OnInit {
             this.sessionCreationService.update(this.buildSessionUpdate(this.latestEvent));
 
             this.openSummaryDialog().afterClosed().subscribe((success) => {
-                if (success) {
-                    this.fetchModifiedEntities();
-                } else {
+                if (!success) {
                     this.revertLatestEvent();
                 }
+
+                this.fetchModifiedEntities();
             });
         } else {
             this.revertLatestEvent();
         }
+
         this.confirmationDialogOpen = false;
     };
 
