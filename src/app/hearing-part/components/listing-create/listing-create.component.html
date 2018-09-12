@@ -10,11 +10,13 @@
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
-                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearingPart.caseNumber" maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
+                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearingPart.caseNumber"
+                           maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearingPart.caseTitle" maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title *" type="text" >
+                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearingPart.caseTitle"
+                           maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title *" type="text" >
                 </mat-form-field>
 
                 <mat-form-field>
