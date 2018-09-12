@@ -37,6 +37,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionsFilterService } from '../../services/sessions-filter-service';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
@@ -129,7 +130,7 @@ describe('SessionsListingsSearchComponent', () => {
         StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
-      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
+      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingPartModificationService, SessionsFilterService],
       declarations: [TransactionDialogComponent]
     });
 
@@ -195,9 +196,6 @@ describe('SessionsListingsSearchComponent', () => {
     });
     it('should set selectedSession to empty obj', () => {
       expect(component.selectedSession).toEqual({});
-    });
-    it('should set filteredSessions to all sessions', () => {
-      expect(component.filteredSessions).toBeDefined();
     });
   });
 

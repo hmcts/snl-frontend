@@ -31,6 +31,7 @@ import { TransactionsModule } from '../features/transactions/transactions.module
 import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
 import { SessionAmendmentTableComponent } from './components/session-amendment-table/session-amendment-table.component';
 import { SessionsListingsSearchComponent } from './containers/sessions-listings-search/sessions-listings-search.component';
+import { SessionsFilterService } from './services/sessions-filter-service';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -81,6 +82,6 @@ export const COMPONENTS = [
   entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]
 })
 export class SessionModule { }

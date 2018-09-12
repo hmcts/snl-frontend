@@ -14,15 +14,15 @@ import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
-import { SessionFilters, UtilizationFilter } from '../../models/session-filter.model';
+import { SessionFilters } from '../../models/session-filter.model';
 import { map } from 'rxjs/operators';
-import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
 import { MatDialog } from '@angular/material';
 import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionsFilterService } from '../../services/sessions-filter-service';
 
 @Component({
     selector: 'app-sessions-search',
@@ -42,12 +42,12 @@ export class SessionsSearchComponent implements OnInit {
     filteredSessions: SessionViewModel[];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
-                private readonly sessionsStatsService: SessionsStatisticsService,
+                private readonly sessionsFilterService: SessionsFilterService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(
             select(fromHearingParts.getFullHearingParts),
             map(asArray),
-            map(this.filterUnlistedHearingParts)
+            map(sessionsFilterService.filterUnlistedHearingParts)
         ) as Observable<HearingPartViewModel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
@@ -68,55 +68,18 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
+        if (!filters) {
+            return sessions;
+        }
         if (filters.startDate !== this.startDate) {
             this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
             this.startDate = filters.startDate;
             this.endDate = filters.endDate;
         }
 
-        return sessions.filter(s => this.filterByProperty(s.person, filters.judges))
-            .filter(s => this.filterByProperty(s.room, filters.rooms))
-            .filter(s => this.filterBySessionType(s, filters))
-            .filter(s => this.filterByUtilization(s, filters.utilization));
-    }
-
-    private filterBySessionType(s: SessionViewModel, filters: SessionFilters) {
-        return filters.sessionTypes.length === 0 ? true : filters.sessionTypes.includes(s.sessionType.code);
-    }
-
-    private filterByUtilization(session: SessionViewModel, filters) {
-        let matches = false;
-        let anyFilterActive = false;
-        Object.values(filters).forEach((filter: UtilizationFilter) => {
-            if (filter.active) {
-                anyFilterActive = true;
-                const allocated = this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
-                const sessionUtilization = this.sessionsStatsService
-                    .calculateUtilizedDuration(moment.duration(session.duration), allocated);
-                if (sessionUtilization >= filter.from && sessionUtilization <= filter.to) {
-                    matches = true;
-                }
-            }
-        });
-
-        return !anyFilterActive ? true : matches;
-    }
-
-    private filterByProperty(property, filters) {
-        if (filters.length === 0) {
-            return true;
-        }
-
-        if (property) {
-            return filters.includes(property.id);
-        }
-
-        return filters.includes('');
-    }
-
-    private filterUnlistedHearingParts(data: HearingPartViewModel[]): HearingPartViewModel[] {
-        return data.filter(h => {
-            return h.session === undefined || h.session === '' || h.session === null
-        });
+        return sessions.filter(s => this.sessionsFilterService.filterByProperty(s.person, filters.judges))
+            .filter(s => this.sessionsFilterService.filterByProperty(s.room, filters.rooms))
+            .filter(s => this.sessionsFilterService.filterBySessionType(s, filters))
+            .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
     }
 }
