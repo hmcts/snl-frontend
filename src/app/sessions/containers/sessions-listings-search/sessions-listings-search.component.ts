@@ -43,9 +43,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     judges$: Observable<Judge[]>;
     selectedSession: any;
     selectedHearingPart;
-    filteredSessions$: Observable<SessionViewModel[]>;
     filters$ = new Subject<SessionFilters>();
     sessionTypes$: Observable<SessionType[]>;
+    filteredSessions: SessionViewModel[];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsStatsService: SessionsStatisticsService,
@@ -66,7 +66,8 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.endDate = moment().add(5, 'years');
         this.selectedHearingPart = {};
         this.selectedSession = {};
-        this.filteredSessions$ = this.sessions$;
+
+        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
     }
 
     ngOnInit() {
@@ -74,8 +75,6 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
-
-        this.filteredSessions$ = combineLatest(this.sessions$, this.filters$, this.filterSessions);
     }
 
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
