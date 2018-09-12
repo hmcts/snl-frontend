@@ -38,6 +38,7 @@ exports.config = {
         screenshotOnSpec: 'none',
         withLogs: true,
         writeReportFreq: 'asap',
+        verbose: 'info',
         imageToAscii: 'none',
         clearFoldersBeforeTest: true
       }],
