@@ -65,7 +65,8 @@ export class SessionEffects {
                     new transactionActions.UpdateTransaction(data),
                     new sessionActions.UpdateComplete()
                 ]),
-                catchError((err) => of(new sessionActions.UpdateFailed(err.error)))
+                catchError((err) => of(new transactionActions.TransactionFailure(
+                    {err: err, id: action.payload.userTransactionId})))
             )
         )
     );

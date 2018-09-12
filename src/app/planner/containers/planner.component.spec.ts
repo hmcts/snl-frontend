@@ -7,20 +7,26 @@ import { State } from '../../app.state';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import * as moment from 'moment';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
-import { SearchForDates, UpdateComplete, UpdateFailed } from '../../sessions/actions/session.action';
+import { SearchForDates } from '../../sessions/actions/session.action';
 import { Observable } from '../../../../node_modules/rxjs/Observable';
-import { TransactionConflicted } from '../../features/transactions/actions/transaction.action';
-import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
-import * as sessionReducers from '../../sessions/reducers';
+import * as fromHearingParts from '../../hearing-part/reducers';
+import * as notesReducers from '../../notes/reducers';
+import * as judgesReducers from '../../judges/reducers';
+import * as fromSessions from '../../sessions/reducers';
+import * as caseTypeReducers from '../../core/reference/reducers/case-type.reducer';
+import * as sessionTypeReducers from '../../core/reference/reducers/session-type.reducer';
+import * as hearingTypeReducers from '../../core/reference/reducers/hearing-type.reducer';
+import { Priority } from '../../hearing-part/models/priority-model';
 
 let component: PlannerComponent;
 let store: Store<State>;
 let storeSpy: jasmine.Spy;
+let hearingPartId = 'hpid';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const sessionsCreationServiceSpy = jasmine.createSpyObj(
   'SessionsCreationService',
-  ['update']
+  ['update', 'fetchUpdatedEntities']
 );
 const hearingPartModificationServiceSpy = jasmine.createSpyObj(
   'HearingPartModificationService',
@@ -36,7 +42,7 @@ const event = <CustomEvent>{
     },
     jsEvent: {
       target: {
-        getAttribute: () => {}
+        getAttribute: () => {return hearingPartId}
       }
     },
     revertFunc: () => {}
@@ -55,7 +61,13 @@ describe('PlannerComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         StoreModule.forRoot({}),
-        StoreModule.forFeature('sessions', sessionReducers.reducers),
+        StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
+        StoreModule.forFeature('sessions', fromSessions.reducers),
+        StoreModule.forFeature('judges', judgesReducers.reducers),
+        StoreModule.forFeature('notes', notesReducers.reducers),
+        StoreModule.forFeature('caseTypes', caseTypeReducers.reducer),
+        StoreModule.forFeature('sessionTypes', sessionTypeReducers.reducer),
+        StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer)
       ],
       providers: [
         ActionsSubject,
@@ -80,31 +92,6 @@ describe('PlannerComponent', () => {
   describe('constructor', () => {
     it('should init object', () => {
       expect(component).toBeDefined();
-    });
-
-    it('should call loadDataForAllJudgesSpy when TransactionConflicted has been dispatched', () => {
-      const loadDataForAllJudgesSpy = spyOn(component, 'loadDataForAllJudges');
-      const mockEntityTransaction: EntityTransaction = {
-        entityId: 'some-transaction-entityId',
-        id: 'some-id',
-        problemsLoaded: false,
-        completed: false,
-        conflicted: true
-      };
-      store.dispatch(new TransactionConflicted(mockEntityTransaction));
-      expect(loadDataForAllJudgesSpy).toHaveBeenCalled();
-    });
-
-    it('should call openSummaryDialog when Session.UpdateComplete has been dispatched', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObj);
-
-        store.dispatch(new UpdateComplete());
-      expect(matDialogSpy.open).toHaveBeenCalled();
-    });
-
-    it('should call openCreationFailedDialog when Session.UpdateComplete has been dispatched', () => {
-      store.dispatch(new UpdateFailed('error msg'));
-      expect(matDialogSpy.open).toHaveBeenCalled();
     });
   });
 
@@ -194,6 +181,44 @@ describe('PlannerComponent', () => {
     });
 
     it('should assign hearing parts to session when dialog confirmed', () => {
+      component.selectedSessionId = 'some-session-id';
+      component.sessions = [
+          {
+              id: 'some-session-id',
+              start: undefined,
+              duration: undefined,
+              room: undefined,
+              person: undefined,
+              caseType: undefined,
+              jurisdiction: 'some jurisdiction',
+              version: 1,
+              sessionType: undefined,
+              hearingParts: undefined,
+              allocated: undefined,
+              utilization: undefined,
+              available: undefined
+          }
+      ];
+
+      component.hearingParts = [{
+          id: hearingPartId,
+          session: undefined,
+          caseNumber: 'abc123',
+          caseTitle: 'some-case-title',
+          caseType: 'asd',
+          hearingType: 'asd',
+          duration: moment.duration(30),
+          scheduleStart: moment.now(),
+          scheduleEnd: moment.now(),
+          version: 2,
+          priority: Priority.Low,
+          reservedJudgeId: undefined,
+          communicationFacilitator: 'interpreter',
+          notes: [],
+          reservedJudge: undefined
+      }
+      ]
+
       matDialogSpy.open.and.returnValue({
           afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
       });
