@@ -1,5 +1,6 @@
 import { element, by, browser, ExpectedConditions } from 'protractor';
 import { ElementHelper } from '../utils/element-helper';
+import { Wait } from '../enums/wait';
 
 export class LoginPage {
   loginButton = element(by.id('login'));
@@ -19,6 +20,6 @@ export class LoginPage {
   }
 
   async waitUntilLoaded() {
-    return await browser.wait(ExpectedConditions.elementToBeClickable(this.username))
+    return await browser.wait(ExpectedConditions.elementToBeClickable(this.username), Wait.normal)
   }
 }
