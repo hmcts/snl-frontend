@@ -1,17 +1,19 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppConfig } from '../../app.config';
-import { TestBed } from '@angular/core/testing';
 import { SecurityService } from './security.service';
-import { AuthorizationHeaderName } from '../models/access-token';
 import { User } from '../models/user.model';
+import { SecurityContext } from './security-context.service';
+import { TestBed } from '@angular/core/testing';
+import { AuthorizationHeaderName } from '../models/access-token';
 
-let storageSpy, httpMock, securityService: SecurityService;
+let storageSpy, httpMock, securityService: SecurityService, securityContext: SecurityContext;
+const fakeUrl = 'https://doesnot.matter.com';
 const mockedAppConfig = {
-    getApiUrl: () => 'https://google.co.uk',
+    getApiUrl: () => fakeUrl,
     createApiUrl: (suffix) => {
-        return 'https://google.co.uk' + suffix;
+        return fakeUrl + suffix;
     }
-};
+} as AppConfig;
 let callbackSpy = jasmine.createSpy();
 
 const expectedSignInURL = `${mockedAppConfig.getApiUrl()}/security/signin`;
@@ -40,17 +42,22 @@ const exampleUserData = Object.assign(new User(), userResponse);
 describe('Security Service', () => {
     beforeEach(() => {
 
-        storageSpy = jasmine.createSpyObj('storage', ['removeItem', 'setItem']);
+        storageSpy = jasmine.createSpyObj('storage', ['removeItem', 'setItem', 'getItem']);
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [
-                SecurityService,
+                SecurityService, SecurityContext,
                 { provide: AppConfig, useValue: mockedAppConfig },
                 { provide: 'STORAGE', useValue: storageSpy}
             ]
         });
-        securityService = TestBed.get(SecurityService);
+    });
+
+    beforeEach(() => {
         httpMock = TestBed.get(HttpTestingController);
+        // const httpClient = TestBed.get(HttpClient);
+        securityContext = TestBed.get(SecurityContext);
+        securityService = TestBed.get(SecurityService); // new SecurityService(securityContext, httpClient, mockedAppConfig);
     });
 
     afterEach(() => {
@@ -59,12 +66,12 @@ describe('Security Service', () => {
 
     describe('Logout', () => {
         it('Logging out should remove authorization data from storage and set user to empty', () => {
-            securityService.currentUser = exampleUserData;
+            securityContext.userSubject$.next(exampleUserData);
 
             securityService.logout(callbackSpy);
 
-            expect(securityService.currentUser).toEqual(User.emptyUser());
-            expect(storageSpy.removeItem).toHaveBeenCalledWith(AuthorizationHeaderName);
+            expect(securityService.getCurrentUser()).toEqual(User.emptyUser());
+            expect(securityContext.getToken()).toEqual(undefined);
             expect(callbackSpy).toHaveBeenCalled();
         });
     });
@@ -73,7 +80,8 @@ describe('Security Service', () => {
         let userAuthProperties = ['accountNonExpired', 'accountNonLocked', 'credentialsNonExpired', 'enabled'];
 
         userAuthProperties.forEach((propertyName) => {
-            let currentUser = {...exampleUserData,
+            let currentUser = {
+                ...exampleUserData,
                 accountNonExpired: true,
                 accountNonLocked: true,
                 credentialsNonExpired: true,
@@ -82,23 +90,24 @@ describe('Security Service', () => {
 
             it(`should return false if at least '${propertyName}' is false`, () => {
                 currentUser[propertyName] = false;
-                securityService.currentUser = currentUser;
+                securityContext.userSubject$.next(currentUser);
 
                 expect(securityService.isAuthenticated()).toBeFalsy();
-            })
-        })
+            });
+        });
 
         it(`should return true if all of the properties: ( ${userAuthProperties.join(', ')} ) are true`, () => {
-            let currentUser = {...exampleUserData,
+            let currentUser = {
+                ...exampleUserData,
                 accountNonExpired: true,
                 accountNonLocked: true,
                 credentialsNonExpired: true,
                 enabled: true
             } as User;
-            securityService.currentUser = currentUser;
+            securityContext.userSubject$.next(currentUser);
 
             expect(securityService.isAuthenticated()).toBeTruthy();
-        })
+        });
     });
 
     describe('Login', () => {
@@ -106,8 +115,8 @@ describe('Security Service', () => {
             spyOn(securityService, 'refreshAuthenticatedUserData');
 
             securityService.authenticate(creds, callbackSpy);
-
             httpMock.expectOne(expectedSignInURL).flush(signinResponse);
+
             expect(storageSpy.setItem).toHaveBeenCalledWith(AuthorizationHeaderName, `Bearer ${token}`);
             expect(securityService.refreshAuthenticatedUserData).toHaveBeenCalledWith(callbackSpy);
         });
@@ -116,18 +125,18 @@ describe('Security Service', () => {
             securityService.refreshAuthenticatedUserData(callbackSpy);
 
             httpMock.expectOne(expectedUserURL).flush(userResponse);
-            expect(securityService.currentUser).toEqual(exampleUserData);
+            expect(securityService.getCurrentUser()).toEqual(exampleUserData);
         });
 
         it('Refreshing user data should with no username should set user to empty', () => {
             securityService.refreshAuthenticatedUserData(callbackSpy);
 
             httpMock.expectOne(expectedUserURL).flush({});
-            expect(securityService.currentUser).toEqual(User.emptyUser());
+            expect(securityService.getCurrentUser()).toEqual(User.emptyUser());
         });
 
         afterEach(() => {
             expect(callbackSpy).toHaveBeenCalled();
-        })
+        });
     });
 });

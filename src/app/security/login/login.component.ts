@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     login() {
         this.security.authenticate(this.credentials, data => {
             // TODO use route.snapsho to go to previously visited component
-            if (this.security.currentUser.hasRole('JUDGE')) {
+            if (this.security.getCurrentUser().hasRole('JUDGE')) {
                 // TODO find a way to get away from /home just keep /judge
                 this.router.navigate(['/home/judge/main']);
             } else if (this.returnUrl) {

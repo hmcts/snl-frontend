@@ -44,7 +44,7 @@ export class CalendarContainerComponent implements OnInit {
     }
 
     private loadDataForJudge(query: DiaryLoadParameters) {
-        query.judgeUsername = this.security.currentUser.username;
+        query.judgeUsername = this.security.getCurrentUser().username;
 
         this.store.dispatch(new SearchForJudgeWithHearings(query));
     }

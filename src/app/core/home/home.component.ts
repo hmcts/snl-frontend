@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     }
 
     isInRole(roleType: string) {
-        return this.security.currentUser.hasRole(roleType);
+        return this.security.getCurrentUser().hasRole(roleType);
     }
 
     authenticated() {

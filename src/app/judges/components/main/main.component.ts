@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SecurityService } from '../../../security/services/security.service';
+import { SecurityContext } from '../../../security/services/security-context.service';
 
 @Component({
     selector: 'app-main',
@@ -10,11 +10,11 @@ export class MainComponent implements OnInit {
 
     judge = '"Unknown name"';
 
-    constructor(private readonly securityService: SecurityService) {
+    constructor(private readonly securityContext: SecurityContext) {
     }
 
     ngOnInit() {
-        this.judge = this.securityService.currentUser.username;
+        this.judge = this.securityContext.getCurrentUser().username;
         // TODO do a call to get the full user Name
     }
 
