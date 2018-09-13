@@ -12,6 +12,9 @@
     <div fxFlex>
       Action summary
     </div>
+    <div fxFlex>
+        {{ (data?.summaryMsg$ | async) }}
+    </div>
     <div fxFlex *ngIf="!(problemsLoaded$ | async)">
       Loading the problems...
     </div>
