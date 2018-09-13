@@ -4,12 +4,14 @@ import { DefaultDataTransformer } from './default-data-transformer';
 import { IcalendarTransformer } from './icalendar-transformer';
 import { SessionType } from '../../reference/models/session-type';
 
+const room = { name: 'room' }
+const person = { name: 'person' }
 let session = {
     id: 'id',
     start: moment(),
     duration: 60,
-    room: { name: 'room' },
-    person: { name: 'person' },
+    room: room,
+    person: person,
     sessionType: { code: 'session-type-code', description: 'session-type-description' } as SessionType,
     hearingParts: [],
     jurisdiction: ''
@@ -21,7 +23,9 @@ let expectedEvent = {
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
-    color: 'gray'
+    color: 'gray',
+    room: room,
+    person: person
 };
 
 let sessionWithoutJudgeAndRoomAndSessiontype = {
@@ -34,7 +38,9 @@ let sessionWithoutJudgeAndRoomAndSessiontype = {
 let expectedEventWithoutJudgeAndRoomAndSessiontype = {
     ...expectedEvent,
     title: `No Room - No Judge - No Session type`,
-    color: 'gray'
+    color: 'gray',
+    room: undefined,
+    person: undefined
 }
 
 let sessionWithIdUndefined = {
