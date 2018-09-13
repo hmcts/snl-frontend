@@ -48,7 +48,7 @@ const sessionCreate: SessionCreate = {
     caseType: undefined
 };
 
-fdescribe('Go to search session', () => {
+describe('Go to search session', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
     });
