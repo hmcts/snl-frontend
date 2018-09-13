@@ -44,6 +44,7 @@ export class SessionsAmendFormComponent {
         this.sessionCreationService.amend(sessionAmend);
         this.openTransactionDialog().afterClosed().subscribe(() => {
             this.sessionCreationService.fetchUpdatedEntities()
+            this.amendSessionAction.emit();
         })
     }
 
@@ -63,7 +64,7 @@ export class SessionsAmendFormComponent {
     private initiateFormGroup() {
         this.sessionAmendFormGroup = new FormGroup({
             sessionTypeCode: new FormControl(this.amendSessionForm.sessionTypeCode, Validators.required),
-            startDate: new FormControl(this.amendSessionForm.startDate, [Validators.required]),
+            startDate: new FormControl({value: this.amendSessionForm.startDate, disabled:true}, [Validators.required]),
             startTime: new FormControl(this.amendSessionForm.startTime, [Validators.required]),
             durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
         });

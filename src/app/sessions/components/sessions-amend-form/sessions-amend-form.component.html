@@ -7,7 +7,7 @@
     <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
-        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [disabled]="true" [(ngModel)]="amendSessionForm.startDate">
+        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [(ngModel)]="amendSessionForm.startDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>

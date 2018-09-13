@@ -12,7 +12,7 @@ export class SessionAmendDialogComponent {
                 private readonly dialogRef: MatDialogRef<SessionAmendDialogComponent>) {
     }
 
-    onCancel() {
+    onSaveOrCancel() {
         this.dialogRef.close();
     }
 }

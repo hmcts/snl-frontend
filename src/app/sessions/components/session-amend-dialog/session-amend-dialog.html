@@ -1,6 +1,6 @@
 <div class="sessions-create-container">
-  <app-sessions-amend-form (amendSessionAction)="onSave()"
-                           (cancelAction)="onCancel()"
+  <app-sessions-amend-form (amendSessionAction)="onSaveOrCancel($event)"
+                           (cancelAction)="onSaveOrCancel($event)"
                            [sessionData]="data.sessionData"
                            [sessionTypes]="data.sessionTypes">
   </app-sessions-amend-form>
