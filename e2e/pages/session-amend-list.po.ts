@@ -19,7 +19,7 @@ export class SessionAmendListPage {
 
     async isSessionDisplayed(id: string): Promise<boolean> {
         const row = await this.sessionsTable.rowById(id);
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Session is not visible`);
-        return await row.isDisplayed();
+        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Session is not present`);
+        return await row.isPresent();
     }
 }
