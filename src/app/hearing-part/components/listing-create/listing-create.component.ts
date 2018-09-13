@@ -24,6 +24,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 const DURATION_UNIT = 'minute';
 
@@ -208,8 +209,8 @@ export class ListingCreateComponent implements OnInit {
     }
 
     private openDialog(actionTitle: string) {
-        this.dialog.open(TransactionDialogComponent, {
-            data: actionTitle,
+        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

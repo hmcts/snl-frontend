@@ -27,6 +27,7 @@ import { HearingPartModificationService } from '../../../hearing-part/services/h
 import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
     selector: 'app-sessions-search',
@@ -153,8 +154,8 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
-            data: 'Assigning hearing part to session',
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle: 'Assigning hearing part to session' },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true
