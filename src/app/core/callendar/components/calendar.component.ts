@@ -81,7 +81,8 @@ export class CalendarComponent implements OnInit {
             eventLimit: false,
             header: this.header,
             views: this.views,
-            titleFormat: 'DD/MM/YYYY'
+            titleFormat: 'DD/MM/YYYY',
+            timezone: 'local'
         };
         // when there are defined resources, agendaDay view for a simple calendar may not work
         // another approach would be to create separate component for scheduler
@@ -160,8 +161,8 @@ export class CalendarComponent implements OnInit {
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
-        event.detail.event.start = moment(event.detail.event.start.format());
-        event.detail.event.end = moment(event.detail.event.end.format());
+        event.detail.event.start = moment(event.detail.event.start, 'DD/MM/YYYY[T]HH:mm:ss Z');
+        event.detail.event.end = moment(event.detail.event.end, 'DD/MM/YYYY[T]HH:mm:ss Z');
 
         eventCallback.emit(event);
     }
