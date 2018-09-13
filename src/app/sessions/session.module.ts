@@ -29,6 +29,7 @@ import { SessionsPropositionsTableComponent } from './components/sessions-propos
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { TransactionsModule } from '../features/transactions/transactions.module';
+import { SessionsAmendFormComponent } from './components/sessions-amend-form/sessions-amend-form.component';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -41,19 +42,20 @@ export const COMPONENTS = [
     SessionEditOrCreateDialogComponent,
     SessionsPropositionsSearchComponent,
     SessionsPropositionsTableComponent,
-    SessionsPropositionsFormComponent
+    SessionsPropositionsFormComponent,
+    SessionsAmendFormComponent
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     AngularMaterialModule,
-      FlexLayoutModule,
-      FormsModule,
-      ReactiveFormsModule,
-      HearingPartModule,
-      TransactionsModule,
-      CoreModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HearingPartModule,
+    TransactionsModule,
+    CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{

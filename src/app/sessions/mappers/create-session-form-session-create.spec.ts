@@ -38,7 +38,7 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
         });
     });
 
-    describe('CreateSessionFormToSessionCreate', () => {
+    describe('AmendSessionFormToSessionAmend', () => {
         it('should map CreateSessionForm model into SessionCreate', () => {
             const createSessionForm: CreateSessionForm = {
                 personId,
