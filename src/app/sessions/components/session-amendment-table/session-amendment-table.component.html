@@ -10,7 +10,7 @@
   <!-- Position Column -->
   <ng-container matColumnDef="id">
     <mat-header-cell style="display:none" *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
-    <mat-cell style="display:none" *matCellDef="let element"> {{element.id}} </mat-cell>
+    <mat-cell  id="{{element.id}}" style="display:none" *matCellDef="let element"></mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="person">
