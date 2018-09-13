@@ -85,7 +85,8 @@ export class SessionsSearchComponent implements OnInit {
                 sessionTypes: this.sessionTypes
             } as SessionAmmendDialogData,
             hasBackdrop: true,
-            height: '60%'
+            height: '100%',
+            disableClose: true
         })
     }
 
