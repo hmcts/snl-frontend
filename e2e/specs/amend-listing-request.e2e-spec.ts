@@ -47,6 +47,7 @@ const listingRequest = {
   ...displayedListingRequestData
 };
 
+
 const listingRequestCreate = {
     ...listingRequest, caseType: 'small-claims',  hearingType: 'trial'
 }
@@ -66,7 +67,7 @@ describe('Amend Listing Request', () => {
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.changeMaxItemsPerPage('100');
       const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(displayedListingRequestData));
-      expect(isListingRequestDisplayed).toBeTruthy();
+      expect(isListingRequestDisplayed).toBeFalsy();
     });
   });
   describe('Click on edit and change some values', () => {
