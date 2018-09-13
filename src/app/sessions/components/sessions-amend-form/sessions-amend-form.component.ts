@@ -39,6 +39,7 @@ export class SessionsAmendFormComponent {
         const sessionAmend: SessionAmmend = Mapper.AmendSessionFormToSessionAmend(this.amendSessionForm)
         sessionAmend.id = this.session.id;
         sessionAmend.userTransactionId = uuid();
+        sessionAmend.version = this.session.version;
 
         this.sessionCreationService.amend(sessionAmend);
         this.openTransactionDialog().afterClosed().subscribe((success) => {

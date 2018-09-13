@@ -20,12 +20,14 @@ export const SessionToAmendSessionForm = (session: Session): SessionAmmendForm =
 export const AmendSessionFormToSessionAmend = (amendSessionForm: SessionAmmendForm): SessionAmmend => {
     const sessionTypeCode = amendSessionForm.sessionTypeCode
     const durationInSeconds = Math.floor(amendSessionForm.durationInMinutes.valueOf() * 60)
+    const startTime = moment.utc(moment(amendSessionForm.startTime, 'HH:mm')).format('HH:mm');
 
     return {
         sessionTypeCode: sessionTypeCode,
         durationInSeconds: durationInSeconds,
-        startTime: amendSessionForm.startTime,
+        startTime: startTime,
         id: undefined,
-        userTransactionId: undefined
+        userTransactionId: undefined,
+        version: undefined
     }
 }
