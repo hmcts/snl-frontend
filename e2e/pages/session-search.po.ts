@@ -65,7 +65,7 @@ export class SessionSearchPage {
 
     async editListingRequestWithValues(...values: string[]): Promise<void> {
         const row = await this.listingRequestsTable.rowThatContains(...values)
-        await row.element(by.cssContainingText('.clickable', 'edit')).click()
+        await row.element(by.cssContainingText('.clickable', 'Edit')).click()
     }
 
     async waitUntilVisible() {
