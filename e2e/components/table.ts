@@ -1,4 +1,4 @@
-import { ElementFinder, by } from 'protractor';
+import { ElementFinder, by, element } from 'protractor';
 import { filterSeries } from 'p-iteration';
 
 export class Table {
@@ -12,6 +12,10 @@ export class Table {
     })
 
     return selectedRow[0];
+  }
+
+  async rowById(id) {
+    return await element(by.id(id));
   }
 
   private areValuesInText(text: string, values: string[]): boolean {

@@ -2,6 +2,7 @@ import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import * as rm from 'typed-rest-client/HttpClient';
 import { CONFIG } from './../../url-config'
+import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 
 export class API {
     private static baseUrl = (process.env.TEST_URL !== undefined) ?
@@ -12,6 +13,13 @@ export class API {
     static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
         const response = await this.rest.put(`${API.baseUrl}/hearing-part/create`, JSON.stringify(body), API.headers);
+        await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
+        return response.message.statusCode;
+    }
+
+    static async createSession(body: SessionCreate) {
+        await API.login();
+        const response = await this.rest.put(`${API.baseUrl}/sessions`, JSON.stringify(body), API.headers);
         await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
         return response.message.statusCode;
     }

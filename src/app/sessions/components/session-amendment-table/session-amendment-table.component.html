@@ -8,6 +8,11 @@
 
 <mat-table id="sessions-table" *ngIf="tableVisible" #table [dataSource]="dataSource" matSort>
   <!-- Position Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell style="display:none" *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
+    <mat-cell style="display:none" *matCellDef="let element"> {{element.id}} </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="person">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.person?.name}} </mat-cell>
@@ -63,4 +68,4 @@
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator *ngIf="tableVisible" [length]="sessions.length" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="tableVisible" [length]="sessions.length" [pageSize]="100" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
