@@ -5,4 +5,4 @@ coverage/
 package-lock.json
 yarn-error.log
 .scannerwork
-REPORTS/
+functional-output/
