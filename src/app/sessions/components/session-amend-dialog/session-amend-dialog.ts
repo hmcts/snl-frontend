@@ -1,19 +1,18 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { ListingCreate } from '../../models/listing-create';
+import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
 
 @Component({
-    selector: 'app-listing-create-dialog',
-    templateUrl: './listing-create-dialog.html'
+    selector: 'app-session-amend-dialog',
+    templateUrl: './session-amend-dialog.html'
 })
-export class ListingCreateDialogComponent {
+export class SessionAmendDialogComponent {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: ListingCreate,
-                private readonly dialogRef: MatDialogRef<ListingCreateDialogComponent>) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: SessionAmmendDialogData,
+                private readonly dialogRef: MatDialogRef<SessionAmendDialogComponent>) {
     }
 
-    onSave() {
+    onCancel() {
         this.dialogRef.close();
     }
-
 }

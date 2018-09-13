@@ -33,6 +33,7 @@ import { SessionAmendmentTableComponent } from './components/session-amendment-t
 import { SessionsListingsSearchComponent } from './containers/sessions-listings-search/sessions-listings-search.component';
 import { SessionsFilterService } from './services/sessions-filter-service';
 import { SessionsAmendFormComponent } from './components/sessions-amend-form/sessions-amend-form.component';
+import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -48,7 +49,8 @@ export const COMPONENTS = [
     SessionsSearchComponent,
     SessionAmendmentTableComponent,
     SessionsListingsSearchComponent,
-    SessionsAmendFormComponent
+    SessionsAmendFormComponent,
+    SessionAmendDialogComponent
 ];
 
 @NgModule({
@@ -81,7 +83,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent, SessionAmendDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]

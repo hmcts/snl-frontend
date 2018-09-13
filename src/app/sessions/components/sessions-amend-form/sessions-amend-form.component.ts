@@ -20,6 +20,7 @@ export class SessionsAmendFormComponent {
     @Input() set sessionData(session: Session) {
         this.session = session;
         this.amendSessionForm = Mapper.SessionToAmendSessionForm(this.session);
+        this.initiateFormGroup();
     }
 
     @Input() sessionTypes: SessionType[];
@@ -28,7 +29,6 @@ export class SessionsAmendFormComponent {
     @Output() cancelAction = new EventEmitter();
 
     constructor() {
-        this.initiateFormGroup();
     }
 
     create() {

@@ -1,4 +1,7 @@
 <div class="sessions-create-container">
-  <app-listing-create (onSave)="onSave()" [editMode]=true [data]="data"
-  ></app-listing-create>
+  <app-sessions-amend-form (amendSessionAction)="onSave()"
+                           (cancelAction)="onCancel()"
+                           [sessionData]="data.sessionData"
+                           [sessionTypes]="data.sessionTypes">
+  </app-sessions-amend-form>
 </div>
