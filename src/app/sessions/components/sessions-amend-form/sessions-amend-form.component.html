@@ -4,7 +4,7 @@
   </mat-card-header>
 
   <mat-card-content class="inputs-container">
-    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="create()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
         <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [disabled]="true" [(ngModel)]="amendSessionForm.startDate">

@@ -6,6 +6,9 @@ import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model
 import { SessionAmmend } from '../../models/ammend/session-ammend.model';
 import { Session } from '../../models/session.model';
 import { v4 as uuid } from 'uuid';
+import { SessionsCreationService } from '../../services/sessions-creation.service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -28,19 +31,34 @@ export class SessionsAmendFormComponent {
     @Output() amendSessionAction = new EventEmitter<SessionAmmend>();
     @Output() cancelAction = new EventEmitter();
 
-    constructor() {
+    constructor(public sessionCreationService: SessionsCreationService,
+                public dialog: MatDialog) {
     }
 
-    create() {
+    amend() {
         const sessionAmend: SessionAmmend = Mapper.AmendSessionFormToSessionAmend(this.amendSessionForm)
         sessionAmend.id = this.session.id;
         sessionAmend.userTransactionId = uuid();
 
-        this.amendSessionAction.emit(sessionAmend);
+        this.sessionCreationService.amend(sessionAmend);
+        this.openTransactionDialog().afterClosed().subscribe((success) => {
+            if (success) {
+                this.sessionCreationService.fetchUpdatedEntities()
+            }
+        })
     }
 
     cancel() {
         this.cancelAction.emit(null);
+    }
+
+    private openTransactionDialog() {
+        return this.dialog.open(TransactionDialogComponent, {
+            data: 'Amending session',
+            width: 'auto',
+            minWidth: 350,
+            hasBackdrop: true
+        });
     }
 
     private initiateFormGroup() {
