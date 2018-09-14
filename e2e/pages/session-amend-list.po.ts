@@ -26,6 +26,6 @@ export class SessionAmendListPage {
     async clickEditOnSession(id: string) {
         const row = await this.sessionsTable.rowById(id);
         await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, 'Session is not present');
-        await row.element(by.id(`amend${id}`)).click();
+        await element(by.id(`amend-button-${id}`)).click();
     }
 }

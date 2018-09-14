@@ -67,7 +67,7 @@
   <ng-container matColumnDef="amend">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span id="amend{{element.id}}" [class.clickable]="true" (click)="amend.emit(element)">Amend</span>
+      <span id="amend-button-{{element.id}}" [class.clickable]="true" (click)="amend.emit(element)">Amend</span>
     </mat-cell>
   </ng-container>
 
