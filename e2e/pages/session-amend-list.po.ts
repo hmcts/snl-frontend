@@ -5,7 +5,7 @@ import { Table } from '../components/table';
 
 export class SessionAmendListPage {
     private filterSessionComponent = new FilterSessionComponent();
-    private sessionsTable = new Table(element(by.id('sessions-table')));
+    public sessionsTable = new Table(element(by.id('sessions-table')));
 
     public noSessionsTitle = element(by.cssContainingText('.heading', 'Sessions:'));
 

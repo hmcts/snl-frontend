@@ -1,6 +1,7 @@
 import { ElementHelper } from '../utils/element-helper';
-import { element, by, ElementFinder } from 'protractor';
+import { element, by, ElementFinder, browser, ExpectedConditions } from 'protractor';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
+import { Wait } from '../enums/wait';
 
 export class FilterSessionComponent {
   private body = element(by.css('body'));
@@ -20,6 +21,8 @@ export class FilterSessionComponent {
   private elementHelper = new ElementHelper();
 
   async filter(formValues: FilterSessionsComponentForm) {
+    await this.waitForStartDateInputToBeVisible(); // A workaround to verify that the filter pane is visible
+
     await this.elementHelper.typeDate(this.startDateInput, formValues.startDate);
     await this.elementHelper.typeDate(this.endDateInput, formValues.endDate);
 
@@ -55,5 +58,11 @@ export class FilterSessionComponent {
     }
 
     await this.filterButton.click();
+  }
+
+  private async waitForStartDateInputToBeVisible() {
+      return await browser.wait(ExpectedConditions.visibilityOf(this.startDateInput),
+          Wait.normal,
+          'Start date input on filter pane is not visible');
   }
 }

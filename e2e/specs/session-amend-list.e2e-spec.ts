@@ -23,7 +23,7 @@ const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY');
 const sessionType = SessionTypes.FTRACK_TRIAL_ONLY;
 const sessionId = uuid();
 
-const formValues: FilterSessionsComponentForm = {
+const filterFormValues: FilterSessionsComponentForm = {
     startDate: todayDate,
     endDate: tomorrowDate,
     sessionType: sessionType,
@@ -62,7 +62,7 @@ describe('Go to search session', () => {
     it('click filter and see some sessions', async () => {
         await navigationFlow.goToAmendSessionsListPage();
 
-        await sessionAmendListPage.filterSession(formValues);
+        await sessionAmendListPage.filterSession(filterFormValues);
 
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
@@ -70,17 +70,24 @@ describe('Go to search session', () => {
     fit('click filter and edit session', async () => {
         await navigationFlow.goToAmendSessionsListPage();
 
-        await sessionAmendListPage.filterSession(formValues);
+        await sessionAmendListPage.filterSession(filterFormValues);
         await sessionAmendListPage.amendSession(sessionId);
 
         const form: SessionAmendForm = {
-            sessionTypeCode: 'Fast Track',
+            sessionTypeCode: SessionTypes.MTRACK_TRIAL_ONLY,
             startTime: '12:00',
             durationInMinutes: 15
         };
 
         await sessionAmendDialog.amendSession(form);
         await transactionDialogPage.clickAcceptButton();
+
+        let filterFormPostAmend = {
+            ...filterFormValues,
+            sessionType: SessionTypes.MTRACK_TRIAL_ONLY,
+        }
+
+        await sessionAmendListPage.filterSession(filterFormPostAmend);
 
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
