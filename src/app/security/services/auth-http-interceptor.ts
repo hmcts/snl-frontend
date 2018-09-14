@@ -7,6 +7,8 @@ import 'rxjs/add/observable/throw';
 import { SecurityContext } from './security-context.service';
 import { Router } from '@angular/router';
 
+const new_token_header_name = 'Refreshed-Token';
+
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
 
@@ -19,11 +21,9 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             tap(event => {
                 if (event instanceof HttpResponse) {
-                    const newToken = req.headers.get('TokenRefresh');
-                    console.log('oldToken ', this.security.getToken());
+                    const newToken = event.headers.get(new_token_header_name);
                     if (newToken) {
                         this.security.setToken(newToken);
-                        console.log('newToken ', newToken);
                     }
                 }
             }),
