@@ -22,7 +22,7 @@ const now = moment();
 let component: SessionAmendmentTableComponent;
 let fixture: ComponentFixture<SessionAmendmentTableComponent>;
 
-fdescribe('SessionAmendmentTableComponent', () => {
+describe('SessionAmendmentTableComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
