@@ -76,6 +76,7 @@ describe('SessionAmendmentTableComponent', () => {
         } as SessionViewModel;
 
         const displayedColumnsExpectedValues = [
+            {columnName: 'id', expected: sampleSessionViewModel.id},
             {columnName: 'person', expected: sampleSessionViewModel.person.name},
             {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
             {columnName: 'date', expected: sampleSessionViewModel.start.unix()},

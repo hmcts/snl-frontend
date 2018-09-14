@@ -17,6 +17,7 @@ export class SessionAmendmentTableComponent implements OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns = [
+      'id',
       'person',
       'time',
       'date',
