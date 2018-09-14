@@ -6,7 +6,7 @@ import { SessionViewModel } from '../../models/session.viewmodel';
 @Component({
   selector: 'app-session-amendment-table',
   templateUrl: './session-amendment-table.component.html',
-  styleUrls: [],
+  styleUrls: ['./session-amendment-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionAmendmentTableComponent implements OnChanges {
@@ -17,6 +17,7 @@ export class SessionAmendmentTableComponent implements OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns = [
+      'id',
       'person',
       'time',
       'date',
