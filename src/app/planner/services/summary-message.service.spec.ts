@@ -23,7 +23,6 @@ describe('SummaryMessageService', () => {
               StoreModule.forRoot({}),
               StoreModule.forFeature('sessions', sessionReducers.reducers),
               StoreModule.forFeature('judges', judgesReducers.reducers),
-            //   StoreModule.forFeature('rooms', roomReducers.reducers)
             ],
             providers: [
                 SummaryMessageService,
@@ -31,8 +30,6 @@ describe('SummaryMessageService', () => {
           });
           summaryMessageService = TestBed.get(SummaryMessageService);
           store = TestBed.get(Store);
-          store.subscribe(console.log)
-        //   storeSpy = spyOn(store, 'dispatch').and.callThrough();
     });
 
     describe('When only time has changed', () => {

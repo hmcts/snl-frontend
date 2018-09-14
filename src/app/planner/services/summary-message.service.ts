@@ -17,9 +17,9 @@ export class SummaryMessageService {
         const eventDetails = event.detail.event;
         let [resourceType, resourceId] = eventDetails.resourceId.split(`${Separator}`);
         const isTimeChanged = this.isTimeChanged(event);
-        const isResourcedChanged = this.isResourcedChanged(event, resourceType, resourceId);
+        const isResourceChanged = this.isResourceChanged(event, resourceType, resourceId);
 
-        if (isTimeChanged && !isResourcedChanged) {
+        if (isTimeChanged && !isResourceChanged) {
             // do not produce summary msg when only time of session has changed
             return Observable.of(null)
         } else {
@@ -33,7 +33,7 @@ export class SummaryMessageService {
         return event.detail.duration.asMilliseconds() > 0
     }
 
-    private isResourcedChanged(event, resourceType, resourceId): boolean {
+    private isResourceChanged(event, resourceType, resourceId): boolean {
         const roomId = safe(() => event.detail.event.room.id) || 'empty'
         const personId = safe(() => event.detail.event.person.id) || 'empty'
 
