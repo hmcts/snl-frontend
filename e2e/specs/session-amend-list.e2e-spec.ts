@@ -51,15 +51,23 @@ const sessionCreate: SessionCreate = {
 describe('Go to search session', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
+        expect(await API.createSession(sessionCreate)).toEqual(200);
     });
 
     it('click filter and see some sessions', async () => {
-        await API.createSession(sessionCreate);
-
         await navigationFlow.goToAmendSessionsListPage();
 
         await sessionAmendListPage.filterSession(formValues);
 
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
-    })
+    });
+
+    fit('click filter and edit session', async () => {
+        await navigationFlow.goToAmendSessionsListPage();
+
+        await sessionAmendListPage.filterSession(formValues);
+        await sessionAmendListPage.clickEditOnSession(sessionId);
+
+        expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
+    });
 });

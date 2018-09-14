@@ -22,4 +22,10 @@ export class SessionAmendListPage {
         await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Session is not present`);
         return await row.isPresent();
     }
+
+    async clickEditOnSession(id: string) {
+        const row = await this.sessionsTable.rowById(id);
+        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, 'Session is not present');
+        await row.element(by.id(`amend${id}`)).click();
+    }
 }
