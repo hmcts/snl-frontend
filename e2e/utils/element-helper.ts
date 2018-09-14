@@ -31,6 +31,9 @@ export class ElementHelper {
   }
 
   async selectValueFromSingleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string) {
+    await browser.wait(ExpectedConditions.elementToBeClickable(selectOptionLocator),
+        Wait.normal,
+        'Select option element is not clickable');
     await selectOptionLocator.click();
     await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();

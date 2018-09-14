@@ -21,7 +21,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-select id="selectSessionType" formControlName="sessionTypeCode" placeholder="Select the session type *" [(value)]="amendSessionForm.sessionTypeCode">
+        <mat-select id="selectAmendSessionType" formControlName="sessionTypeCode" placeholder="Select the session type *" [(value)]="amendSessionForm.sessionTypeCode">
           <mat-option *ngFor="let sessionType of sessionTypes" value="{{sessionType.code}}">{{sessionType.description}}</mat-option>
         </mat-select>
       </mat-form-field>

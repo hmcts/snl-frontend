@@ -7,10 +7,15 @@ import { LoginFlow } from '../flows/login.flow';
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 import { API } from '../utils/api';
 import { v4 as uuid } from 'uuid';
+import { SessionAmendForm } from '../models/session-amend-form';
+import { SessionAmendDialog } from '../pages/session-amend-dialog.po';
+import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 
 const navigationFlow = new NavigationFlow();
 const sessionAmendListPage = new SessionAmendListPage();
 const loginFlow = new LoginFlow();
+const sessionAmendDialog = new SessionAmendDialog();
+const transactionDialogPage = new TransactionDialogPage();
 
 const now = moment().add(5, 'minute');
 const todayDate = now.format('DD/MM/YYYY');
@@ -66,7 +71,16 @@ describe('Go to search session', () => {
         await navigationFlow.goToAmendSessionsListPage();
 
         await sessionAmendListPage.filterSession(formValues);
-        await sessionAmendListPage.clickEditOnSession(sessionId);
+        await sessionAmendListPage.amendSession(sessionId);
+
+        const form: SessionAmendForm = {
+            sessionTypeCode: 'Fast Track',
+            startTime: '12:00',
+            durationInMinutes: 15
+        };
+
+        await sessionAmendDialog.amendSession(form);
+        await transactionDialogPage.clickAcceptButton();
 
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
