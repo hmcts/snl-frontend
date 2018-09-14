@@ -12,7 +12,7 @@ const navigationFlow = new NavigationFlow();
 const sessionAmendListPage = new SessionAmendListPage();
 const loginFlow = new LoginFlow();
 
-const now = moment();
+const now = moment().add(5, 'minute');
 const todayDate = now.format('DD/MM/YYYY');
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY');
 const sessionType = SessionTypes.FTRACK_TRIAL_ONLY;
@@ -43,7 +43,7 @@ const sessionCreate: SessionCreate = {
     personId: null,
     roomId: null,
     duration: 1800,
-    start: moment(moment.now()),
+    start: now,
     sessionTypeCode: 'fast-track---trial-only',
     caseType: undefined
 };
