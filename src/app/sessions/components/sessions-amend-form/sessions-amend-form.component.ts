@@ -36,12 +36,10 @@ export class SessionsAmendFormComponent {
     }
 
     amend() {
-        const sessionAmend: SessionAmmend = Mapper.AmendSessionFormToSessionAmend(this.amendSessionForm)
-        sessionAmend.id = this.session.id;
-        sessionAmend.userTransactionId = uuid();
-        sessionAmend.version = this.session.version;
+        const sessionAmend: SessionAmmend = this.prepareSessionAmend(this.amendSessionForm, this.session);
 
         this.sessionCreationService.amend(sessionAmend);
+
         this.openTransactionDialog().afterClosed().subscribe(() => {
             this.sessionCreationService.fetchUpdatedEntities()
             this.amendSessionAction.emit();
@@ -57,8 +55,18 @@ export class SessionsAmendFormComponent {
             data: 'Amending session',
             width: 'auto',
             minWidth: 350,
-            hasBackdrop: true
+            hasBackdrop: true,
+            disableClose: true
         });
+    }
+
+    private prepareSessionAmend(form: SessionAmmendForm, session: Session) {
+        let sessionAmend: SessionAmmend = Mapper.AmendSessionFormToSessionAmend(form);
+        sessionAmend.id = session.id;
+        sessionAmend.userTransactionId = uuid();
+        sessionAmend.version = session.version;
+
+        return sessionAmend;
     }
 
     private initiateFormGroup() {
