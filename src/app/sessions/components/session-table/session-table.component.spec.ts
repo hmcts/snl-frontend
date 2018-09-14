@@ -87,7 +87,6 @@ describe('SessionTableComponent', () => {
             {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
             {columnName: 'utilization', expected: 0},
             {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
-            {columnName: '', expected: sampleSessionViewModel.available.asMilliseconds()},
         ];
 
         beforeEach(() => {
