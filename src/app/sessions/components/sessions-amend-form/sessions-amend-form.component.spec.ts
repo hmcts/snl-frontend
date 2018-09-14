@@ -33,7 +33,7 @@ let session = {
 
 const sessionCreationServiceSpy = jasmine.createSpyObj('SessionsCreationService', ['amend', 'fetchUpdatedEntities']);
 
-fdescribe('SessionsAmendFormComponent', () => {
+describe('SessionsAmendFormComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule],

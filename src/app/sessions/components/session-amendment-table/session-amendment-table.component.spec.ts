@@ -22,7 +22,7 @@ const now = moment();
 let component: SessionAmendmentTableComponent;
 let fixture: ComponentFixture<SessionAmendmentTableComponent>;
 
-describe('SessionAmendmentTableComponent', () => {
+fdescribe('SessionAmendmentTableComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -87,6 +87,7 @@ describe('SessionAmendmentTableComponent', () => {
             {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
             {columnName: 'utilization', expected: 0},
             {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
+            {columnName: 'amend', expected: undefined},
         ];
 
         beforeEach(() => {
