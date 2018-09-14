@@ -67,7 +67,7 @@ describe('Go to search session', () => {
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
 
-    fit('click filter and edit session', async () => {
+    it('click filter and edit session', async () => {
         await navigationFlow.goToAmendSessionsListPage();
 
         await sessionAmendListPage.filterSession(filterFormValues);
