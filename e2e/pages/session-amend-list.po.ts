@@ -19,13 +19,14 @@ export class SessionAmendListPage {
 
     async isSessionDisplayed(id: string): Promise<boolean> {
         const row = await this.sessionsTable.rowById(id);
-        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Session is not present`);
+        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Session with id: ${id} is not present`);
         return await row.isPresent();
     }
 
-    async clickEditOnSession(id: string) {
+    async amendSession(id: string) {
         const row = await this.sessionsTable.rowById(id);
         await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, 'Session is not present');
         await element(by.id(`amend-button-${id}`)).click();
+
     }
 }
