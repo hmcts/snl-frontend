@@ -34,8 +34,8 @@ export class SummaryMessageService {
     }
 
     private isResourcedChanged(event, resourceType, resourceId): boolean {
-        const roomId = safe(() => event.detail.event.room.id)
-        const personId = safe(() => event.detail.event.person.id)
+        const roomId = safe(() => event.detail.event.room.id) || 'empty'
+        const personId = safe(() => event.detail.event.person.id) || 'empty'
 
         if (resourceType === 'room') {
             return roomId !== resourceId;
@@ -60,7 +60,7 @@ export class SummaryMessageService {
         if (resourceType === 'room') {
             resourceName = event.room.name
         } else if (resourceType === 'person') {
-            resourceName = event.judge.name
+            resourceName = event.person.name
         }
 
         return Observable.of(`${resourceName} has been unassigned`)
