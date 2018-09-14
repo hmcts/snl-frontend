@@ -15,6 +15,7 @@ import {
   getSessionsWithHearingsResponse,
   normalizedGetSessionsWithHearings
 } from './test-data/sessions-service-test-data';
+import { SessionAmmend } from '../models/ammend/session-ammend.model';
 
 const sessionID = 'some-session-id';
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
@@ -197,6 +198,32 @@ describe('SessionsService', () => {
       sessionsService.createSession(dummySession).subscribe();
       const req = httpMock.expectOne(expectedCreateSessionsURL);
       expect(req.request.method).toBe('PUT');
+      req.flush(null);
+    });
+  });
+
+  fdescribe('amendSession', () => {
+    const expectedAmendSessionUrl = `${mockedAppConfig.getApiUrl()}/sessions/amend`;
+    const dummySession: SessionAmmend = {
+      id: 'some-id',
+      userTransactionId: 'some-user-transaction-id',
+      durationInSeconds: 60,
+      sessionTypeCode: 'some-session-type-code',
+      startTime: '12:30', // ie "12:30", "08:45"
+      version: 0
+    };
+
+    it('should build valid URL with body', () => {
+      sessionsService.amendSession(dummySession).subscribe();
+      const req = httpMock.expectOne(expectedAmendSessionUrl);
+      expect(req.request.body).toEqual(dummySession);
+      req.flush(null);
+    });
+
+    it('should make POST request', () => {
+      sessionsService.amendSession(dummySession).subscribe();
+      const req = httpMock.expectOne(expectedAmendSessionUrl);
+      expect(req.request.method).toBe('POST');
       req.flush(null);
     });
   });
