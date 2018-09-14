@@ -7,7 +7,6 @@ import { select, Store } from '@ngrx/store';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
-import { Observable } from 'rxjs/Observable';
 import { State } from '../../../app.state';
 import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 
@@ -22,7 +21,6 @@ export class RoomPlannerComponent implements OnInit {
     columns: any[];
     resources: any[];
     dataTransformer: IcalendarTransformer<SessionViewModel>;
-    sessions$: Observable<any[]>;
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
@@ -31,6 +29,7 @@ export class RoomPlannerComponent implements OnInit {
     @Output() drop = new EventEmitter();
     @Output() eventMouseOver = new EventEmitter();
     @Input() initialStartDate: Date;
+    @Input() sessions: SessionViewModel[];
 
     constructor(private readonly store: Store<State>) {
         this.defaultView = 'timelineWeek';
@@ -51,7 +50,6 @@ export class RoomPlannerComponent implements OnInit {
 
     ngOnInit() {
         this.configureRoomView();
-        this.sessions$ = this.store.select(fromSessions.getFullSessions);
         this.store.dispatch(new fromRoomActions.Get());
     }
 

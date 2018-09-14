@@ -1,4 +1,4 @@
-<app-calendar [preTransformedData]="sessions$ | async"
+<app-calendar [preTransformedData]="sessions"
                     (loadData)="childLoadDataAction($event)"
                     (eventClickCallback)="childEventClick($event)"
                     (eventDropCallback)="childEventDrop($event)"
