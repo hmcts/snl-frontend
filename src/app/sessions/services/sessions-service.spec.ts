@@ -202,7 +202,7 @@ describe('SessionsService', () => {
     });
   });
 
-  fdescribe('amendSession', () => {
+  describe('amendSession', () => {
     const expectedAmendSessionUrl = `${mockedAppConfig.getApiUrl()}/sessions/amend`;
     const dummySession: SessionAmmend = {
       id: 'some-id',
