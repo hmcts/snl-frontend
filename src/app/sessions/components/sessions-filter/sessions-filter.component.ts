@@ -65,6 +65,8 @@ export class SessionsFilterComponent implements OnInit {
               }
           }
       } as SessionFilters;
+
+      this.sendFilter();
   }
 
   sendFilter() {

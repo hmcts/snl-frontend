@@ -14,6 +14,7 @@
                       (drop)="drop($event)"
                       (loadDataAction)="loadDataForAllJudges($event)"
                       [initialStartDate]="lastSearchDateRange?.startDate"
+                      [sessions]="sessions"
     ></app-room-planner>
     <app-judge-planner *ngIf="view==='judge'"
                        (eventClick)="eventClick($event)"
@@ -23,5 +24,6 @@
                        (drop)="drop($event)"
                        (loadDataAction)="loadDataForAllJudges($event)"
                        [initialStartDate]="lastSearchDateRange?.startDate"
+                       [sessions]="sessions"
     ></app-judge-planner>
 </div>

@@ -1,4 +1,4 @@
-import { ElementFinder, by } from 'protractor';
+import { ElementFinder, by, element } from 'protractor';
 import { filterSeries } from 'p-iteration';
 
 export class Table {
@@ -8,14 +8,18 @@ export class Table {
     const rows = await this.parentElement.all(by.css('mat-row')).asElementFinders_()
     const selectedRow = await filterSeries(rows, async (row: ElementFinder): Promise<boolean> => {
       const rowText = await row.getText()
-      return this.areValuesInText(rowText, values)
+      return await this.areValuesInText(rowText, values)
     })
 
     return selectedRow[0];
   }
 
-  private areValuesInText(text: string, values: string[]): boolean {
-    return values.reduce((previous, current) => {
+  async rowById(id) {
+    return await element(by.id(id));
+  }
+
+  private async areValuesInText(text: string, values: string[]): Promise<boolean> {
+    return await values.reduce((previous, current) => {
       return text.indexOf(current) !== -1 && previous;
     }, true);
   }
