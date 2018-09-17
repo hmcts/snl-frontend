@@ -19,22 +19,8 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         req = this.addAuthenticationHeader(req);
         return next.handle(req).pipe(
-            tap(event => {
-                if (event instanceof HttpResponse) {
-                    const newToken = event.headers.get(new_token_header_name);
-                    if (newToken) {
-                        this.security.setToken(newToken);
-                    }
-                }
-            }),
-            catchError(errorResponse => {
-                if (errorResponse && errorResponse.status === 401) {
-                    this.security.logout(() => {
-                        this.router.navigate(['/login']);
-                    });
-                }
-                return Observable.throw(errorResponse);
-            })
+            tap(this.handleNewAuthToken),
+            catchError(this.handle401Error)
         ).catch(() => {
             // to leave the console clean (No ERROR console log entry)
             return Observable.of('');
@@ -49,4 +35,22 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         }
         return req;
     }
+
+    private handleNewAuthToken = (event) => {
+        if (event instanceof HttpResponse) {
+            const newToken = event.headers.get(new_token_header_name);
+            if (newToken) {
+                this.security.setToken(newToken);
+            }
+        }
+    };
+
+    private handle401Error = (errorResponse) => {
+        if (errorResponse && errorResponse.status === 401) {
+            this.security.logout(() => {
+                this.router.navigate(['/login']);
+            });
+        }
+        return Observable.throw(errorResponse);
+    };
 }
