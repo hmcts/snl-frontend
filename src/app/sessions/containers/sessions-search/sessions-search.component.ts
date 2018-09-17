@@ -38,8 +38,8 @@ export class SessionsSearchComponent implements OnInit {
     endDate: moment.Moment;
     hearingParts$: Observable<HearingPartViewModel[]>;
     sessions$: Observable<SessionViewModel[]>;
-    rooms$: Observable<Room[]>;
-    judges$: Observable<Judge[]>;
+    rooms: Room[];
+    judges: Judge[];
     filters$ = new Subject<SessionFilters>();
     sessionTypes: SessionType[];
     filteredSessions: SessionViewModel[];
@@ -53,8 +53,8 @@ export class SessionsSearchComponent implements OnInit {
             map(sessionsFilterService.filterUnlistedHearingParts)
         ) as Observable<HearingPartViewModel[]>;
 
-        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
+        this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
+        this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
         this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => {
             this.sessionTypes = sessionTypes;
         });
@@ -75,14 +75,10 @@ export class SessionsSearchComponent implements OnInit {
     openAmendDialog(s: SessionViewModel) {
         this.dialog.open(SessionAmendDialogComponent, {
             data: {
-                sessionData: {
-                    id: s.id, start: s.start,
-                    duration: moment.duration(s.duration).asSeconds(), room: undefined,
-                    person: undefined, caseType: null,
-                    sessionTypeCode: s.sessionType.code,
-                    jurisdiction: null, version: s.version
-                } as Session,
-                sessionTypes: this.sessionTypes
+                sessionData: s,
+                sessionTypes: this.sessionTypes,
+                rooms: this.rooms,
+                judges: this.judges
             } as SessionAmmendDialogData,
             hasBackdrop: true,
             height: 'auto',
@@ -105,4 +101,5 @@ export class SessionsSearchComponent implements OnInit {
             .filter(s => this.sessionsFilterService.filterBySessionType(s, filters))
             .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
     }
+
 }

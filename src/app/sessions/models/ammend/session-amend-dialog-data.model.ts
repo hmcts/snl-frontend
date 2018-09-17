@@ -1,7 +1,11 @@
-import { Session } from '../session.model';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { Room } from '../../../rooms/models/room.model';
+import { Judge } from '../../../judges/models/judge.model';
+import { SessionViewModel } from '../session.viewmodel';
 
 export interface SessionAmmendDialogData {
-    sessionData: Session,
-    sessionTypes: SessionType[]
+    sessionData: SessionViewModel,
+    sessionTypes: SessionType[],
+    rooms: Room[],
+    judges: Judge[],
 }

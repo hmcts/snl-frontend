@@ -9,6 +9,8 @@ import { v4 as uuid } from 'uuid';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
+import { Judge } from '../../../judges/models/judge.model';
+import { Room } from '../../../rooms/models/room.model';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -19,6 +21,8 @@ export class SessionsAmendFormComponent {
     session: Session;
     amendSessionForm: SessionAmmendForm;
     sessionAmendFormGroup: FormGroup;
+    roomsPlaceholder: string;
+    judgesPlaceholder: string;
 
     @Input() set sessionData(session: Session) {
         this.session = session;
@@ -27,6 +31,8 @@ export class SessionsAmendFormComponent {
     }
 
     @Input() sessionTypes: SessionType[];
+    @Input() judges: Judge[];
+    @Input() rooms: Room[];
 
     @Output() amendSessionAction = new EventEmitter<SessionAmmend>();
     @Output() cancelAction = new EventEmitter();
@@ -75,6 +81,7 @@ export class SessionsAmendFormComponent {
             startDate: new FormControl({value: this.amendSessionForm.startDate, disabled: true}, [Validators.required]),
             startTime: new FormControl(this.amendSessionForm.startTime, [Validators.required]),
             durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
+            hearingPartCount: new FormControl({value: this.amendSessionForm.hearingPartCount, disabled: true}),
         });
     }
 }

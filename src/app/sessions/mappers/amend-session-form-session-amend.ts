@@ -1,19 +1,27 @@
 import * as moment from 'moment';
 import { SessionAmmendForm } from '../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
-import { Session } from '../models/session.model';
+import { SessionViewModel } from '../models/session.viewmodel';
 
-export const SessionToAmendSessionForm = (session: Session): SessionAmmendForm => {
-    const durationInMinutes = Math.floor(session.duration / 60)
+export const SessionToAmendSessionForm = (session: SessionViewModel): SessionAmmendForm => {
+    const durationInMinutes = moment.duration(session.duration).asMinutes();
     const startTime = moment(session.start).format('HH:mm');
     const startDate = session.start;
-    const sessionTypeCode = session.sessionTypeCode;
+    const sessionTypeCode = session.sessionType.code;
+    const personName = session.person !== undefined ? session.person.name : '';
+    const roomName = session.room !== undefined ? session.room.name : '';
+    const roomType = session.room !== undefined ? session.room.id : '';
+    const hearingPartCount = session.hearingParts !== undefined ? session.hearingParts.length : 0;
 
     return {
         durationInMinutes: durationInMinutes,
         startTime: startTime,
         startDate: startDate,
-        sessionTypeCode: sessionTypeCode
+        sessionTypeCode: sessionTypeCode,
+        personName: personName,
+        roomName: roomName,
+        roomType: roomType,
+        hearingPartCount: hearingPartCount
     } as SessionAmmendForm
 }
 
@@ -28,6 +36,8 @@ export const AmendSessionFormToSessionAmend = (amendSessionForm: SessionAmmendFo
         startTime: startTime,
         id: undefined,
         userTransactionId: undefined,
-        version: undefined
+        version: undefined,
+        personId: amendSessionForm.personName,
+        roomId: amendSessionForm.roomName
     }
 }

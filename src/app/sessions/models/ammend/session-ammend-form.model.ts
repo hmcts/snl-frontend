@@ -5,4 +5,8 @@ export interface SessionAmmendForm {
     startTime: string,
     durationInMinutes: number,
     sessionTypeCode: string,
+    roomName: string,
+    roomType: string,
+    personName: string,
+    hearingPartCount: number
 }

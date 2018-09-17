@@ -26,6 +26,24 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-form-field>
+        <mat-select id="selectRoom" [(value)]="amendSessionForm.roomName">
+          <mat-option value="">(No room)</mat-option>
+          <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select id="selectJudge" [(value)]="amendSessionForm.personName">
+          <mat-option value="">(No judge)</mat-option>
+          <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <span>Number of assigned listing requests:</span><input id="hearingPartCount" formControlName="hearingPartCount" matInput type="number" [(ngModel)]="amendSessionForm.hearingPartCount">
+      </mat-form-field>
+
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Amend</button>
         <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
