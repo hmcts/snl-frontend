@@ -22,7 +22,7 @@ class MockRouter {
     }
 }
 
-fdescribe('AuthHttpInterceptor', () => {
+describe('AuthHttpInterceptor', () => {
     beforeEach(() => {
 
         storageSpy = jasmine.createSpyObj('storage', ['removeItem', 'setItem', 'getItem']);
