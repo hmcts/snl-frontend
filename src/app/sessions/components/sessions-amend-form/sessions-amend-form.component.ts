@@ -41,7 +41,7 @@ export class SessionsAmendFormComponent {
         this.sessionCreationService.amend(sessionAmend);
 
         this.openTransactionDialog().afterClosed().subscribe(() => {
-            this.sessionCreationService.fetchUpdatedEntities()
+            this.sessionCreationService.fetchUpdatedEntities();
             this.amendSessionAction.emit();
         })
     }
