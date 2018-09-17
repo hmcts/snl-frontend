@@ -20,4 +20,8 @@ export class NavigationFlow {
   async goToListHearingsPage() {
     await this.topMenu.openListHearingPage();
   }
+
+  async goToAmendSessionsListPage() {
+      await this.topMenu.openSessionsAmendListPage();
+  }
 }
