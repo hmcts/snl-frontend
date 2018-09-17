@@ -55,9 +55,8 @@ describe('Security Service', () => {
 
     beforeEach(() => {
         httpMock = TestBed.get(HttpTestingController);
-        // const httpClient = TestBed.get(HttpClient);
         securityContext = TestBed.get(SecurityContext);
-        securityService = TestBed.get(SecurityService); // new SecurityService(securityContext, httpClient, mockedAppConfig);
+        securityService = TestBed.get(SecurityService);
     });
 
     afterEach(() => {

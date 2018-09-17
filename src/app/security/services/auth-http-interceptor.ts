@@ -7,7 +7,7 @@ import 'rxjs/add/observable/throw';
 import { SecurityContext } from './security-context.service';
 import { Router } from '@angular/router';
 
-const new_token_header_name = 'Refreshed-Token';
+export const new_token_header_name = 'Refreshed-Token';
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
@@ -27,7 +27,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
                     }
                 }
             }),
-            catchError((errorResponse, c2) => {
+            catchError(errorResponse => {
                 if (errorResponse && errorResponse.status === 401) {
                     this.security.logout(() => {
                         this.router.navigate(['/login']);
