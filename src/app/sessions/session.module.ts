@@ -5,7 +5,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './effects/session.effects';
 import { SessionsPageComponent } from './containers/sessions-page/sessions-page.component';
 import { SessionsCreateComponent } from './containers/sessions-create/sessions-create.component';
-import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
 import { SessionTableComponent } from './components/session-table/session-table.component';
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
@@ -29,11 +28,14 @@ import { SessionsPropositionsTableComponent } from './components/sessions-propos
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { TransactionsModule } from '../features/transactions/transactions.module';
+import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
+import { SessionAmendmentTableComponent } from './components/session-amendment-table/session-amendment-table.component';
+import { SessionsListingsSearchComponent } from './containers/sessions-listings-search/sessions-listings-search.component';
+import { SessionsFilterService } from './services/sessions-filter-service';
 
 export const COMPONENTS = [
     SessionsPageComponent,
     SessionsCreateComponent,
-    SessionsSearchComponent,
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
@@ -41,7 +43,10 @@ export const COMPONENTS = [
     SessionEditOrCreateDialogComponent,
     SessionsPropositionsSearchComponent,
     SessionsPropositionsTableComponent,
-    SessionsPropositionsFormComponent
+    SessionsPropositionsFormComponent,
+    SessionsSearchComponent,
+    SessionAmendmentTableComponent,
+    SessionsListingsSearchComponent
 ];
 
 @NgModule({
@@ -77,6 +82,6 @@ export const COMPONENTS = [
   entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]
 })
 export class SessionModule { }
