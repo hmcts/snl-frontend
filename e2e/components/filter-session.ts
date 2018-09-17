@@ -21,7 +21,7 @@ export class FilterSessionComponent {
   private elementHelper = new ElementHelper();
 
   async filter(formValues: FilterSessionsComponentForm) {
-    await this.waitForStartDateInputToBeVisible(); // A workaround to verify that the filter pane is visible
+    await this.waitForStartDateInputToBeVisible();
 
     await this.elementHelper.typeDate(this.startDateInput, formValues.startDate);
     await this.elementHelper.typeDate(this.endDateInput, formValues.endDate);

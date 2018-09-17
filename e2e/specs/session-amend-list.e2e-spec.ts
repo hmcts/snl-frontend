@@ -61,15 +61,12 @@ describe('Go to search session', () => {
 
     it('click filter and see some sessions', async () => {
         await navigationFlow.goToAmendSessionsListPage();
-
         await sessionAmendListPage.filterSession(filterFormValues);
-
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
 
     it('click filter and edit session', async () => {
         await navigationFlow.goToAmendSessionsListPage();
-
         await sessionAmendListPage.filterSession(filterFormValues);
         await sessionAmendListPage.amendSession(sessionId);
 
@@ -88,7 +85,6 @@ describe('Go to search session', () => {
         }
 
         await sessionAmendListPage.filterSession(filterFormPostAmend);
-
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
     });
 });
