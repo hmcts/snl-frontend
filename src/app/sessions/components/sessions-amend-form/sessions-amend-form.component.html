@@ -1,10 +1,10 @@
 <mat-card class="sessions-create-container">
   <mat-card-header>
-    <mat-card-subtitle>Create session</mat-card-subtitle>
+    <mat-card-subtitle>Amend session</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content class="inputs-container">
-    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-create-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
         <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [(ngModel)]="amendSessionForm.startDate">

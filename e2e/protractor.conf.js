@@ -11,11 +11,6 @@ const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('http
 exports.config = {
     SELENIUM_PROMISE_MANAGER: false,
     allScriptsTimeout: 111000,
-    loggingPrefs: {
-        'driver': 'ALL',
-        'server': 'ALL',
-        'browser': 'ALL'
-    },
     suites: {
       e2e: './**/*.e2e-spec.ts',
       smoke: '../smoke-test/*.smoke-spec.ts'
@@ -43,7 +38,7 @@ exports.config = {
         screenshotOnSpec: 'none',
         withLogs: true,
         writeReportFreq: 'asap',
-        verbose: 'debug',
+        verbose: 'info',
         imageToAscii: 'none',
         clearFoldersBeforeTest: true
       }],
