@@ -53,7 +53,8 @@ export class SessionEffects {
         mergeMap(action =>
             this.sessionsService.amendSession(action.payload).pipe(
                 mergeMap((data) => [new transactionActions.UpdateTransaction(data)]),
-                catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
+                catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(
+                    {err: err, id: action.payload.userTransactionId})))
             )
         )
     );
