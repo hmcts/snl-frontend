@@ -3,6 +3,7 @@ import { SessionCreationPage } from './session-creation.po';
 import { element, by, browser, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { SessionSearchPage } from './session-search.po';
+import { SessionAmendListPage } from './session-amend-list.po';
 
 export class TopMenu {
   private parentElement = element(by.css('mat-toolbar-row'));
@@ -12,6 +13,7 @@ export class TopMenu {
   private sessionCreatePage = new SessionCreationPage()
   private sessionSearchPage = new SessionSearchPage()
   private listingCreatePage = new ListingCreationPage()
+  private sessionAmendListPage = new SessionAmendListPage();
 
   async openNewSessionPage() {
     await this.openListingSubMenu('New Session');
@@ -26,6 +28,11 @@ export class TopMenu {
   async openListHearingPage(): Promise<void> {
     await this.openListingSubMenu('List Hearings');
     await this.sessionSearchPage.waitUntilVisible()
+  }
+
+  async openSessionsAmendListPage(): Promise<void> {
+      await this.openListingSubMenu('Search Sessions');
+      await this.sessionAmendListPage.waitUntilVisible()
   }
 
   async openCalendarPage() {
