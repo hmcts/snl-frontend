@@ -6,7 +6,7 @@ export class SessionAmendDialog {
     private startTimeInput = element(by.id('startTime'));
     private durationInput = element(by.id('duration'));
     private selectSessionTypeSelectOption = element(by.id('selectAmendSessionType'));
-    private createButton = element(by.id('create'));
+    private createButton = element(by.id('amend'));
     private elementHelper = new ElementHelper();
 
     async amendSession(form: SessionAmendForm) {
