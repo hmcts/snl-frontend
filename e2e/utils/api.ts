@@ -3,6 +3,7 @@ import { CreateListingRequestBody } from '../models/create-listing-request-body'
 import * as rm from 'typed-rest-client/HttpClient';
 import { CONFIG } from './../../url-config'
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
+import { browser } from 'protractor';
 
 export class API {
     private static baseUrl = (process.env.TEST_URL !== undefined) ?
@@ -18,9 +19,28 @@ export class API {
     }
 
     static async createSession(body: SessionCreate) {
+        console.log('Creating session via API:');
+        console.log(body);
+
         await API.login();
+
         const response = await this.rest.put(`${API.baseUrl}/sessions`, JSON.stringify(body), API.headers);
-        await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
+        console.log('Create session response:')
+        console.log(response);
+        const createSessionBody = await response.readBody();
+        console.log('Create session body:')
+        console.log(createSessionBody);
+
+        console.log('sleeping 20s');
+        await browser.sleep(20000);
+
+        const commitResponse = await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
+            JSON.stringify(body), API.headers);
+        console.log('Commit session response:')
+        const commitBody = await commitResponse.readBody();
+        console.log('Commit session body:')
+        console.log(commitBody)
+
         return response.message.statusCode;
     }
 

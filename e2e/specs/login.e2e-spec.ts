@@ -7,7 +7,7 @@ import { Wait } from '../enums/wait';
 const loginPage = new LoginPage()
 const loginFlow = new LoginFlow()
 
-describe('Login', () => {
+fdescribe('Login', () => {
   describe('When login using invalid credentials', () => {
     it('should not change URL', async () => {
       await loginFlow.logoutIfNeeded()

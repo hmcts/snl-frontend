@@ -1,6 +1,6 @@
 <mat-card class="sessions-create-container">
   <mat-card-header>
-    <mat-card-subtitle>Amend session</mat-card-subtitle>
+    <mat-card-subtitle>Edit session</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content class="inputs-container">
@@ -40,7 +40,7 @@
       </div>
 
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-        <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Amend</button>
+        <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
         <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
       </div>
     </form>
