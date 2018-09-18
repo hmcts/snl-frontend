@@ -36,7 +36,7 @@ exports.config = {
     },
     plugins: [{
         package: 'protractor-screenshoter-plugin',
-        screenshotPath: './functional-output/e2e/',
+        screenshotPath: './functional-output/crossbrowser/reports',
         screenshotOnExpect: 'failure+success',
         screenshotOnSpec: 'none',
         withLogs: true,
@@ -63,7 +63,7 @@ exports.config = {
         }));
         return browser.get('/');
     },
-    onComplete: function () {
+    afterLaunch: function () {
 
             var printSessionId = function (jobName) {
                 browser.getSession().then(function (session) {
