@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthorizationHeaderName } from '../models/access-token';
 
 let storageSpy, httpMock, securityService: SecurityService, securityContext: SecurityContext;
-const fakeUrl = 'https://doesnot.matter.com';
+const fakeUrl = 'https://fake.hmcts.net';
 const mockedAppConfig = {
     getApiUrl: () => fakeUrl,
     createApiUrl: (suffix) => {
