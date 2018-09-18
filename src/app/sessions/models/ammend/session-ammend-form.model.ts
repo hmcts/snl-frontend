@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 
 export interface SessionAmmendForm {
+    id: string,
     startDate: moment.Moment,
     startTime: string,
     durationInMinutes: number,
@@ -8,5 +9,6 @@ export interface SessionAmmendForm {
     roomName: string,
     roomType: string,
     personName: string,
-    hearingPartCount: number
+    hearingPartCount: number,
+    version: number
 }

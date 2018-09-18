@@ -25,7 +25,9 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { SessionAmendDialogComponent } from '../../components/session-amend-dialog/session-amend-dialog';
 import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
-import { Session } from '../../models/session.model';
+import { RoomType } from '../../../core/reference/models/room-type';
+import * as Mapper from '../../mappers/amend-session-form-session-amend';
+import { SessionAmendForm } from '../../../../../e2e/models/session-amend-form';
 
 @Component({
     selector: 'app-sessions-search',
@@ -39,6 +41,7 @@ export class SessionsSearchComponent implements OnInit {
     hearingParts$: Observable<HearingPartViewModel[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms: Room[];
+    roomTypes: RoomType[];
     judges: Judge[];
     filters$ = new Subject<SessionFilters>();
     sessionTypes: SessionType[];
@@ -58,6 +61,9 @@ export class SessionsSearchComponent implements OnInit {
         this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => {
             this.sessionTypes = sessionTypes;
         });
+        this.store.pipe(select(fromReferenceData.selectRoomTypes)).subscribe(roomTypes => {
+            this.roomTypes = roomTypes;
+        });
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
@@ -73,12 +79,11 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     openAmendDialog(s: SessionViewModel) {
+        let sessionAmendForm: SessionAmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
         this.dialog.open(SessionAmendDialogComponent, {
             data: {
-                sessionData: s,
+                sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
-                rooms: this.rooms,
-                judges: this.judges
             } as SessionAmmendDialogData,
             hasBackdrop: true,
             height: 'auto',

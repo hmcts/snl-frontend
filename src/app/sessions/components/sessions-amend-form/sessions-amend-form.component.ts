@@ -4,13 +4,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
 import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../../models/ammend/session-ammend.model';
-import { Session } from '../../models/session.model';
 import { v4 as uuid } from 'uuid';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
-import { Judge } from '../../../judges/models/judge.model';
-import { Room } from '../../../rooms/models/room.model';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -18,21 +15,15 @@ import { Room } from '../../../rooms/models/room.model';
     styleUrls: ['./sessions-amend-form.component.scss']
 })
 export class SessionsAmendFormComponent {
-    session: Session;
     amendSessionForm: SessionAmmendForm;
     sessionAmendFormGroup: FormGroup;
-    roomsPlaceholder: string;
-    judgesPlaceholder: string;
 
-    @Input() set sessionData(session: Session) {
-        this.session = session;
-        this.amendSessionForm = Mapper.SessionToAmendSessionForm(this.session);
+    @Input() set sessionData(session: SessionAmmendForm) {
+        this.amendSessionForm = session;
         this.initiateFormGroup();
     }
 
     @Input() sessionTypes: SessionType[];
-    @Input() judges: Judge[];
-    @Input() rooms: Room[];
 
     @Output() amendSessionAction = new EventEmitter<SessionAmmend>();
     @Output() cancelAction = new EventEmitter();
@@ -42,7 +33,7 @@ export class SessionsAmendFormComponent {
     }
 
     amend() {
-        const sessionAmend: SessionAmmend = this.prepareSessionAmend(this.amendSessionForm, this.session);
+        const sessionAmend: SessionAmmend = this.prepareSessionAmend(this.amendSessionForm);
 
         this.sessionCreationService.amend(sessionAmend);
 
@@ -66,11 +57,9 @@ export class SessionsAmendFormComponent {
         });
     }
 
-    private prepareSessionAmend(form: SessionAmmendForm, session: Session) {
+    private prepareSessionAmend(form: SessionAmmendForm) {
         let sessionAmend: SessionAmmend = Mapper.AmendSessionFormToSessionAmend(form);
-        sessionAmend.id = session.id;
         sessionAmend.userTransactionId = uuid();
-        sessionAmend.version = session.version;
 
         return sessionAmend;
     }
@@ -81,7 +70,6 @@ export class SessionsAmendFormComponent {
             startDate: new FormControl({value: this.amendSessionForm.startDate, disabled: true}, [Validators.required]),
             startTime: new FormControl(this.amendSessionForm.startTime, [Validators.required]),
             durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
-            hearingPartCount: new FormControl({value: this.amendSessionForm.hearingPartCount, disabled: true}),
         });
     }
 }

@@ -210,7 +210,7 @@ describe('SessionsService', () => {
       durationInSeconds: 60,
       sessionTypeCode: 'some-session-type-code',
       startTime: '12:30', // ie "12:30", "08:45"
-      version: 0
+      version: 0,
     };
 
     it('should build valid URL with body', () => {

@@ -26,23 +26,18 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-select id="selectRoom" [(value)]="amendSessionForm.roomName">
-          <mat-option value="">(No room)</mat-option>
-          <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-select id="selectJudge" [(value)]="amendSessionForm.personName">
-          <mat-option value="">(No judge)</mat-option>
-          <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <span>Number of assigned listing requests:</span><input id="hearingPartCount" formControlName="hearingPartCount" matInput type="number" [(ngModel)]="amendSessionForm.hearingPartCount">
-      </mat-form-field>
+      <div>
+        <span>Room name: <strong>{{amendSessionForm.roomName}}</strong></span>
+      </div>
+      <div *ngIf="amendSessionForm.roomName !== '(No room)'">
+        <span>Room type: <strong>{{amendSessionForm.roomType}}</strong></span>
+      </div>
+      <div>
+        <span>Judge name: <strong>{{amendSessionForm.personName}}</strong></span>
+      </div>
+      <div>
+        <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
+      </div>
 
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Amend</button>
