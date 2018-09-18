@@ -70,6 +70,8 @@ export class SessionSearchPage {
 
     async editListingRequestWithValues(...values: string[]): Promise<void> {
         const row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values)
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+
         await row.element(by.cssContainingText('.clickable', 'Edit')).click()
     }
 
@@ -79,6 +81,7 @@ export class SessionSearchPage {
 
     private async selectCheckBoxInRowWithValues(table: Table, paginator: Paginator, ...values: string[]) {
         let row = await table.rowThatContainsAtAnyPage(paginator, ...values)
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`)
         await row.element(by.css('mat-checkbox')).click()
     }
 }

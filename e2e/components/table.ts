@@ -13,8 +13,6 @@ export class Table {
       row = await this.rowThatContains(...values);
     }
 
-    console.log('Searching for the following values in table ' + values + ' found: ' + !!row);
-
     return row;
   }
 
