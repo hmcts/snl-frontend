@@ -67,6 +67,8 @@ export class TransactionDialogComponent {
   onOkClick(): void {
     if (this.okAction !== null && this.success) {
         this.store.dispatch(this.okAction);
+    } else {
+        this.dialogRef.close(false);
     }
   }
 
