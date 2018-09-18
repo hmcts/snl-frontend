@@ -19,14 +19,22 @@ export class API {
     }
 
     static async createSession(body: SessionCreate) {
+        console.log('Creating session via API:');
+        console.log(body);
         await API.login();
         const response = await this.rest.put(`${API.baseUrl}/sessions`, JSON.stringify(body), API.headers);
+        console.log('Create session response:')
+        console.log(response);
+        const createSessionBody = await response.readBody();
+        console.log('Create session body:')
+        console.log(createSessionBody);
         console.log('sleeping 20s');
         await browser.sleep(20000);
-        console.log('Create session response:')
         const commitResponse = await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
-        console.log('COmmit session response:')
-        console.log(commitResponse)
+        console.log('Commit session response:')
+        const commitBody = await commitResponse.readBody();
+        console.log('Commit session body:')
+        console.log(commitBody)
         return response.message.statusCode;
     }
 
