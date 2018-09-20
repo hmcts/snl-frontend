@@ -1,3 +1,8 @@
 .container {
   display: flex; /* or inline-flex */
+  text-align: center;
+}
+
+#problems {
+  text-align: initial;
 }

@@ -1,3 +1,4 @@
+import { SummaryMessageService } from './services/summary-message.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SecurityModule } from '../security/security.module';
@@ -17,10 +18,10 @@ import { SessionModule } from '../sessions/session.module';
         AngularMaterialModule,
         MatButtonModule,
         MatButtonToggleModule,
-        SessionModule
+        SessionModule,
     ],
     declarations: [PlannerComponent, RoomPlannerComponent, JudgePlannerComponent],
-    providers: []
+    providers: [SummaryMessageService]
 })
 export class PlannerModule {
 }
