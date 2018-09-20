@@ -26,7 +26,8 @@ const mockedProblems: Problem[] = [
     message: 'some-msg',
     severity: 'some-severity',
     type: 'some-type',
-    references: undefined
+    references: undefined,
+    createdAt: undefined
   }
 ];
 const mockEntityTransaction: EntityTransaction = {
