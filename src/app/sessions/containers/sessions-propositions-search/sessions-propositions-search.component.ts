@@ -24,6 +24,7 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { SessionsCreationService } from '../../services/sessions-creation.service';
 import { asArray } from '../../../utils/array-utils';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
     selector: 'app-sessions-propositions-search',
@@ -119,8 +120,8 @@ export class SessionsPropositionsSearchComponent implements OnInit {
     }
 
     private openTransactionDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
-            data: 'Creating adhoc session',
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle: 'Creating adhoc session' },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

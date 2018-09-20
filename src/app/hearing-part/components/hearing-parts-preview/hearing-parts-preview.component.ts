@@ -11,6 +11,7 @@ import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-c
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -141,8 +142,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     private openTransactionDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
-            data: 'Deleting hearing part',
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle: 'Deleting hearing part' },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

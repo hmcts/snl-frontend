@@ -1,3 +1,4 @@
+import { SummaryMessageService } from './../services/summary-message.service';
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store, ActionsSubject } from '@ngrx/store';
 import { PlannerComponent } from './planner.component';
@@ -40,6 +41,7 @@ const event = <CustomEvent>{
       start: moment(),
       end: moment()
     },
+    duration: moment.duration({'minutes' : 30}),
     jsEvent: {
       target: {
         getAttribute: () => {return hearingPartId}
@@ -80,7 +82,8 @@ describe('PlannerComponent', () => {
           provide: HearingPartModificationService,
           useValue: hearingPartModificationServiceSpy
         },
-        { provide: MatDialog, useValue: matDialogSpy }
+        { provide: MatDialog, useValue: matDialogSpy },
+        SummaryMessageService
       ]
     });
 
@@ -223,6 +226,7 @@ describe('PlannerComponent', () => {
           afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
       });
 
+      component.eventModify(event);
       matDialogSpy.open.calls.reset();
       component.drop(event);
       expect(
