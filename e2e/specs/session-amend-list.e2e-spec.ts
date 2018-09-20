@@ -55,7 +55,7 @@ const sessionCreate: SessionCreate = {
 
 describe('Go to search session', () => {
     beforeAll(async () => {
-        await loginFlow.loginIfNeeded();
+        await loginFlow.relogin();
         expect(await API.createSession(sessionCreate)).toEqual(200);
     });
 

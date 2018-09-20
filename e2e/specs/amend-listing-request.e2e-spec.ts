@@ -53,7 +53,7 @@ const listingRequestCreate = {
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
-    await loginFlow.loginIfNeeded()
+    await loginFlow.relogin()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
