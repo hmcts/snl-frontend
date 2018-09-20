@@ -4,7 +4,7 @@
                 (filter)="filters$.next($event)"
                 [rooms]="rooms$ | async"
                 [judges]="judges$ | async"
-                [sessionTypes]="sessionTypes$ | async"
+                [sessionTypes]="sessionTypes"
                 [startDate]="startDate"
                 [endDate]="endDate">
         </app-sessions-filter>
@@ -16,7 +16,8 @@
 
         <div>
             <app-session-amendment-table
-                    [sessions]="filteredSessions">
+                    [sessions]="filteredSessions"
+                    (amend)="openAmendDialog($event)">
             </app-session-amendment-table>
         </div>
     </div>
