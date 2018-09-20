@@ -37,6 +37,7 @@ export class ElementHelper {
     await selectOptionLocator.click();
     await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();
+    await browser.waitForAngular();
   }
 
   async selectValueFromMultipleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string, loseFocusLocator: ElementFinder) {
