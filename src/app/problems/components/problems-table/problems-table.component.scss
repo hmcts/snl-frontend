@@ -1,10 +1,10 @@
-.mat-column-id {
-  flex: 0 0 300px;
-  margin-right: 20px;
+.mat-column-severity {
+  max-width: 90px;
+}
+.mat-column-createdAt {
+  max-width: 130px;
 }
 .mat-column-message {
-  flex: 1;
-  max-width: 400px;
   margin-right: 20px;
 }
 /deep/.mat-column-references-description ul {
@@ -12,4 +12,10 @@
   li:first-letter {
     text-transform:capitalize;
   }
+}
+.critical {
+  background-color: #E91E63;
+}
+.urgent {
+  background-color: #283593;
 }
