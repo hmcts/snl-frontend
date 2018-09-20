@@ -5,7 +5,7 @@ import * as requestPromise from 'request-promise'
 import * as URL from '../e2e-url.js'
 
 const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
-const apiURL = process.env.TEST_URL || URL.apiURL;
+const apiURL = process.env.SNL_API_URL || URL.apiURL;
 
 console.log('API URL: ' + apiURL)
 
