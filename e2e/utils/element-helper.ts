@@ -1,5 +1,6 @@
 import { ElementFinder, Key, element, by, ElementArrayFinder, ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
+import { Logger } from './logger';
 
 export class ElementHelper {
   async clear(elem: ElementFinder, length?: number) {
@@ -31,9 +32,7 @@ export class ElementHelper {
   }
 
   async selectValueFromSingleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string) {
-    await browser.wait(ExpectedConditions.elementToBeClickable(selectOptionLocator),
-        Wait.normal,
-        'Select option element is not clickable');
+    await this.browserWaitElementClickable(selectOptionLocator);
     await selectOptionLocator.click();
     await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();
@@ -69,5 +68,14 @@ export class ElementHelper {
         });
       })
       .first();
+  }
+
+  async browserWaitElementClickable(selectOptionLocator: ElementFinder) {
+    Logger.log(`Waiting for element of locator: ${selectOptionLocator.locator()} to be clickable`)
+    return await browser.wait(
+        ExpectedConditions.elementToBeClickable(selectOptionLocator),
+        Wait.normal,
+        `Select option element is not clickable: ${selectOptionLocator}`
+    )
   }
 }
