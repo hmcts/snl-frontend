@@ -18,6 +18,10 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         'acceptInsecureCerts': true,
+        loggingPrefs: {
+            'driver': 'INFO',
+            'browser': 'INFO'
+        },
         chromeOptions: {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
@@ -32,9 +36,6 @@ exports.config = {
         print: function () {}
     },
     plugins: [{
-        package: 'protractor-console',
-        logLevels: ['severe', 'warning', 'debug', 'info']
-    }, {
         package: 'protractor-screenshoter-plugin',
         screenshotPath: './functional-output/e2e/',
         screenshotOnExpect: 'failure+success',
