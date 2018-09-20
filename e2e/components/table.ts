@@ -1,10 +1,22 @@
 import { ElementFinder, by, element } from 'protractor';
 import { filterSeries } from 'p-iteration';
+import { Paginator } from './paginator';
 
 export class Table {
   constructor(private parentElement: ElementFinder) {}
 
-  async rowThatContains(...values: string[]): Promise<ElementFinder> {
+  async rowThatContainsAtAnyPage(paginator: Paginator, ...values: string[]): Promise<ElementFinder> {
+    let row = await this.rowThatContains(...values);
+
+    while (!row && await paginator.hasNextPage()) {
+      await paginator.nextPageClick();
+      row = await this.rowThatContains(...values);
+    }
+
+    return row;
+  }
+
+  private async rowThatContains(...values: string[]): Promise<ElementFinder> {
     const rows = await this.parentElement.all(by.css('mat-row')).asElementFinders_()
     const selectedRow = await filterSeries(rows, async (row: ElementFinder): Promise<boolean> => {
       const rowText = await row.getText()
