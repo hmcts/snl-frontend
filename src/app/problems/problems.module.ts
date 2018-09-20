@@ -8,11 +8,13 @@ import { reducers } from './reducers';
 import { ProblemsService } from './services/problems.service';
 import { ProblemsPageComponent } from './containers/problems/problems-page.component';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   imports: [
     CommonModule,
     AngularMaterialModule,
+    MatChipsModule,
     StoreModule.forFeature('problems', reducers),
     EffectsModule.forFeature([ProblemEffects])
   ],

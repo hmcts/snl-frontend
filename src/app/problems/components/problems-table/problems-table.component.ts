@@ -2,6 +2,7 @@ import { ProblemReference } from '../../models/problem-reference.model';
 import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { Problem } from '../../models/problem.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-problems-table',
@@ -9,7 +10,7 @@ import { MatPaginator, MatTableDataSource } from '@angular/material';
   styleUrls: ['./problems-table.component.scss']
 })
 export class ProblemsTableComponent implements OnInit, OnChanges {
-  displayedColumns = ['id', 'message', 'references description'];
+  displayedColumns = ['severity', 'createdAt', 'message', 'references description'];
   dataSource;
 
   @Input() problems: Problem[];
@@ -28,5 +29,9 @@ export class ProblemsTableComponent implements OnInit, OnChanges {
   extractRefDescriptions(element: Problem): string[] {
     return element.references
       .map((reference: ProblemReference) => `${reference.entity}: ${reference.description}`);
+  }
+
+  formatDate(date: Moment): string {
+    return date.format('YYYY-MM-DD HH:mm')
   }
 }
