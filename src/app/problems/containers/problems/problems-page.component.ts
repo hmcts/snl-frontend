@@ -16,11 +16,26 @@ export class ProblemsPageComponent implements OnInit {
     problems$: Observable<Problem[]>;
 
     constructor(private readonly store: Store<fromProblems.State>) {
-        this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(data => data ? Object.values(data) : []));
+        this.problems$ = this.store.pipe(
+            select(fromProblems.getProblems),
+            map(data => data ? Object.values(data) : []),
+            map(this.sortByCreatedAtDescending));
     }
 
     ngOnInit() {
         this.store.dispatch(new fromProblemsPartsActions.Get())
+    }
+
+    sortByCreatedAtDescending(problems: Problem[]): Problem[] {
+        return problems.sort((a, b) => {
+            if (!a.createdAt.isValid()) {
+                return 1;
+            } else if (!b.createdAt.isValid()) {
+                return -1;
+            } else {
+                return b.createdAt.diff(a.createdAt)
+            }
+        });
     }
 
 }
