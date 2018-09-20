@@ -4,6 +4,7 @@ import { Logger } from './logger';
 
 export class ElementHelper {
   async clear(elem: ElementFinder, length?: number) {
+    Logger.log(`Clearing value of ${elem.locator()}`);
     const inputText = await elem.getAttribute('value');
     length = length || inputText.length || 100;
     let backspaceSeries = '';
@@ -26,6 +27,8 @@ export class ElementHelper {
   }
 
   async typeDate(dateInput: ElementFinder, date: string): Promise<void> {
+    Logger.log(`Inputting date into: ${dateInput.locator()} with value: ${JSON.stringify(date)}`)
+    Logger.log(`Clicking date input control`)
     await dateInput.click();
     await this.clear(dateInput);
     return await dateInput.sendKeys(date);
@@ -75,7 +78,16 @@ export class ElementHelper {
     return await browser.wait(
         ExpectedConditions.elementToBeClickable(selectOptionLocator),
         Wait.normal,
-        `Select option element is not clickable: ${selectOptionLocator}`
+        `Element is not clickable: ${selectOptionLocator}`
+    )
+  }
+
+  async browserWaitElementVisible(selectOptionLocator: ElementFinder) {
+    Logger.log(`Waiting for element of locator: ${selectOptionLocator.locator()} to be visible`)
+    return await browser.wait(
+        ExpectedConditions.visibilityOf(selectOptionLocator),
+        Wait.normal,
+        `Element is not visible: ${selectOptionLocator}`
     )
   }
 }
