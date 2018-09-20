@@ -31,12 +31,15 @@ export class ElementHelper {
     Logger.log(`Clicking date input control`)
     await dateInput.click();
     await this.clear(dateInput);
+    Logger.log(`Sending keys: ${date}`)
     return await dateInput.sendKeys(date);
   }
 
   async selectValueFromSingleSelectOption(selectOptionLocator: ElementFinder, textToSelect: string) {
     await this.browserWaitElementClickable(selectOptionLocator);
+    Logger.log(`Clicking: ${selectOptionLocator.locator()}`)
     await selectOptionLocator.click();
+    Logger.log(`Clicking element containing text: ${textToSelect}`)
     await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();
     await browser.waitForAngular();

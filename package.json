@@ -68,6 +68,7 @@
     "ngx-pagination": "^3.0.3",
     "normalizr": "^3.2.4",
     "p-iteration": "^1.1.7",
+    "protractor-console": "^3.0.0",
     "protractor-http-client": "^1.0.4",
     "protractor-screenshoter-plugin": "^0.10.1",
     "reflect-metadata": "^0.1.12",

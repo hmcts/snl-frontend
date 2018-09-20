@@ -32,6 +32,9 @@ exports.config = {
         print: function () {}
     },
     plugins: [{
+        package: 'protractor-console',
+        logLevels: ['severe', 'warning', 'debug', 'info']
+    }, {
         package: 'protractor-screenshoter-plugin',
         screenshotPath: './functional-output/e2e/',
         screenshotOnExpect: 'failure+success',
