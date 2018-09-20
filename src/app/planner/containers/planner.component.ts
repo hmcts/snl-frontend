@@ -1,3 +1,4 @@
+import { SummaryMessageService } from './../services/summary-message.service';
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
@@ -18,6 +19,7 @@ import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-par
 import * as fromHearingParts from '../../hearing-part/reducers/index';
 import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import { ITransactionDialogData } from '../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
     selector: 'app-planner',
@@ -37,7 +39,8 @@ export class PlannerComponent implements OnInit {
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
-                public hearingModificationService: HearingPartModificationService) {
+                public hearingModificationService: HearingPartModificationService,
+                private summaryMessageService: SummaryMessageService) {
         this.confirmationDialogOpen = false;
     }
 
@@ -177,10 +180,13 @@ export class PlannerComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            hasBackdrop: true
+            hasBackdrop: true,
+            data: {
+                summaryMsg$: this.summaryMessageService.buildSummaryMessage(this.latestEvent)
+            }
         });
     }
 }
