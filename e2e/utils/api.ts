@@ -1,56 +1,74 @@
 import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
-import * as rm from 'typed-rest-client/HttpClient';
-import { CONFIG } from './../../url-config'
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
-import { browser } from 'protractor';
+import * as requestPromise from 'request-promise'
+import * as URL from '../e2e-url.js'
+
+const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
+const apiURL = process.env.SNL_API_URL || URL.apiURL;
+
+console.log('API URL: ' + apiURL)
 
 export class API {
-    private static baseUrl = (process.env.TEST_URL !== undefined) ?
-    'http://snl-api-aat.service.core-compute-aat.internal' : CONFIG.apiUrl;
-    private static headers = { 'Authorization': '', 'Content-Type': 'application/json' }
-    private static rest = new rm.HttpClient('e2e-tests', null, {headers: API.headers});
+    private static baseUrl = apiURL;
+    private static applicationJSONHeader = {'Content-Type': 'application/json' }
+    private static headers = { 'Authorization': '', ...API.applicationJSONHeader }
 
     static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
-        const response = await this.rest.put(`${API.baseUrl}/hearing-part/create`, JSON.stringify(body), API.headers);
-        await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`, JSON.stringify(body), API.headers);
-        return response.message.statusCode;
+        const options = {
+            method: 'PUT',
+            uri: `${API.baseUrl}/hearing-part/create`,
+            body: JSON.stringify(body),
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        await API.commitUserTransaction(body)
+
+        return response.statusCode;
     }
 
     static async createSession(body: SessionCreate) {
-        console.log('Creating session via API:');
-        console.log(body);
-
         await API.login();
+        const options = {
+            method: 'PUT',
+            uri: `${API.baseUrl}/sessions`,
+            body: JSON.stringify(body),
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        await API.commitUserTransaction(body)
 
-        const response = await this.rest.put(`${API.baseUrl}/sessions`, JSON.stringify(body), API.headers);
-        console.log('Create session response:')
-        console.log(response);
-        const createSessionBody = await response.readBody();
-        console.log('Create session body:')
-        console.log(createSessionBody);
-
-        console.log('sleeping 20s');
-        await browser.sleep(20000);
-
-        const commitResponse = await this.rest.post(`${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
-            JSON.stringify(body), API.headers);
-        console.log('Commit session response:')
-        const commitBody = await commitResponse.readBody();
-        console.log('Commit session body:')
-        console.log(commitBody)
-
-        return response.message.statusCode;
+        return response.statusCode;
     }
 
     private static async login() {
-        const body = {
-            username: Credentials.ValidOfficerUsername,
-            password: Credentials.ValidOfficerPassword
+        const options = {
+            method: 'POST',
+            uri: `${API.baseUrl}/security/signin`,
+            body: JSON.stringify({
+                username: Credentials.ValidOfficerUsername,
+                password: Credentials.ValidOfficerPassword
+            }),
+            headers: API.applicationJSONHeader,
+            resolveWithFullResponse: true,
         };
-        const response = await API.rest.post(`${API.baseUrl}/security/signin`, JSON.stringify(body), API.headers)
-        const responseBody = JSON.parse(await response.readBody());
+
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
         API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
+    }
+
+    private static async commitUserTransaction(body: {userTransactionId: string}) {
+        const commitUserTransactionOptions = {
+            method: 'POST',
+            uri: `${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
+            body: body,
+            headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
+            json: true // Automatically stringifies the body to JSON
+        }
+        await rp(commitUserTransactionOptions)
     }
 }

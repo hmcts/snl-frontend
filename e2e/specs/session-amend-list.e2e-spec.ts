@@ -53,9 +53,9 @@ const sessionCreate: SessionCreate = {
     caseType: undefined
 };
 
-describe('Go to search session', () => {
+fdescribe('Go to search session', () => {
     beforeAll(async () => {
-        await loginFlow.loginIfNeeded();
+        await loginFlow.relogin();
         expect(await API.createSession(sessionCreate)).toEqual(200);
     });
 

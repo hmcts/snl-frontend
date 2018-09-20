@@ -30,4 +30,9 @@ export class LoginFlow {
       await this.loginPage.waitUntilLoaded()
     }
   }
+
+  async relogin() {
+    await this.logoutIfNeeded();
+    await this.loginIfNeeded();
+  }
 }
