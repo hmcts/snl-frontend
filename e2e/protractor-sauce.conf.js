@@ -23,7 +23,9 @@ exports.config = {
            'version': '11.103',
            'name': 'snl-IE-tests',
            'tunnel-identifier': 'reformtunnel',
-           'extendedDebugging' : 'true'
+           'extendedDebugging': true,
+           'shardTestFiles': true,
+           'maxInstances': 2
         }],
     baseUrl: baseUrl,
     framework: 'jasmine',
@@ -63,13 +65,12 @@ exports.config = {
         }));
         return browser.get('/');
     },
-    afterLaunch: function () {
-
+    onComplete: function () {
             var printSessionId = function (jobName) {
                 browser.getSession().then(function (session) {
                     console.log('SauceOnDemandSessionID=' + session.getId() + ' job-name=' + jobName);
                 });
             }
-            printSessionId("snl-frontend");
+        printSessionId("snl-frontend");
         }
 };
