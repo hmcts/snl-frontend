@@ -56,7 +56,7 @@ const sessionDuration = 30;
 const overListedDuration = 31;
 const notListedDuration = 0;
 const customDuration = 16;
-const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
+const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name', roomTypeCode: 'code' }];
 const mockedJudges: Judge[] = [{ id: judgeId, name: 'some-judge-name' }];
 const mockedNotes: Note[] = [
     {

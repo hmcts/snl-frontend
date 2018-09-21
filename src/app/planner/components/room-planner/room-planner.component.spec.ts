@@ -17,7 +17,7 @@ let store: Store<State>;
 let storeSpy: jasmine.Spy;
 
 const roomId = 'some-room-id';
-const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
+const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name', roomTypeCode: 'code' }];
 
 describe('RoomPlannerComponent', () => {
   beforeEach(() => {

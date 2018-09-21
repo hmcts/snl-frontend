@@ -1,9 +1,9 @@
 
 export interface SessionAmmend {
-    id: string;
+    id: string,
     userTransactionId: string,
-    durationInSeconds: number;
-    startTime: string; // ie "12:30", "08:45"
-    sessionTypeCode: string;
-    version: number;
+    durationInSeconds: number,
+    startTime: string, // ie "12:30", "08:45"
+    sessionTypeCode: string,
+    version: number
 }

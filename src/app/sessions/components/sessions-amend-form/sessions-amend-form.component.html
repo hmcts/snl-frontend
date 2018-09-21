@@ -26,6 +26,19 @@
         </mat-select>
       </mat-form-field>
 
+      <div>
+        <span>Room name: <strong>{{amendSessionForm.roomName}}</strong></span>
+      </div>
+      <div *ngIf="amendSessionForm.roomName !== '(No room)'">
+        <span>Room type: <strong>{{amendSessionForm.roomType}}</strong></span>
+      </div>
+      <div>
+        <span>Judge name: <strong>{{amendSessionForm.personName}}</strong></span>
+      </div>
+      <div>
+        <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
+      </div>
+
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
         <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
