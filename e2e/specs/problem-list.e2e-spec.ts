@@ -34,7 +34,7 @@ const numberOfExpectedProblems = 3 // because, Room & judge not set + is listed 
 
 const displayValuesFromProblems = (problems: any[]): string[][] => {
     return problems.map((problem) => {
-        const createdAt = moment(problem.createdAt).format('YYYY-MM-DD HH:mm')
+        const createdAt = moment(problem.createdAt).format('DD/MM/YYYY HH:mm')
         return [problem.severity, createdAt, problem.message]
     })
 }
