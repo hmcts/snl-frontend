@@ -32,6 +32,6 @@ export class ProblemsTableComponent implements OnInit, OnChanges {
   }
 
   formatDate(date: Moment): string {
-    return date.format('YYYY-MM-DD HH:mm')
+    return date.format('DD/MM/YYYY HH:mm')
   }
 }
