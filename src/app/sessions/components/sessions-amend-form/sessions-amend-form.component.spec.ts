@@ -3,10 +3,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { SessionsAmendFormComponent } from './sessions-amend-form.component';
 import { SessionsCreationService } from '../../services/sessions-creation.service';
-import { Session } from '../../models/session.model';
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
+import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionToAmendSessionForm } from '../../mappers/amend-session-form-session-amend';
 
 let fixture: ComponentFixture<SessionsAmendFormComponent>;
 let component: SessionsAmendFormComponent;
@@ -17,19 +19,18 @@ const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
 };
 
-let now = moment();
-
-let session = {
+let sessionViewmodel = {
     id: 'id',
-    start: now,
+    start: moment(),
     duration: 60,
-    room: 'room',
-    person: 'person',
-    caseType: 'caseType',
-    sessionTypeCode: 'sessionTypeCode',
-    jurisdiction: 'jurisdiction',
-    version: 0
-} as Session;
+    room: { name: 'room', roomTypeCode: 'code' },
+    person: { name: 'person' },
+    sessionType: { code: 'session-type-code', description: 'session-type-description' } as SessionType,
+    hearingParts: [],
+    jurisdiction: ''
+} as SessionViewModel;
+
+let session = SessionToAmendSessionForm(sessionViewmodel, [{code: 'code', description: 'descr'}]);
 
 const sessionCreationServiceSpy = jasmine.createSpyObj('SessionsCreationService', ['amend', 'fetchUpdatedEntities']);
 
@@ -58,7 +59,6 @@ describe('SessionsAmendFormComponent', () => {
         it('the key variables should be set', () => {
             component.sessionData = session;
 
-            expect(component.session).toEqual(session);
             expect(component.amendSessionForm).toBeDefined();
             expect(component.sessionAmendFormGroup).toBeDefined();
         });
@@ -68,7 +68,6 @@ describe('SessionsAmendFormComponent', () => {
         it('the proper data is passed to the service', () => {
             component.sessionData = session;
 
-            expect(component.session).toEqual(session);
             expect(component.amendSessionForm).toBeDefined();
             expect(component.sessionAmendFormGroup).toBeDefined();
         });
