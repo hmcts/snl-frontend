@@ -58,6 +58,8 @@ export class API {
     }
 
     private static async login() {
+        if (API.headers.Authorization.length > 0) { return }
+
         const options = {
             method: 'POST',
             uri: `${API.baseUrl}/security/signin`,
