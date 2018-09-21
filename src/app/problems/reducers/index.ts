@@ -34,9 +34,9 @@ export const getProblems = createSelector<any, Dictionary<Problem>, Dictionary<P
         if (!problemEntities) { return {} }
         const transformedProblemEntities = Object.assign({}, problemEntities); ;
 
-        Object.keys(transformedProblemEntities).map((key) => {
+        Object.keys(transformedProblemEntities).forEach((key) => {
             transformedProblemEntities[key].createdAt = moment(transformedProblemEntities[key].createdAt);
-         });
+        });
 
         return transformedProblemEntities;
     }
