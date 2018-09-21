@@ -23,6 +23,11 @@ import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
+import { SessionAmendDialogComponent } from '../../components/session-amend-dialog/session-amend-dialog';
+import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
+import { RoomType } from '../../../core/reference/models/room-type';
+import * as Mapper from '../../mappers/amend-session-form-session-amend';
+import { SessionAmendForm } from '../../../../../e2e/models/session-amend-form';
 
 @Component({
     selector: 'app-sessions-search',
@@ -35,10 +40,11 @@ export class SessionsSearchComponent implements OnInit {
     endDate: moment.Moment;
     hearingParts$: Observable<HearingPartViewModel[]>;
     sessions$: Observable<SessionViewModel[]>;
-    rooms$: Observable<Room[]>;
-    judges$: Observable<Judge[]>;
+    rooms: Room[];
+    roomTypes: RoomType[];
+    judges: Judge[];
     filters$ = new Subject<SessionFilters>();
-    sessionTypes$: Observable<SessionType[]>;
+    sessionTypes: SessionType[];
     filteredSessions: SessionViewModel[];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
@@ -50,9 +56,14 @@ export class SessionsSearchComponent implements OnInit {
             map(sessionsFilterService.filterUnlistedHearingParts)
         ) as Observable<HearingPartViewModel[]>;
 
-        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
-        this.sessionTypes$ = this.store.pipe(select(fromReferenceData.selectSessionTypes));
+        this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
+        this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
+        this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => {
+            this.sessionTypes = sessionTypes;
+        });
+        this.store.pipe(select(fromReferenceData.selectRoomTypes)).subscribe(roomTypes => {
+            this.roomTypes = roomTypes;
+        });
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
@@ -65,6 +76,19 @@ export class SessionsSearchComponent implements OnInit {
         this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
         this.store.dispatch(new RoomActions.Get());
         this.store.dispatch(new JudgeActions.Get());
+    }
+
+    openAmendDialog(s: SessionViewModel) {
+        let sessionAmendForm: SessionAmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
+        this.dialog.open(SessionAmendDialogComponent, {
+            data: {
+                sessionData: sessionAmendForm,
+                sessionTypes: this.sessionTypes,
+            } as SessionAmmendDialogData,
+            hasBackdrop: true,
+            height: 'auto',
+            disableClose: true
+        })
     }
 
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
@@ -82,4 +106,5 @@ export class SessionsSearchComponent implements OnInit {
             .filter(s => this.sessionsFilterService.filterBySessionType(s, filters))
             .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
     }
+
 }

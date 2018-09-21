@@ -1,0 +1,48 @@
+<mat-card class="sessions-create-container">
+  <mat-card-header>
+    <mat-card-subtitle>Edit session</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content class="inputs-container">
+    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+      
+      <mat-form-field class="date-picker-element">
+        <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [(ngModel)]="amendSessionForm.startDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="amendSessionForm.startTime">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input id="duration" formControlName="durationInMinutes" type="number" matInput placeholder="Duration *" [(ngModel)]="amendSessionForm.durationInMinutes">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select id="selectAmendSessionType" formControlName="sessionTypeCode" placeholder="Select the session type *" [(value)]="amendSessionForm.sessionTypeCode">
+          <mat-option *ngFor="let sessionType of sessionTypes" value="{{sessionType.code}}">{{sessionType.description}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div>
+        <span>Room name: <strong>{{amendSessionForm.roomName}}</strong></span>
+      </div>
+      <div *ngIf="amendSessionForm.roomName !== '(No room)'">
+        <span>Room type: <strong>{{amendSessionForm.roomType}}</strong></span>
+      </div>
+      <div>
+        <span>Judge name: <strong>{{amendSessionForm.personName}}</strong></span>
+      </div>
+      <div>
+        <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
+      </div>
+
+      <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
+        <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
+        <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

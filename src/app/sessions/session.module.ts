@@ -5,6 +5,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './effects/session.effects';
 import { SessionsPageComponent } from './containers/sessions-page/sessions-page.component';
 import { SessionsCreateComponent } from './containers/sessions-create/sessions-create.component';
+import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
 import { SessionTableComponent } from './components/session-table/session-table.component';
 import { RouterModule } from '@angular/router';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
@@ -28,10 +29,11 @@ import { SessionsPropositionsTableComponent } from './components/sessions-propos
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { TransactionsModule } from '../features/transactions/transactions.module';
-import { SessionsSearchComponent } from './containers/sessions-search/sessions-search.component';
 import { SessionAmendmentTableComponent } from './components/session-amendment-table/session-amendment-table.component';
 import { SessionsListingsSearchComponent } from './containers/sessions-listings-search/sessions-listings-search.component';
 import { SessionsFilterService } from './services/sessions-filter-service';
+import { SessionsAmendFormComponent } from './components/sessions-amend-form/sessions-amend-form.component';
+import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -46,19 +48,21 @@ export const COMPONENTS = [
     SessionsPropositionsFormComponent,
     SessionsSearchComponent,
     SessionAmendmentTableComponent,
-    SessionsListingsSearchComponent
+    SessionsListingsSearchComponent,
+    SessionsAmendFormComponent,
+    SessionAmendDialogComponent
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     AngularMaterialModule,
-      FlexLayoutModule,
-      FormsModule,
-      ReactiveFormsModule,
-      HearingPartModule,
-      TransactionsModule,
-      CoreModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HearingPartModule,
+    TransactionsModule,
+    CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
@@ -79,7 +83,7 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent, SessionAmendDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]

@@ -71,7 +71,7 @@ let numberOfVisibleEvents: number;
 
 describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
   beforeAll(async () => {
-    await loginFlow.loginIfNeeded();
+    await loginFlow.relogin();
     await navigationFlow.goToCalendarPage()
   });
   describe('Remember number of visible events in calendar, Go to new session page and create session', () => {

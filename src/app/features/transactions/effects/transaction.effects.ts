@@ -102,8 +102,7 @@ export class TransactionEffects {
     transactionFailure$: Observable<Action> = this.actions$.pipe(
         ofType<transactionActions.TransactionFailure>(transactionActions.EntityTransactionActionTypes.TransactionFailure),
         mergeMap((action: any) => {
-                if (action.payload.err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException' ||
-                    action.payload.err.error.exception === 'org.springframework.web.client.HttpServerErrorException') {
+                if (action.payload.err.error.exception === 'uk.gov.hmcts.reform.sandl.snlapi.exceptions.OptimisticLockException') {
                     return of(new transactionActions.UpdateTransaction({
                         id: action.payload.id,
                         rulesProcessingStatus: RulesProcessingStatuses.NOT_STARTED,

@@ -2,9 +2,9 @@
     <div fxFlex="25%">
         <app-sessions-filter
                 (filter)="filters$.next($event)"
-                [rooms]="rooms$ | async"
-                [judges]="judges$ | async"
-                [sessionTypes]="sessionTypes$ | async"
+                [rooms]="rooms"
+                [judges]="judges"
+                [sessionTypes]="sessionTypes"
                 [startDate]="startDate"
                 [endDate]="endDate">
         </app-sessions-filter>
@@ -16,7 +16,8 @@
 
         <div>
             <app-session-amendment-table
-                    [sessions]="filteredSessions">
+                    [sessions]="filteredSessions"
+                    (amend)="openAmendDialog($event)">
             </app-session-amendment-table>
         </div>
     </div>

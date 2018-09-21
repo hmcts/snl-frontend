@@ -11,6 +11,7 @@ import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
 import { SessionPropositionQuery } from '../models/session-proposition-query.model';
+import { SessionAmmend } from '../models/ammend/session-ammend.model';
 
 @Injectable()
 export class SessionsService {
@@ -52,6 +53,11 @@ export class SessionsService {
     createSession(sessionCreate: SessionCreate): Observable<any> {
       return this.http
         .put<string>(`${this.config.getApiUrl()}/sessions`, sessionCreate)
+    }
+
+    amendSession(sessionAmend: SessionAmmend): Observable<any> {
+      return this.http
+        .post<string>(`${this.config.getApiUrl()}/sessions/amend`, sessionAmend)
     }
 
     /**

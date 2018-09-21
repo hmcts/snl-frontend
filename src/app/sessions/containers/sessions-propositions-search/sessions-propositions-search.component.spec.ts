@@ -23,7 +23,7 @@ let component: SessionsPropositionsSearchComponent;
 
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
-const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
+const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name', roomTypeCode: 'code' }];
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const sessionDialogSpy = jasmine.createSpyObj(['close']);
 const sessionsCreationServiceSpy = jasmine.createSpyObj(
