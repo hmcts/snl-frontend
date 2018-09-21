@@ -1,6 +1,7 @@
 import { ElementHelper } from '../utils/element-helper';
-import { element, by, ElementFinder } from 'protractor';
+import { element, by, ElementFinder} from 'protractor';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
+import { Logger } from '../utils/logger';
 
 export class FilterSessionComponent {
   private body = element(by.css('body'));
@@ -20,6 +21,9 @@ export class FilterSessionComponent {
   private elementHelper = new ElementHelper();
 
   async filter(formValues: FilterSessionsComponentForm) {
+    Logger.log(`Filtering sessions with values: ${JSON.stringify(formValues)}`);
+    await this.waitForStartDateInputToBeVisible();
+
     await this.elementHelper.typeDate(this.startDateInput, formValues.startDate);
     await this.elementHelper.typeDate(this.endDateInput, formValues.endDate);
 
@@ -55,5 +59,10 @@ export class FilterSessionComponent {
     }
 
     await this.filterButton.click();
+  }
+
+  private async waitForStartDateInputToBeVisible() {
+    Logger.log('Waiting for startDateInput to be visible');
+    return await this.elementHelper.browserWaitElementVisible(this.startDateInput);
   }
 }

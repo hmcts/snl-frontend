@@ -3,9 +3,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Action, select, Store } from '@ngrx/store';
+import { Action, select, Store, ActionsSubject } from '@ngrx/store';
 import { State } from '../../../../app.state';
-import { CommitTransaction, RollbackTransaction } from '../../actions/transaction.action';
+import {
+    CommitTransaction,
+    RollbackTransaction,
+    EntityTransactionActionTypes
+} from '../../actions/transaction.action';
 import * as fromSessionIndex from '../../reducers';
 import { Problem } from '../../../../problems/models/problem.model';
 import { EntityTransaction } from '../../models/transaction-status.model';
@@ -30,9 +34,10 @@ export class TransactionDialogComponent {
   success: boolean;
 
   constructor(
-      private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: ITransactionDialogData ,
-      private readonly store: Store<State>) {
+  private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
+  public actionListener$: ActionsSubject,
+  @Inject(MAT_DIALOG_DATA) public data: ITransactionDialogData,
+  private readonly store: Store<State>) {
       dialogRef.disableClose = true
       this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentTransactionStatus));
@@ -46,13 +51,27 @@ export class TransactionDialogComponent {
       combineLatest(this.transacted$, this.problemsLoaded$, this.conflicted$,
           (s, p, c) => { return (s && p && !c) }).subscribe(s => { this.success = s});
       this.actionTitle = data.actionTitle;
+
+      this.actionListener$.subscribe(actions => {
+          switch (actions.type) {
+              case EntityTransactionActionTypes.TransactionCommitted: {
+                  this.dialogRef.close(this.success);
+                  break;
+              }
+              case EntityTransactionActionTypes.TransactionRolledBack: {
+                  this.dialogRef.close(false);
+                  break;
+              }
+          }
+      });
   }
 
   onOkClick(): void {
     if (this.okAction !== null && this.success) {
         this.store.dispatch(this.okAction);
+    } else {
+        this.dialogRef.close(false);
     }
-    this.dialogRef.close(this.success);
   }
 
   onHideDialogClick(): void {
@@ -61,6 +80,5 @@ export class TransactionDialogComponent {
 
   onDeleteClick(): void {
     this.store.dispatch(new RollbackTransaction(this.transactionId));
-    this.dialogRef.close(false);
   }
 }

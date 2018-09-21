@@ -8,11 +8,30 @@ describe('SessionsCreationService', () => {
   beforeEach(() => {
     storeSpy = jasmine.createSpyObj('Store', ['dispatch']);
     session = { userTransactionId: null };
-
-    new SessionsCreationService(storeSpy).create(session);
   });
 
   describe('create', () => {
+    beforeEach(() => {
+        new SessionsCreationService(storeSpy).create(session);
+    });
+    it('should set userTransactionId for given session', () => {
+      expect(session.userTransactionId).toBeDefined();
+    });
+
+    it('should dispatch two actions', () => {
+      expect(storeSpy.dispatch).toHaveBeenCalledTimes(3);
+    });
+
+    it('should set transaction.id to be the same as session.userTransactionId', () => {
+      const transactionId = storeSpy.dispatch.calls.first().args[0].payload.id;
+      expect(transactionId).toEqual(session.userTransactionId);
+    });
+  });
+
+  describe('amend', () => {
+    beforeEach(() => {
+        new SessionsCreationService(storeSpy).amend(session);
+    });
     it('should set userTransactionId for given session', () => {
       expect(session.userTransactionId).toBeDefined();
     });
