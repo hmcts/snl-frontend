@@ -1,7 +1,7 @@
-import { Session } from '../session.model';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionAmendForm } from '../../../../../e2e/models/session-amend-form';
 
 export interface SessionAmmendDialogData {
-    sessionData: Session,
-    sessionTypes: SessionType[]
+    sessionData: SessionAmendForm,
+    sessionTypes: SessionType[],
 }

@@ -2,8 +2,8 @@
     <div fxFlex="25%">
         <app-sessions-filter
                 (filter)="filters$.next($event)"
-                [rooms]="rooms$ | async"
-                [judges]="judges$ | async"
+                [rooms]="rooms"
+                [judges]="judges"
                 [sessionTypes]="sessionTypes"
                 [startDate]="startDate"
                 [endDate]="endDate">

@@ -10,8 +10,8 @@ import * as moment from 'moment';
 
 let store: Store<judgesReducers.State>;
 let summaryMessageService: SummaryMessageService;
-let roomA = {id: 'roomA-id', name: 'roomA-name'}
-let roomB = {id: 'roomB-id', name: 'roomB-name'}
+let roomA = {id: 'roomA-id', name: 'roomA-name', roomTypeCode: 'codea'}
+let roomB = {id: 'roomB-id', name: 'roomB-name', roomTypeCode: 'codeb'}
 let personA = {id: 'personA-id', name: 'personA-name'}
 let personB = {id: 'personB-id', name: 'personB-name'}
 const zeroDuration = moment.duration(0, 'minutes');
