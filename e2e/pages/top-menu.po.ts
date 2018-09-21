@@ -4,16 +4,19 @@ import { element, by, browser, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { SessionSearchPage } from './session-search.po';
 import { SessionAmendListPage } from './session-amend-list.po';
+import { ProblemsPage } from './problems.po';
 
 export class TopMenu {
   private parentElement = element(by.css('mat-toolbar-row'));
   private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
   private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
+  private problemsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Problems');
   private logoutButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Logout'))
   private sessionCreatePage = new SessionCreationPage()
   private sessionSearchPage = new SessionSearchPage()
   private listingCreatePage = new ListingCreationPage()
   private sessionAmendListPage = new SessionAmendListPage();
+  private problemsPage = new ProblemsPage();
 
   async openNewSessionPage() {
     await this.openListingSubMenu('New Session');
@@ -46,6 +49,11 @@ export class TopMenu {
 
   async clickOnLogoutButton() {
     await this.logoutButtonElement.click()
+  }
+
+  async openProblemsPage() {
+    await element(this.problemsButtonSelector).click()
+    await this.problemsPage.waitUntilVisible()
   }
 
   private async openListingSubMenu(optionName: string): Promise<void> {
