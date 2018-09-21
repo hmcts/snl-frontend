@@ -8,6 +8,7 @@ import { ProblemsPage } from '../pages/problems.po';
 import { protractor } from 'protractor/built/ptor';
 import { waitFor } from '../utils/wait-for';
 import { forEachSeries } from 'p-iteration';
+import { browser } from 'protractor';
 
 const navigationFlow = new NavigationFlow();
 const loginFlow = new LoginFlow();
@@ -69,6 +70,7 @@ describe('Problem list tests', () => {
 
         it('Refresh page, new problems should be visible in table', async () => {
             await protractor.browser.refresh();
+            await browser.waitForAngular()
             await navigationFlow.goToProblemsPage();
             const numberOfProblemsAfterSessionCreation = await problemsPage.getNumberOfProblems()
 
