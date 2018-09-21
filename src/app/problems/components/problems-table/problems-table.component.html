@@ -4,7 +4,7 @@
     <mat-header-cell *matHeaderCellDef> Severity </mat-header-cell>
     <mat-cell *matCellDef="let element"> 
       <mat-chip-list>
-        <mat-chip>{{element.severity}}</mat-chip>
+        <mat-chip [ngClass]="{'critical': element.severity === 'Critical', 'urgent': element.severity === 'Urgent'}">{{element.severity}}</mat-chip>
       </mat-chip-list>
     </mat-cell>
   </ng-container>
