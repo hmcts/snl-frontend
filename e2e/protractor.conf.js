@@ -3,10 +3,12 @@
 
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
+const URL = require('./e2e-url.js');
 
-const isHeadlessModeEnabled = true;
+const isHeadlessModeEnabled = !!process.env.TEST_URL;
+const frontendURL = (process.env.TEST_URL || URL.frontendURL).replace('https', 'http');
 
-const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
+console.log('Frontend URL: ' + frontendURL);
 
 exports.config = {
     SELENIUM_PROMISE_MANAGER: false,
@@ -18,13 +20,21 @@ exports.config = {
     capabilities: {
         'browserName': 'chrome',
         'acceptInsecureCerts': true,
+        loggingPrefs: {
+            'driver': 'INFO',
+            'browser': 'INFO'
+        },
         chromeOptions: {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
+        },
+        proxy: (!URL.proxy) ? null : {
+            proxyType: 'manual',
+            httpProxy: URL.proxy.replace('http://', '')
         }
     },
     directConnect: true,
-    baseUrl: baseUrl,
+    baseUrl: frontendURL,
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,

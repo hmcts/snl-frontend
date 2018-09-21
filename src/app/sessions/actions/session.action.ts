@@ -3,6 +3,7 @@ import { Session } from '../models/session.model';
 import { SessionQuery, SessionQueryForDates } from '../models/session-query.model';
 import { SessionCreate } from '../models/session-create.model';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
+import { SessionAmmend } from '../models/ammend/session-ammend.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
@@ -14,6 +15,7 @@ export enum SessionActionTypes {
   SearchFailed = '[Session] Search Failed',
   Create = '[Session] Create',
   Update = '[Session] Update',
+  Amend = '[Session] Amend',
   UpdateComplete = '[Session] Update Complete',
   UpdateFailed = '[Session] Update Failed',
   CreateComplete = '[Session] Create Complete',
@@ -85,6 +87,12 @@ export class Update implements Action {
     readonly type = SessionActionTypes.Update;
 
     constructor(public payload: any) {}
+}
+
+export class Amend implements Action {
+    readonly type = SessionActionTypes.Amend;
+
+    constructor(public payload: SessionAmmend) {}
 }
 
 export class CreateComplete implements Action {

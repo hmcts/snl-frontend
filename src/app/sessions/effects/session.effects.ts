@@ -48,6 +48,18 @@ export class SessionEffects {
     );
 
     @Effect()
+    amend$: Observable<Action> = this.actions$.pipe(
+        ofType<sessionActions.Amend>(sessionActions.SessionActionTypes.Amend),
+        mergeMap(action =>
+            this.sessionsService.amendSession(action.payload).pipe(
+                mergeMap((data) => [new transactionActions.UpdateTransaction(data)]),
+                catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(
+                    {err: err, id: action.payload.userTransactionId})))
+            )
+        )
+    );
+
+    @Effect()
     update$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
         distinctUntilChanged(),

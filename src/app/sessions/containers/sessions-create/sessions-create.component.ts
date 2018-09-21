@@ -17,6 +17,7 @@ import { SessionsCreationService } from '../../services/sessions-creation.servic
 import { asArray } from '../../../utils/array-utils';
 import * as refData from '../../../core/reference/reducers/index';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
     selector: 'app-sessions-create',
@@ -60,8 +61,8 @@ export class SessionsCreateComponent implements OnInit {
     }
 
     private openDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
-            data: 'Creating session',
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle: 'Creating session' },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

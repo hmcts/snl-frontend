@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -6,12 +6,13 @@ import { SessionViewModel } from '../../models/session.viewmodel';
 @Component({
   selector: 'app-session-amendment-table',
   templateUrl: './session-amendment-table.component.html',
-  styleUrls: [],
+  styleUrls: ['./session-amendment-table.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionAmendmentTableComponent implements OnChanges {
 
   @Input() sessions: SessionViewModel[];
+  @Output() amend = new EventEmitter();
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -27,6 +28,7 @@ export class SessionAmendmentTableComponent implements OnChanges {
       'allocated',
       'utilization',
       'available',
+      'amend'
   ];
 
   dataSource: MatTableDataSource<any>;
