@@ -7,6 +7,8 @@ import * as URL from '../e2e-url.js'
 const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
 const apiURL = process.env.SNL_API_URL || URL.apiURL;
 
+console.log('ENV Vars: ' + process.env)
+
 console.log('API URL: ' + apiURL)
 
 export class API {
@@ -42,6 +44,19 @@ export class API {
         await API.commitUserTransaction(body)
 
         return response.statusCode;
+    }
+
+    static async getProblems() {
+        await API.login();
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/problems`,
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
+        return responseBody;
     }
 
     private static async login() {
