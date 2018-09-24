@@ -1,18 +1,24 @@
 <mat-table #table [dataSource]="dataSource">
 
-  <!-- Position Column -->
-  <ng-container matColumnDef="id">
-    <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.id}}</mat-cell>
+  <ng-container matColumnDef="severity">
+    <mat-header-cell *matHeaderCellDef> Severity </mat-header-cell>
+    <mat-cell *matCellDef="let element"> 
+      <mat-chip-list>
+        <mat-chip [ngClass]="{'critical': element.severity === 'Critical', 'urgent': element.severity === 'Urgent'}">{{element.severity}}</mat-chip>
+      </mat-chip-list>
+    </mat-cell>
   </ng-container>
 
-  <!-- Name Column -->
+  <ng-container matColumnDef="createdAt">
+      <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ formatDate(element.createdAt) }}</mat-cell>
+    </ng-container>
+
   <ng-container matColumnDef="message">
     <mat-header-cell *matHeaderCellDef> Message </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.message}} </mat-cell>
   </ng-container>
 
-  <!-- Ref description Column -->
   <ng-container matColumnDef="references description">
     <mat-header-cell *matHeaderCellDef> References description </mat-header-cell>
     <mat-cell *matCellDef="let element">
