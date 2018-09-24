@@ -3,10 +3,14 @@
 
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
-const URL = require('./e2e-url.js');
+const configUtils = require('./e2e-config.js');
+const config = configUtils.getConfig(configUtils.JENKINS_EXECUTOR, configUtils.PREVIEW_ENVIRONMENT);
 
-const isHeadlessModeEnabled = !!process.env.TEST_URL;
-const frontendURL = (process.env.TEST_URL || URL.frontendURL).replace('https', 'http');
+console.log(config);
+console.log(JSON.stringify(process.env));
+
+const isHeadlessModeEnabled = config.executorSettings.headlessMode;
+const frontendURL = (process.env.TEST_URL || config.environment.frontendURL).replace('https', 'http');
 
 console.log('Frontend URL: ' + frontendURL);
 
@@ -28,9 +32,9 @@ exports.config = {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
         },
-        proxy: (!URL.proxy) ? null : {
+        proxy: (!config.proxy.required) ? null : {
             proxyType: 'manual',
-            httpProxy: URL.proxy.replace('http://', '')
+            httpProxy: config.proxy.url.replace('http://', '')
         }
     },
     directConnect: true,

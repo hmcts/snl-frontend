@@ -92,7 +92,7 @@ As a result, the SNL frontend app will be started and made available on port `34
 
 * single run: `yarn test:functional`
 
-You can change target URL by changing the **e2e-url.js**. In this file there are two configurations already: local, and ATT. Uncomment this configuration that you would like to use.
+You can change target URL by changing the **e2e-config.js**. In this file there are two configurations already: local, and ATT. Uncomment this configuration that you would like to use.
 E2E tests generates screenshot on failure. Output is stored in *functional-output* directory.
 
 ## Production
