@@ -1,53 +1,43 @@
-import { Inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AccessToken } from '../models/access-token';
+import { SecurityContext } from './security-context.service';
 import { AppConfig } from '../../app.config';
-import { Subject } from 'rxjs/Subject';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
-import { AccessToken, AuthorizationHeaderName } from '../models/access-token';
 
 @Injectable()
 export class SecurityService {
 
-    userSubject$: Subject<User> = new Subject();
-    currentUser: User = User.emptyUser();
-
-    constructor(private readonly http: HttpClient,
-                private readonly config: AppConfig,
-                @Inject('STORAGE') private storage: Storage) { // NOSONAR not readonly
-        this.userSubject$.subscribe(user => this.currentUser = user);
+    constructor(private readonly context: SecurityContext,
+                private readonly http: HttpClient,
+                private readonly config: AppConfig) { // NOSONAR not readonly
     }
 
     authenticate(credentials, callback) {
-        this.http.post(this.config.createApiUrl('/security/signin'), credentials).subscribe(sigininResponse => {
-            const accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
-            this.storage.setItem(AuthorizationHeaderName, accessToken.getAsHeader().headerToken);
-            return this.refreshAuthenticatedUserData(callback);
-        });
-    }
-
-    isAuthenticated() {
-        return this.currentUser.accountNonExpired && this.currentUser.accountNonLocked
-            && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
-    }
-
-    logout(callback) {
-        this.storage.removeItem(AuthorizationHeaderName);
-        this.userSubject$.next(User.emptyUser());
-        callback();
+        return this.http.post(this.config.createApiUrl('/security/signin'), credentials)
+            .subscribe(sigininResponse => {
+                const accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
+                this.context.setToken(accessToken.getAsHeader().headerToken);
+                return this.refreshAuthenticatedUserData(callback);
+            });
     }
 
     refreshAuthenticatedUserData(callback) {
         this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-            this.parseAuthenticationRespone(response);
+            this.context.parseAuthenticationRespone(response);
             callback();
         });
     }
 
-    private parseAuthenticationRespone(response) {
-        if (response['username']) {
-            this.userSubject$.next(Object.assign(new User(), response));
-        } else {
-            this.userSubject$.next(User.emptyUser());
-        }
+    isAuthenticated() {
+        return this.context.isAuthenticated();
+    }
+
+    logout(callback?) {
+        return this.context.logout(callback);
+    }
+
+    getCurrentUser(): User {
+        return this.context.getCurrentUser();
     }
 }

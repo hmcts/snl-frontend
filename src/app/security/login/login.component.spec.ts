@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SecurityService } from '../services/security.service';
+import { SecurityContext } from '../services/security-context.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from './login.component';
 import { AngularMaterialModule } from '../../../angular-material/angular-material.module';
@@ -13,7 +14,7 @@ let storageSpy: jasmine.Spy;
 let navigateSpy: jasmine.Spy;
 let navigateByUrlSpy: jasmine.Spy;
 
-const mockedAppConfig = { getApiUrl() {'https://google.co.uk'},
+const mockedAppConfig = { getApiUrl() {'https://some.url'},
     createApiUrl(suffix) { return this.getApiUrl() + suffix}
 };
 
@@ -48,7 +49,7 @@ describe('LoginComponent', () => {
                 FormsModule,
                 HttpClientTestingModule
             ],
-            providers: [LoginComponent, SecurityService, AppConfig,
+            providers: [LoginComponent, SecurityService, SecurityContext, AppConfig,
                 { provide: AppConfig, useValue: mockedAppConfig },
                 { provide: 'STORAGE', useValue: storageSpy}
             ]

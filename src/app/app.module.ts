@@ -4,7 +4,7 @@ import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@a
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
@@ -22,7 +22,6 @@ import { SecurityService } from './security/services/security.service';
 import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { Observable } from 'rxjs/Observable';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
 import { PocComponent } from './admin/components/poc/poc.component';
 import { AdminModule } from './admin/admin.module';
@@ -32,11 +31,12 @@ import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
-import { AuthorizationHeaderName } from './security/models/access-token';
 import { getLocalStorage } from './utils/storage';
 import { ReportModule } from './features/reports/report.module';
 import { NotesModule } from './notes/notes.module';
 import { TransactionsModule } from './features/transactions/transactions.module';
+import { AuthHttpInterceptor } from './security/services/auth-http-interceptor';
+import { SecurityContext } from './security/services/security-context.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -47,27 +47,6 @@ export class XhrInterceptor implements HttpInterceptor {
             withCredentials: true
         });
         return next.handle(xhr);
-    }
-}
-
-@Injectable()
-export class AuthHttpInterceptor implements HttpInterceptor {
-
-    constructor(@Inject('STORAGE') private storage: Storage) {
-    }
-
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        req = this.addAuthenticationHeader(req);
-        return next.handle(req);
-    }
-
-    private addAuthenticationHeader(req: HttpRequest<any>) {
-        let headerToken = this.storage.getItem(AuthorizationHeaderName);
-        let headerName = AuthorizationHeaderName;
-        if (headerToken !== null && !req.headers.has(headerName)) {
-            req = req.clone({headers: req.headers.set(headerName, headerToken)});
-        }
-        return req;
     }
 }
 
@@ -98,7 +77,6 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         SecurityModule,
         AdminModule,
         NotificationModule,
-        SecurityModule,
         JudgesModule,
         HearingPartModule,
         ProblemsModule,
@@ -107,7 +85,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
         NotesModule,
         TransactionsModule
     ],
-    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService,
+    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
