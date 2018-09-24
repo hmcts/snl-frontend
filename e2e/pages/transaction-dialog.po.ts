@@ -19,6 +19,7 @@ export class TransactionDialogPage {
     await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.long, 'Accept button is not visible');
     await acceptButton.click();
     await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.long, 'Accept button wont disappear');
+    await browser.wait(ExpectedConditions.invisibilityOf(element(by.className('cdk-overlay-pane'))), Wait.long)
     return await browser.waitForAngular()
   }
 

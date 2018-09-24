@@ -1,5 +1,6 @@
 import { TopMenu } from '../pages/top-menu.po';
 import { CalendarPage } from '../pages/calendar.po';
+import { Logger } from '../utils/logger';
 
 export class NavigationFlow {
   topMenu = new TopMenu();
@@ -22,6 +23,11 @@ export class NavigationFlow {
   }
 
   async goToAmendSessionsListPage() {
-      await this.topMenu.openSessionsAmendListPage();
+    await this.topMenu.openSessionsAmendListPage();
+  }
+
+  async goToProblemsPage() {
+    Logger.log(`Opening problems page`);
+    await this.topMenu.openProblemsPage();
   }
 }

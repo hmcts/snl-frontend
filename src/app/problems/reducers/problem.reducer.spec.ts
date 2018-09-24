@@ -2,42 +2,46 @@ import { reducer } from './problem.reducer';
 import { Get, GetComplete, GetFailed, RemoveAll, UpsertMany } from '../actions/problem.action';
 import { Problem } from '../models/problem.model';
 
-const problems = [
+const problems: Problem[] = [
     {
         id: '1',
         message: undefined,
         severity: undefined,
         type: undefined,
-        references: undefined
+        references: undefined,
+        createdAt: undefined
     },
     {
         id: '2',
         message: undefined,
         severity: undefined,
         type: undefined,
-        references: undefined
+        references: undefined,
+        createdAt: undefined
     }
-] as Problem[];
+]
 
 const problemsEntities = {
     '1': problems[0],
     '2': problems[1]
 };
 
-const problemsUpsert = [
+const problemsUpsert: Problem[] = [
     {
         id: '1',
         message: 'some msg',
         severity: undefined,
         type: undefined,
-        references: undefined
+        references: undefined,
+        createdAt: undefined
     },
     {
         id: '2',
         message: undefined,
         severity: undefined,
         type: 'abcde',
-        references: undefined
+        references: undefined,
+        createdAt: undefined
     }
 ];
 
@@ -59,7 +63,6 @@ describe('ProblemReducer', () => {
 
         expect(state.loading).toEqual(false)
         expect(state.entities).toEqual(problemsEntities)
-
     });
 
     it('should set loading to false and give error', () => {
