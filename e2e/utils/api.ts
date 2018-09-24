@@ -2,7 +2,7 @@ import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 import * as requestPromise from 'request-promise'
-import * as URL from '../e2e-url.js'
+import * as URL from '../e2e-config.js'
 
 const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
 const apiURL = process.env.SNL_API_URL || URL.apiURL;
