@@ -7,6 +7,7 @@ const configUtils = require('./e2e-config.js');
 const config = configUtils.getConfig(configUtils.JENKINS_EXECUTOR, configUtils.PREVIEW_ENVIRONMENT);
 
 console.log(config);
+console.log('ASD');
 console.log(JSON.stringify(process.env));
 
 const isHeadlessModeEnabled = config.executorSettings.headlessMode;
