@@ -10,7 +10,7 @@ export class TopMenu {
   private parentElement = element(by.css('mat-toolbar-row'));
   private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
   private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
-  private problemsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Problems');
+  private problemsButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Problems'));
   private logoutButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Logout'))
   private sessionCreatePage = new SessionCreationPage()
   private sessionSearchPage = new SessionSearchPage()
@@ -52,7 +52,8 @@ export class TopMenu {
   }
 
   async openProblemsPage() {
-    await element(this.problemsButtonSelector).click()
+    await browser.wait(ExpectedConditions.elementToBeClickable(this.problemsButtonElement), Wait.normal)
+    await this.problemsButtonElement.click()
     await this.problemsPage.waitUntilVisible()
   }
 
