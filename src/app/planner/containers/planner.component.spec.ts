@@ -192,7 +192,6 @@ describe('PlannerComponent', () => {
               duration: undefined,
               room: undefined,
               person: undefined,
-              caseType: undefined,
               jurisdiction: 'some jurisdiction',
               version: 1,
               sessionType: undefined,

@@ -6,7 +6,6 @@ export interface Session {
   duration: number;
   room: string;
   person: string;
-  caseType: string;
   sessionTypeCode: string;
   jurisdiction: string;
   version: number;
