@@ -29,11 +29,15 @@ import { SessionsPropositionsTableComponent } from './components/sessions-propos
 import { SessionsPropositionsFormComponent } from './components/sessions-propositions-form/sessions-propositions-form.component';
 import { SessionEditOrCreateDialogComponent } from './components/session-edit-or-create-dialog/session-edit-or-create-dialog.component';
 import { TransactionsModule } from '../features/transactions/transactions.module';
+import { SessionAmendmentTableComponent } from './components/session-amendment-table/session-amendment-table.component';
+import { SessionsListingsSearchComponent } from './containers/sessions-listings-search/sessions-listings-search.component';
+import { SessionsFilterService } from './services/sessions-filter-service';
+import { SessionsAmendFormComponent } from './components/sessions-amend-form/sessions-amend-form.component';
+import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 
 export const COMPONENTS = [
     SessionsPageComponent,
     SessionsCreateComponent,
-    SessionsSearchComponent,
     SessionTableComponent,
     SessionsFilterComponent,
     DetailsDialogComponent,
@@ -41,19 +45,24 @@ export const COMPONENTS = [
     SessionEditOrCreateDialogComponent,
     SessionsPropositionsSearchComponent,
     SessionsPropositionsTableComponent,
-    SessionsPropositionsFormComponent
+    SessionsPropositionsFormComponent,
+    SessionsSearchComponent,
+    SessionAmendmentTableComponent,
+    SessionsListingsSearchComponent,
+    SessionsAmendFormComponent,
+    SessionAmendDialogComponent
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     AngularMaterialModule,
-      FlexLayoutModule,
-      FormsModule,
-      ReactiveFormsModule,
-      HearingPartModule,
-      TransactionsModule,
-      CoreModule,
+    FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HearingPartModule,
+    TransactionsModule,
+    CoreModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
@@ -74,9 +83,9 @@ export const COMPONENTS = [
         ]},
     ]),
   ],
-  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent],
+  entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent, SessionAmendDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]
 })
 export class SessionModule { }

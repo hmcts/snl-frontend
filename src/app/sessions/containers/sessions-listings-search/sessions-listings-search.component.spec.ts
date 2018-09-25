@@ -5,7 +5,7 @@ import * as transactionsReducers from '../../../features/transactions/reducers';
 import { Room } from '../../../rooms/models/room.model';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { Store, StoreModule } from '@ngrx/store';
-import { SessionsSearchComponent } from './sessions-search.component';
+import { SessionsListingsSearchComponent } from './sessions-listings-search.component';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
@@ -37,9 +37,10 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionsFilterService } from '../../services/sessions-filter-service';
 
 let storeSpy: jasmine.Spy;
-let component: SessionsSearchComponent;
+let component: SessionsListingsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
@@ -55,7 +56,7 @@ const sessionDuration = 30;
 const overListedDuration = 31;
 const notListedDuration = 0;
 const customDuration = 16;
-const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name' }];
+const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name', roomTypeCode: 'code' }];
 const mockedJudges: Judge[] = [{ id: judgeId, name: 'some-judge-name' }];
 const mockedNotes: Note[] = [
     {
@@ -112,7 +113,7 @@ const mockedSessions: Session[] = [
   }
 ];
 
-describe('SessionsSearchComponent', () => {
+describe('SessionsListingsSearchComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -129,7 +130,7 @@ describe('SessionsSearchComponent', () => {
         StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
-      providers: [SessionsSearchComponent, SessionsStatisticsService, HearingPartModificationService],
+      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingPartModificationService, SessionsFilterService],
       declarations: [TransactionDialogComponent]
     });
 
@@ -140,7 +141,7 @@ describe('SessionsSearchComponent', () => {
     });
 
     mockedFullSession = [defaultFullMockedSession()];
-    component = TestBed.get(SessionsSearchComponent);
+    component = TestBed.get(SessionsListingsSearchComponent);
     store = TestBed.get(Store);
     storeSpy = spyOn(store, 'dispatch').and.callThrough();
   });
@@ -195,9 +196,6 @@ describe('SessionsSearchComponent', () => {
     });
     it('should set selectedSession to empty obj', () => {
       expect(component.selectedSession).toEqual({});
-    });
-    it('should set filteredSessions to all sessions', () => {
-      expect(component.filteredSessions$).toEqual(component.sessions$);
     });
   });
 
@@ -382,7 +380,7 @@ describe('SessionsSearchComponent', () => {
 // Helpers
 
 function computeAndVerifyFilteredSession(
-  sessionSearchComponent: SessionsSearchComponent,
+  sessionSearchComponent: SessionsListingsSearchComponent,
   sessionFilter: SessionFilters
 ): void {
   const expectedFilteredSessions = sessionSearchComponent.filterSessions(
@@ -393,7 +391,7 @@ function computeAndVerifyFilteredSession(
 }
 
 function computeAndVerifyFilteredSessionToBeEmptyArray(
-  sessionSearchComponent: SessionsSearchComponent,
+  sessionSearchComponent: SessionsListingsSearchComponent,
   sessionFilter: SessionFilters
 ): void {
   const filteredSessions = sessionSearchComponent.filterSessions(

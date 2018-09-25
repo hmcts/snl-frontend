@@ -27,6 +27,12 @@ export class LoginFlow {
     if (!isLoginPageDisplayed) {
       await this.topMenu.clickOnLogoutButton()
       await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL havent appear')
+      await this.loginPage.waitUntilLoaded()
     }
+  }
+
+  async relogin() {
+    await this.logoutIfNeeded();
+    await this.loginIfNeeded();
   }
 }

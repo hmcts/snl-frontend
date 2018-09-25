@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PocService } from '../../services/poc-service';
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-poc',
@@ -10,9 +11,9 @@ export class PocComponent implements OnInit {
 
   loadRulesFromDbResult: string;
   timeSet: string;
-  yearRequestBody = {timeType: 'year', value: 0} as TimeRequestBody;
-  monthRequestBody = {timeType: 'month', value: 0} as TimeRequestBody;
-  dayRequestBody = {timeType: 'day', value: 0} as TimeRequestBody;
+  yearRequestBody = {timeType: 'year', value: +moment().format('YYYY')} as TimeRequestBody;
+  monthRequestBody = {timeType: 'month', value: +moment().format('M')} as TimeRequestBody;
+  dayRequestBody = {timeType: 'day', value: +moment().format('D')} as TimeRequestBody;
   hourRequestBody = {timeType: 'hour', value: 0} as TimeRequestBody;
   minuteRequestBody = {timeType: 'minute', value: 0} as TimeRequestBody;
 

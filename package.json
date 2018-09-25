@@ -8,6 +8,7 @@
     "build": "ng build --prod",
     "start": "ng serve",
     "test": "ng test --single-run --code-coverage",
+    "test-debug": "ng test --browsers ChromeDebug",
     "test:coverage": "istanbul check-coverage --statements 0 --lines 0 --functions 0 --branches 0",
     "test:a11y": "echo 'TODO: Accessibility tests'",
     "test:nsp": "nsp check",
@@ -23,7 +24,8 @@
     "serve:ssr": "node dist/server.js",
     "build:client-and-server-bundles": "ng build --prod && ng build --prod --app 1 --output-hashing=false",
     "webpack:server": "webpack --config webpack.server.config.js --progress --colors",
-    "sonar-scan": "NODE_PATH=. sonar-scanner -X"
+    "sonar-scan": "NODE_PATH=. sonar-scanner -X",
+    "verify": "npm run lint && npm run test && npm run test:functional"
   },
   "dependencies": {
     "@angular/animations": "~5.0.0",
@@ -49,6 +51,7 @@
     "@nguniversal/express-engine": "^5.0.0-beta.5",
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0-beta.5",
     "@types/jquery": "3.2.7",
+    "@types/request-promise": "^4.1.42",
     "class-transformer": "^0.1.8",
     "core-js": "^2.4.1",
     "cors": "^2.8.4",
@@ -70,9 +73,10 @@
     "protractor-http-client": "^1.0.4",
     "protractor-screenshoter-plugin": "^0.10.1",
     "reflect-metadata": "^0.1.12",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "rxjs": "^5.5.0",
     "ts-loader": "^3.1.1",
-    "typed-rest-client": "^1.0.9",
     "url": "^0.11.0",
     "uuid": "^3.3.2",
     "zone.js": "^0.8.4"

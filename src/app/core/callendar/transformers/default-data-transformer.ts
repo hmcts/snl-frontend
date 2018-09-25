@@ -15,6 +15,8 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
         const sessionType = (session.sessionType) ? session.sessionType.description : 'No Session type';
 
         return {
+            person: session.person,
+            room: session.room,
             title: `${roomName} - ${judgeName} - ${sessionType}`,
             start: moment(session.start),
             end: moment(moment(session.start).add(moment.duration(session.duration))),

@@ -7,6 +7,7 @@ import * as ProblemsActions from '../../problems/actions/problem.action';
 import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
+import { SessionAmmend } from '../models/ammend/session-ammend.model';
 
 @Injectable()
 export class SessionsCreationService {
@@ -39,6 +40,19 @@ export class SessionsCreationService {
 
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
         this.store.dispatch(new SessionActions.Update(session));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
+    }
+
+    amend(sessionAmmend: SessionAmmend) {
+        this.recentSessionId = sessionAmmend.id;
+
+        const transactionId = uuid();
+
+        sessionAmmend.userTransactionId = transactionId;
+        const transaction = this.createTransaction(sessionAmmend.id, transactionId);
+
+        this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
+        this.store.dispatch(new SessionActions.Amend(sessionAmmend));
         this.store.dispatch(new ProblemsActions.RemoveAll());
     }
 

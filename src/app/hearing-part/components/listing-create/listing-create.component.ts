@@ -24,6 +24,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 
 const DURATION_UNIT = 'minute';
 
@@ -53,6 +54,9 @@ export class ListingCreateComponent implements OnInit {
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
     caseTypes: CaseType[] = [];
+
+    caseTitleMaxLength = 200;
+    caseNumberMaxLength = 200;
 
     public listing: ListingCreate;
 
@@ -195,11 +199,26 @@ export class ListingCreateComponent implements OnInit {
 
     private initiateForm() {
         this.listingCreate = new FormGroup({
-            caseNumber: new FormControl(this.listing.hearingPart.caseNumber, Validators.required),
-            caseTitle: new FormControl(this.listing.hearingPart.caseTitle, [Validators.required]),
-            caseType: new FormControl(this.listing.hearingPart.caseType, [Validators.required]),
-            hearingType: new FormControl(this.listing.hearingPart.hearingType, [Validators.required]),
-            duration: new FormControl(this.listing.hearingPart.duration.asMinutes(), [Validators.required, Validators.min(1)]),
+            caseNumber: new FormControl(
+                this.listing.hearingPart.caseNumber,
+                [Validators.required, Validators.maxLength(this.caseNumberMaxLength)]
+            ),
+            caseTitle: new FormControl(
+                this.listing.hearingPart.caseTitle,
+                [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
+            ),
+            caseType: new FormControl(
+                this.listing.hearingPart.caseType,
+                [Validators.required]
+            ),
+            hearingType: new FormControl(
+                this.listing.hearingPart.hearingType,
+                [Validators.required]
+            ),
+            duration: new FormControl(
+                this.listing.hearingPart.duration.asMinutes(),
+                [Validators.required, Validators.min(1)]
+            ),
             targetDates: new FormGroup({
                 targetFrom: new FormControl(this.listing.hearingPart.scheduleStart),
                 targetTo: new FormControl(this.listing.hearingPart.scheduleEnd),
@@ -208,8 +227,8 @@ export class ListingCreateComponent implements OnInit {
     }
 
     private openDialog(actionTitle: string) {
-        this.dialog.open(TransactionDialogComponent, {
-            data: actionTitle,
+        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            data: { actionTitle },
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true

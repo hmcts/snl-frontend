@@ -22,14 +22,14 @@ const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
-const sessionType = SessionTypes.FTRACK_TRIAL_ONLY
+const sessionType = SessionTypes.K_FAST_TRACK_AND_APPLICATIONS
 const room = Rooms.COURT_4
 const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
-const listingRequestCaseType = CaseTypes.SCLAIMS // must be other than sessionCaseType
-const listingRequestHearingType = HearingTypes.TRIAL;
-const caseTypesInvalidMsg = 'The case type on the listing request does not match a case type associated to the session type of the session'
+const listingRequestCaseType = CaseTypes.K_SMALL_CLAIMS // must be other than sessionCaseType
+const listingRequestHearingType = HearingTypes.K_ASAJ;
+const caseTypesInvalidMsg = 'Session of type ' + sessionType + ' is not suitable for this listing request'
 
 const listingCreationForm: ListingCreationForm = {
     caseNumber,
@@ -69,10 +69,9 @@ const sessionSearchPage = new SessionSearchPage()
 const sessionDetailsDialogPage = new SessionDetailsDialogPage()
 let numberOfVisibleEvents: number;
 
-// Disabled due changes in rules
-xdescribe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
+describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
   beforeAll(async () => {
-    await loginFlow.loginIfNeeded();
+    await loginFlow.relogin();
     await navigationFlow.goToCalendarPage()
   });
   describe('Remember number of visible events in calendar, Go to new session page and create session', () => {

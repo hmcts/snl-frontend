@@ -1,4 +1,4 @@
-<mat-table id="hearing-part-preview" *ngIf="dataSource" #table [dataSource]="dataSource" matSort>
+<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort>
   <!-- Position Column -->
   <ng-container matColumnDef="selectHearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
@@ -79,7 +79,7 @@
   <ng-container matColumnDef="editor">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span class="clickable" (click)="openEditDialog(element)">edit</span>
+      <span class="clickable" (click)="openEditDialog(element)">Edit</span>
     </mat-cell>
   </ng-container>
 
@@ -87,4 +87,4 @@
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator id="hearings-part-table-paginator" [length]="100" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>

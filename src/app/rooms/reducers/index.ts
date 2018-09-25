@@ -2,6 +2,8 @@ import * as fromRoot from '../../app.state';
 import * as fromRooms from './room.reducer';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionsState } from '../../sessions/reducers';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { Room } from '../models/room.model';
 
 export interface RoomsState {
     readonly rooms: fromRooms.State;
@@ -31,6 +33,10 @@ export const getRoomsLoading = createSelector(
     getRoomsEntitiesState,
     fromRooms.getLoading
 );
+
+export const getRoomById = (id: string) => createSelector(getRooms, (rooms: Dictionary<Room>) => {
+    return rooms[id];
+});
 
 export const {
     selectIds: getRoomsIds,

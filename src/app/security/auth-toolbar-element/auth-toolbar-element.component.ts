@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SecurityService } from '../services/security.service';
+import { SecurityContext } from '../services/security-context.service';
 
 @Component({
     selector: 'app-auth-toolbar-element',
@@ -11,11 +11,11 @@ export class AuthToolbarElementComponent implements OnInit {
 
     loggedInUsername = 'Logged user';
 
-    constructor(private readonly security: SecurityService, private readonly router: Router) {
+    constructor(private readonly security: SecurityContext, private readonly router: Router) {
     }
 
     ngOnInit() {
-        this.loggedInUsername = this.security.currentUser.username;
+        this.loggedInUsername = this.security.getCurrentUser().username;
         this.security.userSubject$.subscribe(user => {
             this.loggedInUsername = user.username;
         });

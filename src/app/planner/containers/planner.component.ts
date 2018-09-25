@@ -1,7 +1,8 @@
+import { SummaryMessageService } from './../services/summary-message.service';
 import { Component, OnInit } from '@angular/core';
-import { ActionsSubject, select, Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { State } from '../../app.state';
-import { SearchForDates, SessionActionTypes, } from '../../sessions/actions/session.action';
+import { SearchForDates } from '../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { DetailsDialogComponent } from '../../sessions/components/details-dialog/details-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -11,12 +12,14 @@ import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
 import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
 import { v4 as uuid } from 'uuid';
 import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import * as fromHearingParts from '../../hearing-part/reducers/index';
 import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
+import { SessionViewModel } from '../../sessions/models/session.viewmodel';
+import { ITransactionDialogData } from '../../features/transactions/models/transaction-dialog-data.model';
 
 @Component({
     selector: 'app-planner',
@@ -28,44 +31,29 @@ export class PlannerComponent implements OnInit {
     public lastSearchDateRange: SessionQueryForDates;
     private confirmationDialogRef;
     private confirmationDialogOpen;
-    private selectedSessionId;
+    public selectedSessionId;
     private latestEvent: any;
+    public sessions: SessionViewModel[];
+    public hearingParts: any[];
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
                 public hearingModificationService: HearingPartModificationService,
-                public actionListener$: ActionsSubject) {
+                private summaryMessageService: SummaryMessageService) {
         this.confirmationDialogOpen = false;
-
-        this.actionListener$.subscribe(data => {
-            switch (data.type) {
-                case sessionTransactionActs.EntityTransactionActionTypes.TransactionConflicted: {
-                    this.loadDataForAllJudges(this.lastSearchDateRange);
-                    break;
-                }
-                case SessionActionTypes.UpdateComplete: {
-                    this.openSummaryDialog().afterClosed().subscribe(() => {
-                        this.fetchModifiedEntities();
-                    });
-
-                    this.latestEvent = undefined;
-                    break;
-                }
-                case SessionActionTypes.UpdateFailed: {
-                    this.revertLatestEvent();
-                    this.store.select(fromSessions.getSessionsError).subscribe(error => {
-                        this.openCreationFailedDialog(error);
-                    }).unsubscribe();
-                    this.latestEvent = undefined;
-                    break;
-                }
-            }
-        });
     }
 
     ngOnInit() {
         this.setRoomView();
+
+        this.store.select(fromSessions.getFullSessions).subscribe(sessions => {
+            this.sessions = sessions;
+        });
+
+        this.store.select(fromHearingParts.getFullHearingParts).subscribe(hearingParts => {
+            this.hearingParts = hearingParts;
+        });
     }
 
     public setRoomView() {
@@ -106,9 +94,18 @@ export class PlannerComponent implements OnInit {
     public eventModifyConfirmationClosed = (confirmed: boolean) => {
         if (confirmed) {
             this.sessionCreationService.update(this.buildSessionUpdate(this.latestEvent));
+
+            this.openSummaryDialog().afterClosed().subscribe((success) => {
+                if (!success) {
+                    this.revertLatestEvent();
+                }
+
+                this.fetchModifiedEntities();
+            });
         } else {
             this.revertLatestEvent();
         }
+
         this.confirmationDialogOpen = false;
     };
 
@@ -128,15 +125,19 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
                 if (confirmed) {
+                    let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
                     this.hearingModificationService.assignHearingPartWithSession({
-                        hearingPartId: event.detail.jsEvent.target.getAttribute('data-hearingid'),
+                        hearingPartId: hearingPartId,
+                        hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
                         sessionId: selectedSessionId,
+                        sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version,
                         start: null
                     } as SessionAssignment);
 
                     this.openSummaryDialog().afterClosed().subscribe(() => {
-                        this.store.dispatch(new fromHearingPartsActions.Search());
+                        this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
+                        this.fetchModifiedEntities();
                     });
                 }
             });
@@ -148,7 +149,7 @@ export class PlannerComponent implements OnInit {
     }
 
     private buildSessionUpdate(event) {
-        let [resourceType, resourceId] = event.detail.event.resourceId.split(`(${Separator})(.+)`);
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(`${Separator}`);
         resourceType += 'Id';
 
         return {
@@ -179,22 +180,12 @@ export class PlannerComponent implements OnInit {
     }
 
     private openSummaryDialog() {
-        return this.dialog.open(TransactionDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
-        });
-    }
-
-    private openCreationFailedDialog(error: any) {
-        this.dialog.open(DialogWithActionsComponent, {
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             width: 'auto',
             minWidth: 350,
             hasBackdrop: true,
             data: {
-                message: 'This session has been changed by another user since you first loaded the calendar, ' +
-                         'please reload the page and try again',
-                hideDecline: true
+                summaryMsg$: this.summaryMessageService.buildSummaryMessage(this.latestEvent)
             }
         });
     }

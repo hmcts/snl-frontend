@@ -41,6 +41,7 @@ function stateWith(roomReducer): State {
 function generateRoom(id: string): Room {
     return {
         id: id,
-        name: null
+        name: null,
+        roomTypeCode: 'code'
     }
 };

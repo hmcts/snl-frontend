@@ -1,6 +1,8 @@
 import * as fromRoot from '../../app.state';
 import * as fromJudges from './judge.reducer';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
+import { Dictionary } from '@ngrx/entity/src/models';
+import { Judge } from '../models/judge.model';
 
 export interface JudgesState {
     readonly judges: fromJudges.State;
@@ -24,6 +26,10 @@ export const getJudges = createSelector(
     getJudgesEntitiesState,
     state => state.entities
 );
+
+export const getJudgeById = (id: string) => createSelector(getJudges, (judges: Dictionary<Judge>) => {
+    return judges[id];
+});
 
 export const getJudgesLoading = createSelector(
     getJudgesEntitiesState,
