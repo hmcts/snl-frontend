@@ -49,8 +49,7 @@ const sessionCreate: SessionCreate = {
     roomId: null,
     duration: 1800,
     start: now,
-    sessionTypeCode: 'fast-track---trial-only',
-    caseType: undefined
+    sessionTypeCode: 'fast-track---trial-only'
 };
 
 describe('Go to search session', () => {
