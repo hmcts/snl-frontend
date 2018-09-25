@@ -25,6 +25,7 @@
       ],
       "stylePreprocessorOptions": {
         "includePaths": [
+          "../node_modules/govuk-frontend"
         ]
       },
       "scripts": [],
