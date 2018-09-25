@@ -1,0 +1,14 @@
+<div class="govuk-form-group">
+    <label class="govuk-label" for="{{id}}">
+        {{label.text}}
+    </label>
+    <span id="{{id + '-hint'}}" class="govuk-hint">{{hint.text}}</span>
+    <input class="govuk-input"
+           id="{{id}}"
+           name="{{name}}"
+           type="text"
+           [(ngModel)]="value"
+           (ngModelChange)="valueChange.emit($event)"
+           attr.aria-describedby="{{id + '-hint'}}"
+    >
+</div>

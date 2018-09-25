@@ -3128,6 +3128,10 @@ govuk-elements-sass@^3.1.2:
   dependencies:
     govuk_frontend_toolkit "^7.1.0"
 
+govuk-frontend@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-2.0.0.tgz#daf69eeffc60d013ad5fd14b59e5e488ac63a132"
+
 govuk_frontend_toolkit@^7.1.0:
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/govuk_frontend_toolkit/-/govuk_frontend_toolkit-7.4.2.tgz#67c0b386c2761272464322ed1fc22db38d69afc3"
