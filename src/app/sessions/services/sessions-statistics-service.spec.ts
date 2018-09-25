@@ -111,7 +111,7 @@ describe('SessionsStatisticsService', () => {
                 .toEqual(0);
         });
 
-        it('should throw error when params are undefined', () => {
+        it('should throw error when params are undefined ', () => {
             expect(() => {
                 sessionsStatisticsService.calculateUtilizedDuration(undefined, undefined);
             }).toThrow();
