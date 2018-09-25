@@ -4,10 +4,9 @@ const LOCAL_ENVIRONMENT = 'local-environment';
 const JENKINS_EXECUTOR = 'jenkins-executor';
 const PREVIEW_ENVIRONMENT = 'preview-environment';
 const PROXY_URL = 'http://proxyout.reform.hmcts.net:8080';
+const ENVIRONMENT_VARIABLE_TO_CHECK_IF_RAN_ON_JENKINS = "NODE_NAME";
 
-// Input Parameters:
-let EXECUTOR = LOCAL_EXECUTOR;
-let ENVIRONMENT = PREVIEW_ENVIRONMENT;
+let finalConfig = {};
 
 // Configs:
 const executorSettings = {
@@ -42,11 +41,12 @@ const defaultConfig = {
 function getConfig(executor, environment) {
     let config = defaultConfig;
 
-    if((executor === LOCAL_EXECUTOR) && (environment === PREVIEW_ENVIRONMENT)) {
+    if ((executor === LOCAL_EXECUTOR) && (environment === PREVIEW_ENVIRONMENT)) {
         config.proxy = {
             required: true,
             url: PROXY_URL
         }
+        config.environment = environments[PREVIEW_ENVIRONMENT];
     } else if ((executor === JENKINS_EXECUTOR)) {
         config.executorSettings = executorSettings[JENKINS_EXECUTOR];
         config.environment = environments[PREVIEW_ENVIRONMENT]
@@ -55,8 +55,30 @@ function getConfig(executor, environment) {
     return config;
 }
 
+function getExecutor(processEnvVars) {
+    let runningOnJenkins = processEnvVars[ENVIRONMENT_VARIABLE_TO_CHECK_IF_RAN_ON_JENKINS] !== undefined;
+    console.log()
+    return runningOnJenkins ? JENKINS_EXECUTOR : LOCAL_EXECUTOR;
+}
+
+function isExecutingOnJenkins(processEnvVars) {
+    return getExecutor(processEnvVars) === JENKINS_EXECUTOR;
+}
+
+function setFinalConfig(config) {
+    finalConfig = config;
+}
+
+function getFinalConfig() {
+    return finalConfig;
+}
+
 module.exports = {
     getConfig: getConfig,
+    getFinalConfig: getFinalConfig,
+    setFinalConfig: setFinalConfig,
+    getExecutor: getExecutor,
+    isExecutingOnJenkins: isExecutingOnJenkins,
     LOCAL_EXECUTOR,
     LOCAL_ENVIRONMENT,
     JENKINS_EXECUTOR,

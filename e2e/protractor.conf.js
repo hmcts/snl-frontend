@@ -4,16 +4,26 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
 const configUtils = require('./e2e-config.js');
-const config = configUtils.getConfig(configUtils.JENKINS_EXECUTOR, configUtils.PREVIEW_ENVIRONMENT);
 
-console.log(config);
-console.log('ASD');
-console.log(JSON.stringify(process.env));
+let e2eConfig = {};
 
-const isHeadlessModeEnabled = config.executorSettings.headlessMode;
-const frontendURL = (process.env.TEST_URL || config.environment.frontendURL).replace('https', 'http');
+if(configUtils.isExecutingOnJenkins(process.env)) {
+    console.log("Executing on: Jenkins");
+    e2eConfig = configUtils.getConfig(configUtils.JENKINS_EXECUTOR, configUtils.PREVIEW_ENVIRONMENT)
+} else {
+    console.log("Executing on: Local machine");
+    e2eConfig = configUtils.getConfig(configUtils.LOCAL_EXECUTOR, configUtils.LOCAL_ENVIRONMENT)
+}
 
-console.log('Frontend URL: ' + frontendURL);
+e2eConfig = configUtils.getConfig(configUtils.LOCAL_EXECUTOR, configUtils.PREVIEW_ENVIRONMENT)
+
+const isHeadlessModeEnabled = e2eConfig.executorSettings.headlessMode;
+e2eConfig.environment.frontendURL = (process.env.TEST_URL || e2eConfig.environment.frontendURL).replace('https', 'http');
+
+configUtils.setFinalConfig(e2eConfig);
+e2eConfig = configUtils.getFinalConfig();
+
+console.log(e2eConfig);
 
 exports.config = {
     SELENIUM_PROMISE_MANAGER: false,
@@ -33,13 +43,13 @@ exports.config = {
             args: isHeadlessModeEnabled ? ['--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080'] : [],
             binary: puppeteer.executablePath(),
         },
-        proxy: (!config.proxy.required) ? null : {
+        proxy: (!e2eConfig.proxy.required) ? null : {
             proxyType: 'manual',
-            httpProxy: config.proxy.url.replace('http://', '')
+            httpProxy: e2eConfig.proxy.url.replace('http://', '')
         }
     },
     directConnect: true,
-    baseUrl: frontendURL,
+    baseUrl: e2eConfig.environment.frontendURL,
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,

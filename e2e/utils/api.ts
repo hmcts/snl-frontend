@@ -2,15 +2,15 @@ import { Credentials } from '../enums/credentials';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 import * as requestPromise from 'request-promise'
-import * as URL from '../e2e-config.js'
+import * as configUtils from '../e2e-config.js'
 
-const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
-const apiURL = process.env.SNL_API_URL || URL.apiURL;
+const config = configUtils.getFinalConfig();
 
-console.log('API URL: ' + apiURL)
+const rp = (config.proxy.url) ? requestPromise.defaults({ proxy: config.proxy.url, strictSSL: false}) : requestPromise;
+const apiUrl = config.environment.apiURL;
 
 export class API {
-    private static baseUrl = apiURL;
+    private static baseUrl = apiUrl;
     private static applicationJSONHeader = {'Content-Type': 'application/json' }
     private static headers = { 'Authorization': '', ...API.applicationJSONHeader }
 
@@ -56,8 +56,8 @@ export class API {
             resolveWithFullResponse: true,
         };
 
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
     }
 
