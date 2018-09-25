@@ -23,8 +23,7 @@ const sessionCreate: SessionCreate = {
     roomId: null,
     duration: 1800,
     start: in5Minutes,
-    sessionTypeCode: 'fast-track---trial-only',
-    caseType: undefined
+    sessionTypeCode: 'fast-track---trial-only'
 };
 
 let numberOfProblems: number;
