@@ -16,7 +16,7 @@ export class Table {
     return row;
   }
 
-  private async rowThatContains(...values: string[]): Promise<ElementFinder> {
+  async rowThatContains(...values: string[]): Promise<ElementFinder> {
     const rows = await this.parentElement.all(by.css('mat-row')).asElementFinders_()
     const selectedRow = await filterSeries(rows, async (row: ElementFinder): Promise<boolean> => {
       const rowText = await row.getText()

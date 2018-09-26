@@ -40,6 +40,12 @@ module.exports = function (config) {
       '--disable-gpu',
       '--no-sandbox'
     ],
-    singleRun: false
+    singleRun: false,
+    customLaunchers: {
+        ChromeDebug: {
+            base: 'Chrome',
+            flags: [ '--remote-debugging-port=9333' ]
+        }
+    }
   });
 };

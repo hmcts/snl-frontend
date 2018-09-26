@@ -1,4 +1,5 @@
 import { ProblemReference } from './problem-reference.model';
+import * as moment from 'moment';
 
 export interface Problem {
     id: string;
@@ -6,4 +7,5 @@ export interface Problem {
     severity: string;
     type: string;
     references: ProblemReference[];
+    createdAt: moment.Moment
 }
