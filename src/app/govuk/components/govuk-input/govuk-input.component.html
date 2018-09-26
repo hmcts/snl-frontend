@@ -6,7 +6,7 @@
     <input class="govuk-input"
            id="{{id}}"
            name="{{name}}"
-           type="text"
+           type="{{type}}"
            [(ngModel)]="value"
            (ngModelChange)="valueChange.emit($event)"
            attr.aria-describedby="{{id + '-hint'}}"

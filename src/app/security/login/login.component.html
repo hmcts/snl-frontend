@@ -4,8 +4,8 @@
   </div>
   <form #loginForm="ngForm" role="form" class="login-form" (submit)="login()">
 
-    <app-govuk-input id="username" name="username" [(value)]="credentials.username" [label]="{text:'Login'}"></app-govuk-input>
-    <app-govuk-input id="password" name="password" [(value)]="credentials.password" [label]="{text:'Password'}"></app-govuk-input>
+    <app-govuk-input id="username" name="username" [(value)]="credentials.username" [label]="{text:'Username'}"></app-govuk-input>
+    <app-govuk-input id="password" name="password" type="password" [(value)]="credentials.password" [label]="{text:'Password'}"></app-govuk-input>
 
     <br/>
     <app-govuk-button text="Login"></app-govuk-button>

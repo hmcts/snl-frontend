@@ -15,6 +15,7 @@ export class GovukInputComponent {
     @Input() label = {
         text: ''
     };
+    @Input() type = 'text';
 
     @Input() value: string;
     @Output() valueChange: EventEmitter<String> = new EventEmitter<String>();
