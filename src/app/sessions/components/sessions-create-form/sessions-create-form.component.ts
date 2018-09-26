@@ -9,10 +9,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { safe } from '../../../utils/js-extensions';
 import { CreateSessionForm } from '../../models/create-session-form.model';
 import * as Mapper from '../../mappers/create-session-form-session-create';
-import { Note } from '../../../notes/models/note.model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -27,7 +27,7 @@ export class SessionsCreateFormComponent {
 
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
-    notes: Note[];
+    noteViewModels: NoteViewmodel[];
     injectedSessionCreate: SessionCreate;
     createSessionForm: CreateSessionForm;
     roomsPlaceholder: string;
@@ -74,15 +74,16 @@ export class SessionsCreateFormComponent {
             sessionTypeCode: null
         };
         this.initiateFormGroup();
-        this.notes = sessionNotesConfig.defaultNotes();
+        this.noteViewModels = sessionNotesConfig.defaultNotes()
+            .map(getNoteViewModel)
+            .map(n => this.setCustomInputLabel(n, 'Notes'));
     }
 
     create() {
         const sessionCreate = Mapper.CreateSessionFormToSessionCreate(this.createSessionForm)
         sessionCreate.id = safe(() => this.injectedSessionCreate.id) || uuid();
-        this.notes = this.prepareNotes(sessionCreate.id);
 
-        this.createSessionAction.emit({session: sessionCreate, notes: this.notes});
+        this.createSessionAction.emit({session: sessionCreate, notes: this.prepareNotes(sessionCreate.id)});
     }
 
     cancel() {
@@ -101,6 +102,11 @@ export class SessionsCreateFormComponent {
         );
 
         return this.notePreparerService.removeEmptyNotes(notes);
+    }
+
+    private setCustomInputLabel(note: NoteViewmodel, inputLabel: string) {
+        note.inputLabel = inputLabel;
+        return note;
     }
 
     private initiateFormGroup() {

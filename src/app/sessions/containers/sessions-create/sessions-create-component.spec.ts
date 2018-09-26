@@ -114,7 +114,7 @@ describe('SessionsCreateComponent', () => {
                 caseType: 'casetype',
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
@@ -144,7 +144,7 @@ describe('SessionsCreateComponent', () => {
                 caseType: 'casetype',
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 

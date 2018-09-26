@@ -40,7 +40,7 @@
         </mat-select>
       </mat-form-field>
 
-      <app-note-list [notes]="notes"></app-note-list>
+      <app-note-list [notes]="noteViewModels"></app-note-list>
 
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="create" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionCreateFormGroup.valid">Create</button>

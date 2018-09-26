@@ -1,26 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { NoteListComponent } from './note-list.component';
-import { Note } from '../../models/note.model';
 
 let noteListComponent: NoteListComponent;
-
-let note = {
-    id: '1',
-    content: 'a',
-    type: 't',
-    entityId: 'p',
-    entityType: 'e'
-} as Note;
-
-let secondNote = {
-    id: '2',
-    content: 'a',
-    type: 't',
-    entityId: 'p',
-    entityType: 'e'
-} as Note;
-
-let notes = [note, secondNote];
 
 describe('NoteListComponent', () => {
     beforeEach(() => {
@@ -29,6 +10,36 @@ describe('NoteListComponent', () => {
             ],
             providers: [NoteListComponent]
         });
+
+        this.note = {
+            id: '1',
+            content: 'a',
+            type: 't',
+            entityId: 'p',
+            entityType: 'e',
+        };
+
+        this.secondNote = {
+            id: '2',
+            content: 'a',
+            type: 't',
+            entityId: 'p',
+            entityType: 'e'
+        };
+
+        this.noteVm = {
+            ...this.note,
+            modified: false,
+            inputLabel: 'lbl'
+        }
+
+        this.secondNoteVm = {
+            ...this.secondNote,
+            modified: false,
+            inputLabel: 'lbl'
+        }
+
+        this.noteViewModels = [this.noteVm, this.secondNoteVm];
 
         noteListComponent = TestBed.get(NoteListComponent);
     });
@@ -39,16 +50,16 @@ describe('NoteListComponent', () => {
 
     describe('Getting only modified notes', () => {
         it('should return only modified notes', () => {
-            noteListComponent.notes = notes;
+            noteListComponent.notes = this.noteViewModels;
             noteListComponent.noteViewModels[0].modified = true;
 
             let actualNotes = noteListComponent.getModifiedNotes();
 
-            expect(actualNotes).toEqual([note]);
+            expect(actualNotes).toEqual([this.note]);
         });
 
         it('should return no notes if no modifications were done', () => {
-            noteListComponent.notes = notes;
+            noteListComponent.notes = this.noteViewModels;
 
             let actualNotes = noteListComponent.getModifiedNotes();
 

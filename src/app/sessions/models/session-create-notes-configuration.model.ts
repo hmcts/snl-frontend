@@ -14,7 +14,7 @@ export class SessionCreateNotesConfiguration implements NotesConfiguration {
         const otherNote = {
             id: undefined,
             content: '',
-            type: 'Notes'
+            type: 'Other note'
         } as Note;
 
         return [otherNote];
