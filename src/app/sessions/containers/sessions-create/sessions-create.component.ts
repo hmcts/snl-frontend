@@ -62,10 +62,8 @@ export class SessionsCreateComponent implements OnInit {
 
     private openDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle: 'Creating session' },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Creating session' }
         });
     }
 }
