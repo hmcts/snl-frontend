@@ -1,0 +1,20 @@
+#!groovy
+
+properties([
+        pipelineTriggers([cron('00 22 * * *')])
+])
+
+@Library("Infrastructure")
+
+def product = "snl"
+def component = "frontend"
+
+withNightlyPipeline("nodejs", product, component) {
+    env.TEST_URL = 'https://snl-frontend-aat.service.core-compute-aat.internal'
+
+    enableCrossBrowserTest()
+
+    after('crossBrowserTest') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+    }
+}
