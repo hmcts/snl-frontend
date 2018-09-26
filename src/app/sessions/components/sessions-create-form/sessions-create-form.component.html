@@ -40,6 +40,8 @@
         </mat-select>
       </mat-form-field>
 
+      <app-note-list [notes]="notes"></app-note-list>
+
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="create" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionCreateFormGroup.valid">Create</button>
         <button type="button" *ngIf="showCancelButton()" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>

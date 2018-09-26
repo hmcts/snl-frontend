@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { SessionCreate } from '../../models/session-create.model';
@@ -9,6 +9,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { safe } from '../../../utils/js-extensions';
 import { CreateSessionForm } from '../../models/create-session-form.model';
 import * as Mapper from '../../mappers/create-session-form-session-create';
+import { Note } from '../../../notes/models/note.model';
+import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -21,6 +25,9 @@ export class SessionsCreateFormComponent {
     public static SELECT_ROOM_PLACEHOLDER = 'Select the room';
     public static SELECT_JUDGE_PLACEHOLDER = 'Select the judge';
 
+    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+
+    notes: Note[];
     injectedSessionCreate: SessionCreate;
     createSessionForm: CreateSessionForm;
     roomsPlaceholder: string;
@@ -51,10 +58,11 @@ export class SessionsCreateFormComponent {
             SessionsCreateFormComponent.SELECT_JUDGE_PLACEHOLDER;
     };
 
-    @Output() createSessionAction = new EventEmitter<SessionCreate>();
+    @Output() createSessionAction = new EventEmitter();
     @Output() cancelAction = new EventEmitter();
 
-    constructor() {
+    constructor(readonly sessionNotesConfig: SessionCreateNotesConfiguration,
+                public notePreparerService: NotesPreparerService) {
         this.roomsPlaceholder = SessionsCreateFormComponent.LOADING_ROOMS_PLACEHOLDER;
         this.judgesPlaceholder = SessionsCreateFormComponent.LOADING_JUDGES_PLACEHOLDER;
         this.createSessionForm = {
@@ -66,13 +74,15 @@ export class SessionsCreateFormComponent {
             sessionTypeCode: null
         };
         this.initiateFormGroup();
+        this.notes = sessionNotesConfig.defaultNotes();
     }
 
     create() {
         const sessionCreate = Mapper.CreateSessionFormToSessionCreate(this.createSessionForm)
-        sessionCreate.id = safe(() => this.injectedSessionCreate.id) || uuid()
+        sessionCreate.id = safe(() => this.injectedSessionCreate.id) || uuid();
+        this.notes = this.prepareNotes(sessionCreate.id);
 
-        this.createSessionAction.emit(sessionCreate);
+        this.createSessionAction.emit({session: sessionCreate, notes: this.notes});
     }
 
     cancel() {
@@ -81,6 +91,16 @@ export class SessionsCreateFormComponent {
 
     showCancelButton(): boolean {
         return this.cancelAction.observers.length > 0;
+    }
+
+    prepareNotes(sessionId) {
+        let notes = this.notePreparerService.prepare(
+            this.noteList.getModifiedNotes(),
+            sessionId,
+            this.sessionNotesConfig.entityName
+        );
+
+        return this.notePreparerService.removeEmptyNotes(notes);
     }
 
     private initiateFormGroup() {
