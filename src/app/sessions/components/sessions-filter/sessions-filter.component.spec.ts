@@ -24,7 +24,6 @@ describe('SessionsFilterComponent', () => {
   describe('sendFilter', () => {
     it('should emit filters', () => {
       const mockedFilters: SessionFilters = {
-        caseTypes: [],
         sessionTypes: [],
         rooms: [],
         judges: [],
