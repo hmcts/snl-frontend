@@ -1,9 +1,12 @@
 <nav class="hmcts-primary-navigation" attr.aria-label="{{label}}">
     <div class="hmcts-primary-navigation__container">
-        <ul class="hmcts-primary-navigation__list" *ngFor="let item of items">
-            <li class="hmcts-primary-navigation__item">
-                <a class="hmcts-primary-navigation__link" [attr.aria-current]="item.active" href="{{item.href}}">{{item.text}}</a>
+        <ul class="hmcts-primary-navigation__list">
+            <li class="hmcts-primary-navigation__item" *ngFor="let item of items">
+                <a *ngIf="item.href !== undefined && item.href.length > 0" class="hmcts-primary-navigation__link" [attr.aria-current]="item.active"
+                   [routerLink]="item.href">{{item.text}}</a>
+                <button (click)="loadSubNavigation(item.children); false">{{item.text}}</button>
             </li>
         </ul>
     </div>
 </nav>
+<app-hmcts-sub-navigation *ngIf="showSubNavItems()" [items]="subNavItems"></app-hmcts-sub-navigation>

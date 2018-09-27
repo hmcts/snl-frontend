@@ -44,6 +44,7 @@
     "@angular/platform-server": "~5.0.0",
     "@angular/router": "~5.0.0",
     "@angular/upgrade": "~5.0.0",
+    "@hmcts/frontend": "^0.0.11-alpha",
     "@ngrx/effects": "^5.2.0",
     "@ngrx/entity": "^5.2.0",
     "@ngrx/store": "^5.2.0",

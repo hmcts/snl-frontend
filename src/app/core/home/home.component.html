@@ -1,16 +1,17 @@
+<app-hmcts-global-header [navigation]="navigation" [serviceName]="serviceName"></app-hmcts-global-header>
+<app-hmcts-primary-navigation [items]="items"></app-hmcts-primary-navigation>
 <mat-toolbar color="primary" class="toolbar-container">
   <mat-toolbar-row>
       <span class="name-element">Scheduling and listing</span>
 
       <span class="example-spacer"></span>
-
       <div *ngIf="isInRole('officer')">
         <a mat-button routerLink='/' routerLinkActive="active">Main</a>
         <a mat-button [matMenuTriggerFor]="sessions">Listings</a>
           <mat-menu #sessions="matMenu" color="primary" [overlapTrigger]="false" class="primary-colored-background">
               <a mat-menu-item routerLink="listinghearings/assign" routerLinkActive="active" color="primary">List Hearings</a>
               <a mat-menu-item routerLink="sessions/search" routerLinkActive="active" color="primary">Search Sessions</a>
-              <a mat-menu-item routerLink="sessions/search-proposition" routerLinkActive="active"> Find availability</a>
+              <a mat-menu-item routerLink="sessions/search-proposition" routerLinkActive="active">Find availability</a>
               <a mat-menu-item routerLink="listing" routerLinkActive="active">New Listing Request</a>
               <a mat-menu-item routerLink="sessions/create" routerLinkActive="active">New Session</a>
           </mat-menu>
@@ -34,7 +35,6 @@
         </mat-menu>
 
       </div>
-
     <span class="fill-space"></span>
 
     <div>
@@ -43,6 +43,7 @@
 
   </mat-toolbar-row>
 </mat-toolbar>
+
 
 <div class="toolbar-to-content-spacer"></div>
 

@@ -7,6 +7,8 @@ import {Component, Input} from '@angular/core';
 })
 export class HmctsPrimaryNavigationComponent {
 
+    subNavItems = [];
+
     @Input() label = 'Primary navigation';
     @Input() items = [
         {
@@ -21,6 +23,16 @@ export class HmctsPrimaryNavigationComponent {
             href: '#3'
         }
     ];
+
+    loadSubNavigation(items) {
+        this.subNavItems = items;
+    }
+
+    showSubNavItems() {
+        console.log(this.subNavItems.length)
+
+        return this.subNavItems.length > 0;
+    }
 
     constructor() { }
 
