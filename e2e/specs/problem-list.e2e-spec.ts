@@ -38,11 +38,25 @@ const displayValuesFromProblems = (problems: any[]): string[][] => {
     })
 }
 
+export function getConsole () {
+    return ;
+};
+
+export function printConsole () {
+    return getConsole
+};
+
 describe('Problem list tests', () => {
     describe('Go to Problems page', () => {
         beforeAll(async () => {
             await loginFlow.loginIfNeeded();
             await navigationFlow.goToProblemsPage();
+        });
+
+        afterEach(async () => {
+            await browser.manage().logs().get('browser').then(browserLog => {
+                browserLog.forEach(log => console.error(log.message));
+            });
         });
 
         it('Remember number of problems', async () => {
@@ -57,7 +71,7 @@ describe('Problem list tests', () => {
         });
 
         it('wait until new problems will be generated', async () => {
-            const result = await waitFor(5, async () => {
+            const result = await waitFor(25, async () => {
                 const alreadyKnownIds = problemsBeforeAction.map(problem => problem.id)
                 const problems = (await API.getProblems()) as any[]
                 newProblems = problems.filter(x => !alreadyKnownIds.includes(x.id));
