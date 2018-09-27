@@ -137,7 +137,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 notes: hearingPart.notes
             } as ListingCreate,
             hasBackdrop: true,
-            height: '60%'
+            height: 'auto'
         })
     }
 
