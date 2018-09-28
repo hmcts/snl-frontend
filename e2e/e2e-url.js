@@ -6,7 +6,7 @@ var attEnv = {
 
 var prEnv = {
     proxy: 'http://proxyout.reform.hmcts.net:8080',
-    frontendURL: "http://pr-163-snl-frontend-preview-staging.service.core-compute-preview.internal",
+    frontendURL: "http://pr-174-snl-frontend-preview-staging.service.core-compute-preview.internal",
     apiURL: "http://snl-api-aat.service.core-compute-aat.internal"
 };
 
