@@ -58,13 +58,9 @@ export class SessionsCreateComponent implements OnInit {
 
     afterClosed(confirmed, notes) {
          if (confirmed) {
-            this.getCreatedSession(this.sessionId)
+            this.store.dispatch(new SessionActions.Get(this.sessionId));
             this.store.dispatch(new fromNotes.CreateMany(notes));
         }
-    }
-
-    public getCreatedSession(sessionId: string) {
-        this.store.dispatch(new SessionActions.Get(sessionId));
     }
 
     private openDialog() {

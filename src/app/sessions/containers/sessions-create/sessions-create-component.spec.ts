@@ -121,7 +121,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new CommitTransaction(transactionId));
-            component.getCreatedSession(component.sessionId);
+            component.afterClosed(true, component.sessionId);
 
             httpMock.expectOne(getCommitTransactionUrl(transactionId)).flush(getTransactionCommittedResponse(transactionId));
             httpMock.expectOne(getSessionByIdUrl(sessionId)).flush(getCreatedSessionResponse(sessionId));
@@ -150,6 +150,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new RollbackTransaction(transactionId));
+            component.afterClosed(false, component.sessionId);
 
             httpMock.expectOne(getRollbackTransactionUrl(transactionId)).flush(getTransactionRolledbackResponse(transactionId));
 
