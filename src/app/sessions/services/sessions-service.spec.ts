@@ -183,7 +183,6 @@ describe('SessionsService', () => {
       roomId: 'some-room-id',
       duration: 30,
       start: moment(),
-      caseType: 'some-case-type',
       sessionTypeCode: 'some-session-type-code'
     };
 
