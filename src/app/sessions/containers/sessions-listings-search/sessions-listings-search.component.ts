@@ -27,6 +27,7 @@ import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
+import { safe } from '../../../utils/js-extensions';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -41,8 +42,8 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
-    selectedSession: any;
-    selectedHearingPart;
+    selectedSession: SessionViewModel;
+    selectedHearingPart: HearingPartViewModel;
     filters$ = new Subject<SessionFilters>();
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
@@ -64,8 +65,6 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
-        this.selectedHearingPart = {};
-        this.selectedSession = {};
 
         combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
     }
@@ -109,6 +108,8 @@ export class SessionsListingsSearchComponent implements OnInit {
 
         this.openSummaryDialog().afterClosed().subscribe(() => {
             this.store.dispatch(new fromHearingPartsActions.Search());
+            this.selectedHearingPart = undefined
+            this.selectedSession = undefined
         });
     }
 
@@ -117,7 +118,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     assignButtonEnabled() {
-        return !!((this.selectedHearingPart.id) && (this.selectedSession.id));
+        return !!(safe(() => this.selectedHearingPart.id) && (safe(() => this.selectedSession.id)));
     }
 
     private openSummaryDialog() {
