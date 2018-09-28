@@ -1,31 +1,32 @@
+import { HearingPartResponse } from './../models/hearing-part-response';
+import { UpdateHearingPartRequest } from './../models/update-hearing-part-request';
+import { CreateHearingPartRequest } from './../models/create-hearing-part-request';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppConfig } from '../../app.config';
 import { HearingPartService } from './hearing-part-service';
 import moment = require('moment');
-import { HearingPart } from '../models/hearing-part';
+import { v4 as uuid } from 'uuid';
 
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
 let hearingPartService: HearingPartService;
 let httpMock: HttpTestingController;
 
-const hearingPartResponse = {
+const hearingPartResponse: HearingPartResponse = {
     version: 2,
     id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
     caseNumber: 'number-2018-08-27T09:55:24.172Z',
     caseTitle: 'title-2018-08-27T09:55:24.172Z',
-    caseType: 'SCLAIMS',
-    hearingType: 'Preliminary Hearing',
+    caseTypeCode: 'SCLAIMS',
+    hearingTypeCode: 'Preliminary Hearing',
     duration: 'PT30M',
     scheduleStart: '2018-08-27T09:55:24.172Z',
     scheduleEnd: '2018-09-26T09:55:24.174Z',
     reservedJudgeId: null,
     communicationFacilitator: null,
-    start: null,
-    createdAt: '2018-08-27T10:40:48.824Z',
     priority: null,
-    session: null,
+    deleted: false
 };
 
 const normalizedHearingPartsResponse = {
@@ -38,9 +39,9 @@ const normalizedHearingPartsResponse = {
                 caseTitle: 'title-2018-08-27T09:55:24.172Z',
                 caseType: 'SCLAIMS',
                 hearingType: 'Preliminary Hearing',
-                duration: moment.duration('PT30M'),
-                scheduleStart: moment('2018-08-27T09:55:24.172Z'),
-                scheduleEnd: moment('2018-09-26T09:55:24.174Z'),
+                duration: 'PT30M',
+                scheduleStart: '2018-08-27T09:55:24.172Z',
+                scheduleEnd: '2018-09-26T09:55:24.174Z',
                 reservedJudgeId: null,
                 communicationFacilitator: null,
                 start: null,
@@ -63,9 +64,9 @@ const normalizedHearingPartResponse = {
                 caseTitle: 'title-2018-08-27T09:55:24.172Z',
                 caseType: 'SCLAIMS',
                 hearingType: 'Preliminary Hearing',
-                duration: moment.duration('PT30M'),
-                scheduleStart: moment('2018-08-27T09:55:24.172Z'),
-                scheduleEnd: moment('2018-09-26T09:55:24.174Z'),
+                duration: 'PT30M',
+                scheduleStart: '2018-08-27T09:55:24.172Z',
+                scheduleEnd: '2018-09-26T09:55:24.174Z',
                 reservedJudgeId: null,
                 communicationFacilitator: null,
                 start: null,
@@ -89,24 +90,25 @@ const sessionAssignment = {
 
 const hearingParts = [hearingPartResponse];
 
-const hearingPart = {
-    version: 2,
+const createHearingPartRequest: CreateHearingPartRequest = {
     id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
     caseNumber: 'number-2018-08-27T09:55:24.172Z',
     caseTitle: 'title-2018-08-27T09:55:24.172Z',
-    caseType: 'SCLAIMS',
-    hearingType: 'Preliminary Hearing',
+    caseTypeCode: 'SCLAIMS',
+    hearingTypeCode: 'Preliminary Hearing',
     duration: moment.duration('PT30M'),
     scheduleStart: moment('2018-08-27T09:55:24.172Z'),
     scheduleEnd: moment('2018-09-26T09:55:24.174Z'),
     reservedJudgeId: null,
     communicationFacilitator: null,
-    start: null,
-    createdAt: '2018-08-27T10:40:48.824Z',
     priority: null,
-    session: null,
-    userTransactionId: null
-} as HearingPart;
+    userTransactionId: uuid()
+};
+
+const updateHearingPartRequest: UpdateHearingPartRequest = {
+    ...createHearingPartRequest,
+    version: 1
+};
 
 describe('HearingPartService', () => {
     beforeEach(() => {
@@ -172,7 +174,7 @@ describe('HearingPartService', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing-part/create`;
 
         it('should build proper url', () => {
-            hearingPartService.createListing(hearingPart).subscribe();
+            hearingPartService.createListing(createHearingPartRequest).subscribe();
 
             httpMock.expectOne(expectedUrl).flush(hearingPartResponse);
         });
@@ -182,7 +184,7 @@ describe('HearingPartService', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing-part/update`;
 
         it('should build proper url', () => {
-            hearingPartService.updateListing(hearingPart).subscribe();
+            hearingPartService.updateListing(updateHearingPartRequest).subscribe();
 
             httpMock.expectOne(expectedUrl).flush(hearingPartResponse);
         });

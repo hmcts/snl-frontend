@@ -10,7 +10,7 @@ let session: SessionViewModel;
 function createHearingPart(duration: moment.Duration = moment.duration('PT20M')) {
     return {
         id: undefined,
-        session: undefined,
+        sessionId: undefined,
         caseNumber: undefined,
         caseTitle: undefined,
         caseType: undefined,
@@ -86,7 +86,7 @@ describe('SessionsStatisticsService', () => {
                 person: undefined,
                 sessionType: undefined,
                 caseType: undefined,
-                hearingParts: [] as [HearingPartViewModel],
+                hearingParts: [],
                 jurisdiction: undefined,
                 version: undefined,
                 allocated: undefined,
