@@ -49,11 +49,8 @@ export class SessionsAmendFormComponent {
 
     private openTransactionDialog() {
         return this.dialog.open(TransactionDialogComponent, {
-            data: 'Amending session',
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true,
-            disableClose: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: 'Amending session'
         });
     }
 

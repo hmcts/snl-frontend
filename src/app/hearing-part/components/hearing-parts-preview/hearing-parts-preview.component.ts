@@ -143,10 +143,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle: 'Deleting hearing part' },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Deleting hearing part' }
         });
     }
 
