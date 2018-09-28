@@ -45,7 +45,7 @@ export class ListingCreateComponent implements OnInit {
     @Output() onSave = new EventEmitter();
 
     listingCreate: FormGroup;
-    communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
+    communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
@@ -55,8 +55,10 @@ export class ListingCreateComponent implements OnInit {
     get caseTypes(): CaseType[] { return this._caseTypes }
     set caseTypes(caseTypes: CaseType[]) {
         this._caseTypes = caseTypes
-        if (safe(() => this.listing.hearingPart.caseType)) {
-            this.hearings = this.getHearingTypesFromCaseType(this.listing.hearingPart.caseType);
+        const caseTypeCode = safe(() => this.listing.hearingPart.caseTypeCode)
+
+        if (caseTypeCode) {
+            this.hearings = this.getHearingTypesFromCaseType(caseTypeCode);
         }
     }
 
@@ -102,7 +104,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     edit() {
-        this.hearingPartModificationService.updateListingRequest(this.listing, this.prepareNotes());
+        this.hearingPartModificationService.updateListingRequest(this.listing);
         this.openDialog('Editing listing request');
 
         this.onSave.emit();
@@ -111,7 +113,7 @@ export class ListingCreateComponent implements OnInit {
     create() {
         this.listing.hearingPart.id = uuid();
 
-        this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
+        this.hearingPartModificationService.createListingRequest(this.listing);
         this.openDialog('Creating listing request');
     }
 
@@ -149,7 +151,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onCaseTypeChanged(event: MatSelectChange) {
-        this.listing.hearingPart.hearingType = undefined;
+        this.listing.hearingPart.hearingTypeCode = undefined;
         let newHearings = [];
 
         if (!(event.value === undefined || event.value === null)) {
@@ -178,11 +180,10 @@ export class ListingCreateComponent implements OnInit {
         return {
             hearingPart: {
                 id: undefined,
-                session: undefined,
                 caseNumber: undefined,
                 caseTitle: undefined,
-                caseType: undefined,
-                hearingType: undefined,
+                caseTypeCode: undefined,
+                hearingTypeCode: undefined,
                 duration: undefined,
                 scheduleStart: undefined,
                 scheduleEnd: undefined,
@@ -193,7 +194,6 @@ export class ListingCreateComponent implements OnInit {
                 userTransactionId: undefined,
             },
             notes: this.listingNotesConfig.defaultNotes(),
-            userTransactionId: undefined
         };
     }
 
@@ -207,12 +207,12 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearingPart.caseTitle,
                 [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
             ),
-            caseType: new FormControl(
-                this.listing.hearingPart.caseType,
+            caseTypeCode: new FormControl(
+                this.listing.hearingPart.caseTypeCode,
                 [Validators.required]
             ),
-            hearingType: new FormControl(
-                this.listing.hearingPart.hearingType,
+            hearingTypeCode: new FormControl(
+                this.listing.hearingPart.hearingTypeCode,
                 [Validators.required]
             ),
             duration: new FormControl(
