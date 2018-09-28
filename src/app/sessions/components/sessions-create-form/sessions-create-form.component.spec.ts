@@ -59,7 +59,6 @@ describe('SessionsCreateFormComponent', () => {
                 duration: 900,
                 roomId: 'rid',
                 personId: 'pid',
-                caseType: 'CaseType',
             } as SessionCreate;
 
             expect(component.createSessionForm.durationInMinutes).toEqual(15);

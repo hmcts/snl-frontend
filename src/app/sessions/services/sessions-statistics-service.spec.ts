@@ -40,7 +40,6 @@ describe('SessionsStatisticsService', () => {
                 duration: 10,
                 room: undefined,
                 person: undefined,
-                caseType: undefined,
                 sessionType: undefined,
                 hearingParts: [createHearingPart()],
                 jurisdiction: undefined,
@@ -61,7 +60,6 @@ describe('SessionsStatisticsService', () => {
                 room: undefined,
                 person: undefined,
                 sessionType: undefined,
-                caseType: undefined,
                 hearingParts: [
                     createHearingPart(moment.duration('PT20M')),
                     createHearingPart(moment.duration('PT10M')),
@@ -85,7 +83,6 @@ describe('SessionsStatisticsService', () => {
                 room: undefined,
                 person: undefined,
                 sessionType: undefined,
-                caseType: undefined,
                 hearingParts: [] as [HearingPartViewModel],
                 jurisdiction: undefined,
                 version: undefined,
@@ -114,7 +111,7 @@ describe('SessionsStatisticsService', () => {
                 .toEqual(0);
         });
 
-        it('should throw error when params are undefined', () => {
+        it('should throw error when params are undefined ', () => {
             expect(() => {
                 sessionsStatisticsService.calculateUtilizedDuration(undefined, undefined);
             }).toThrow();

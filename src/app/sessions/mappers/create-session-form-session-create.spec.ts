@@ -5,7 +5,6 @@ import * as moment from 'moment';
 
 const personId = 'some-person-id';
 const roomId = 'some-room-id';
-const caseType = 'some-case-type';
 const sessionTypeCode = 'some-session-type-code';
 const durationInSeconds = 1800
 const durationInMinutes = durationInSeconds / 60
@@ -19,7 +18,6 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
                 userTransactionId: 'some-user-transaction',
                 personId,
                 roomId,
-                caseType,
                 sessionTypeCode,
                 duration: durationInSeconds,
                 start: now
@@ -54,7 +52,6 @@ describe('CreateSessionFormSessionCreate Mapper', () => {
                 userTransactionId: undefined,
                 personId,
                 roomId,
-                caseType: null,
                 sessionTypeCode,
                 duration: durationInSeconds,
                 start: now
