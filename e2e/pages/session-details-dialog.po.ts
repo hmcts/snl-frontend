@@ -1,13 +1,27 @@
 import { ElementHelper } from '../utils/element-helper';
 import { by, element } from 'protractor';
+import { Logger } from '../utils/logger';
 
 export class SessionDetailsDialogPage {
   private elementHelper = new ElementHelper();
 
   async isDialogWithTextsDisplayed(...text: string[]): Promise<boolean> {
-    const eventsWrapper = element.all(by.css('app-details-dialog'));
-    const elementWithValues = await this.elementHelper.elementThatContains(eventsWrapper, ...text);
-    return await elementWithValues.isDisplayed();
+    Logger.log(`Verifying if Session Details Dialog is displayed with values: ${JSON.stringify(text)}`)
+    const eventsWrapper = await element(by.css('app-details-dialog'));
+    await this.elementHelper.browserWaitElementVisible(eventsWrapper);
+    let containsProperText = true;
+    await eventsWrapper.getText().then(dialogText => {
+        Logger.log(`Session Details Dialog inner text: ${dialogText}`)
+
+        text.forEach(textEntry => {
+          Logger.log(`Verifying if inner Session Details Dialog text includes: ${textEntry}`)
+          if (!dialogText.includes(textEntry)) {
+              Logger.log(`Inner Session Details Dialog text DOES NOT INCLUDE: ${textEntry}`)
+              containsProperText = false;
+          }
+        });
+    });
+    return await eventsWrapper.isDisplayed() && containsProperText;
   }
 
   async close() {
