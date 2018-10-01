@@ -89,8 +89,9 @@ export class ListingCreateComponent implements OnInit {
                 this.initiateListing();
             }
             this.setFormGroup();
-            this.initiateNotes();
         });
+
+        this.initiateNotes();
     }
 
     ngOnInit() {
