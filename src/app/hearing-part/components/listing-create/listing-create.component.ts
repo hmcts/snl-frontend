@@ -25,6 +25,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-listing-create',
@@ -44,6 +45,7 @@ export class ListingCreateComponent implements OnInit {
 
     @Output() onSave = new EventEmitter();
 
+    noteViewModels: NoteViewmodel[];
     listingCreate: FormGroup;
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
@@ -87,6 +89,7 @@ export class ListingCreateComponent implements OnInit {
                 this.initiateListing();
             }
             this.setFormGroup();
+            this.initiateNotes();
         });
     }
 
@@ -195,6 +198,10 @@ export class ListingCreateComponent implements OnInit {
             },
             notes: this.listingNotesConfig.defaultNotes(),
         };
+    }
+
+    private initiateNotes() {
+        this.noteViewModels = this.listing.notes.map(getNoteViewModel);
     }
 
     private setFormGroup() {

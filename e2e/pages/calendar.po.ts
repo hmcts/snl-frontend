@@ -8,10 +8,20 @@ export class CalendarPage {
     return await element.all(this.calendarEntryClass).count();
   }
 
+  async clickNextButton() {
+    await element(by.className('fc-next-button')).click();
+  }
+
+  async clickPrevButton() {
+      await element(by.className('fc-prev-button')).click();
+  }
+
   async openListView() {
     // Due some reasons events in calendar aren't displayed until some action will be taken
     // workaround for it is to select already selected view mode (month/week/day/list)
     await element(by.className('fc-listMonth-button')).click();
+    await this.clickPrevButton();
+    await this.clickNextButton();
     await browser
       .wait(
         ExpectedConditions.visibilityOf(element.all(this.calendarEntryClass).first()),

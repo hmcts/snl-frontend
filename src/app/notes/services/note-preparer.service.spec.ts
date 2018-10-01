@@ -16,12 +16,13 @@ let alreadyExistentNote = {
 } as Note;
 
 describe('NotePreparerService', () => {
-    describe('When preparing the notes', () => {
-        let service: NotesPreparerService;
+    let service: NotesPreparerService;
 
-        beforeEach(() => {
-            service = new NotesPreparerService();
-        })
+    beforeEach(() => {
+        service = new NotesPreparerService();
+    })
+
+    describe('When preparing the notes', () => {
 
         it('missing uuids should be generated', () => {
             let notes = service.prepare([note, note, note], 'parent-id', 'entity-name');
@@ -58,5 +59,53 @@ describe('NotePreparerService', () => {
                 expect(n.entityType).toEqual('entity-name');
             })
         });
+    });
+
+    describe('Removing empty notes', () => {
+        it('should not remove notes that have content length !== 0', () => {
+
+            let noteWithContentUndefined = {
+                ...note,
+                content: undefined
+            } as Note;
+
+            let noteWithContentLengthNonZero = {
+                ...note,
+                content: 'non zero content'
+            } as Note;
+
+            let notes = service.removeEmptyNotes([noteWithContentUndefined, noteWithContentLengthNonZero]);
+
+            expect(notes.length).toEqual(1);
+        })
+
+        it('should remove notes that have content length = 0', () => {
+
+            let noteWithContentLengthZero = {
+                ...note,
+                content: ''
+            } as Note;
+
+            let notes = service.removeEmptyNotes([noteWithContentLengthZero]);
+
+            expect(notes.length).toEqual(0);
+        })
+
+        it('should remove notes that have content undefined or null', () => {
+
+            let noteWithContentUndefined = {
+                ...note,
+                content: undefined
+            } as Note;
+
+            let noteWithContentNull = {
+                ...note,
+                content: null
+            } as Note;
+
+            let notes = service.removeEmptyNotes([noteWithContentUndefined, noteWithContentNull]);
+
+            expect(notes.length).toEqual(0);
+        })
     })
 });

@@ -13,4 +13,8 @@ describe('When converting note to noteviewmodel', () => {
     it('the \'modified\' flag should be set by default to \'false\'', () => {
         expect(getNoteViewModel(note).modified).toEqual(false)
     });
+
+    it('the \'inputLabel\' string should be set by default to value of \'type\'', () => {
+        expect(getNoteViewModel(note).inputLabel).toEqual(note.type)
+    });
 });
