@@ -26,6 +26,7 @@ import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
 import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { Note } from '../../../notes/models/note.model';
 
 @Component({
     selector: 'app-listing-create',
@@ -98,6 +99,10 @@ export class ListingCreateComponent implements OnInit {
         this.listing.notes.map(getNoteViewModel).forEach(n => {
             if (n.type === 'Other note') {
                 this.freeTextNoteViewModels.push(n);
+                if (n.id !== undefined) {
+                    n.readonly = true;
+                    n.displayCreationDetails = true;
+                }
             } else {
                 this.noteViewModels.push(n);
             }
@@ -191,9 +196,16 @@ export class ListingCreateComponent implements OnInit {
             return alreadyExistingNote || defaultNote
         });
 
-        let newFreeTextNote = this.listingNotesConfig.getNewFreeTextNote();
-        console.log([...defaultNotes, ...hp.notes, newFreeTextNote]);
-        return [newFreeTextNote, ...defaultNotes, ...hp.notes];
+        let notes = [...defaultNotes, ...hp.notes];
+        if (this.containsOldFreeTextNote(notes)) {
+            return [this.listingNotesConfig.getNewFreeTextNote(), ...notes];
+        } else {
+            return notes;
+        }
+    }
+
+    private containsOldFreeTextNote(notes: Note[]) {
+        return notes.find(n => n.type === 'Other note' && n.id === undefined) === undefined;
     }
 
     private initiateListing() {

@@ -2,7 +2,9 @@ import { Note } from './note.model';
 
 export interface NoteViewmodel extends Note {
     modified: boolean,
-    inputLabel: string
+    inputLabel: string,
+    readonly: boolean,
+    displayCreationDetails: boolean
 }
 
 export function getNoteViewModel(note: Note): NoteViewmodel {
@@ -11,8 +13,12 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         content: note.content,
         type: note.type,
         modified: false,
+        readonly: false,
         entityId: note.entityId,
         entityType: note.entityType,
-        inputLabel: note.type
+        inputLabel: note.type,
+        createdAt: note.createdAt,
+        modifiedBy: note.modifiedBy,
+        displayCreationDetails: false
     } as NoteViewmodel
 }
