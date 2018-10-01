@@ -10,16 +10,15 @@ export class SessionDetailsDialogPage {
     const eventsWrapper = await element(by.css('app-details-dialog'));
     await this.elementHelper.browserWaitElementVisible(eventsWrapper);
     let containsProperText = true;
-    await eventsWrapper.getText().then(dialogText => {
-        Logger.log(`Session Details Dialog inner text: ${dialogText}`)
+    const dialogText = await eventsWrapper.getText();
+    Logger.log(`Session Details Dialog inner text: ${dialogText}`)
 
-        text.forEach(textEntry => {
-          Logger.log(`Verifying if inner Session Details Dialog text includes: ${textEntry}`)
-          if (!dialogText.includes(textEntry)) {
-              Logger.log(`Inner Session Details Dialog text DOES NOT INCLUDE: ${textEntry}`)
-              containsProperText = false;
-          }
-        });
+    text.forEach(textEntry => {
+      Logger.log(`Verifying if inner Session Details Dialog text includes: ${textEntry}`)
+      if (!dialogText.includes(textEntry)) {
+          Logger.log(`Inner Session Details Dialog text DOES NOT INCLUDE: ${textEntry}`)
+          containsProperText = false;
+      }
     });
     return await eventsWrapper.isDisplayed() && containsProperText;
   }
