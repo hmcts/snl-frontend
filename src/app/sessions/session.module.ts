@@ -34,6 +34,8 @@ import { SessionsListingsSearchComponent } from './containers/sessions-listings-
 import { SessionsFilterService } from './services/sessions-filter-service';
 import { SessionsAmendFormComponent } from './components/sessions-amend-form/sessions-amend-form.component';
 import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
+import { NotesModule } from '../notes/notes.module';
+import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -63,6 +65,7 @@ export const COMPONENTS = [
     HearingPartModule,
     TransactionsModule,
     CoreModule,
+    NotesModule,
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
@@ -86,6 +89,7 @@ export const COMPONENTS = [
   entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent, SessionAmendDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService, SessionsCreationService, SessionsFilterService]
+  providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService,
+      SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration]
 })
 export class SessionModule { }

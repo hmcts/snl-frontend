@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { getNoteFromViewModel, Note } from '../../models/note.model';
-import { getNoteViewModel, NoteViewmodel } from '../../models/note.viewmodel';
+import { NoteViewmodel } from '../../models/note.viewmodel';
 
 @Component({
   selector: 'app-note-list',
@@ -13,8 +13,8 @@ export class NoteListComponent {
     public noteViewModels: NoteViewmodel[];
     @Input() disabled: boolean;
 
-    @Input() set notes(notes: Note[]) {
-        this.noteViewModels = notes.map(getNoteViewModel);
+    @Input() set notes(notes: NoteViewmodel[]) {
+        this.noteViewModels = notes;
     };
 
     getModifiedNotes(): Note[] {
