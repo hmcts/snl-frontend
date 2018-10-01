@@ -31,19 +31,20 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import * as notesActions from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
-import { HearingPartViewModel, mapToHearingPart } from '../../../hearing-part/models/hearing-part.viewmodel';
+import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { Priority } from '../../../hearing-part/models/priority-model';
 import { CaseType } from '../../../core/reference/models/case-type';
-import { HearingPart } from '../../../hearing-part/models/hearing-part';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
+import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
 let store: Store<fromHearingParts.State>;
 let mockedFullSession: SessionViewModel[];
 const nowMoment = moment();
+const nowISOSting = nowMoment.toISOString();
 const roomId = 'some-room-id';
 const judgeId = 'some-judge-id';
 const stubCaseType = {code: 'some-case-type-code', description: 'some-case-type'} as CaseType;
@@ -52,10 +53,11 @@ const stubSessionType = {code: 'some-session-type-code', description: 'some-sess
 const stubSessionTypes = [stubSessionType];
 const stubHearingType = {code: 'some-hearing-type-code', description: 'some-hearing-type'} as HearingType;
 const stubHearingTypes = [stubHearingType];
-const sessionDuration = 30;
-const overListedDuration = 31;
-const notListedDuration = 0;
-const customDuration = 16;
+const durationStringFormat = 'PT30M';
+const sessionDuration = moment.duration(durationStringFormat).asMilliseconds();
+const overListedDuration = moment.duration('PT31M').asMilliseconds();
+const notListedDuration = moment.duration('PT0M').asMilliseconds();
+const customDuration = moment.duration('PT16M').asMilliseconds();
 const mockedRooms: Room[] = [{ id: roomId, name: 'some-room-name', roomTypeCode: 'code' }];
 const mockedJudges: Judge[] = [{ id: judgeId, name: 'some-judge-name' }];
 const mockedNotes: Note[] = [
@@ -67,16 +69,33 @@ const mockedNotes: Note[] = [
         entityType: 'ListingRequest'
     }];
 
+const mockedHearingPartResponse: HearingPartResponse = {
+  id: 'some-id',
+  sessionId: undefined,
+  caseNumber: 'abc123',
+  caseTitle: 'some-case-title',
+  caseTypeCode: stubCaseType.code,
+  hearingTypeCode: stubHearingType.code,
+  duration: durationStringFormat,
+  scheduleStart: nowISOSting,
+  scheduleEnd: nowISOSting,
+  version: 2,
+  priority: Priority.Low,
+  reservedJudgeId: judgeId,
+  communicationFacilitator: 'interpreter',
+  deleted: false
+}
+
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
-    session: undefined,
+    sessionId: undefined,
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
     caseType: stubCaseType,
     hearingType: stubHearingType,
-    duration: moment.duration(sessionDuration),
-    scheduleStart: nowMoment,
-    scheduleEnd: nowMoment,
+    duration: moment.duration(durationStringFormat),
+    scheduleStart: moment(nowISOSting),
+    scheduleEnd: moment(nowISOSting),
     version: 2,
     priority: Priority.Low,
     reservedJudgeId: judgeId,
@@ -85,18 +104,11 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudge: mockedJudges[0]
 };
 
-const mockedUnlistedHearingPart: HearingPart = {
-    ...mapToHearingPart(mockedUnlistedHearingPartVM),
-};
-
-const mockedUnlistedHearingPartsVM: HearingPartViewModel[] = [mockedUnlistedHearingPartVM];
-const mockedUnlistedHearingParts: HearingPart[] = [mockedUnlistedHearingPart];
-
 // same as unlisted, but with session set to matching id in Session
-let mockedListedHearingPartVM = { ...mockedUnlistedHearingPartVM, session: 'some-session-id' };
-let mockedListedHearingPart = { ...mockedUnlistedHearingPart, session: 'some-session-id' };
+let mockedListedHearingPartVM: HearingPartViewModel = { ...mockedUnlistedHearingPartVM, sessionId: 'some-session-id' };
+let mockedListedHearingPart: HearingPartResponse = { ...mockedHearingPartResponse, sessionId: 'some-session-id' };
 const mockedListedHearingPartsVM: HearingPartViewModel[] = [mockedListedHearingPartVM];
-const mockedListedHearingParts: HearingPart[] = [mockedListedHearingPart];
+const mockedListedHearingPartResponses: HearingPartResponse[] = [mockedListedHearingPart];
 
 const mockedSessions: Session[] = [
   {
@@ -152,12 +164,12 @@ describe('SessionsListingsSearchComponent', () => {
     it('should fetch hearingParts', () => {
       store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
-      store.dispatch(new hearingPartActions.SearchComplete(mockedUnlistedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete([mockedHearingPartResponse]));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearingParts$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual(mockedUnlistedHearingPartsVM);
+        expect(hearingParts).toEqual([mockedUnlistedHearingPartVM]);
       });
     });
     it('should fetch rooms', () => {
@@ -177,7 +189,7 @@ describe('SessionsListingsSearchComponent', () => {
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
       store.dispatch(new referenceDataActions.GetAllSessionTypeComplete(stubSessionTypes));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
-      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingParts));
+      store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingPartResponses));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
       store.dispatch(new sessionsActions.SearchComplete(mockedSessions));
@@ -191,10 +203,10 @@ describe('SessionsListingsSearchComponent', () => {
       expect(component.endDate).toBeDefined();
     });
     it('should set null to selectedHearingPart', () => {
-      expect(component.selectedHearingPart).toEqual({});
+      expect(component.selectedHearingPart).toBeUndefined();
     });
     it('should set selectedSession to empty obj', () => {
-      expect(component.selectedSession).toEqual({});
+      expect(component.selectedSession).toBeUndefined();
     });
   });
 
@@ -318,7 +330,7 @@ describe('SessionsListingsSearchComponent', () => {
   describe('assignToSession', () => {
     it('should dispatch AssignToSession action', () => {
       component.selectedSession = mockedFullSession[0];
-      component.selectedHearingPart = mockedUnlistedHearingPart;
+      component.selectedHearingPart = mockedListedHearingPartVM;
       component.assignToSession();
 
       const passedObj = storeSpy.calls.first().args[0];
@@ -328,10 +340,10 @@ describe('SessionsListingsSearchComponent', () => {
         passedObj instanceof hearingPartActions.AssignToSession
       ).toBeTruthy();
       expect(sessionAssignmentPayload.hearingPartId).toEqual(
-        mockedUnlistedHearingPart.id
+        mockedListedHearingPartVM.id
       );
       expect(sessionAssignmentPayload.hearingPartVersion).toEqual(
-          mockedUnlistedHearingPart.version
+        mockedListedHearingPartVM.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
       expect(sessionAssignmentPayload.sessionId).toEqual(
@@ -347,7 +359,7 @@ describe('SessionsListingsSearchComponent', () => {
   describe('selectSession', () => {
     it('should set selectSession', () => {
       const expectedSelectedSession = mockedFullSession[0];
-      expect(component.selectedSession).toEqual({});
+      expect(component.selectedSession).toBeUndefined();
       component.selectSession(expectedSelectedSession);
       expect(component.selectedSession).toEqual(expectedSelectedSession);
     });
@@ -357,19 +369,19 @@ describe('SessionsListingsSearchComponent', () => {
     describe('when selectedHearingPart is not null and selectedSession is set', () => {
       it('should return true ', () => {
         component.selectedSession = mockedFullSession[0];
-        component.selectedHearingPart = mockedUnlistedHearingPart;
+        component.selectedHearingPart = mockedUnlistedHearingPartVM;
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
     describe('when either selectedHearingPart is not null or selectedSession is not set', () => {
       it('should return false ', () => {
-        component.selectedSession = {};
-        component.selectedHearingPart = mockedUnlistedHearingPart;
+        component.selectedSession = undefined;
+        component.selectedHearingPart = mockedUnlistedHearingPartVM;
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {
-        component.selectedSession = {};
-        component.selectedHearingPart = {};
+        component.selectedSession = undefined;
+        component.selectedHearingPart = undefined;
         expect(component.assignButtonEnabled()).toEqual(false);
       });
     });
@@ -411,7 +423,7 @@ function defaultFullMockedSession(): SessionViewModel {
     hearingParts: mockedListedHearingPartsVM,
     jurisdiction: 'some jurisdiction',
     version: 1,
-    allocated: moment.duration('PT0.03S'),
+    allocated: moment.duration('PT30M'),
     utilization: 100,
     available: moment.duration('PT0M')
   };

@@ -40,11 +40,11 @@ function stateWith(hearingPartReducer): State {
 function generateHearingParts(id: string): HearingPart {
     return {
         id: id,
-        session: null,
+        sessionId: null,
         caseNumber: null,
         caseTitle: null,
-        caseType: null,
-        hearingType: null,
+        caseTypeCode: null,
+        hearingTypeCode: null,
         duration: null,
         scheduleStart: null,
         scheduleEnd: null,
@@ -52,6 +52,6 @@ function generateHearingParts(id: string): HearingPart {
         priority: null,
         reservedJudgeId: null,
         communicationFacilitator: null,
-        userTransactionId: null
+        deleted: false
     }
 };
