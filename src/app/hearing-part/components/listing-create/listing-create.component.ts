@@ -26,6 +26,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { Note } from '../../../notes/models/note.model';
 
 const DURATION_UNIT = 'minute';
 
@@ -39,7 +40,7 @@ export class ListingCreateComponent implements OnInit {
 
     @Input() set data(value: ListingCreate) {
         this.listing = value;
-        this.listing.notes = this.setNotesIfExist(value);
+        this.listing.notes = this.setNotes(value);
         this.initiateForm();
     }
 
@@ -156,8 +157,8 @@ export class ListingCreateComponent implements OnInit {
         this.hearings = newHearings;
     }
 
-    private setNotesIfExist(hp: ListingCreate) {
-        return this.listingNotesConfig.defaultNotes().map(note => {
+    private setNotes(hp: ListingCreate) {
+        let defaultNotes = this.listingNotesConfig.defaultNotes().map(note => {
             const obj = hp.notes.find(note1 => note1.type === note.type);
             if (obj === undefined) {
                 return note;
@@ -165,6 +166,14 @@ export class ListingCreateComponent implements OnInit {
                 return obj;
             }
         });
+
+        defaultNotes.push({
+            id: undefined,
+            content: '',
+            type: 'Other note'
+        } as Note);
+
+        return defaultNotes;
     }
 
     private initiateListing() {
@@ -202,6 +211,7 @@ export class ListingCreateComponent implements OnInit {
 
     private initiateNotes() {
         this.noteViewModels = this.listing.notes.map(getNoteViewModel);
+        this.noteViewModels.filter(n => n.type === 'Other note').forEach(n => this.setCustomInputLabel(n, 'Note'));
     }
 
     private initiateForm() {
@@ -260,5 +270,10 @@ export class ListingCreateComponent implements OnInit {
 
     afterCreate() {
         this.initiateListing();
+    }
+
+    private setCustomInputLabel(note: NoteViewmodel, inputLabel: string) {
+        note.inputLabel = inputLabel;
+        return note;
     }
 }
