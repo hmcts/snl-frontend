@@ -32,26 +32,24 @@ const hearingPartResponse: HearingPartResponse = {
 const normalizedHearingPartsResponse = {
     entities: {
         hearingParts: {
-            'ba766510-e898-4919-8d3b-25f3e1b932aa': {
+            'ba766510-e898-4919-8d3b-25f3e1b932aa':
+            {
                 version: 2,
                 id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
                 caseNumber: 'number-2018-08-27T09:55:24.172Z',
                 caseTitle: 'title-2018-08-27T09:55:24.172Z',
-                caseType: 'SCLAIMS',
-                hearingType: 'Preliminary Hearing',
+                caseTypeCode: 'SCLAIMS',
+                hearingTypeCode: 'Preliminary Hearing',
                 duration: 'PT30M',
                 scheduleStart: '2018-08-27T09:55:24.172Z',
                 scheduleEnd: '2018-09-26T09:55:24.174Z',
                 reservedJudgeId: null,
                 communicationFacilitator: null,
-                start: null,
-                createdAt: '2018-08-27T10:40:48.824Z',
                 priority: null,
-                session: null
+                deleted: false
             }
-    }
-},
-    result: ['ba766510-e898-4919-8d3b-25f3e1b932aa']
+        }
+    }, result: ['ba766510-e898-4919-8d3b-25f3e1b932aa']
 };
 
 const normalizedHearingPartResponse = {
@@ -62,21 +60,18 @@ const normalizedHearingPartResponse = {
                 id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
                 caseNumber: 'number-2018-08-27T09:55:24.172Z',
                 caseTitle: 'title-2018-08-27T09:55:24.172Z',
-                caseType: 'SCLAIMS',
-                hearingType: 'Preliminary Hearing',
+                caseTypeCode: 'SCLAIMS',
+                hearingTypeCode: 'Preliminary Hearing',
                 duration: 'PT30M',
                 scheduleStart: '2018-08-27T09:55:24.172Z',
                 scheduleEnd: '2018-09-26T09:55:24.174Z',
                 reservedJudgeId: null,
                 communicationFacilitator: null,
-                start: null,
-                createdAt: '2018-08-27T10:40:48.824Z',
                 priority: null,
-                session: null
+                deleted: false
             }
         }
-    },
-    result: 'ba766510-e898-4919-8d3b-25f3e1b932aa'
+    }, result: 'ba766510-e898-4919-8d3b-25f3e1b932aa'
 };
 
 const sessionAssignment = {

@@ -101,7 +101,6 @@ export const getFullSessions = createSelector(
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
-                caseType: undefined,
                 sessionType: sessionType,
                 hearingParts: hearingParts,
                 jurisdiction: sessionData.jurisdiction,

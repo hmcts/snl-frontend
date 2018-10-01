@@ -20,7 +20,6 @@ export const CreateSessionFormToSessionCreate = (createSessionForm: CreateSessio
     return {
         personId,
         roomId,
-        caseType: null,
         sessionTypeCode,
         duration: durationInSeconds,
         start: startDateWithTime,

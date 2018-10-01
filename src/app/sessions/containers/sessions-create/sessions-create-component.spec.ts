@@ -37,7 +37,7 @@ let store: Store<State>;
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
 let getCreatedSessionResponse = (sessionId: string) => {
-    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'caseType': 'SCLAIMS', 'room': null}
+    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'room': null}
 }
 
 let getTransactionStartedResponse = (id: string) => {
@@ -110,8 +110,7 @@ describe('SessionsCreateComponent', () => {
                 start: moment(),
                 duration: 1800,
                 roomId: null,
-                personId: null,
-                caseType: 'casetype',
+                personId: null
             } as SessionCreate;
 
             component.create(session);
@@ -140,8 +139,7 @@ describe('SessionsCreateComponent', () => {
                 start: moment(),
                 duration: 1800,
                 roomId: null,
-                personId: null,
-                caseType: 'casetype',
+                personId: null
             } as SessionCreate;
 
             component.create(session);
