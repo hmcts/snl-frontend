@@ -25,6 +25,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-listing-create',
@@ -32,7 +33,8 @@ import { safe } from '../../../utils/js-extensions';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
-    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+    @ViewChild('notesList') noteList: NoteListComponent;
+    @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
 
     @Input() set data(value: ListingCreate) {
         this.listing = value;
@@ -50,6 +52,8 @@ export class ListingCreateComponent implements OnInit {
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
     hearings: HearingType[] = [];
+    noteViewModels: NoteViewmodel[] = [];
+    freeTextNoteViewModels: NoteViewmodel[] = [];
 
     private _caseTypes: CaseType[] = [];
     get caseTypes(): CaseType[] { return this._caseTypes }
@@ -90,8 +94,19 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
+    private initiateNotes() {
+        this.listing.notes.map(getNoteViewModel).forEach(n => {
+            if (n.type === 'Other note') {
+                this.freeTextNoteViewModels.push(n);
+            } else {
+                this.noteViewModels.push(n);
+            }
+        });
+    }
+
     ngOnInit() {
         this.store.dispatch(new JudgeActions.Get());
+        this.initiateNotes();
     }
 
     save() {
@@ -122,11 +137,19 @@ export class ListingCreateComponent implements OnInit {
     }
 
     prepareNotes() {
-        return this.notePreparerService.prepare(
+        let preparedNotes = this.notePreparerService.prepare(
             this.noteList.getModifiedNotes(),
             this.listing.hearingPart.id,
             this.listingNotesConfig.entityName
         );
+
+        let preparedFreeTextNotes = this.notePreparerService.prepare(
+            this.freeTextNoteList.getModifiedNotes(),
+            this.listing.hearingPart.id,
+            this.listingNotesConfig.entityName
+        )
+
+        return [...preparedNotes, ...preparedFreeTextNotes];
     }
 
     updateDuration(durationValue) {
@@ -162,10 +185,15 @@ export class ListingCreateComponent implements OnInit {
     }
 
     private setNotesIfExist(hp: ListingCreate) {
-        return this.listingNotesConfig.defaultNotes().map(note => {
-            const obj = hp.notes.find(note1 => note1.type === note.type);
-            return obj || note
+        let defaultNotes = this.listingNotesConfig.defaultNotes().map(defaultNote => {
+            const alreadyExistingNote = hp.notes.find(note => note.type === defaultNote.type);
+            hp.notes = hp.notes.filter(n => n.id !== alreadyExistingNote.id);
+            return alreadyExistingNote || defaultNote
         });
+
+        let newFreeTextNote = this.listingNotesConfig.getNewFreeTextNote();
+        console.log([...defaultNotes, ...hp.notes, newFreeTextNote]);
+        return [newFreeTextNote, ...defaultNotes, ...hp.notes];
     }
 
     private initiateListing() {

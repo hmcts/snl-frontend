@@ -80,7 +80,8 @@
 
             <div style="padding-right: 2em">
                 <div fxLayout="column" fxLayoutGap="10%">
-                    <app-note-list [notes]="noteViewModels"></app-note-list>
+                    <app-note-list #notesList [notes]="noteViewModels"></app-note-list>
+                    <app-note-list #freeTextNotesList [notes]="freeTextNoteViewModels"></app-note-list>
                 </div>
             </div>
 
