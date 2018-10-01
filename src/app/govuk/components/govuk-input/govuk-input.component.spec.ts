@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GovukInputComponent } from './govuk-input.component';
+import { FormsModule } from '@angular/forms';
 
 describe('GovukInputComponent', () => {
   let component: GovukInputComponent;
@@ -8,7 +9,8 @@ describe('GovukInputComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GovukInputComponent ]
+      declarations: [ GovukInputComponent ],
+        imports: [ FormsModule ]
     })
     .compileComponents();
   }));

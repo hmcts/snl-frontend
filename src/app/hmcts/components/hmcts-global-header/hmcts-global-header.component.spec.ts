@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HmctsGlobalHeaderComponent } from './hmcts-global-header.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HmctsGlobalHeaderComponent', () => {
   let component: HmctsGlobalHeaderComponent;
@@ -8,6 +9,7 @@ describe('HmctsGlobalHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+    imports: [ RouterTestingModule ],
       declarations: [ HmctsGlobalHeaderComponent ]
     })
     .compileComponents();

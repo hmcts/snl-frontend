@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
 
     error;
 
-    items = {};
+    items = [];
 
     navigation = {};
 
@@ -46,10 +46,16 @@ export class HomeComponent implements OnInit {
 
         this.navigation = {
             label: 'Scheduling and listing',
-            items: {
-                href: '/logout',
-                name: 'Logout'
-            }
+            items: [
+                {
+                    href: null,
+                    text: 'Logged in as: ' + this.security.getCurrentUser().username
+                },
+                {
+                    href: '/logout',
+                    text: 'Logout'
+                }
+            ]
         }
 
         this.serviceName = {
@@ -71,7 +77,7 @@ export class HomeComponent implements OnInit {
             items.push(
                 {
                     text: 'Listings',
-                    href: 'listings',
+                    href: null,
                     children: [
                         {
                             text: 'List Hearings',

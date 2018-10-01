@@ -313,7 +313,13 @@
             <nav class="hmcts-header__navigation" attr.aria-label="{{navigation.label}}">
                 <ul class="hmcts-header__navigation-list">
                     <li class="hmcts-header__navigation-item" *ngFor="let item of navigation.items">
-                        <a class="hmcts-header__navigation-link" routerLink="{{item.href}}">{{item.text}}</a>
+                        <a *ngIf="item.href !== undefined && item.href != null && item.href.length > 0"
+                           class="hmcts-header__navigation-link" routerLink="{{item.href}}">
+                            {{item.text}}
+                        </a>
+                        <span *ngIf="item.href === undefined || item.href === null || item.href === ''">
+                            {{item.text}}
+                        </span>
                     </li>
                 </ul>
             </nav>

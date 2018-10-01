@@ -10,7 +10,7 @@ describe('HmctsSubNavigationComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ HmctsSubNavigationComponent ],
-            imports: [RouterTestingModule]
+            imports: [ RouterTestingModule ]
         })
             .compileComponents();
     }));

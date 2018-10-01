@@ -2,11 +2,22 @@
     <div class="hmcts-primary-navigation__container">
         <ul class="hmcts-primary-navigation__list">
             <li class="hmcts-primary-navigation__item" *ngFor="let item of items">
-                <a *ngIf="item.href !== undefined && item.href.length > 0" class="hmcts-primary-navigation__link" [attr.aria-current]="item.active"
-                   [routerLink]="item.href">{{item.text}}</a>
-                <button (click)="loadSubNavigation(item.children); false">{{item.text}}</button>
+                <a *ngIf="item.href !== undefined && item.href !== null && item.href.length > 0"
+                   class="hmcts-primary-navigation__link"
+                   [attr.aria-current]="selectedNavItem.href === item.href"
+                   routerLink="{{item.href}}"
+                   (click)="selectNavItem(item)">
+                    {{item.text}}
+                </a>
+                <a *ngIf="item.children !== undefined && item.children !== null && item.children.length > 0"
+                   class="hmcts-primary-navigation__link"
+                   [attr.aria-current]="false"
+                   routerLink=""
+                   (click)="selectNavItem(item)">
+                    {{item.text}}
+                </a>
             </li>
         </ul>
     </div>
 </nav>
-<app-hmcts-sub-navigation *ngIf="showSubNavItems()" [items]="subNavItems"></app-hmcts-sub-navigation>
+<app-hmcts-sub-navigation *ngFor="let item of items" [items]="item.children" [hidden]="selectedNavItem.href !== item.href"></app-hmcts-sub-navigation>
