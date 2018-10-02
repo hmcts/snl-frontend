@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-hmcts-global-header',
@@ -15,6 +15,7 @@ export class HmctsGlobalHeaderComponent {
         items: []
     };
 
-    constructor() { }
+    constructor() {
+    }
 
 }

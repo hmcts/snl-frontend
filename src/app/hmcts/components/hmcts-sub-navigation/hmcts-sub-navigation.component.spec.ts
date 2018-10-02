@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HmctsSubNavigationComponent } from './hmcts-sub-navigation.component';
-import {RouterTestingModule} from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('HmctsSubNavigationComponent', () => {
     let component: HmctsSubNavigationComponent;
@@ -9,8 +9,8 @@ describe('HmctsSubNavigationComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ HmctsSubNavigationComponent ],
-            imports: [ RouterTestingModule ]
+            declarations: [HmctsSubNavigationComponent],
+            imports: [RouterTestingModule]
         })
             .compileComponents();
     }));
