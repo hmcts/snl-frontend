@@ -65,16 +65,13 @@ export class HomeComponent implements OnInit {
     }
 
     private buildNavigationItems() {
-        let items = [
-            {
-                text: 'Main',
-                href: '/home',
-                children: [],
-            }
-        ];
-
         if (this.isInRole('officer')) {
-            items.push(
+            return [
+                {
+                    text: 'Main',
+                    href: '/',
+                    children: [],
+                },
                 {
                     text: 'Listings',
                     href: null,
@@ -96,26 +93,63 @@ export class HomeComponent implements OnInit {
                             href: 'sessions/create'
                         },
                     ]
+                },
+                {
+                    text: 'Calendar',
+                    href: 'calendar',
+                    children: [],
+                },
+                {
+                    text: 'Planner',
+                    href: 'planner',
+                    children: [],
+                },
+                {
+                    text: 'Problems',
+                    href: 'problems',
+                    children: [],
+                },
+                {
+                    text: 'Reports',
+                    href: null,
+                    children: [
+                        {
+                            text: 'Unlisted Hearings Requests',
+                            href: 'reports/unlisted'
+                        }
+                    ]
                 }
-            );
+            ];
         }
 
-        return items.concat([
-            {
-                text: 'Calendar',
-                href: 'calendar',
-                children: [],
-            },
-            {
-                text: 'Planner',
-                href: 'planner',
-                children: [],
-            },
-            {
-                text: 'Problems',
-                href: 'problems',
-                children: [],
-            }
-        ]);
+        if (this.isInRole('judge')) {
+            return [
+                {
+                    text: 'Main',
+                    href: '/home/judge/main',
+                    children: [],
+                },
+                {
+                    text: 'Calendar',
+                    href: '/home/judge/diary-calendar',
+                    children: [],
+                },
+                {
+                    text: 'Problems',
+                    href: 'problems',
+                    children: [],
+                },
+                {
+                    text: 'Reports',
+                    href: null,
+                    children: [
+                        {
+                            text: 'Listed Hearings Requests',
+                            href: 'reports/listed'
+                        }
+                    ]
+                }
+            ];
+        }
     }
 }
