@@ -57,6 +57,19 @@ export class API {
         return responseBody;
     }
 
+    static async getHearingParts() {
+        await API.login();
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/hearing-part`,
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
+        return responseBody;
+    }
+
     private static async login() {
         if (API.headers.Authorization.length > 0) { return }
 
