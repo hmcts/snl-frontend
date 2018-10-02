@@ -80,8 +80,7 @@
 
             <div style="padding-right: 2em">
                 <div fxLayout="column" fxLayoutGap="10%">
-                    <app-note-list #notesList [notes]="noteViewModels"></app-note-list>
-                    <app-note-list class="free-text-notes-box" #freeTextNotesList [notes]="freeTextNoteViewModels"></app-note-list>
+                    <app-listing-note-list #notesComponent [notes]="this.listing.notes" [entityId]="this.listing.hearingPart.id"></app-listing-note-list>
                 </div>
             </div>
 

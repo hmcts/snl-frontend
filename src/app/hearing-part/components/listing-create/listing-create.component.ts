@@ -7,9 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
-import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
@@ -25,8 +23,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
-import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
-import { Note } from '../../../notes/models/note.model';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 
 @Component({
     selector: 'app-listing-create',
@@ -34,12 +32,10 @@ import { Note } from '../../../notes/models/note.model';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
-    @ViewChild('notesList') noteList: NoteListComponent;
-    @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
+    @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
     @Input() set data(value: ListingCreate) {
         this.listing = value;
-        this.listing.notes = this.setNotesIfExist(value);
         this.setFormGroup();
     }
 
@@ -54,7 +50,6 @@ export class ListingCreateComponent implements OnInit {
     judges: Judge[] = [];
     hearings: HearingType[] = [];
     noteViewModels: NoteViewmodel[] = [];
-    freeTextNoteViewModels: NoteViewmodel[] = [];
 
     private _caseTypes: CaseType[] = [];
     get caseTypes(): CaseType[] { return this._caseTypes }
@@ -74,9 +69,7 @@ export class ListingCreateComponent implements OnInit {
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
-                private readonly notePreparerService: NotesPreparerService,
-                private readonly hearingPartModificationService: HearingPartModificationService,
-                readonly listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly hearingPartModificationService: HearingPartModificationService) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = safe(error.message) || '';
@@ -97,7 +90,6 @@ export class ListingCreateComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new JudgeActions.Get());
-        this.initiateNotes();
     }
 
     save() {
@@ -124,24 +116,9 @@ export class ListingCreateComponent implements OnInit {
     }
 
     createNotes() {
-        this.store.dispatch(new fromNotes.CreateMany(this.prepareNotes()));
+        this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
     }
 
-    prepareNotes() {
-        let preparedNotes = this.notePreparerService.prepare(
-            this.noteList.getModifiedNotes(),
-            this.listing.hearingPart.id,
-            this.listingNotesConfig.entityName
-        );
-
-        let preparedFreeTextNotes = this.notePreparerService.prepare(
-            this.freeTextNoteList.getModifiedNotes(),
-            this.listing.hearingPart.id,
-            this.listingNotesConfig.entityName
-        );
-
-        return [...preparedNotes, ...preparedFreeTextNotes];
-    }
 
     updateDuration(durationValue) {
         if (durationValue !== undefined && durationValue !== null) {
@@ -175,27 +152,6 @@ export class ListingCreateComponent implements OnInit {
         this.hearings = newHearings;
     }
 
-    private setNotesIfExist(hp: ListingCreate) {
-        let defaultNotes = this.listingNotesConfig.defaultNotes().map(defaultNote => {
-            const alreadyExistingNote = hp.notes.find(note => note.type === defaultNote.type);
-            if (alreadyExistingNote !== undefined) {
-                hp.notes = hp.notes.filter(n => n.id !== alreadyExistingNote.id);
-            }
-            return alreadyExistingNote || defaultNote
-        });
-
-        let notes = [...defaultNotes, ...hp.notes];
-        if (this.containsOldFreeTextNote(notes)) {
-            return [this.listingNotesConfig.getNewFreeTextNote(), ...notes];
-        } else {
-            return notes;
-        }
-    }
-
-    private containsOldFreeTextNote(notes: Note[]) {
-        return notes.find(n => n.type === 'Other note' && n.id === undefined) === undefined;
-    }
-
     private initiateListing() {
         this.listing = this.defaultListing();
     }
@@ -221,7 +177,7 @@ export class ListingCreateComponent implements OnInit {
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
             },
-            notes: this.listingNotesConfig.defaultNotes(),
+            notes: []
         };
     }
 
@@ -263,35 +219,6 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
-    private initiateNotes() {
-        this.listing.notes.map(getNoteViewModel)
-            .map(this.disableShowingCreationDetailsOnNewNotes)
-            .map(this.makeExistingFreetextNotesReadonly)
-            .forEach(this.disposeToProperArrays);
-    }
-
-    private disableShowingCreationDetailsOnNewNotes(note: NoteViewmodel): NoteViewmodel {
-        if (note.id === undefined) {
-            note.displayCreationDetails = false;
-        }
-        return note;
-    }
-
-    private makeExistingFreetextNotesReadonly(n: NoteViewmodel): NoteViewmodel {
-        if (n.type === 'Other note' && n.id !== undefined) {
-            n.readonly = true;
-        }
-
-        return n;
-    }
-
-    private disposeToProperArrays = (n: NoteViewmodel) => {
-        if (n.type === 'Other note') {
-            this.freeTextNoteViewModels.push(n);
-        } else {
-            this.noteViewModels.push(n);
-        }
-    }
 
     afterClosed(confirmed) {
         if (confirmed) {

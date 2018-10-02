@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { DraggableDialog } from '../../../core/dialog/draggable-dialog';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { NoteViewmodel } from '../../models/note.viewmodel';
 
 @Component({
     selector: 'app-notes-list-dialog',
@@ -9,7 +10,19 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class NotesListDialogComponent extends DraggableDialog {
 
-    constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: string) {
+    public noteViewModels: NoteViewmodel[] = [];
+    public freeTextNoteViewModels: NoteViewmodel[] = [];
+    constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: NoteViewmodel[]) {
         super(dialogRef);
+
+        this.data.forEach(this.disposeToProperArrays);
+    }
+
+    protected disposeToProperArrays = (n: NoteViewmodel) => {
+        if (n.type === 'Other note') {
+            this.freeTextNoteViewModels.push(n);
+        } else {
+            this.noteViewModels.push(n);
+        }
     }
 }
