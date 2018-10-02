@@ -132,7 +132,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     openEditDialog(hearingPart: HearingPartViewModel) {
-        console.log(hearingPart.notes);
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
                 hearingPart: mapToUpdateHearingPartRequest(hearingPart),

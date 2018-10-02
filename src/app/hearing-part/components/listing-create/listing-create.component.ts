@@ -95,20 +95,6 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
-    private initiateNotes() {
-        this.listing.notes.map(getNoteViewModel).forEach(n => {
-            if (n.type === 'Other note') {
-                this.freeTextNoteViewModels.push(n);
-                if (n.id !== undefined) {
-                    n.readonly = true;
-                    n.displayCreationDetails = true;
-                }
-            } else {
-                this.noteViewModels.push(n);
-            }
-        });
-    }
-
     ngOnInit() {
         this.store.dispatch(new JudgeActions.Get());
         this.initiateNotes();
@@ -192,7 +178,9 @@ export class ListingCreateComponent implements OnInit {
     private setNotesIfExist(hp: ListingCreate) {
         let defaultNotes = this.listingNotesConfig.defaultNotes().map(defaultNote => {
             const alreadyExistingNote = hp.notes.find(note => note.type === defaultNote.type);
-            hp.notes = hp.notes.filter(n => n.id !== alreadyExistingNote.id);
+            if (alreadyExistingNote !== undefined) {
+                hp.notes = hp.notes.filter(n => n.id !== alreadyExistingNote.id);
+            }
             return alreadyExistingNote || defaultNote
         });
 
@@ -273,6 +261,36 @@ export class ListingCreateComponent implements OnInit {
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);
         });
+    }
+
+    private initiateNotes() {
+        this.listing.notes.map(getNoteViewModel)
+            .map(this.disableShowingCreationDetailsOnNewNotes)
+            .map(this.makeExistingFreetextNotesReadonly)
+            .forEach(this.disposeToProperArrays);
+    }
+
+    private disableShowingCreationDetailsOnNewNotes(note: NoteViewmodel): NoteViewmodel {
+        if (note.id === undefined) {
+            note.displayCreationDetails = false;
+        }
+        return note;
+    }
+
+    private makeExistingFreetextNotesReadonly(n: NoteViewmodel): NoteViewmodel {
+        if (n.type === 'Other note' && n.id !== undefined) {
+            n.readonly = true;
+        }
+
+        return n;
+    }
+
+    private disposeToProperArrays = (n: NoteViewmodel) => {
+        if (n.type === 'Other note') {
+            this.freeTextNoteViewModels.push(n);
+        } else {
+            this.noteViewModels.push(n);
+        }
     }
 
     afterClosed(confirmed) {

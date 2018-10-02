@@ -18,9 +18,9 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         entityId: note.entityId,
         entityType: note.entityType,
         inputLabel: note.type,
-        createdAt: moment(note.createdAt).format(),
+        createdAt: moment(note.createdAt).format('DD/MM/YYYY hh:mm'),
         modifiedBy: note.modifiedBy,
-        displayCreationDetails: false
+        displayCreationDetails: true
     } as NoteViewmodel
 }
 
