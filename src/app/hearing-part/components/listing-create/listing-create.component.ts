@@ -213,7 +213,7 @@ export class ListingCreateComponent implements OnInit {
             ),
             caseTitle: new FormControl(
                 this.listing.hearingPart.caseTitle,
-                [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
+                [Validators.maxLength(this.caseTitleMaxLength)]
             ),
             caseTypeCode: new FormControl(
                 this.listing.hearingPart.caseTypeCode,
