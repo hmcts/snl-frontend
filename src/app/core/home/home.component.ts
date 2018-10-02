@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
         let items = [
             {
                 text: 'Main',
-                href: 'listinghearings/assign',
+                href: '/home',
                 children: [],
             }
         ];
@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit {
                 children: [],
             },
             {
-                text: 'Reports',
+                text: 'Problems',
                 href: 'problems',
                 children: [],
             }

@@ -7,11 +7,11 @@ import { SessionAmendListPage } from './session-amend-list.po';
 import { ProblemsPage } from './problems.po';
 
 export class TopMenu {
-  private parentElement = element(by.css('mat-toolbar-row'));
-  private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
-  private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
-  private problemsButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Problems'));
-  private logoutButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Logout'))
+  private parentElement = element(by.css('nav.hmcts-primary-navigation'));
+  private listingsButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Listings');
+  private calendarButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Calendar');
+  private problemsButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Problems'));
+  private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'))
   private sessionCreatePage = new SessionCreationPage()
   private sessionSearchPage = new SessionSearchPage()
   private listingCreatePage = new ListingCreationPage()
