@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { Note } from '../../../notes/models/note.model';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
@@ -10,7 +10,7 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
   templateUrl: './listing-note-list.component.html',
   styleUrls: ['./listing-note-list.component.scss']
 })
-export class ListingNoteListComponent {
+export class ListingNoteListComponent implements OnInit {
   @ViewChild('notesList') noteList: NoteListComponent;
   @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
 
@@ -20,11 +20,14 @@ export class ListingNoteListComponent {
 
   @Input() set notes(value: Note[]) {
       this._notes = value;
-      this.initiateNotes(this._notes);
   }
 
   @Input()
   public entityId: string;
+
+  ngOnInit() {
+      this.initiateNotes(this._notes);
+  }
 
   constructor(readonly listingNotesConfig: ListingCreateNotesConfiguration,
             public notePreparerService: NotesPreparerService) { }

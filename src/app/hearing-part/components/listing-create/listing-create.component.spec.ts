@@ -44,6 +44,7 @@ import { HearingPartModificationService } from '../../services/hearing-part-modi
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import moment = require('moment');
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -107,7 +108,8 @@ describe('ListingCreateComponent', () => {
             ],
             declarations: [
                 ListingCreateComponent,
-                TransactionDialogComponent
+                TransactionDialogComponent,
+                ListingNoteListComponent
             ],
             providers: [
                 {provide: AppConfig, useValue: stubAppConfig},
@@ -313,12 +315,6 @@ describe('ListingCreateComponent', () => {
                 component.data = listingCreate;
 
                 expect(component.listing).toEqual(listingCreate);
-            });
-
-            it('should set default notes if there are no notes in listing', () => {
-                component.data = listingCreate;
-
-                expect(component.listing.notes).toEqual(component.listingNotesConfig.defaultNotes());
             });
         });
     });

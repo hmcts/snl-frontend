@@ -5,14 +5,16 @@ let note = {
     id: undefined,
     content: 'a',
     entityId: undefined,
-    entityType: undefined
+    entityType: undefined,
+    createdAt: undefined,
 } as Note;
 
 let alreadyExistentNote = {
     id: 'id',
     content: 'a',
     entityId: undefined,
-    entityType: undefined
+    entityType: undefined,
+    createdAt: undefined
 } as Note;
 
 describe('NotePreparerService', () => {

@@ -7,7 +7,6 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
@@ -119,7 +118,6 @@ export class ListingCreateComponent implements OnInit {
         this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
     }
 
-
     updateDuration(durationValue) {
         if (durationValue !== undefined && durationValue !== null) {
             this.listing.hearingPart.duration = moment.duration(durationValue, 'minute');
@@ -218,7 +216,6 @@ export class ListingCreateComponent implements OnInit {
             this.afterClosed(confirmed);
         });
     }
-
 
     afterClosed(confirmed) {
         if (confirmed) {
