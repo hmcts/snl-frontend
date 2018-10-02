@@ -105,7 +105,6 @@ const mockedSessions: Session[] = [
     duration: sessionDuration,
     room: roomId,
     person: judgeId,
-    caseType: stubCaseType.code,
     sessionTypeCode: stubSessionType.code,
     // hearingTypes: [stubHearingType.code],
     jurisdiction: 'some jurisdiction',
@@ -408,7 +407,6 @@ function defaultFullMockedSession(): SessionViewModel {
     duration: sessionDuration,
     room: mockedRooms[0],
     person: mockedJudges[0],
-    caseType: undefined,
     sessionType: stubSessionType,
     hearingParts: mockedListedHearingPartsVM,
     jurisdiction: 'some jurisdiction',
@@ -421,7 +419,6 @@ function defaultFullMockedSession(): SessionViewModel {
 
 function defaultSessionFilter(): SessionFilters {
   return {
-    caseTypes: [],
     sessionTypes: [],
     rooms: [],
     judges: [],

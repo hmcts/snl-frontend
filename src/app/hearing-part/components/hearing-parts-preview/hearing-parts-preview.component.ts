@@ -12,6 +12,7 @@ import { HearingPartModificationService } from '../../services/hearing-part-modi
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -99,7 +100,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     openNotesDialog(hearingPart: HearingPartViewModel) {
         if (this.hasNotes(hearingPart)) {
             this.dialog.open(NotesListDialogComponent, {
-                data: hearingPart.notes,
+                data: hearingPart.notes.map(getNoteViewModel),
                 hasBackdrop: false,
                 width: '30%'
             })
@@ -143,10 +144,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle: 'Deleting hearing part' },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Deleting hearing part' }
         });
     }
 

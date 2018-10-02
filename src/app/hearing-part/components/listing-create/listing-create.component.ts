@@ -25,6 +25,7 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 const DURATION_UNIT = 'minute';
 
@@ -46,6 +47,7 @@ export class ListingCreateComponent implements OnInit {
 
     @Output() onSave = new EventEmitter();
 
+    noteViewModels: NoteViewmodel[];
     listingCreate: FormGroup;
     hearings: HearingType[] = [];
     communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
@@ -82,6 +84,7 @@ export class ListingCreateComponent implements OnInit {
                 this.initiateListing();
             }
             this.initiateForm();
+            this.initiateNotes();
         });
     }
 
@@ -197,6 +200,10 @@ export class ListingCreateComponent implements OnInit {
         }
     }
 
+    private initiateNotes() {
+        this.noteViewModels = this.listing.notes.map(getNoteViewModel);
+    }
+
     private initiateForm() {
         this.listingCreate = new FormGroup({
             caseNumber: new FormControl(
@@ -228,10 +235,8 @@ export class ListingCreateComponent implements OnInit {
 
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle }
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);
         });

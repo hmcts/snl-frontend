@@ -105,8 +105,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                     start: moment(spv.date, 'DD MMM YYYY').add(moment.duration(spv.startTime as string)),
                     duration: durationInSeconds,
                     roomId: spv.room.id,
-                    personId: spv.judge.id,
-                    caseType: undefined
+                    personId: spv.judge.id
                 } as SessionCreate,
                 rooms$: this.rooms$,
                 judges$: this.judges$,
@@ -121,10 +120,8 @@ export class SessionsPropositionsSearchComponent implements OnInit {
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle: 'Creating adhoc session' },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Creating adhoc session' }
         });
     }
 

@@ -37,7 +37,7 @@ let store: Store<State>;
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
 let getCreatedSessionResponse = (sessionId: string) => {
-    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'caseType': 'SCLAIMS', 'room': null}
+    return {'id': sessionId, 'person': null, 'start': '2018-07-11T10:04:57.623Z', 'duration': 'PT30M', 'room': null}
 }
 
 let getTransactionStartedResponse = (id: string) => {
@@ -110,11 +110,10 @@ describe('SessionsCreateComponent', () => {
                 start: moment(),
                 duration: 1800,
                 roomId: null,
-                personId: null,
-                caseType: 'casetype',
+                personId: null
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
@@ -122,7 +121,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new CommitTransaction(transactionId));
-            component.getCreatedSession(component.sessionId);
+            component.afterClosed(true, component.sessionId);
 
             httpMock.expectOne(getCommitTransactionUrl(transactionId)).flush(getTransactionCommittedResponse(transactionId));
             httpMock.expectOne(getSessionByIdUrl(sessionId)).flush(getCreatedSessionResponse(sessionId));
@@ -140,11 +139,10 @@ describe('SessionsCreateComponent', () => {
                 start: moment(),
                 duration: 1800,
                 roomId: null,
-                personId: null,
-                caseType: 'casetype',
+                personId: null
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
@@ -152,6 +150,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new RollbackTransaction(transactionId));
+            component.afterClosed(false, component.sessionId);
 
             httpMock.expectOne(getRollbackTransactionUrl(transactionId)).flush(getTransactionRolledbackResponse(transactionId));
 

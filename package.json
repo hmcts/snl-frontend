@@ -15,6 +15,7 @@
     "test:smoke": "protractor e2e/protractor.conf.js --suite smoke",
     "test:smokeDocker": "echo 'TODO: Smoke docker",
     "test:functional": "npm run e2e",
+    "test:crossbrowser": "protractor e2e/protractor-sauce.conf.js --suite e2e",
     "lint": "tslint --project . -t verbose 'src/**/*.ts'",
     "e2e": "protractor e2e/protractor.conf.js --suite e2e",
     "start:fr": "ng serve --aot --i18nFile=src/locale/messages.fr.xlf --i18nFormat=xlf --locale=fr",
