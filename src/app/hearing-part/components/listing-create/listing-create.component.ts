@@ -152,7 +152,7 @@ export class ListingCreateComponent implements OnInit {
             this.freeTextNoteList.getModifiedNotes(),
             this.listing.hearingPart.id,
             this.listingNotesConfig.entityName
-        )
+        );
 
         return [...preparedNotes, ...preparedFreeTextNotes];
     }

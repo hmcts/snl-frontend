@@ -1,6 +1,6 @@
 import { NoteViewmodel } from './note.viewmodel';
 
-export interface Note {
+export interface NoteUpsert {
   id: string;
   type: string;
   content: string;
@@ -10,14 +10,12 @@ export interface Note {
   modifiedBy: string;
 }
 
-export function getNoteFromViewModel(note: NoteViewmodel): Note {
+export function getNoteUpsertFromNoteViewModel(note: NoteViewmodel): NoteUpsert {
     return {
         id: note.id,
         content: note.content,
         type: note.type,
         entityId: note.entityId,
         entityType: note.entityType,
-        createdAt: note.createdAt,
-        modifiedBy: note.modifiedBy
-    } as Note
+    } as NoteUpsert
 }

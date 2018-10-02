@@ -1,4 +1,5 @@
 import { Note } from './note.model';
+import * as moment from 'moment';
 
 export interface NoteViewmodel extends Note {
     modified: boolean,
@@ -17,8 +18,13 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         entityId: note.entityId,
         entityType: note.entityType,
         inputLabel: note.type,
-        createdAt: note.createdAt,
+        createdAt: moment(note.createdAt).format(),
         modifiedBy: note.modifiedBy,
         displayCreationDetails: false
     } as NoteViewmodel
+}
+
+export function enableDisplayCreationDetails(note: NoteViewmodel) {
+    note.displayCreationDetails = true;
+    return note;
 }

@@ -38,7 +38,7 @@ describe('NotesService', () => {
         const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes`;
 
         it('should call proper url', () => {
-            notesService.createMany([note]).subscribe(
+            notesService.upsertMany([note]).subscribe(
                 data => expect(data).toEqual([note])
             );
             httpMock.expectOne(expectedUrl).flush([note]);
