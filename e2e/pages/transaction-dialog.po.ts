@@ -1,9 +1,9 @@
-import { element, by, ExpectedConditions, browser } from 'protractor';
+import { element, by, ExpectedConditions, browser, ElementFinder } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class TransactionDialogPage {
   private parentElement = element(by.className('mat-dialog-container'));
-  private summaryCreationElement = this.parentElement.element(by.id('sessionCreationSummary'));
+  private actionCreationElement = this.parentElement.element(by.id('actionSummary'));
   private sessionButtonSelector = this.parentElement.element(by.cssContainingText('.mat-button-wrapper', 'Sessions'));
   private problemsDiv = element(by.id('problems'));
 
@@ -14,22 +14,21 @@ export class TransactionDialogPage {
 
   async clickAcceptButton(): Promise<any> {
     const acceptButton = element(by.id('okButton'));
-    await browser.wait(ExpectedConditions.presenceOf(acceptButton), Wait.normal);
-    await browser.executeScript('arguments[0].scrollIntoView();', acceptButton.getWebElement());
-    await browser.wait(ExpectedConditions.visibilityOf(acceptButton), Wait.long, 'Accept button is not visible');
-    await acceptButton.click();
-    await browser.wait(ExpectedConditions.invisibilityOf(acceptButton), Wait.long, 'Accept button wont disappear');
-    await browser.wait(ExpectedConditions.invisibilityOf(element(by.className('cdk-overlay-pane'))), Wait.long)
-    return await browser.waitForAngular()
+    return await this.clickDialogButton(acceptButton, 'Accept')
   }
 
-  async isSessionCreationSummaryDisplayed(): Promise<boolean> {
+  async clickRollbackButton(): Promise<any> {
+    const rollbackButton = element(by.id('rollbackButton'));
+    return await this.clickDialogButton(rollbackButton, 'Rollback')
+  }
+
+  async isActionCreationSummaryDisplayed(): Promise<boolean> {
     await browser.wait(
-      ExpectedConditions.visibilityOf(this.summaryCreationElement),
+      ExpectedConditions.visibilityOf(this.actionCreationElement),
       Wait.normal,
-      'Session Creation Summary is not visible'
+      'Action Creation Summary is not visible'
     );
-    return await this.summaryCreationElement.isDisplayed();
+    return await this.actionCreationElement.isDisplayed();
   }
 
   async isProblemWithTextDisplayed(problemText: string): Promise<boolean> {
@@ -40,5 +39,15 @@ export class TransactionDialogPage {
     );
     const problemsDivText = await this.problemsDiv.getText();
     return await Promise.resolve(problemsDivText.indexOf(problemText) !== -1);
+  }
+
+  private async clickDialogButton(buttonElement: ElementFinder, buttonName: string) {
+    await browser.wait(ExpectedConditions.presenceOf(buttonElement), Wait.normal);
+    await browser.executeScript('arguments[0].scrollIntoView();', buttonElement.getWebElement());
+    await browser.wait(ExpectedConditions.visibilityOf(buttonElement), Wait.long, `${buttonName} button is not visible`);
+    await buttonElement.click();
+    await browser.wait(ExpectedConditions.invisibilityOf(buttonElement), Wait.long, `${buttonElement} button wont disappear`);
+    await browser.wait(ExpectedConditions.invisibilityOf(element(by.className('cdk-overlay-pane'))), Wait.long)
+    return await browser.waitForAngular()
   }
 }
