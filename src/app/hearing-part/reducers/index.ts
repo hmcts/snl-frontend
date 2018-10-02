@@ -47,14 +47,16 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
             const {id, sessionId, caseNumber, caseTitle, duration, priority,
                 scheduleStart, scheduleEnd, version, reservedJudgeId, communicationFacilitator} = hearingPart
+                const scheduleStartObj = moment(scheduleStart)
+                const scheduleEndObj = moment(scheduleEnd)
             return {
                 id,
                 sessionId,
                 caseNumber,
                 caseTitle,
                 duration: moment.duration(duration),
-                scheduleStart: moment(scheduleStart),
-                scheduleEnd: moment(scheduleEnd),
+                scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
+                scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
                 version,
                 reservedJudgeId,
                 communicationFacilitator,
