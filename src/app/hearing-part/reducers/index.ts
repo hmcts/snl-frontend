@@ -54,14 +54,16 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 return moment(left.createdAt).diff(moment(right.createdAt));
             }).reverse();
 
+            const scheduleStartObj = moment(scheduleStart)
+            const scheduleEndObj = moment(scheduleEnd)
             return {
                 id,
                 sessionId,
                 caseNumber,
                 caseTitle,
                 duration: moment.duration(duration),
-                scheduleStart: moment(scheduleStart),
-                scheduleEnd: moment(scheduleEnd),
+                scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
+                scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
                 version,
                 reservedJudgeId,
                 communicationFacilitator,

@@ -90,7 +90,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     parseDate(date) {
-        return moment(date).format('DD/MM/YYYY');
+        if (date) {
+            return moment(date).format('DD/MM/YYYY');
+        } else {
+            return null;
+        }
     }
 
     hasNotes(hearingPart: HearingPartViewModel): boolean {

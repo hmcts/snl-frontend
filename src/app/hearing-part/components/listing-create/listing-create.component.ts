@@ -22,8 +22,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
-import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-listing-create',
@@ -187,7 +187,7 @@ export class ListingCreateComponent implements OnInit {
             ),
             caseTitle: new FormControl(
                 this.listing.hearingPart.caseTitle,
-                [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
+                [Validators.maxLength(this.caseTitleMaxLength)]
             ),
             caseTypeCode: new FormControl(
                 this.listing.hearingPart.caseTypeCode,

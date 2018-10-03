@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 import { API }from '../utils/api';
+import { CreateListingRequestBody } from '../models/create-listing-request-body';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
@@ -40,15 +41,8 @@ const displayedListingRequestData = {
   priority
 };
 
-const listingRequest = {
-  id,
-  duration,
-  userTransactionId,
-  ...displayedListingRequestData
-};
-
-const listingRequestCreate = {
-    ...listingRequest, caseType: 'small-claims',  hearingType: 'trial'
+const listingRequestCreate: CreateListingRequestBody = {
+    id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial'
 }
 
 describe('Amend Listing Request', () => {
