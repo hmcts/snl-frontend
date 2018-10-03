@@ -67,54 +67,6 @@ describe('ProblemsPageComponent', () => {
 
         expect(problemsPageComponent.problems).toEqual(expectedProblemOrder)
     });
-
-    describe('sortByCreatedAtDescending', () => {
-        it('should sort by created at property - the newest problems should be first', () => {
-            const theNewestProblem = problemGenerator(moment())
-            const problemWithUndefinedCreatedAt = problemGenerator(moment(null))
-            const theOldestProblem = problemGenerator(moment().subtract(2, 'hours'))
-            const middleProblem = problemGenerator(moment().subtract(1, 'hours'))
-            const problems: Problem[] = [
-                problemWithUndefinedCreatedAt,
-                theNewestProblem,
-                theOldestProblem,
-                middleProblem,
-            ];
-
-            const sortedProblems = problemsPageComponent.sortByCreatedAtDescending(problems)
-
-            expect(sortedProblems).toEqual([
-                theNewestProblem,
-                middleProblem,
-                theOldestProblem,
-                problemWithUndefinedCreatedAt
-            ])
-        });
-    });
-
-    describe('sortBySeverity', () => {
-        it('should sort by severity - Critical first, Warning last', () => {
-            const criticalProblem = problemGenerator(moment(), 'Critical')
-            const urgentProblem = problemGenerator(moment(), 'Urgent')
-            const warningProblem = problemGenerator(moment(), 'Warning')
-            const undefinedSeverityProblem = problemGenerator(moment(), 'SomeString')
-
-            const problems: Problem[] = [
-                urgentProblem,
-                warningProblem,
-                undefinedSeverityProblem,
-                criticalProblem
-            ]
-
-            const sortedProblems = problemsPageComponent.sortBySeverity(problems)
-            expect(sortedProblems).toEqual([
-                criticalProblem,
-                urgentProblem,
-                warningProblem,
-                undefinedSeverityProblem
-            ])
-        });
-    });
 });
 
 function problemGenerator(createdAt: moment.Moment, severity = 'Warning'): Problem {
