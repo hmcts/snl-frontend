@@ -145,7 +145,7 @@ describe('ListingCreateComponent', () => {
 
     describe('Initial state ', () => {
         it('should include priority', () => {
-            expect(component.errors).toEqual('');
+            expect(component.errors).toBeUndefined();
             expect(component.listing).toBeDefined();
             expect(component.listing.hearingPart.priority).toBe(Priority.Low);
         });
