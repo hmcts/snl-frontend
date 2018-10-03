@@ -1,4 +1,4 @@
-<form class="block">
+<form class="block" id="note-{{note.type.split(' ').join('')}}">
   <div *ngIf="note.displayCreationDetails" style="font-size: 12px">{{note.modifiedBy}} - {{note.createdAt}}</div>
 
   <mat-form-field  style="width: 100%">
