@@ -49,10 +49,10 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 scheduleStart, scheduleEnd, version, reservedJudgeId, communicationFacilitator} = hearingPart;
 
             let filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
-
-            filteredNotes.sort((left, right) => {
+            let sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(left.createdAt).diff(moment(right.createdAt));
-            }).reverse();
+            })
+            let sortedReversedNotes = [...sortedNotes].reverse();
 
             const scheduleStartObj = moment(scheduleStart)
             const scheduleEndObj = moment(scheduleEnd)
@@ -71,7 +71,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 caseType: caseTypes[hearingPart.caseTypeCode],
                 hearingType: hearingTypes[hearingPart.hearingTypeCode],
                 reservedJudge: judges[hearingPart.reservedJudgeId],
-                notes: filteredNotes,
+                notes: sortedReversedNotes,
             };
         });
         return finalHearingParts;
