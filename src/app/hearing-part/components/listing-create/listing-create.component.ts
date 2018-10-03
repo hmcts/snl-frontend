@@ -66,6 +66,9 @@ export class ListingCreateComponent implements OnInit {
 
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
+    numberOfSeconds = 60
+    binIntMaxValue = 9223372036854775807;
+    limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
 
     public listing: ListingCreate;
 
@@ -225,7 +228,7 @@ export class ListingCreateComponent implements OnInit {
             ),
             duration: new FormControl(
                 this.listing.hearingPart.duration ? this.listing.hearingPart.duration.asMinutes() : undefined,
-                [Validators.required, Validators.min(1)]
+                [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
             ),
             targetDates: new FormGroup({
                 targetFrom: new FormControl(this.listing.hearingPart.scheduleStart),
