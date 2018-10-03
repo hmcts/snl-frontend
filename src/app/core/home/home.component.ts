@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
                 },
                 {
                     text: 'Listings',
-                    href: null,
+                    href: 'listinghearings/assign',
                     children: [
                         {
                             text: 'List Hearings',
