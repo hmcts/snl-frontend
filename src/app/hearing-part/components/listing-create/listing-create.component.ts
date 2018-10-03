@@ -79,7 +79,7 @@ export class ListingCreateComponent implements OnInit {
                 readonly listingNotesConfig: ListingCreateNotesConfiguration) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
-            this.errors = safe(error.message) || '';
+            this.errors = safe(() => error.message);
         });
         this.store.select(fromJudges.getJudges).withLatestFrom(
             this.store.select(fromReferenceData.selectCaseTypes)
