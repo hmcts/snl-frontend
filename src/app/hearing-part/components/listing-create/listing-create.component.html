@@ -11,11 +11,13 @@
 
                 <mat-form-field>
                     <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearingPart.caseNumber"
+                           (change)="listing.hearingPart.caseNumber = listing.hearingPart.caseNumber.trim()"
                            maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
                 </mat-form-field>
 
                 <mat-form-field>
                     <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearingPart.caseTitle"
+                           (change)="listing.hearingPart.caseTitle = listing.hearingPart.caseTitle.trim()"
                            maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title" type="text" >
                 </mat-form-field>
 
