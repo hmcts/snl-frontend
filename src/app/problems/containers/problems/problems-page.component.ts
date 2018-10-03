@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Problem } from '../../models/problem.model';
+import { Problem, isGreater, Severity } from '../../models/problem.model';
 import * as fromProblems from '../../reducers';
 import * as fromProblemsPartsActions from '../../actions/problem.action'
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -13,17 +12,32 @@ import { map } from 'rxjs/operators';
 })
 export class ProblemsPageComponent implements OnInit {
 
-    problems$: Observable<Problem[]>;
+    problems: Problem[] = [];
 
     constructor(private readonly store: Store<fromProblems.State>) {
-        this.problems$ = this.store.pipe(
-            select(fromProblems.getProblems),
+        this.store.select(fromProblems.getProblems).pipe(
             map(data => data ? Object.values(data) : []),
-            map(this.sortByCreatedAtDescending));
+            map(this.sortByCreatedAtDescending),
+            map(this.sortBySeverity)
+        ).subscribe(problems => this.problems = problems)
     }
 
     ngOnInit() {
         this.store.dispatch(new fromProblemsPartsActions.Get())
+    }
+
+    sortBySeverity(problems: Problem[]): Problem[] {
+        return problems.sort((a, b) => {
+            const aSeverity = Severity[a.severity] || Severity.Warning
+            const bSeverity = Severity[b.severity] || Severity.Warning
+            if (aSeverity === bSeverity) {
+                return 0
+            } else if (isGreater(aSeverity, bSeverity)) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
     }
 
     sortByCreatedAtDescending(problems: Problem[]): Problem[] {
@@ -37,5 +51,4 @@ export class ProblemsPageComponent implements OnInit {
             }
         });
     }
-
 }
