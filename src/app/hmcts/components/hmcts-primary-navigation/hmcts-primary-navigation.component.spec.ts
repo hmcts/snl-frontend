@@ -25,4 +25,10 @@ describe('HmctsPrimaryNavigationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('selectNav should set selectedNavItem', () => {
+    const item = {};
+    component.selectNavItem(item);
+    expect(component.selectedNavItem);
+  });
 });

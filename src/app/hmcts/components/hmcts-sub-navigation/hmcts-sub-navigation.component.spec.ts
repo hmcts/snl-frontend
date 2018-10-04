@@ -24,4 +24,10 @@ describe('HmctsSubNavigationComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('click should set selectedNavItem', () => {
+        const item = {};
+        component.click(item);
+        expect(component.selectedNavItem);
+    });
 });
