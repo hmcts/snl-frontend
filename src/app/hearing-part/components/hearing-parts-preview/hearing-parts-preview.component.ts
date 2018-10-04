@@ -31,20 +31,20 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     dataSource: MatTableDataSource<HearingPartViewModel>;
     displayedColumns = [
-      'selectHearing',
-      'caseNumber',
-      'caseTitle',
-      'caseType',
-      'hearingType',
-      'duration',
-      'communicationFacilitator',
-      'priority',
-      'reservedJudge',
-      'notes',
-      'scheduleStart',
-      'scheduleEnd',
-      'delete',
-      'editor'
+        'caseNumber',
+        'caseTitle',
+        'caseType',
+        'hearingType',
+        'duration',
+        'communicationFacilitator',
+        'priority',
+        'reservedJudge',
+        'notes',
+        'scheduleStart',
+        'scheduleEnd',
+        'selectHearing',
+        'delete',
+        'editor'
     ];
 
     constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
