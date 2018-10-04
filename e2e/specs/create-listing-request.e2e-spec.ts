@@ -45,7 +45,7 @@ describe('Create Listing Request', () => {
   describe('Fill in a form, set start & end dates for tomorrow', () => {
     it('popup with problems should appear', async () => {
       await listingCreationPage.createListingRequest(formValues)
-      const problemText = 'Listing request target schedule to date is 4 weeks or nearer from today and it has not been listed yet - Warning'
+      const problemText = 'Listing request target schedule to date is 4 weeks or nearer from today and it has not been listed yet - Urgent'
       const isProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(problemText)
       expect(isProblemDisplayed).toBeTruthy()
     });
