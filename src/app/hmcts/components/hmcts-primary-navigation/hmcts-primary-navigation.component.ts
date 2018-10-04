@@ -15,7 +15,7 @@ export class HmctsPrimaryNavigationComponent {
     }
 
     selectNavItem(item) {
-        this.selectedNavItem = item;
+        this.selectedNavItem = {...item};
     }
 
     constructor() { }

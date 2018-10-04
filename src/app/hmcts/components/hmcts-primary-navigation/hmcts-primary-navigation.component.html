@@ -16,6 +16,6 @@
 <app-hmcts-sub-navigation
   *ngFor="let item of items"
   [items]="item.children"
-  [currentUrl]="selectedNavItem.href"
-  [hidden]="selectedNavItem != item"
+  [selectedNavItem]="selectedNavItem"
+  [hidden]="selectedNavItem.href != item.href"
 ></app-hmcts-sub-navigation>

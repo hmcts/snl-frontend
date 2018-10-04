@@ -8,9 +8,13 @@ import { Component, Input } from '@angular/core';
 export class HmctsSubNavigationComponent {
     @Input() label = 'Sub navigation';
     @Input() items = [];
-    @Input() currentUrl = '';
 
-    click(url) {
-        this.currentUrl = url;
+    @Input() selectedNavItem: any = {
+        href: '',
+        text: ''
+    }
+
+    click(item) {
+        this.selectedNavItem = item;
     }
 }

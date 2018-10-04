@@ -3,8 +3,8 @@
         <li class="hmcts-sub-navigation__item" *ngFor="let item of items">
             <a data-selector="sub-nav-link"
                class="hmcts-sub-navigation__link"
-               (click)="click(item.href)"
-               [attr.aria-current]="item.href === currentUrl ? '' : null"
+               (click)="click(item)"
+               [attr.aria-current]="item.href === selectedNavItem.href ? '' : null"
                routerLink="{{item.href}}">
                 {{item.text}}
             </a>
