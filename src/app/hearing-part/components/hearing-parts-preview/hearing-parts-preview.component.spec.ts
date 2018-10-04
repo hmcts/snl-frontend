@@ -156,7 +156,6 @@ describe('HearingPartPreviewComponent', () => {
         } as HearingPartViewModel;
 
         const displayedColumnsExpectedValues = [
-            { columnName: 'selectHearing', expected: undefined },
             { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
             { columnName: 'caseTitle', expected: sampleHearingPart.caseTitle },
             { columnName: 'caseType', expected: sampleHearingPart.caseType.description },
@@ -168,6 +167,7 @@ describe('HearingPartPreviewComponent', () => {
             { columnName: 'notes', expected: 'No' },
             { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.unix() },
             { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.unix() },
+            { columnName: 'selectHearing', expected: undefined },
             { columnName: 'delete', expected: undefined },
             { columnName: 'editor', expected: undefined },
         ];
