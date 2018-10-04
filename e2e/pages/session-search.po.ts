@@ -94,14 +94,12 @@ export class SessionSearchPage {
         Logger.log(`Count of notes found for given id: ${foundNotesCount}`);
 
         Logger.log(`Obtaining THE FIRST note by given selector: ${expectedNoteId}`);
-        let firstFoundNote = await foundNotes[0]
+        let firstFoundNote = await foundNotes[0];
 
         let noteText = await firstFoundNote.getAttribute('value');
-        Logger.log(`Obtained text: ${noteText}`);
-        Logger.log(`Expected text: ${expectedNoteValue}`);
-        Logger.log(`Are obtained and expected notes the same?: ${noteText === expectedNoteValue}`);
+        Logger.log(`Obtained: ${noteText}. Expected: ${expectedNoteValue}. Obtained==Expected?: ${noteText === expectedNoteValue}`);
 
-        await element(by.id('notesDialog')).element(by.cssContainingText('button', 'Close')).click();
+        await this.closeNotesDialog();
 
         return noteText === expectedNoteValue;
     }
@@ -114,5 +112,9 @@ export class SessionSearchPage {
         let row = await table.rowThatContainsAtAnyPage(paginator, ...values)
         await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`)
         await row.element(by.css('mat-checkbox')).click()
+    }
+
+    private async closeNotesDialog() {
+        return element(by.id('notesDialog')).element(by.cssContainingText('button', 'Close')).click();
     }
 }
