@@ -1,4 +1,4 @@
-import { browser, by, element, ExpectedConditions } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import moment = require('moment');
 
@@ -45,7 +45,7 @@ export class PlannerPage {
     }
 
     async waitUntilVisible() {
-        moment().isoWeekYear()
+        moment().isoWeekYear();
         let expectedDate = moment().day(0).format('DD/MM') + ' - ' + moment().day(6).format('DD/MM/YYYY');
         await browser.wait(ExpectedConditions.visibilityOf(this.plannerTitle), Wait.normal, expectedDate);
     }
@@ -63,7 +63,7 @@ export class PlannerPage {
             .getAttribute('data-resource-id');
     }
 
-    getAllEventsForTheResource(resourceId: string) {
+    getRowWithEventsByResource(resourceId: string) {
         return element.all(by.className('fc-time-area'))
             .last()
             .all(by.tagName('tr'))
@@ -72,8 +72,17 @@ export class PlannerPage {
                     return value === resourceId;
                 });
             })
-            .first()
+            .first();
+    }
+
+    getAllEventsForTheResource(resourceId: string) {
+        return this.getRowWithEventsByResource(resourceId)
             .all(by.className('fc-title'));
     }
 
+    async clickOnEvent(elementToClick: ElementFinder, values: string[]) {
+        await elementToClick.click();
+        const dialog = element(by.css('mat-dialog-container'));
+        await browser.wait(ExpectedConditions.visibilityOf(dialog), Wait.normal, `Event with values [ ${values.join(', ')} ] haven't appear`)
+    }
 }
