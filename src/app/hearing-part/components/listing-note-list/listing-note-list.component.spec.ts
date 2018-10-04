@@ -64,7 +64,7 @@ describe('ListingNoteListComponent', () => {
       expect(actualNotesCount).toEqual(expectedDefaultNotesCount);
     })
 
-    it('which has \'Other note\' already, this note is preserved and new one is added', () => {
+    it('which has "Other note" already, this note is preserved and new one is added', () => {
         component.notes = [otherNote];
         fixture.detectChanges();
 
@@ -72,7 +72,7 @@ describe('ListingNoteListComponent', () => {
         expect(component.noteViewModels.length).toEqual(2);
     })
 
-    it('which has \'Special Requirements\' note already, this note is preserved', () => {
+    it('which has "Special Requirements" note already, this note is preserved', () => {
         component.notes = [specReqNote];
         fixture.detectChanges();
 
@@ -82,7 +82,7 @@ describe('ListingNoteListComponent', () => {
         expect(specReqNoteViewModel.id).toEqual(specReqNote.id);
     })
 
-    it('all existing \'Other notes\' are readonly', () => {
+    it('all existing "Other notes" are readonly', () => {
         component.notes = [otherNote];
         fixture.detectChanges();
 
@@ -93,7 +93,7 @@ describe('ListingNoteListComponent', () => {
             });
     })
 
-    it('newly added \'Other note\' is NOT readonly', () => {
+    it('newly added "Other note" is NOT readonly', () => {
         component.notes = [otherNote];
         fixture.detectChanges();
 
@@ -104,7 +104,7 @@ describe('ListingNoteListComponent', () => {
             });
     })
 
-    it('\'Spec Req\' and \'Fac Req\' notes are NOT readonly', () => {
+    it('"Spec Req" and "Fac Req" notes are NOT readonly', () => {
         component.notes = [];
         fixture.detectChanges();
 
