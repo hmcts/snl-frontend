@@ -6,7 +6,16 @@ import { v4 as uuid } from 'uuid';
 import { ProblemsService } from '../../services/problems.service';
 import { Observable } from 'rxjs';
 
-const fakeProblems = [problemGenerator(moment(), 'Warning')]
+const fakeProblems: Problem[] = [
+    {
+        id: uuid(),
+        message: undefined,
+        severity: 'Warning',
+        type: undefined,
+        references: undefined,
+        createdAt: moment()
+    }
+]
 let problemsPageComponent: ProblemsPageComponent;
 let problemServiceSpy: jasmine.SpyObj<ProblemsService> = jasmine.createSpyObj('ProblemsService', ['getAll']);
 problemServiceSpy.getAll.and.returnValue(Observable.of(fakeProblems))
@@ -36,14 +45,3 @@ describe('ProblemsPageComponent', () => {
         expect(problemsPageComponent.problems).toEqual(fakeProblems)
     });
 });
-
-function problemGenerator(createdAt: moment.Moment, severity = 'Warning'): Problem {
-    return {
-        id: uuid(),
-        message: undefined,
-        severity: severity,
-        type: undefined,
-        references: undefined,
-        createdAt: createdAt
-    }
-}
