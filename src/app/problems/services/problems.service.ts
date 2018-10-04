@@ -11,8 +11,7 @@ import * as moment from 'moment';
 @Injectable()
 export class ProblemsService {
 
-    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
-    }
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) { }
 
     getAll(): Observable<Problem[]> {
         return this.getProblems()
