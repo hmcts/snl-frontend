@@ -3,7 +3,7 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { HearingPartViewModel, mapToHearingPart } from '../../models/hearing-part.viewmodel';
+import { HearingPartViewModel, mapToUpdateHearingPartRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
 import { ListingCreate } from '../../models/listing-create';
@@ -31,20 +31,20 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     dataSource: MatTableDataSource<HearingPartViewModel>;
     displayedColumns = [
-      'selectHearing',
-      'caseNumber',
-      'caseTitle',
-      'caseType',
-      'hearingType',
-      'duration',
-      'communicationFacilitator',
-      'priority',
-      'reservedJudge',
-      'notes',
-      'scheduleStart',
-      'scheduleEnd',
-      'delete',
-      'editor'
+        'caseNumber',
+        'caseTitle',
+        'caseType',
+        'hearingType',
+        'duration',
+        'communicationFacilitator',
+        'priority',
+        'reservedJudge',
+        'notes',
+        'scheduleStart',
+        'scheduleEnd',
+        'selectHearing',
+        'delete',
+        'editor'
     ];
 
     constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
@@ -90,7 +90,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     parseDate(date) {
-        return moment(date).format('DD/MM/YYYY');
+        if (date) {
+            return moment(date).format('DD/MM/YYYY');
+        } else {
+            return null;
+        }
     }
 
     hasNotes(hearingPart: HearingPartViewModel): boolean {
@@ -134,11 +138,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     openEditDialog(hearingPart: HearingPartViewModel) {
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
-                hearingPart: mapToHearingPart(hearingPart),
+                hearingPart: mapToUpdateHearingPartRequest(hearingPart),
                 notes: hearingPart.notes
             } as ListingCreate,
             hasBackdrop: true,
-            height: '60%'
+            height: 'auto'
         })
     }
 

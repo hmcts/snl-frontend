@@ -1,19 +1,3 @@
-import * as moment from 'moment'
-import { Priority } from './priority-model';
+import { HearingPartResponse } from './hearing-part-response';
 
-export interface HearingPart {
-    id: string;
-    session: string;
-    caseNumber: string;
-    caseTitle: string;
-    caseType: string;
-    hearingType: string;
-    duration: moment.Duration
-    scheduleStart: moment.Moment;
-    scheduleEnd: moment.Moment;
-    version: number;
-    priority: Priority;
-    reservedJudgeId: string;
-    communicationFacilitator: string;
-    userTransactionId: string;
-}
+export interface HearingPart extends HearingPartResponse { }

@@ -1,5 +1,5 @@
 import { ProblemReference } from '../../models/problem-reference.model';
-import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Problem } from '../../models/problem.model';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { Moment } from 'moment';
@@ -9,22 +9,24 @@ import { Moment } from 'moment';
   templateUrl: './problems-table.component.html',
   styleUrls: ['./problems-table.component.scss']
 })
-export class ProblemsTableComponent implements OnInit, OnChanges {
+export class ProblemsTableComponent {
   displayedColumns = ['severity', 'createdAt', 'message', 'references description'];
-  dataSource;
+  dataSource: MatTableDataSource<Problem>;
 
-  @Input() problems: Problem[];
+  private _problems: Problem[];
+  @Input() set problems(problems: Problem[]) {
+    this._problems = problems;
+    this.dataSource = new MatTableDataSource(Object.values(this.problems));
+    this.dataSource.paginator = this.paginator;
+  }
+
+  get problems(): Problem[] {
+    return this._problems;
+  }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor() {}
-
-  ngOnInit() {}
-
-  ngOnChanges() {
-    this.dataSource = new MatTableDataSource(Object.values(this.problems));
-    this.dataSource.paginator = this.paginator;
-  }
 
   extractRefDescriptions(element: Problem): string[] {
     return element.references

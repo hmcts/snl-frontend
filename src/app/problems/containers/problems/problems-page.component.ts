@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Problem } from '../../models/problem.model';
-import * as fromProblems from '../../reducers';
-import * as fromProblemsPartsActions from '../../actions/problem.action'
-import { select, Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import { ProblemsService } from '../../services/problems.service';
 
 @Component({
   selector: 'app-problems-page',
@@ -12,30 +8,11 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./problems-page.component.scss']
 })
 export class ProblemsPageComponent implements OnInit {
+    problems: Problem[] = [];
 
-    problems$: Observable<Problem[]>;
-
-    constructor(private readonly store: Store<fromProblems.State>) {
-        this.problems$ = this.store.pipe(
-            select(fromProblems.getProblems),
-            map(data => data ? Object.values(data) : []),
-            map(this.sortByCreatedAtDescending));
-    }
+    constructor(private readonly problemsService: ProblemsService) { }
 
     ngOnInit() {
-        this.store.dispatch(new fromProblemsPartsActions.Get())
+        this.problemsService.getAll().subscribe(problems => this.problems = problems);
     }
-
-    sortByCreatedAtDescending(problems: Problem[]): Problem[] {
-        return problems.sort((a, b) => {
-            if (!a.createdAt.isValid()) {
-                return 1;
-            } else if (!b.createdAt.isValid()) {
-                return -1;
-            } else {
-                return b.createdAt.diff(a.createdAt)
-            }
-        });
-    }
-
 }

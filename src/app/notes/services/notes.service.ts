@@ -22,6 +22,7 @@ export class NotesService {
             .post<Note[]>(`${this.getUrl()}/entities`, ids)
             .pipe(map(notes => notes || []))
     }
+
     createMany(notes: Note[]): Observable<Note[]> {
         return this.http
             .put<Note[]>(this.getUrl(), notes)
