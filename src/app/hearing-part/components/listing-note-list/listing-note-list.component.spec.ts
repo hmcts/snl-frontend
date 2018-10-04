@@ -24,9 +24,7 @@ describe('ListingNoteListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        imports: [
-        ],
-      declarations: [MockNoteListComponent, ListingNoteListComponent],
+        declarations: [MockNoteListComponent, ListingNoteListComponent],
         providers: [ListingCreateNotesConfiguration, NotesPreparerService]
     })
     .compileComponents();
@@ -37,17 +35,27 @@ describe('ListingNoteListComponent', () => {
     fixture = TestBed.createComponent(ListingNoteListComponent);
     component = fixture.componentInstance;
 
-    otherNote = {
+    let baseNote: Note = {
         id: '1',
+        type: undefined,
+        content: 'a',
+        entityId: undefined,
+        entityType: undefined,
+        createdAt: undefined,
+        modifiedBy: undefined
+    }
+
+    otherNote = {
+        ...baseNote,
         content: 'a',
         type: 'Other note'
-    } as Note;
+    };
 
     specReqNote = {
-        id: '1',
+        ...baseNote,
         content: 'a',
         type: 'Special Requirements'
-    } as Note;
+    };
   });
 
   it('should create', () => {

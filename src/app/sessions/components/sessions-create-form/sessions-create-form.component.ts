@@ -77,7 +77,10 @@ export class SessionsCreateFormComponent {
         this.noteViewModels = sessionNotesConfig.defaultNotes()
             .map(getNoteViewModel)
             .map(n => this.setCustomInputLabel(n, 'Notes'))
-            .map(n => { n.displayCreationDetails = false; return n; });
+            .map(n => {
+                n.displayCreationDetails = false;
+                return n;
+            });
     }
 
     create() {

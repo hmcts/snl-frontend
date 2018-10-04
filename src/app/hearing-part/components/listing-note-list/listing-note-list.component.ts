@@ -14,7 +14,7 @@ export class ListingNoteListComponent implements OnInit {
   @ViewChild('notesList') noteList: NoteListComponent;
   @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
 
-  public _notes: Note[];
+  private _notes: Note[];
   public noteViewModels: NoteViewmodel[] = [];
   public freeTextNoteViewModels: NoteViewmodel[] = [];
 
