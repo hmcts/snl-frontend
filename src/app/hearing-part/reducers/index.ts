@@ -6,6 +6,8 @@ import { getNotes } from '../../notes/reducers';
 import { HearingPartViewModel } from '../models/hearing-part.viewmodel';
 import { HearingPart } from '../models/hearing-part';
 import { getJudgesEntities } from '../../judges/reducers';
+import * as moment from 'moment';
+import { Priority } from '../models/priority-model';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
@@ -43,10 +45,24 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         let finalHearingParts: HearingPartViewModel[];
         if (hearingParts === undefined) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
+            const {id, sessionId, caseNumber, caseTitle, duration, priority,
+                scheduleStart, scheduleEnd, version, reservedJudgeId, communicationFacilitator} = hearingPart
+                const scheduleStartObj = moment(scheduleStart)
+                const scheduleEndObj = moment(scheduleEnd)
             return {
-                ...hearingPart,
-                caseType: caseTypes[hearingPart.caseType],
-                hearingType: hearingTypes[hearingPart.hearingType],
+                id,
+                sessionId,
+                caseNumber,
+                caseTitle,
+                duration: moment.duration(duration),
+                scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
+                scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
+                version,
+                reservedJudgeId,
+                communicationFacilitator,
+                priority: Priority[priority],
+                caseType: caseTypes[hearingPart.caseTypeCode],
+                hearingType: hearingTypes[hearingPart.hearingTypeCode],
                 reservedJudge: judges[hearingPart.reservedJudgeId],
                 notes: Object.values(notes).filter(note => note.entityId === hearingPart.id),
             };

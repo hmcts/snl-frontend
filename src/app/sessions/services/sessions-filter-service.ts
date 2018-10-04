@@ -47,7 +47,7 @@ export class SessionsFilterService {
 
     filterUnlistedHearingParts(data: HearingPartViewModel[]): HearingPartViewModel[] {
         return data.filter(h => {
-            return h.session === undefined || h.session === '' || h.session === null
+            return h.sessionId === undefined || h.sessionId === '' || h.sessionId === null
         });
     }
 }

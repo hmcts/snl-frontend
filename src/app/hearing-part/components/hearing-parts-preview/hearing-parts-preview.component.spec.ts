@@ -139,7 +139,7 @@ describe('HearingPartPreviewComponent', () => {
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
         const sampleHearingPart = {
             id: '-1',
-            session: null,
+            sessionId: null,
             caseNumber: 'cn-123',
             caseTitle: 'ctitle-123',
             caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
@@ -194,7 +194,7 @@ describe('HearingPartPreviewComponent', () => {
 function generateHearingParts(id: string): HearingPartViewModel {
     return {
         id: id,
-        session: null,
+        sessionId: null,
         caseNumber: null,
         caseTitle: null,
         caseType: { code: '', description: '' } as CaseType,
