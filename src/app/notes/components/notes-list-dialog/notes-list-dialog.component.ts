@@ -17,10 +17,7 @@ export class NotesListDialogComponent extends DraggableDialog {
 
         this.data.forEach(this.disposeToProperArrays);
 
-        let specReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Special Requirements');
-        let facReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Facility Requirements');
-
-        this.noteViewModels = [specReqNvm, facReqNvm].filter(nvm => nvm !== undefined);
+        this.noteViewModels = this.putNotesInOrder();
     }
 
     protected disposeToProperArrays = (n: NoteViewmodel) => {
@@ -29,5 +26,12 @@ export class NotesListDialogComponent extends DraggableDialog {
         } else {
             this.noteViewModels.push(n);
         }
+    }
+
+    protected putNotesInOrder = () => {
+        let specReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Special Requirements');
+        let facReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Facility Requirements');
+
+        return [specReqNvm, facReqNvm].filter(nvm => nvm !== undefined);
     }
 }
