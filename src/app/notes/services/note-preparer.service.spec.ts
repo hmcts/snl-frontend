@@ -109,5 +109,31 @@ describe('NotePreparerService', () => {
 
             expect(notes.length).toEqual(0);
         })
+
+        it('should remove notes that have only spaces', () => {
+
+            let noteWithContentWithOnlySpaces = {
+                ...note,
+                content: '       '
+            } as Note;
+
+            let notes = service.removeEmptyNotes([noteWithContentWithOnlySpaces]);
+
+            expect(notes.length).toEqual(0);
+        })
+
+        it('should not modify the note content', () => {
+
+            let content = 'Content with some spaces';
+            let noteWithContentWithSomeSpaces = {
+                ...note,
+                content: content
+            } as Note;
+
+            let notes = service.removeEmptyNotes([noteWithContentWithSomeSpaces]);
+
+            expect(notes.length).toEqual(1);
+            expect(notes[0].content).toEqual(content);
+        })
     })
 });

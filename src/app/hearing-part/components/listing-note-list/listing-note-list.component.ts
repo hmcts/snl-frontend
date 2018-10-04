@@ -53,6 +53,7 @@ export class ListingNoteListComponent implements OnInit {
           this.entityId,
           this.listingNotesConfig.entityName
       );
+      preparedFreeTextNotes = this.notePreparerService.removeEmptyNotes(preparedFreeTextNotes);
 
       return [...preparedNotes, ...preparedFreeTextNotes];
   }

@@ -16,6 +16,11 @@ export class NotesListDialogComponent extends DraggableDialog {
         super(dialogRef);
 
         this.data.forEach(this.disposeToProperArrays);
+
+        let specReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Special Requirements');
+        let facReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Facility Requirements');
+
+        this.noteViewModels = [specReqNvm, facReqNvm].filter(nvm => nvm !== undefined);
     }
 
     protected disposeToProperArrays = (n: NoteViewmodel) => {
