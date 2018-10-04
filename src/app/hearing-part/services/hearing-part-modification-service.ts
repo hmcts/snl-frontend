@@ -6,7 +6,6 @@ import { AssignToSession, CreateListingRequest, Delete, DeleteComplete, UpdateLi
 import { InitializeTransaction } from '../../features/transactions/actions/transaction.action';
 import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as ProblemsActions from '../../problems/actions/problem.action';
-import { Note } from '../../notes/models/note.model';
 import { ListingCreate } from '../models/listing-create';
 import { v4 as uuid } from 'uuid';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
@@ -22,20 +21,26 @@ export class HearingPartModificationService {
         this.store.dispatch(new InitializeTransaction(this.createTransaction(assignment.sessionId, assignment.userTransactionId)))
     }
 
-    createListingRequest(listing: ListingCreate, notes: Note[]) {
-        listing.userTransactionId = uuid();
+    createListingRequest(listing: ListingCreate) {
+        listing.hearingPart.userTransactionId = uuid();
 
-        this.store.dispatch(new CreateListingRequest({...listing, notes: notes}));
+        this.store.dispatch(new CreateListingRequest(listing.hearingPart));
         this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.hearingPart.id, listing.userTransactionId)))
+        this.store.dispatch(new InitializeTransaction(
+                this.createTransaction(listing.hearingPart.id, listing.hearingPart.userTransactionId)
+            )
+        )
     }
 
-    updateListingRequest(listing: ListingCreate, notes: Note[]) {
-        listing.userTransactionId = uuid();
+    updateListingRequest(listing: ListingCreate) {
+        listing.hearingPart.userTransactionId = uuid();
 
-        this.store.dispatch(new UpdateListingRequest({...listing, notes: notes}));
+        this.store.dispatch(new UpdateListingRequest(listing));
         this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(listing.hearingPart.id, listing.userTransactionId)))
+        this.store.dispatch(new InitializeTransaction(
+                this.createTransaction(listing.hearingPart.id, listing.hearingPart.userTransactionId)
+            )
+        )
     }
 
     deleteHearingPart(hearingPartDeletion: HearingPartDeletion) {

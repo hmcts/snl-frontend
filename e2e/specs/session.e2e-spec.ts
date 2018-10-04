@@ -79,7 +79,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
       await navigationFlow.goToNewSessionPage()
       await sessionCreationPage.createSession(todayDate, startTime, duration, sessionType, room, judge)
-      expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
+      expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
       await transactionDialogPage.clickAcceptButton()
     });
   });
@@ -94,7 +94,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
     it('newly created listing request should be visible', async () => {
       await navigationFlow.goToNewListingRequestPage()
       await listingCreationPage.createListingRequest(listingCreationForm)
-      expect(await transactionDialogPage.isSessionCreationSummaryDisplayed()).toBeTruthy()
+      expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
       await transactionDialogPage.clickAcceptButton();
     });
   });

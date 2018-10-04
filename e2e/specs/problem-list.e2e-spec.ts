@@ -9,6 +9,7 @@ import { protractor } from 'protractor/built/ptor';
 import { waitFor } from '../utils/wait-for';
 import { forEachSeries } from 'p-iteration';
 import { browser } from 'protractor';
+import { Wait } from '../enums/wait';
 
 const navigationFlow = new NavigationFlow();
 const loginFlow = new LoginFlow();
@@ -71,7 +72,7 @@ describe('Problem list tests', () => {
         });
 
         it('wait until new problems will be generated', async () => {
-            const result = await waitFor(25, async () => {
+            const result = await waitFor(Wait.normal, async () => {
                 const alreadyKnownIds = problemsBeforeAction.map(problem => problem.id)
                 const problems = (await API.getProblems()) as any[]
                 newProblems = problems.filter(x => !alreadyKnownIds.includes(x.id));
