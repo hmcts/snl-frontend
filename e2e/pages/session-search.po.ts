@@ -101,6 +101,8 @@ export class SessionSearchPage {
         Logger.log(`Expected text: ${expectedNoteValue}`);
         Logger.log(`Are obtained and expected notes the same?: ${noteText === expectedNoteValue}`);
 
+        await element(by.id('notesDialog')).element(by.cssContainingText('button', 'Close')).click();
+
         return noteText === expectedNoteValue;
     }
 

@@ -46,7 +46,7 @@ const listingRequestCreate: CreateListingRequestBody = {
     id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial'
 }
 
-fdescribe('Amend Listing Request with notes', () => {
+describe('Amend Listing Request with notes', () => {
   beforeAll(async () => {
     await loginFlow.relogin()
   });
@@ -64,7 +64,7 @@ fdescribe('Amend Listing Request with notes', () => {
       expect(isListingRequestDisplayed).toBeTruthy();
     });
   });
-  describe('Click on edit and change some values', () => {
+  describe('Click on edit and change some values and a note', () => {
     it('new values should be visible on list', async () => {
       await sessionSearchPage.editListingRequestWithValues(caseNumber);
       const newCaseNumber = `edited-${caseNumber}`;
