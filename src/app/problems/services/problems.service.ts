@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
-import { Problem, ProblemResponse } from '../models/problem.model';
+import { Problem, ProblemResponse, Page } from '../models/problem.model';
 import { AppConfig } from '../../app.config';
 import { HttpClient } from '@angular/common/http';
 import { normalize } from 'normalizr';
@@ -13,14 +13,15 @@ export class ProblemsService {
 
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) { }
 
-    getAll(): Observable<Problem[]> {
-        return this.getProblems()
-            .map(problemResponses => {
-                const problems: Problem[] = problemResponses.map(problemResponse => {
+    getAll(size = 20, page = 1): Observable<Page<Problem>> {
+        return this.getProblems(size, page)
+            .map((pagedProblemResponse: Page<ProblemResponse>) => {
+                const problems: Problem[] = pagedProblemResponse.content.map(problemResponse => {
                     const createdAt = moment(problemResponse.createdAt);
                     return {...problemResponse, createdAt}
-                })
-                return problems
+                });
+
+                return {... pagedProblemResponse, content: problems}
             })
     }
 
@@ -35,9 +36,9 @@ export class ProblemsService {
             .pipe(map(this.normalizeProblems));
     }
 
-    private getProblems() {
+    private getProblems(size = 20, page = 1) {
         return this.http
-            .get<ProblemResponse[]>(`${this.config.getApiUrl()}/problems`)
+            .get<Page<ProblemResponse>>(`${this.config.getApiUrl()}/problems?size=${size}&page=${page}`)
     }
 
     private normalizeProblems(problemsData) {
