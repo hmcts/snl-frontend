@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { ReferenceDataService } from './services/reference-data.service';
-import { AppConfig } from '../../app.config';
 import { StoreModule } from '@ngrx/store';
 import * as fromHT from './reducers/hearing-type.reducer';
 import * as fromCT from './reducers/case-type.reducer';
