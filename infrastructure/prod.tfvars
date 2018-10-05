@@ -1,1 +1,1 @@
-external_host_name = "www.snl.platform.hmcts.net"
+external_host_name = "snl-app.platform.hmcts.net"
