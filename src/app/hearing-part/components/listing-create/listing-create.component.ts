@@ -7,9 +7,6 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
-import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
@@ -25,7 +22,8 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
-import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-listing-create',
@@ -33,11 +31,10 @@ import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.view
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
-    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+    @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
     @Input() set data(value: ListingCreate) {
         this.listing = value;
-        this.listing.notes = this.setNotesIfExist(value);
         this.setFormGroup();
     }
 
@@ -45,13 +42,13 @@ export class ListingCreateComponent implements OnInit {
 
     @Output() onSave = new EventEmitter();
 
-    noteViewModels: NoteViewmodel[];
     listingCreate: FormGroup;
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
     hearings: HearingType[] = [];
+    noteViewModels: NoteViewmodel[] = [];
 
     private _caseTypes: CaseType[] = [];
     get caseTypes(): CaseType[] { return this._caseTypes }
@@ -74,9 +71,7 @@ export class ListingCreateComponent implements OnInit {
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
-                private readonly notePreparerService: NotesPreparerService,
-                private readonly hearingPartModificationService: HearingPartModificationService,
-                readonly listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly hearingPartModificationService: HearingPartModificationService) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = safe(() => error.message);
@@ -93,8 +88,6 @@ export class ListingCreateComponent implements OnInit {
             }
             this.setFormGroup();
         });
-
-        this.initiateNotes();
     }
 
     ngOnInit() {
@@ -125,15 +118,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     createNotes() {
-        this.store.dispatch(new fromNotes.CreateMany(this.prepareNotes()));
-    }
-
-    prepareNotes() {
-        return this.notePreparerService.prepare(
-            this.noteList.getModifiedNotes(),
-            this.listing.hearingPart.id,
-            this.listingNotesConfig.entityName
-        );
+        this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
     }
 
     updateDuration(durationValue) {
@@ -168,13 +153,6 @@ export class ListingCreateComponent implements OnInit {
         this.hearings = newHearings;
     }
 
-    private setNotesIfExist(hp: ListingCreate) {
-        return this.listingNotesConfig.defaultNotes().map(note => {
-            const obj = hp.notes.find(note1 => note1.type === note.type);
-            return obj || note
-        });
-    }
-
     private initiateListing() {
         this.listing = this.defaultListing();
     }
@@ -200,12 +178,8 @@ export class ListingCreateComponent implements OnInit {
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
             },
-            notes: this.listingNotesConfig.defaultNotes(),
+            notes: []
         };
-    }
-
-    private initiateNotes() {
-        this.noteViewModels = this.listing.notes.map(getNoteViewModel);
     }
 
     private setFormGroup() {

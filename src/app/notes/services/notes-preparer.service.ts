@@ -18,6 +18,11 @@ export class NotesPreparerService {
         return notes.filter(n => n.content !== undefined)
             .filter(n => n.content !== null)
             .filter(n => n.content.length !== 0)
+            .filter(n => {
+                let note = {...n};
+                let trimmedContentLength = note.content.trim().length;
+                return trimmedContentLength !== 0;
+            })
     }
 
     private generateUUIDIfUndefined(note: Note): Note {

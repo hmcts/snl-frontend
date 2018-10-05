@@ -4,7 +4,7 @@ import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { v4 as uuid } from 'uuid';
 import { HearingTypes } from '../enums/hearing-types';
-import { ListingCreationPage } from '../pages/listing-creation.po';
+import { LISTING_NOTES, ListingCreationPage } from '../pages/listing-creation.po';
 import * as moment from 'moment';
 import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
@@ -32,6 +32,7 @@ const id = uuid();
 const userTransactionId = uuid();
 const hearingType = HearingTypes.TRIAL;
 const otherHearingType = HearingTypes.ADJOURNED;
+const specReqNoteValue = 'SPEC REQ';
 
 const displayedListingRequestData = {
   caseNumber,
@@ -77,10 +78,17 @@ describe('Amend Listing Request', () => {
         fromDate: todayDate,
         endDate: tomorrowDate
       }
+      await listingCreationPage.setNoteValue(LISTING_NOTES.SPECIAL_REQUIREMENTS, specReqNoteValue);
       await listingCreationPage.createListingRequest(listingForm)
       await transactionDialogPage.clickAcceptButton();
       const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(listingForm));
       expect(isListingRequestDisplayed).toBeTruthy()
     });
+  });
+  describe('Click on notes indicator and verify the notes', () => {
+      it('notes should be present', async () => {
+          let notePresent = await sessionSearchPage.checkIfHasNote(LISTING_NOTES.SPECIAL_REQUIREMENTS.selector, specReqNoteValue, caseNumber);
+          expect(notePresent).toBeTruthy(`Expected note DOES NOT have text: ${specReqNoteValue}`);
+      });
   });
 });

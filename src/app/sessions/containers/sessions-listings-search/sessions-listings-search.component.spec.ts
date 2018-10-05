@@ -66,7 +66,9 @@ const mockedNotes: Note[] = [
         content: 'nice content',
         type: 'Facility Requirements',
         entityId: 'some-id',
-        entityType: 'ListingRequest'
+        entityType: 'ListingRequest',
+        createdAt: undefined,
+        modifiedBy: undefined
     }];
 
 const mockedHearingPartResponse: HearingPartResponse = {
