@@ -3,9 +3,9 @@ import { ElementHelper } from '../utils/element-helper';
 import { Wait } from '../enums/wait';
 
 export class LoginPage {
-  loginButton = element(by.id('login'));
-  private username = element(by.id('username'));
-  private password = element(by.id('password'));
+  loginButton = element(by.css('#loginForm button'));
+  private username = element(by.css('input#username'));
+  private password = element(by.css('input#password'));
   private elementHelper = new ElementHelper();
 
   async login(username: string, password: string) {

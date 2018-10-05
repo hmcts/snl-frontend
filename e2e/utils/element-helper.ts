@@ -5,6 +5,7 @@ import { Logger } from './logger';
 export class ElementHelper {
   async clear(elem: ElementFinder, length?: number) {
     Logger.log(`Clearing value of ${elem.locator()}`);
+    console.log(`Clearing value of ${elem.locator()}`);
     const inputText = await elem.getAttribute('value');
     length = length || inputText.length || 100;
     let backspaceSeries = '';

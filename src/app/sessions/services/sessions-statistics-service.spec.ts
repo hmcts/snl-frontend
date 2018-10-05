@@ -10,7 +10,7 @@ let session: SessionViewModel;
 function createHearingPart(duration: moment.Duration = moment.duration('PT20M')) {
     return {
         id: undefined,
-        session: undefined,
+        sessionId: undefined,
         caseNumber: undefined,
         caseTitle: undefined,
         caseType: undefined,
@@ -83,7 +83,7 @@ describe('SessionsStatisticsService', () => {
                 room: undefined,
                 person: undefined,
                 sessionType: undefined,
-                hearingParts: [] as [HearingPartViewModel],
+                hearingParts: [],
                 jurisdiction: undefined,
                 version: undefined,
                 allocated: undefined,
@@ -111,7 +111,7 @@ describe('SessionsStatisticsService', () => {
                 .toEqual(0);
         });
 
-        it('should throw error when params are undefined ', () => {
+        it('should throw error when params are undefined', () => {
             expect(() => {
                 sessionsStatisticsService.calculateUtilizedDuration(undefined, undefined);
             }).toThrow();

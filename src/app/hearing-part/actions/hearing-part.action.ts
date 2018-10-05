@@ -3,6 +3,8 @@ import { HearingPart } from '../models/hearing-part';
 import { SessionAssignment } from '../models/session-assignment';
 import { ListingCreate } from '../models/listing-create';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
+import { CreateHearingPartRequest } from '../models/create-hearing-part-request';
+import { HearingPartResponse } from '../models/hearing-part-response';
 
 export enum HearingPartActionTypes {
   GetById = '[HearingPart] Get by id',
@@ -44,7 +46,7 @@ export class GetById implements Action {
 export class SearchComplete implements Action {
   readonly type = HearingPartActionTypes.SearchComplete;
 
-  constructor(public payload: HearingPart[]) {}
+  constructor(public payload: HearingPartResponse[]) {}
 }
 
 export class SearchFailed implements Action {
@@ -62,7 +64,7 @@ export class Create implements Action {
 export class CreateListingRequest implements Action {
     readonly type = HearingPartActionTypes.CreateListingRequest;
 
-    constructor(public payload: ListingCreate) {}
+    constructor(public payload: CreateHearingPartRequest) {}
 }
 
 export class UpdateListingRequest implements Action {

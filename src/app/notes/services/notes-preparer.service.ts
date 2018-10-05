@@ -14,6 +14,17 @@ export class NotesPreparerService {
             .map(n => this.assignEntityName(n, entityName));
     }
 
+    public removeEmptyNotes(notes: Note[]): Note[] {
+        return notes.filter(n => n.content !== undefined)
+            .filter(n => n.content !== null)
+            .filter(n => n.content.length !== 0)
+            .filter(n => {
+                let note = {...n};
+                let trimmedContentLength = note.content.trim().length;
+                return trimmedContentLength !== 0;
+            })
+    }
+
     private generateUUIDIfUndefined(note: Note): Note {
         if (this.isLogicallyUndefined(note.id)) {
             note.id = uuid();

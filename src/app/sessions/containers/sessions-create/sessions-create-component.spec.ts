@@ -113,7 +113,7 @@ describe('SessionsCreateComponent', () => {
                 personId: null
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
@@ -121,7 +121,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new CommitTransaction(transactionId));
-            component.getCreatedSession(component.sessionId);
+            component.afterClosed(true, component.sessionId);
 
             httpMock.expectOne(getCommitTransactionUrl(transactionId)).flush(getTransactionCommittedResponse(transactionId));
             httpMock.expectOne(getSessionByIdUrl(sessionId)).flush(getCreatedSessionResponse(sessionId));
@@ -142,7 +142,7 @@ describe('SessionsCreateComponent', () => {
                 personId: null
             } as SessionCreate;
 
-            component.create(session);
+            component.create({session: session, notes: []});
 
             let transactionId = storeSpy.calls.all()[0].args[0].payload.id; // retrieve transactionId passed into one of the actions
 
@@ -150,6 +150,7 @@ describe('SessionsCreateComponent', () => {
             httpMock.expectOne(getGetProblemsUrl(transactionId)).flush([]);
 
             store.dispatch(new RollbackTransaction(transactionId));
+            component.afterClosed(false, component.sessionId);
 
             httpMock.expectOne(getRollbackTransactionUrl(transactionId)).flush(getTransactionRolledbackResponse(transactionId));
 

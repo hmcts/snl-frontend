@@ -1,71 +1,33 @@
 import { ProblemsPageComponent } from './problems-page.component';
 import { TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
 import { Problem } from '../../models/problem.model';
-import { reducers } from '../../reducers';
-import * as problemsActions from '../../actions/problem.action';
-import * as fromProblems from '../../reducers';
 import * as moment from 'moment';
+import { v4 as uuid } from 'uuid';
+import { ProblemsService } from '../../services/problems.service';
+import { Observable } from 'rxjs';
 
+const fakeProblems: Problem[] = [
+    {
+        id: uuid(),
+        message: undefined,
+        severity: 'Warning',
+        type: undefined,
+        references: undefined,
+        createdAt: moment()
+    }
+]
 let problemsPageComponent: ProblemsPageComponent;
-let storeSpy: jasmine.Spy;
-let store: Store<fromProblems.State>;
-
-const theNewestProblem: Problem = {
-    id: '1',
-    message: undefined,
-    severity: undefined,
-    type: undefined,
-    references: undefined,
-    createdAt: moment()
-}
-
-const theOldestProblem: Problem = {
-    id: '3',
-    message: undefined,
-    severity: undefined,
-    type: undefined,
-    references: undefined,
-    createdAt: moment().subtract(2, 'hours')
-}
-
-const middleProblem: Problem = {
-    id: '2',
-    message: undefined,
-    severity: undefined,
-    type: undefined,
-    references: undefined,
-    createdAt: moment().subtract(1, 'hours')
-}
-
-const problemWithUndefinedCreatedAt: Problem = {
-    id: '4',
-    message: undefined,
-    severity: undefined,
-    type: undefined,
-    references: undefined,
-    createdAt: moment(null)
-}
-
-const problems: Problem[] = [
-    problemWithUndefinedCreatedAt,
-    theNewestProblem,
-    theOldestProblem,
-    middleProblem
-];
+let problemServiceSpy: jasmine.SpyObj<ProblemsService> = jasmine.createSpyObj('ProblemsService', ['getAll']);
+problemServiceSpy.getAll.and.returnValue(Observable.of(fakeProblems))
 
 describe('ProblemsPageComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                StoreModule.forRoot({}),
-                StoreModule.forFeature('problems', reducers),
-            ],
-            providers: [ProblemsPageComponent]
+            providers: [
+                ProblemsPageComponent,
+                { provide: ProblemsService, useValue: problemServiceSpy },
+            ]
         });
-
-        store = TestBed.get(Store)
-        storeSpy = spyOn(store, 'dispatch').and.callThrough();
 
         problemsPageComponent = TestBed.get(ProblemsPageComponent);
         problemsPageComponent.ngOnInit();
@@ -75,29 +37,11 @@ describe('ProblemsPageComponent', () => {
         expect(problemsPageComponent).toBeDefined();
     });
 
-    it('should dispatch get action on store', () => {
-        const passedObj = storeSpy.calls.argsFor(0)[0];
-        expect(passedObj instanceof problemsActions.Get).toBeTruthy();
+    it('should call problem service to fetch problem', () => {
+        expect(problemServiceSpy.getAll).toHaveBeenCalled()
     });
 
-    it('should populate problems', () => {
-        store.dispatch(new problemsActions.GetComplete(problems));
-
-        problemsPageComponent.problems$.subscribe(data => {
-            expect(data.length).toEqual(problems.length);
-            problems.forEach(problem => expect(data).toContain(problem))
-        })
-    });
-
-    describe('sortByCreatedAtDescending', () => {
-        it('should sort by created at property - the newest problems should be first', () => {
-            const sortedProblems = problemsPageComponent.sortByCreatedAtDescending(problems)
-            expect(sortedProblems).toEqual([
-                theNewestProblem,
-                middleProblem,
-                theOldestProblem,
-                problemWithUndefinedCreatedAt
-            ])
-        });
+    it('should set problems property', () => {
+        expect(problemsPageComponent.problems).toEqual(fakeProblems)
     });
 });

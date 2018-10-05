@@ -2,6 +2,27 @@ import { ElementHelper } from '../utils/element-helper';
 import { element, by, browser, ExpectedConditions } from 'protractor';
 import { ListingCreationForm } from '../models/listing-creation-form';
 import { Wait } from '../enums/wait';
+import { Logger } from '../utils/logger';
+
+interface ListingNote {
+  selector: string,
+  parentList: string
+}
+
+export const LISTING_NOTES: {[s: string]: ListingNote} = {
+  SPECIAL_REQUIREMENTS: {
+    selector: 'note-SpecialRequirements',
+    parentList: 'noteList'
+  },
+  FACILITY_REQUIREMENTS: {
+    selector: 'note-FacilityRequirements',
+    parentList: 'noteList'
+  },
+  OTHER_NOTES: {
+    selector: 'note-Othernote',
+    parentList: 'otherNoteList'
+  }
+};
 
 export class ListingCreationPage {
   private parentElement = element(by.css('app-listing-create'))
@@ -24,6 +45,14 @@ export class ListingCreationPage {
     await this.elementHelper.typeDate(this.fromDateInput, listingCreationForm.fromDate);
     await this.elementHelper.typeDate(this.endDateInput, listingCreationForm.endDate);
     return await this.saveButton.click();
+  }
+
+  async setNoteValue(note: ListingNote, value: string) {
+    Logger.log(`Setting note of id: ${note.selector} within list of id ${note.parentList} to have text: \'${value}\'`);
+    let noteElement = await this.parentElement.element(by.id(note.parentList)).element(by.id(note.selector));
+    let textArea = await noteElement.element(by.id('note-textarea'));
+    Logger.log(`Locating textarea of note successful. Typing in the value`);
+    await this.elementHelper.typeValue(textArea, value);
   }
 
   async waitUntilVisible() {

@@ -15,5 +15,4 @@ export class ListingCreateDialogComponent {
     onSave() {
         this.dialogRef.close();
     }
-
 }

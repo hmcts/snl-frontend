@@ -6,6 +6,8 @@ export interface Note {
   content: string;
   entityId: string;
   entityType: string;
+  createdAt: string;
+  modifiedBy: string;
 }
 
 export function getNoteFromViewModel(note: NoteViewmodel): Note {
@@ -14,6 +16,8 @@ export function getNoteFromViewModel(note: NoteViewmodel): Note {
         content: note.content,
         type: note.type,
         entityId: note.entityId,
-        entityType: note.entityType
+        entityType: note.entityType,
+        createdAt: note.createdAt,
+        modifiedBy: note.modifiedBy
     } as Note
 }
