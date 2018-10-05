@@ -50,7 +50,7 @@
                 <mat-form-field>
                     <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearingPart.communicationFacilitator">
                         <mat-option>None</mat-option>
-                        <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option> 
+                        <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
@@ -82,7 +82,7 @@
 
             <div style="padding-right: 2em">
                 <div fxLayout="column" fxLayoutGap="10%">
-                    <app-note-list [notes]="noteViewModels"></app-note-list>
+                    <app-listing-note-list #notesComponent [notes]="this.listing.notes" [entityId]="this.listing.hearingPart.id"></app-listing-note-list>
                 </div>
             </div>
 
