@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { AuthPageComponent } from './containers/auth-page/auth-page.component';
 import { AuthGuard } from './guards/auth.guard';
 import { getLocalStorage } from '../utils/storage';
+import { GovukModule } from '../govuk/govuk.module';
 
 export const COMPONENTS = [
     AuthPageComponent,
@@ -22,6 +23,7 @@ export const COMPONENTS = [
         MatButtonModule,
         MatInputModule,
         MatFormFieldModule,
+        GovukModule,
         RouterModule.forChild([{
             path: '',
             component: AuthPageComponent,

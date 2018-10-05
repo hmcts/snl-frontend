@@ -20,10 +20,13 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "sass-styles.scss"
       ],
       "stylePreprocessorOptions": {
-        "includePaths": []
+        "includePaths": [
+          "../node_modules/govuk-frontend"
+        ]
       },
       "scripts": [],
       "environmentSource": "environments/environment.ts",
