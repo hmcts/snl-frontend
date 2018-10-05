@@ -46,7 +46,7 @@ const listingRequestCreate: CreateListingRequestBody = {
     id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial'
 }
 
-fdescribe('Amend Listing Request', () => {
+describe('Amend Listing Request', () => {
   beforeAll(async () => {
     await loginFlow.relogin()
   });
