@@ -105,6 +105,7 @@ describe('Planner, check newly created sessions existence', () => {
         });
 
         it('There should be at least one not allocated Session', async () => {
+            plannerPage.waitUntilVisible();
             resourceId = await plannerPage.getResourceIdByName('Not allocated');
             Logger.log('"Not allocated" resource id: ' + resourceId);
 
