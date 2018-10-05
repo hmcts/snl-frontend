@@ -10,42 +10,26 @@ import { Judges, JudgesCodes } from '../enums/judges';
 import { RoomCodes, Rooms } from '../enums/rooms';
 import { SessionTypes, SessionTypesCodes } from '../enums/session-types';
 import { Logger } from '../utils/logger';
-// import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
-// import { ElementHelper } from '../utils/element-helper';
-// import { by, element } from 'protractor';
-// import { ElementFinder } from 'protractor';
+import { ElementFinder } from 'protractor';
+import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 
 const loginFlow = new LoginFlow();
 const navigationFlow = new NavigationFlow();
 const plannerPage = new PlannerPage();
-// const sessionDetailsDialog = new SessionDetailsDialogPage();
-// const elementHelper = new ElementHelper();
+const sessionDetailsDialog = new SessionDetailsDialogPage();
 let today = moment();
 let numberOfVisibleEvents: number;
 let visibleElementsDiff: number;
 let resourceId: string;
 let textToCheck: string;
-
 let sessionsToCreate: SessionCreate[];
 
-// async function getTextFromArray(rowEvents, valueToCheck: string) {
-//     return rowEvents.clone()
-//         .filter(row => {
-//             return row.getText().then(value => {
-//                 return value === valueToCheck;
-//             });
-//         })
-//         .first()
-//         .getText();
-// }
-
-// async function clickAndValidateDialog(event: ElementFinder, valuesToCheck: string[]) {
-//     await plannerPage.clickOnEvent(event, valuesToCheck);
-//     const idDialogDisplayed = await sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
-//     expect(idDialogDisplayed).toBeTruthy();
-//     await sessionDetailsDialog.close();
-// }
-
+async function clickAndValidateDialog(event: ElementFinder, valuesToCheck: string[]) {
+    await plannerPage.clickOnEvent(event, valuesToCheck);
+    const idDialogDisplayed = await sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
+    expect(idDialogDisplayed).toBeTruthy();
+    await sessionDetailsDialog.close();
+}
 
 fdescribe('Planner, check newly created sessions existence', () => {
 
@@ -124,29 +108,22 @@ fdescribe('Planner, check newly created sessions existence', () => {
             resourceId = await plannerPage.getResourceIdByName('Not allocated');
             Logger.log('"Not allocated" resource id: ' + resourceId);
 
-            // let rowEvents = plannerPage.getAllEventsForTheResource(resourceId);
-            // rowEvents.first().getText().then(text => {
-            //     Logger.log('row events text: ' + text);
-            // });
-
             textToCheck = 'No Room - No Judge - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            // let handle = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-            // let found = await handle.getText();
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[0].id);
 
             expect(found).toEqual(textToCheck);
         });
 
-        // it('after a click open properly filled dialog', async () => {
-        //     let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-        //     const valuesToCheck: string[] = [
-        //         today.format('DD/MM/YYYY'),
-        //         SessionTypes.FTRACK_TRIAL_ONLY,
-        //         '(No judge)',
-        //         '(No room)'
-        //     ];
-        //     await clickAndValidateDialog(event, valuesToCheck);
-        // });
+        it('after a click open properly filled dialog', async () => {
+            let event = await plannerPage.getSessionEventById(sessionsToCreate[0].id);
+            const valuesToCheck: string[] = [
+                today.format('DD/MM/YYYY'),
+                SessionTypes.FTRACK_TRIAL_ONLY,
+                '(No judge)',
+                '(No room)'
+            ];
+            await clickAndValidateDialog(event, valuesToCheck);
+        });
 
         it('There should be at least one Session allocated to First judge', async () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.JUDGE_LINDA);
@@ -163,16 +140,16 @@ fdescribe('Planner, check newly created sessions existence', () => {
             expect(found).toEqual(textToCheck);
         });
 
-        // it('after a click open properly filled dialog', async () => {
-        //     let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-        //     const valuesToCheck: string[] = [
-        //         today.format('DD/MM/YYYY'),
-        //         SessionTypes.FTRACK_TRIAL_ONLY,
-        //         Judges.JUDGE_LINDA,
-        //         '(No room)'
-        //     ];
-        //     await clickAndValidateDialog(event, valuesToCheck);
-        // });
+        it('after a click open properly filled dialog', async () => {
+            let event = await plannerPage.getSessionEventById(sessionsToCreate[3].id);
+            const valuesToCheck: string[] = [
+                today.format('DD/MM/YYYY'),
+                SessionTypes.FTRACK_TRIAL_ONLY,
+                Judges.JUDGE_LINDA,
+                '(No room)'
+            ];
+            await clickAndValidateDialog(event, valuesToCheck);
+        });
 
         it('There should be at least two Session allocated to Second judge - prepare', async () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.AMY_WESSOME);
@@ -189,14 +166,14 @@ fdescribe('Planner, check newly created sessions existence', () => {
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[1].id);
             expect(found).toEqual(textToCheck);
 
-            // let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-            // const valuesToCheck: string[] = [
-            //     today.format('DD/MM/YYYY'),
-            //     SessionTypes.FTRACK_TRIAL_ONLY,
-            //     Judges.JUDGE_LINDA,
-            //     '(No room)'
-            // ];
-            // await clickAndValidateDialog(event, valuesToCheck);
+            let event = await plannerPage.getSessionEventById(sessionsToCreate[1].id);
+            const valuesToCheck: string[] = [
+                today.format('DD/MM/YYYY'),
+                SessionTypes.FTRACK_TRIAL_ONLY,
+                Judges.AMY_WESSOME,
+                '(No room)'
+            ];
+            await clickAndValidateDialog(event, valuesToCheck);
         });
 
         it('check second session', async () => {
@@ -205,14 +182,14 @@ fdescribe('Planner, check newly created sessions existence', () => {
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[2].id);
             expect(found).toEqual(secondTextToCheck);
 
-            // let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-            // const valuesToCheck: string[] = [
-            //     today.format('DD/MM/YYYY'),
-            //     SessionTypes.FTRACK_TRIAL_ONLY,
-            //     Judges.AMY_WESSOME,
-            //     Rooms.COURT_4
-            // ];
-            // await clickAndValidateDialog(event, valuesToCheck);
+            let event = await plannerPage.getSessionEventById(sessionsToCreate[2].id);
+            const valuesToCheck: string[] = [
+                today.format('DD/MM/YYYY'),
+                SessionTypes.FTRACK_TRIAL_ONLY,
+                Judges.AMY_WESSOME,
+                Rooms.COURT_4
+            ];
+            await clickAndValidateDialog(event, valuesToCheck);
         });
     });
 
