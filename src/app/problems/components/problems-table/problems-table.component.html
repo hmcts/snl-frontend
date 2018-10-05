@@ -1,4 +1,4 @@
-<mat-table #table [dataSource]="dataSource">
+<mat-table #table [dataSource]="problems">
 
   <ng-container matColumnDef="severity">
     <mat-header-cell *matHeaderCellDef> Severity </mat-header-cell>
@@ -32,10 +32,10 @@
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator #paginator
-               id="problems-table-paginator" 
-               [pageSize]="10"
-               [pageSizeOptions]="[5, 10, 20]"
-               [showFirstLastButtons]="true">
+<mat-paginator 
+  id="problems-table-paginator" 
+  [length]="totalCount" 
+  [pageSize]="initialPageSize" 
+  [pageSizeOptions]="[5, 10, 20]"
+  [showFirstLastButtons]="true">
 </mat-paginator>
-
