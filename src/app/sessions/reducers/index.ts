@@ -89,7 +89,7 @@ export const getFullSessions = createSelector(
         if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
             const sessionData: Session = sessions[sessionKey];
-            const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.session === sessionData.id);
+            const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.sessionId === sessionData.id);
             const allocated = calculateAllocated(hearingParts);
             const sessionType = (sessionTypes[sessionData.sessionTypeCode] === undefined) ?
                 {code: 'N/A', description: 'N/A'} as SessionType :
@@ -101,7 +101,6 @@ export const getFullSessions = createSelector(
                 duration: sessionData.duration,
                 room: rooms[sessionData.room],
                 person: judges[sessionData.person],
-                caseType: undefined,
                 sessionType: sessionType,
                 hearingParts: hearingParts,
                 jurisdiction: sessionData.jurisdiction,

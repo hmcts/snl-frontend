@@ -18,6 +18,7 @@ import { asArray } from '../../../utils/array-utils';
 import * as refData from '../../../core/reference/reducers/index';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import * as fromNotes from '../../../notes/actions/notes.action';
 
 @Component({
     selector: 'app-sessions-create',
@@ -49,23 +50,23 @@ export class SessionsCreateComponent implements OnInit {
         this.store.dispatch(new JudgeActions.Get());
     }
 
-    create(session) {
-        this.sessionId = session.id;
-        this.sessionCreationService.create(session);
-        this.dialogRef = this.openDialog();
-        this.dialogRef.afterClosed().subscribe(() => this.getCreatedSession(this.sessionId));
+    create(sessionCreate) {
+        this.sessionId = sessionCreate.session.id;
+        this.sessionCreationService.create(sessionCreate.session);
+        this.openDialog().afterClosed().subscribe((confirmed) => this.afterClosed(confirmed, sessionCreate.notes));
     }
 
-    public getCreatedSession(sessionId: string) {
-        this.store.dispatch(new SessionActions.Get(sessionId));
+    afterClosed(confirmed, notes) {
+         if (confirmed) {
+            this.store.dispatch(new SessionActions.Get(this.sessionId));
+            this.store.dispatch(new fromNotes.CreateMany(notes));
+        }
     }
 
     private openDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            data: { actionTitle: 'Creating session' },
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Creating session' }
         });
     }
 }

@@ -2,6 +2,8 @@ import { ProblemsService } from './problems.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppConfig } from '../../app.config';
+import { ProblemResponse, Problem } from '../models/problem.model';
+import * as moment from 'moment';
 
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
@@ -100,6 +102,39 @@ describe('ProblemsService', () => {
     afterEach(() => {
         httpMock.verify();
     });
+
+    describe('getAll', () => {
+        it('should fetch and map createdAt', () => {
+            const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems`;
+            const problemResponse: ProblemResponse = {
+                createdAt: '2018-10-03T12:06:56.386Z',
+                id: 'dd92a4b8896f9d555b70ffdff95fedfd',
+                message: 'Session of type multi-track---trial-only on 03/10/2018 11:00 does not yet have a room assigned',
+                references: [{
+                    description: 'Start: 03/10/2018 11:00, Session type: multi-track---trial-only',
+                    entity: 'session',
+                    entity_id: 'ddf0e208-1d85-4073-a4f0-445f7c967bd1',
+                    id: null,
+                    problem_id: null,
+                }],
+                severity: 'Critical',
+                type: 'Resource_missing'
+            }
+
+            const mappedProblem: Problem = {
+                ...problemResponse,
+                createdAt: moment(problemResponse.createdAt)
+            }
+
+            problemsService
+                .getAll()
+                .subscribe(problems => {
+                    expect(problems).toEqual([mappedProblem])
+                })
+
+            httpMock.expectOne(expectedUrl).flush([problemResponse]);
+        })
+    })
 
     describe('getProblems', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems`;

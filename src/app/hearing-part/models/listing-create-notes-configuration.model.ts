@@ -10,6 +10,14 @@ export class ListingCreateNotesConfiguration implements NotesConfiguration {
         this.entityName = 'ListingRequest';
     }
 
+    public getNewFreeTextNote(): Note {
+        return {
+            id: undefined,
+            content: '',
+            type: 'Other note'
+        } as Note;
+    }
+
     public defaultNotes(): Note[] {
         const specReqNote = {
             id: undefined,

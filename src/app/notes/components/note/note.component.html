@@ -1,5 +1,7 @@
-<form>
+<form class="block" id="note-{{note.type.split(' ').join('')}}">
+  <div *ngIf="note.displayCreationDetails" style="font-size: 12px">{{note.modifiedBy}} - {{note.createdAt}}</div>
+
   <mat-form-field  style="width: 100%">
-    <textarea  id="note-textarea" [formControl]="content" matInput matTextareaAutosize="true" placeholder="{{note.type}}" value="{{note.content}}"></textarea>
+    <textarea  id="note-textarea" [readonly]="note.readonly" [formControl]="content" matInput matTextareaAutosize="true" placeholder="{{note.inputLabel}}" value="{{note.content}}"></textarea>
   </mat-form-field>
 </form>

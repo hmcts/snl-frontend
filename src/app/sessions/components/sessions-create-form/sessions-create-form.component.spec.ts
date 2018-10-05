@@ -4,6 +4,11 @@ import { AngularMaterialModule } from '../../../../angular-material/angular-mate
 import { SessionsCreateFormComponent } from './sessions-create-form.component';
 import { SessionCreate } from '../../models/session-create.model';
 import * as moment from 'moment';
+import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
+import { NoteComponent } from '../../../notes/components/note/note.component';
+import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 let fixture: ComponentFixture<SessionsCreateFormComponent>;
 let component: SessionsCreateFormComponent;
@@ -11,8 +16,9 @@ let component: SessionsCreateFormComponent;
 describe('SessionsCreateFormComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule],
-            declarations: [SessionsCreateFormComponent]
+            imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule],
+            declarations: [SessionsCreateFormComponent, NoteListComponent, NoteComponent],
+            providers: [SessionCreateNotesConfiguration, NotesPreparerService]
         });
         fixture = TestBed.createComponent(SessionsCreateFormComponent);
         component = fixture.componentInstance;
@@ -25,6 +31,8 @@ describe('SessionsCreateFormComponent', () => {
     describe('Creating the session', () => {
         it('should generate unique session id on subsequent creations', () => {
             let spy = spyOn(component.createSessionAction, 'emit');
+            component.noteViewModels = [];
+            fixture.detectChanges();
 
             // @ts-ignore: saveArgumentsByValue not existent in jasmine-types but still works and exists in documentation:
             // https://jasmine.github.io/api/2.8/Spy_calls.html
@@ -35,9 +43,9 @@ describe('SessionsCreateFormComponent', () => {
             let firstSession = spy.calls.argsFor(0)[0];
             let secondSession = spy.calls.argsFor(1)[0];
 
-            expect(firstSession.id).toBeDefined();
-            expect(secondSession.id).toBeDefined();
-            expect(firstSession.id).not.toEqual(secondSession.id);
+            expect(firstSession.session.id).toBeDefined();
+            expect(secondSession.session.id).toBeDefined();
+            expect(firstSession.session.id).not.toEqual(secondSession.session.id);
         });
     });
 
@@ -51,7 +59,6 @@ describe('SessionsCreateFormComponent', () => {
                 duration: 900,
                 roomId: 'rid',
                 personId: 'pid',
-                caseType: 'CaseType',
             } as SessionCreate;
 
             expect(component.createSessionForm.durationInMinutes).toEqual(15);

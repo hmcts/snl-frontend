@@ -37,6 +37,8 @@ import { NotesModule } from './notes/notes.module';
 import { TransactionsModule } from './features/transactions/transactions.module';
 import { AuthHttpInterceptor } from './security/services/auth-http-interceptor';
 import { SecurityContext } from './security/services/security-context.service';
+import { HmctsModule } from './hmcts/hmcts.module';
+import { GovukModule } from './govuk/govuk.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -83,7 +85,9 @@ export class XhrInterceptor implements HttpInterceptor {
         PlannerModule,
         ReportModule,
         NotesModule,
-        TransactionsModule
+        TransactionsModule,
+        HmctsModule,
+        GovukModule
     ],
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},

@@ -2,19 +2,12 @@
   <div class="alert alert-danger" [hidden]="!error">
     There was a problem logging in. Please try again.
   </div>
-  <form #loginForm="ngForm" role="form" class="login-form" (submit)="login()">
+  <form #loginForm="ngForm" role="form" class="login-form" (submit)="login()" id="loginForm">
 
-    <mat-form-field class="login-full-width">
-      <input matInput placeholder="Username:" type="text"
-             class="form-control" id="username" name="username" [(ngModel)]="credentials.username">
-    </mat-form-field>
-
-    <mat-form-field class="login-full-width">
-      <input matInput placeholder="Password:" type="password"
-             class="form-control" id="password" name="password" [(ngModel)]="credentials.password">
-    </mat-form-field>
+    <app-govuk-input id="username" name="username" [(value)]="credentials.username" [label]="{text:'Username'}"></app-govuk-input>
+    <app-govuk-input id="password" name="password" type="password" [(value)]="credentials.password" [label]="{text:'Password'}"></app-govuk-input>
 
     <br/>
-    <button mat-raised-button color="warm" id="login">Log in</button>
+    <app-govuk-button text="Login" id="login"></app-govuk-button>
   </form>
 </div>

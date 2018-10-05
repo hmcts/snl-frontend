@@ -9,6 +9,7 @@ import { protractor } from 'protractor/built/ptor';
 import { waitFor } from '../utils/wait-for';
 import { forEachSeries } from 'p-iteration';
 import { browser } from 'protractor';
+import { Wait } from '../enums/wait';
 
 const navigationFlow = new NavigationFlow();
 const loginFlow = new LoginFlow();
@@ -23,8 +24,7 @@ const sessionCreate: SessionCreate = {
     roomId: null,
     duration: 1800,
     start: in5Minutes,
-    sessionTypeCode: 'fast-track---trial-only',
-    caseType: undefined
+    sessionTypeCode: 'fast-track---trial-only'
 };
 
 let numberOfProblems: number;
@@ -39,11 +39,25 @@ const displayValuesFromProblems = (problems: any[]): string[][] => {
     })
 }
 
+export function getConsole () {
+    return ;
+};
+
+export function printConsole () {
+    return getConsole
+};
+
 describe('Problem list tests', () => {
     describe('Go to Problems page', () => {
         beforeAll(async () => {
             await loginFlow.loginIfNeeded();
             await navigationFlow.goToProblemsPage();
+        });
+
+        afterEach(async () => {
+            await browser.manage().logs().get('browser').then(browserLog => {
+                browserLog.forEach(log => console.error(log.message));
+            });
         });
 
         it('Remember number of problems', async () => {
@@ -58,7 +72,7 @@ describe('Problem list tests', () => {
         });
 
         it('wait until new problems will be generated', async () => {
-            const result = await waitFor(5, async () => {
+            const result = await waitFor(Wait.normal, async () => {
                 const alreadyKnownIds = problemsBeforeAction.map(problem => problem.id)
                 const problems = (await API.getProblems()) as any[]
                 newProblems = problems.filter(x => !alreadyKnownIds.includes(x.id));

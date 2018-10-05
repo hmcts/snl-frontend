@@ -13,12 +13,11 @@ export function reducer(
     state = initialHearingTypeState,
     action: ReferenceDataActions
 ): HearingTypeState {
-    switch (action.type) {
-        case ReferenceDataActionTypes.GetAllHearingTypeComplete:
-            const entities: HearingType[] = action.payload === undefined ? [] : Object.values(action.payload);
-            return adapter.addAll(entities, state);
-        default:
-            return state;
+    if (action.type === ReferenceDataActionTypes.GetAllHearingTypeComplete) {
+        const entities: HearingType[] = action.payload === undefined ? [] : Object.values(action.payload);
+        return adapter.addAll(entities, state);
+    } else {
+        return state;
     }
 }
 

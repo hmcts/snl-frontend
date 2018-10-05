@@ -181,9 +181,7 @@ export class PlannerComponent implements OnInit {
 
     private openSummaryDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
-            hasBackdrop: true,
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
             data: {
                 summaryMsg$: this.summaryMessageService.buildSummaryMessage(this.latestEvent)
             }

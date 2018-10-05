@@ -17,13 +17,15 @@ import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
 import { ListingCreateDialogComponent } from './components/listing-create-dialog/listing-create-dialog';
+import { ListingNoteListComponent } from './components/listing-note-list/listing-note-list.component';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
     ListingCreateComponent,
     DraggableHearingPartComponent,
     DraggableHearingPartComponent,
-    ListingCreateDialogComponent
+    ListingCreateDialogComponent,
+    ListingNoteListComponent
 ];
 
 @NgModule({

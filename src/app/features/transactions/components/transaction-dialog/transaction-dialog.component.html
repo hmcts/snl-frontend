@@ -8,7 +8,7 @@
     </p>
   </div>
 
-  <div id="sessionCreationSummary" fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="(transacted$ | async) && !(conflicted$ | async)">
+  <div id="actionSummary" fxFlex fxLayout="column" fxLayoutGap="20px" *ngIf="(transacted$ | async) && !(conflicted$ | async)">
     <div fxFlex>
       Action summary
     </div>
@@ -47,16 +47,12 @@
     </div>
   </div>
 
-  <div *ngIf="!(finished$ | async)">
-      You are allowed to hide this dialog, the session processing will continue in the background.
-  </div>
   <div *ngIf="(finished$ | async) && (problems$ | async).length !== 0">
     Please confirm what action you’d like to take
   </div>
   <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
     <button *ngIf="(finished$ | async)" id="okButton" mat-button (click)="onOkClick()">Accept</button>
-    <button *ngIf="!(finished$ | async)" id="hideDialogButton" mat-button (click)="onHideDialogClick()">Hide the dialog</button>
-    <button *ngIf="(finished$ | async) && (problems$ | async).length !== 0" mat-button (click)="onDeleteClick()">Rollback</button>
+    <button *ngIf="(finished$ | async) && (problems$ | async).length !== 0" id="rollbackButton" mat-button (click)="onDeleteClick()">Rollback</button>
   </div>
 
 </div>
