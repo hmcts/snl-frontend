@@ -31,7 +31,7 @@ async function clickAndValidateDialog(event: ElementFinder, valuesToCheck: strin
     await sessionDetailsDialog.close();
 }
 
-fdescribe('Planner, check newly created sessions existence', () => {
+describe('Planner, check newly created sessions existence', () => {
 
     beforeAll(async () => {
         await loginFlow.relogin();
@@ -135,7 +135,6 @@ fdescribe('Planner, check newly created sessions existence', () => {
             });
 
             textToCheck = 'No Room - ' + Judges.JUDGE_LINDA + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            // let found = await getTextFromArray(rowEvents.clone(), textToCheck);
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[3].id);
             expect(found).toEqual(textToCheck);
         });
@@ -162,7 +161,6 @@ fdescribe('Planner, check newly created sessions existence', () => {
 
         it('check first session', async () => {
             textToCheck = 'No Room - ' + Judges.AMY_WESSOME + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            // let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[1].id);
             expect(found).toEqual(textToCheck);
 
@@ -178,7 +176,6 @@ fdescribe('Planner, check newly created sessions existence', () => {
 
         it('check second session', async () => {
             let secondTextToCheck = Rooms.COURT_4 + ' - ' + Judges.AMY_WESSOME + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            // let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), secondTextToCheck);
             let found = await plannerPage.getSessionEventTextById(sessionsToCreate[2].id);
             expect(found).toEqual(secondTextToCheck);
 

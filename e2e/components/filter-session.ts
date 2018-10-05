@@ -1,5 +1,5 @@
 import { ElementHelper } from '../utils/element-helper';
-import { element, by, ElementFinder} from 'protractor';
+import { by, element, ElementFinder } from 'protractor';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { Logger } from '../utils/logger';
 

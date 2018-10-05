@@ -88,7 +88,10 @@ export class PlannerPage {
     async clickOnEvent(elementToClick: ElementFinder, values: string[]) {
         await elementToClick.click();
         const dialog = element(by.css('mat-dialog-container'));
-        await browser.wait(ExpectedConditions.visibilityOf(dialog), Wait.normal, `Event with values [ ${values.join(', ')} ] haven't appear`);
+        await browser.wait(ExpectedConditions.visibilityOf(dialog),
+            Wait.normal,
+            `Event with values [ ${values.join(', ')} ] haven't appear`
+        );
     }
 
     async getSessionEventById(id: string): Promise<ElementFinder> {
