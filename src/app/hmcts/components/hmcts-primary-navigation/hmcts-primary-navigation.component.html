@@ -1,0 +1,21 @@
+<nav class="hmcts-primary-navigation" attr.aria-label="{{label}}">
+    <div class="hmcts-primary-navigation__container">
+        <ul class="hmcts-primary-navigation__list">
+            <li class="hmcts-primary-navigation__item" *ngFor="let item of items">
+                <a *ngIf="item.href && item.href.length > 0"
+                   class="hmcts-primary-navigation__link"
+                   [attr.aria-current]="selectedNavItem.href === item.href ? 'page' : null"
+                   routerLink="{{item.href}}"
+                   (click)="selectNavItem(item)">
+                    {{item.text}}
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<app-hmcts-sub-navigation
+  *ngFor="let item of items"
+  [items]="item.children"
+  [selectedNavItem]="selectedNavItem"
+  [hidden]="selectedNavItem.href != item.href"
+></app-hmcts-sub-navigation>
