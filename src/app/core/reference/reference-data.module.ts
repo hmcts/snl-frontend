@@ -17,7 +17,7 @@ import { ReferenceDataEffects } from './effects/reference-data.effects';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [AppConfig, ReferenceDataService]
+    providers: [ReferenceDataService]
 })
 export class ReferenceDataModule {
 }
