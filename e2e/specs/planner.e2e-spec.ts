@@ -1,7 +1,7 @@
 import { LoginFlow } from '../flows/login.flow';
 import { NavigationFlow } from '../flows/navigation.flow';
 import * as moment from 'moment';
-// import { API } from '../utils/api';
+import { API } from '../utils/api';
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 import { v4 as uuid } from 'uuid';
 import { PlannerPage } from '../pages/planner.po';
@@ -11,14 +11,15 @@ import { RoomCodes, Rooms } from '../enums/rooms';
 import { SessionTypes, SessionTypesCodes } from '../enums/session-types';
 import { Logger } from '../utils/logger';
 // import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
-import { ElementHelper } from '../utils/element-helper';
+// import { ElementHelper } from '../utils/element-helper';
+// import { by, element } from 'protractor';
 // import { ElementFinder } from 'protractor';
 
 const loginFlow = new LoginFlow();
 const navigationFlow = new NavigationFlow();
 const plannerPage = new PlannerPage();
 // const sessionDetailsDialog = new SessionDetailsDialogPage();
-const elementHelper = new ElementHelper();
+// const elementHelper = new ElementHelper();
 let today = moment();
 let numberOfVisibleEvents: number;
 let visibleElementsDiff: number;
@@ -27,16 +28,16 @@ let textToCheck: string;
 
 let sessionsToCreate: SessionCreate[];
 
-async function getTextFromArray(rowEvents, valueToCheck: string) {
-    return rowEvents.clone()
-        .filter(row => {
-            return row.getText().then(value => {
-                return value === valueToCheck;
-            });
-        })
-        .first()
-        .getText();
-}
+// async function getTextFromArray(rowEvents, valueToCheck: string) {
+//     return rowEvents.clone()
+//         .filter(row => {
+//             return row.getText().then(value => {
+//                 return value === valueToCheck;
+//             });
+//         })
+//         .first()
+//         .getText();
+// }
 
 // async function clickAndValidateDialog(event: ElementFinder, valuesToCheck: string[]) {
 //     await plannerPage.clickOnEvent(event, valuesToCheck);
@@ -45,7 +46,8 @@ async function getTextFromArray(rowEvents, valueToCheck: string) {
 //     await sessionDetailsDialog.close();
 // }
 
-describe('Planner, check newly created sessions existence', () => {
+
+fdescribe('Planner, check newly created sessions existence', () => {
 
     beforeAll(async () => {
         await loginFlow.relogin();
@@ -63,41 +65,44 @@ describe('Planner, check newly created sessions existence', () => {
             duration: 3600,
             start: today,
             sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
-        }, {
-            id: uuid(),
-            userTransactionId: uuid(),
-            personId: JudgesCodes[Judges.AMY_WESSOME],
-            roomId: null,
-            duration: 3600,
-            start: today,
-            sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
-        }, {
-            id: uuid(),
-            userTransactionId: uuid(),
-            personId: JudgesCodes[Judges.AMY_WESSOME],
-            roomId: RoomCodes[Rooms.COURT_4],
-            duration: 3600,
-            start: today.clone().minute(15),
-            sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
-        }, {
-            id: uuid(),
-            userTransactionId: uuid(),
-            personId: JudgesCodes[Judges.JUDGE_LINDA],
-            roomId: null,
-            duration: 3600,
-            start: today.clone().minute(15),
-            sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
-        }
+        },
+            {
+                id: uuid(),
+                userTransactionId: uuid(),
+                personId: JudgesCodes[Judges.AMY_WESSOME],
+                roomId: null,
+                duration: 3600,
+                start: today,
+                sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
+            },
+            {
+                id: uuid(),
+                userTransactionId: uuid(),
+                personId: JudgesCodes[Judges.AMY_WESSOME],
+                roomId: RoomCodes[Rooms.COURT_4],
+                duration: 3600,
+                start: today.clone().minute(15),
+                sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
+            }, {
+                id: uuid(),
+                userTransactionId: uuid(),
+                personId: JudgesCodes[Judges.JUDGE_LINDA],
+                roomId: null,
+                duration: 3600,
+                start: today.clone().minute(15),
+                sessionTypeCode: SessionTypesCodes[SessionTypes.FTRACK_TRIAL_ONLY]
+            }
         ];
     });
 
     describe('Check if newly created sessions are on planner ', () => {
         it('Create sessions ', async () => {
             numberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
-            // for (let session of sessionsToCreate) {
-            //     expect(await API.createSession(session)).toEqual(200);
-            // }
-            // expect(numberOfVisibleEvents).not.toEqual(0);
+            expect(numberOfVisibleEvents).not.toEqual(0);
+            for (let session of sessionsToCreate) {
+                expect(await API.createSession(session)).toEqual(200);
+                Logger.log('Created session: id: ' + session.id + ' start: ' + session.start.toISOString());
+            }
         });
 
         it('Refresh the view ', async () => {
@@ -108,6 +113,10 @@ describe('Planner, check newly created sessions existence', () => {
         it('Refreshed view should show new sessions ', async () => {
             let newNumberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
             visibleElementsDiff = Math.abs(newNumberOfVisibleEvents - numberOfVisibleEvents);
+            Logger.log('Sessions number, before call: ' +
+                numberOfVisibleEvents + ' after: ' + newNumberOfVisibleEvents +
+                ' diff: ' + visibleElementsDiff);
+
             expect(visibleElementsDiff).toEqual(sessionsToCreate.length);
         });
 
@@ -121,8 +130,9 @@ describe('Planner, check newly created sessions existence', () => {
             // });
 
             textToCheck = 'No Room - No Judge - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            let handle = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
-            let found = await handle.getText();
+            // let handle = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
+            // let found = await handle.getText();
+            let found = await plannerPage.getSessionEventTextById(sessionsToCreate[0].id);
 
             expect(found).toEqual(textToCheck);
         });
@@ -148,7 +158,8 @@ describe('Planner, check newly created sessions existence', () => {
             });
 
             textToCheck = 'No Room - ' + Judges.JUDGE_LINDA + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            let found = await getTextFromArray(rowEvents.clone(), textToCheck);
+            // let found = await getTextFromArray(rowEvents.clone(), textToCheck);
+            let found = await plannerPage.getSessionEventTextById(sessionsToCreate[3].id);
             expect(found).toEqual(textToCheck);
         });
 
@@ -174,7 +185,8 @@ describe('Planner, check newly created sessions existence', () => {
 
         it('check first session', async () => {
             textToCheck = 'No Room - ' + Judges.AMY_WESSOME + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
+            // let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
+            let found = await plannerPage.getSessionEventTextById(sessionsToCreate[1].id);
             expect(found).toEqual(textToCheck);
 
             // let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);
@@ -189,8 +201,8 @@ describe('Planner, check newly created sessions existence', () => {
 
         it('check second session', async () => {
             let secondTextToCheck = Rooms.COURT_4 + ' - ' + Judges.AMY_WESSOME + ' - ' + SessionTypes.FTRACK_TRIAL_ONLY;
-            let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), secondTextToCheck);
-
+            // let found = await getTextFromArray(plannerPage.getAllEventsForTheResource(resourceId), secondTextToCheck);
+            let found = await plannerPage.getSessionEventTextById(sessionsToCreate[2].id);
             expect(found).toEqual(secondTextToCheck);
 
             // let event = await elementHelper.elementThatContains(plannerPage.getAllEventsForTheResource(resourceId), textToCheck);

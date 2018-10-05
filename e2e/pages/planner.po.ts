@@ -7,7 +7,17 @@ export class PlannerPage {
     private plannerTitle = element(by.tagName('h2'));
 
     async getNumberOfVisibleEvents(): Promise<number> {
+        await this.waitForCalendarToLoadEvents();
         return await element.all(this.timelineEvent).count();
+    }
+
+    private async waitForCalendarToLoadEvents() {
+        await browser
+            .wait(
+                ExpectedConditions.visibilityOf(element.all(this.timelineEvent).first()),
+                Wait.short
+            )
+            .catch(() => Promise.resolve(false));
     }
 
     async clickNextButton() {
@@ -36,12 +46,7 @@ export class PlannerPage {
         await element(by.className('fc-timelineDay-button')).click();
         await this.clickPrevButton();
         await this.clickNextButton();
-        await browser
-            .wait(
-                ExpectedConditions.visibilityOf(element.all(this.timelineEvent).first()),
-                Wait.short
-            )
-            .catch(() => Promise.resolve(false));
+        await this.waitForCalendarToLoadEvents();
     }
 
     async waitUntilVisible() {
@@ -83,6 +88,14 @@ export class PlannerPage {
     async clickOnEvent(elementToClick: ElementFinder, values: string[]) {
         await elementToClick.click();
         const dialog = element(by.css('mat-dialog-container'));
-        await browser.wait(ExpectedConditions.visibilityOf(dialog), Wait.normal, `Event with values [ ${values.join(', ')} ] haven't appear`)
+        await browser.wait(ExpectedConditions.visibilityOf(dialog), Wait.normal, `Event with values [ ${values.join(', ')} ] haven't appear`);
+    }
+
+    async getSessionEventById(id: string): Promise<ElementFinder> {
+        return await element(by.id(id)).element(by.xpath('..'));
+    }
+
+    async getSessionEventTextById(id: string): Promise<string> {
+        return await (await this.getSessionEventById(id)).getText();
     }
 }
