@@ -9,20 +9,20 @@ interface ListingNote {
   parentList: string
 }
 
-export const LISTING_NOTES = {
+export const LISTING_NOTES: {[s: string]: ListingNote} = {
   SPECIAL_REQUIREMENTS: {
     selector: 'note-SpecialRequirements',
     parentList: 'noteList'
-  } as ListingNote,
+  },
   FACILITY_REQUIREMENTS: {
     selector: 'note-FacilityRequirements',
     parentList: 'noteList'
-  } as ListingNote,
+  },
   OTHER_NOTES: {
     selector: 'note-Othernote',
     parentList: 'otherNoteList'
-  } as ListingNote
-}
+  }
+};
 
 export class ListingCreationPage {
   private parentElement = element(by.css('app-listing-create'))
