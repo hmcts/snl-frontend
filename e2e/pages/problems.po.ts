@@ -2,10 +2,12 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { Table } from '../components/table';
 import { Logger } from '../utils/logger';
+import { Paginator } from '../components/paginator';
 
 export class ProblemsPage {
     private containerElement = element(by.css('app-problems-page'))
     public problemsTable = new Table(element(by.css('app-problems-table')));
+    private problemsTablePaginator = new Paginator(element(by.id('problems-table-paginator')));
 
     async waitUntilVisible() {
         Logger.log(`Waiting for Problems page to be visible`);
@@ -14,7 +16,8 @@ export class ProblemsPage {
 
     async isProblemDisplayed(values: string[]): Promise<boolean> {
         Logger.log(`Checking if problem with values: '${values}' is displayed`);
-        const row = await this.problemsTable.rowThatContains(...values);
+
+        const row = await this.problemsTable.rowThatContainsAtAnyPage(this.problemsTablePaginator, ...values);
         await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Problem row with values: '${values}' is not present`);
         return await row.isPresent();
     }

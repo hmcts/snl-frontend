@@ -8,15 +8,15 @@ import { ProblemsPage } from './problems.po';
 import { PlannerPage } from './planner.po';
 
 export class TopMenu {
-  private parentElement = element(by.css('mat-toolbar-row'));
-  private listingsButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Listings');
-  private calendarButtonSelector = by.cssContainingText('.mat-button-wrapper', 'Calendar');
-  private problemsButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Problems'));
-  private logoutButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Logout'));
-  private plannerButtonElement = element(by.cssContainingText('.mat-button-wrapper', 'Planner'));
-  private sessionCreatePage = new SessionCreationPage();
-  private sessionSearchPage = new SessionSearchPage();
-  private listingCreatePage = new ListingCreationPage();
+  private parentElement = element(by.css('nav.hmcts-primary-navigation'));
+  private listingsButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Listings');
+  private calendarButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Calendar');
+  private problemsButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Problems'));
+  private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'))
+  private plannerButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Planner'));
+  private sessionCreatePage = new SessionCreationPage()
+  private sessionSearchPage = new SessionSearchPage()
+  private listingCreatePage = new ListingCreationPage()
   private sessionAmendListPage = new SessionAmendListPage();
   private problemsPage = new ProblemsPage();
   private plannerPage = new PlannerPage();

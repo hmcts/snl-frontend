@@ -1,5 +1,6 @@
 <div id="notesDialog" draggable="true" class="container">
-    <app-note-list [notes]="data" [disabled]=true></app-note-list>
+    <app-note-list [notes]="noteViewModels" [disabled]=true></app-note-list>
+    <app-note-list class="free-text-notes-box" [notes]="freeTextNoteViewModels" [disabled]=true></app-note-list>
     <div id="button-space">
         <button mat-button (click)="onCloseClick()">Close</button>
     </div>

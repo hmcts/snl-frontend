@@ -46,7 +46,7 @@ describe('Notes Effects', () => {
 
     describe('When creating many notes', () => {
         it('with non-empty notes payload it should call proper service and return \'UpsertMany\' action', () => {
-            spyOn(notesService, 'createMany').and.returnValue(Observable.of([note]));
+            spyOn(notesService, 'upsertMany').and.returnValue(Observable.of([note]));
 
             const action = new NoteActions.CreateMany([note]);
             const expectedAction = new NoteActions.UpsertMany([note]);
@@ -58,7 +58,7 @@ describe('Notes Effects', () => {
         });
 
         it('with empty notes payload it should call proper service and do not return any action', () => {
-            spyOn(notesService, 'createMany').and.returnValue(Observable.of([note]));
+            spyOn(notesService, 'upsertMany').and.returnValue(Observable.of([note]));
 
             const action = new NoteActions.CreateMany([]);
 

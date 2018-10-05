@@ -7,14 +7,10 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing-part.action';
 import { Priority } from '../../models/priority-model';
-import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import { HearingPart } from '../../models/hearing-part';
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
@@ -25,9 +21,9 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
-import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
-
-const DURATION_UNIT = 'minute';
+import { safe } from '../../../utils/js-extensions';
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-listing-create',
@@ -35,43 +31,50 @@ const DURATION_UNIT = 'minute';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
-    @ViewChild(NoteListComponent) noteList: NoteListComponent;
+    @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
     @Input() set data(value: ListingCreate) {
         this.listing = value;
-        this.listing.notes = this.setNotesIfExist(value);
-        this.initiateForm();
+        this.setFormGroup();
     }
 
     @Input() editMode = false;
 
     @Output() onSave = new EventEmitter();
 
-    noteViewModels: NoteViewmodel[];
     listingCreate: FormGroup;
-    hearings: HearingType[] = [];
-    communicationFacilitators = ['None', 'Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
+    communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     errors = '';
-    success: boolean;
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
-    caseTypes: CaseType[] = [];
+    hearings: HearingType[] = [];
+    noteViewModels: NoteViewmodel[] = [];
+
+    private _caseTypes: CaseType[] = [];
+    get caseTypes(): CaseType[] { return this._caseTypes }
+    set caseTypes(caseTypes: CaseType[]) {
+        this._caseTypes = caseTypes
+        const caseTypeCode = safe(() => this.listing.hearingPart.caseTypeCode)
+
+        if (caseTypeCode) {
+            this.hearings = this.getHearingTypesFromCaseType(caseTypeCode);
+        }
+    }
 
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
+    numberOfSeconds = 60
+    binIntMaxValue = 9223372036854775807;
+    limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
 
     public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
-                private readonly notePreparerService: NotesPreparerService,
-                private readonly hearingPartModificationService: HearingPartModificationService,
-                readonly listingNotesConfig: ListingCreateNotesConfiguration) {
+                private readonly hearingPartModificationService: HearingPartModificationService) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
-            if (error !== undefined) {
-                this.errors = error.message;
-            }
+            this.errors = safe(() => error.message);
         });
         this.store.select(fromJudges.getJudges).withLatestFrom(
             this.store.select(fromReferenceData.selectCaseTypes)
@@ -79,12 +82,11 @@ export class ListingCreateComponent implements OnInit {
                 this.judges = Object.values(judges);
                 this.caseTypes = caseTypes;
             }
-        ).subscribe((data) => {
+        ).subscribe(() => {
             if (!this.editMode) {
                 this.initiateListing();
             }
-            this.initiateForm();
-            this.initiateNotes();
+            this.setFormGroup();
         });
     }
 
@@ -98,10 +100,11 @@ export class ListingCreateComponent implements OnInit {
         } else {
             this.create();
         }
+        this.errors = ''
     }
 
     edit() {
-        this.hearingPartModificationService.updateListingRequest(this.listing, this.prepareNotes());
+        this.hearingPartModificationService.updateListingRequest(this.listing);
         this.openDialog('Editing listing request');
 
         this.onSave.emit();
@@ -110,20 +113,12 @@ export class ListingCreateComponent implements OnInit {
     create() {
         this.listing.hearingPart.id = uuid();
 
-        this.hearingPartModificationService.createListingRequest(this.listing, this.prepareNotes());
+        this.hearingPartModificationService.createListingRequest(this.listing);
         this.openDialog('Creating listing request');
     }
 
     createNotes() {
-        this.store.dispatch(new fromNotes.CreateMany(this.prepareNotes()));
-    }
-
-    prepareNotes() {
-        return this.notePreparerService.prepare(
-            this.noteList.getModifiedNotes(),
-            this.listing.hearingPart.id,
-            this.listingNotesConfig.entityName
-        );
+        this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
     }
 
     updateDuration(durationValue) {
@@ -137,7 +132,7 @@ export class ListingCreateComponent implements OnInit {
         const targetTo = control.get('targetTo').value as moment.Moment;
 
         function isLogicallyUndefined(property: any) {
-            return (property === undefined) || (property === '') || (property === null);
+            return (property === undefined) || (property === '') || (property === null) || property.isValid() === false;
         }
 
         if (isLogicallyUndefined(targetFrom) || isLogicallyUndefined(targetTo)) {
@@ -148,63 +143,46 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onCaseTypeChanged(event: MatSelectChange) {
+        this.listing.hearingPart.hearingTypeCode = undefined;
         let newHearings = [];
+
         if (!(event.value === undefined || event.value === null)) {
             const selectedCode = event.value as string;
-            newHearings = this.caseTypes.find(ct => ct.code === selectedCode).hearingTypes;
+            newHearings = this.getHearingTypesFromCaseType(selectedCode);
         }
         this.hearings = newHearings;
     }
 
-    private setNotesIfExist(hp: ListingCreate) {
-        return this.listingNotesConfig.defaultNotes().map(note => {
-            const obj = hp.notes.find(note1 => note1.type === note.type);
-            if (obj === undefined) {
-                return note;
-            } else {
-                return obj;
-            }
-        });
-    }
-
     private initiateListing() {
         this.listing = this.defaultListing();
-        this.errors = '';
-        this.success = false;
     }
 
-    private defaultListing() {
-        const now = moment();
-        if (this.caseTypes !== undefined && this.caseTypes.length > 0) {
-            this.hearings = this.caseTypes[0].hearingTypes;
-            const defaultHearingTypeCode = (this.hearings[0] !== undefined) ? this.hearings[0].code : null;
-            return {
-                hearingPart: {
-                    id: undefined,
-                    session: undefined,
-                    caseNumber: `number-${now.toISOString()}`,
-                    caseTitle: `title-${now.toISOString()}`,
-                    caseType: this.caseTypes[0].code,
-                    hearingType: defaultHearingTypeCode,
-                    duration: moment.duration(30, DURATION_UNIT),
-                    scheduleStart: now,
-                    scheduleEnd: moment().add(30, 'day'),
-                    priority: Priority.Low,
-                    version: 0,
-                    reservedJudgeId: undefined,
-                    communicationFacilitator: undefined
-                } as HearingPart,
-                notes: this.listingNotesConfig.defaultNotes(),
-                userTransactionId: undefined
-            } as ListingCreate;
-        }
+    private getHearingTypesFromCaseType(selectedCaseTypeCode): HearingType[] {
+        return this.caseTypes.find(ct => ct.code === selectedCaseTypeCode).hearingTypes;
     }
 
-    private initiateNotes() {
-        this.noteViewModels = this.listing.notes.map(getNoteViewModel);
+    private defaultListing(): ListingCreate {
+        return {
+            hearingPart: {
+                id: undefined,
+                caseNumber: undefined,
+                caseTitle: undefined,
+                caseTypeCode: undefined,
+                hearingTypeCode: undefined,
+                duration: undefined,
+                scheduleStart: undefined,
+                scheduleEnd: undefined,
+                priority: Priority.Low,
+                version: 0,
+                reservedJudgeId: undefined,
+                communicationFacilitator: undefined,
+                userTransactionId: undefined,
+            },
+            notes: []
+        };
     }
 
-    private initiateForm() {
+    private setFormGroup() {
         this.listingCreate = new FormGroup({
             caseNumber: new FormControl(
                 this.listing.hearingPart.caseNumber,
@@ -212,19 +190,19 @@ export class ListingCreateComponent implements OnInit {
             ),
             caseTitle: new FormControl(
                 this.listing.hearingPart.caseTitle,
-                [Validators.required, Validators.maxLength(this.caseTitleMaxLength)]
+                [Validators.maxLength(this.caseTitleMaxLength)]
             ),
-            caseType: new FormControl(
-                this.listing.hearingPart.caseType,
+            caseTypeCode: new FormControl(
+                this.listing.hearingPart.caseTypeCode,
                 [Validators.required]
             ),
-            hearingType: new FormControl(
-                this.listing.hearingPart.hearingType,
+            hearingTypeCode: new FormControl(
+                this.listing.hearingPart.hearingTypeCode,
                 [Validators.required]
             ),
             duration: new FormControl(
-                this.listing.hearingPart.duration.asMinutes(),
-                [Validators.required, Validators.min(1)]
+                this.listing.hearingPart.duration ? this.listing.hearingPart.duration.asMinutes() : undefined,
+                [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
             ),
             targetDates: new FormGroup({
                 targetFrom: new FormControl(this.listing.hearingPart.scheduleStart),
@@ -248,17 +226,10 @@ export class ListingCreateComponent implements OnInit {
         }
         if (this.editMode) {
             this.afterEdit();
-        } else {
-            this.afterCreate();
         }
     }
 
     afterEdit() {
         this.store.dispatch(new GetById(this.listing.hearingPart.id));
-        this.initiateListing();
-    }
-
-    afterCreate() {
-        this.initiateListing();
     }
 }

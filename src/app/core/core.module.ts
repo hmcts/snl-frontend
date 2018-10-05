@@ -7,19 +7,21 @@ import { TransactionBackendService } from '../features/transactions/services/tra
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
 import { ReferenceDataModule } from './reference/reference-data.module';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
+import { HmctsModule } from '../hmcts/hmcts.module';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
     CalendarComponent,
     DurationFormatPipe,
-    DurationAsMinutesPipe
+    DurationAsMinutesPipe,
 ];
 
 @NgModule({
     imports: [
         CommonModule,
         FullCalendarModule,
-        ReferenceDataModule
+        ReferenceDataModule,
+        HmctsModule
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,

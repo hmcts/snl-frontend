@@ -1,0 +1,13 @@
+<nav class="hmcts-sub-navigation" attr.aria-label="{{label}}">
+    <ul class="hmcts-sub-navigation__list">
+        <li class="hmcts-sub-navigation__item" *ngFor="let item of items">
+            <a data-selector="sub-nav-link"
+               class="hmcts-sub-navigation__link"
+               (click)="click(item)"
+               [attr.aria-current]="item.href === selectedNavItem.href ? '' : null"
+               routerLink="{{item.href}}">
+                {{item.text}}
+            </a>
+        </li>
+    </ul>
+</nav>

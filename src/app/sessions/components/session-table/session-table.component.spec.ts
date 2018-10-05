@@ -76,17 +76,17 @@ describe('SessionTableComponent', () => {
         } as SessionViewModel;
 
         const displayedColumnsExpectedValues = [
-            {columnName: 'select session', expected: undefined},
-            {columnName: 'person', expected: sampleSessionViewModel.person.name},
-            {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'date', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
-            {columnName: 'room', expected: sampleSessionViewModel.room.name},
             {columnName: 'sessionType', expected: sampleSessionViewModel.sessionType.description},
+            {columnName: 'date', expected: sampleSessionViewModel.start.unix()},
+            {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
+            {columnName: 'person', expected: sampleSessionViewModel.person.name},
+            {columnName: 'room', expected: sampleSessionViewModel.room.name},
             {columnName: 'hearingParts', expected: 0},
-            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
             {columnName: 'utilization', expected: 0},
             {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
+            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
+            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
+            {columnName: 'select session', expected: undefined}
         ];
 
         beforeEach(() => {

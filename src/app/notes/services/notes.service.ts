@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { Note } from '../models/note.model';
+import { NoteUpsert } from '../models/note-upsert.model';
 
 @Injectable()
 export class NotesService {
@@ -22,7 +23,8 @@ export class NotesService {
             .post<Note[]>(`${this.getUrl()}/entities`, ids)
             .pipe(map(notes => notes || []))
     }
-    createMany(notes: Note[]): Observable<Note[]> {
+
+    upsertMany(notes: NoteUpsert[]): Observable<Note[]> {
         return this.http
             .put<Note[]>(this.getUrl(), notes)
     }

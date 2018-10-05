@@ -44,15 +44,14 @@ import { HearingPartModificationService } from '../../services/hearing-part-modi
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import moment = require('moment');
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
 let store: Store<State>;
 let fixture: ComponentFixture<ListingCreateComponent>;
-let listingCreateNoteConfig: ListingCreateNotesConfiguration;
 
 let note;
-let secondNote;
 
 const now = moment();
 const stubAppConfig = {getApiUrl: () => 'https://fake.url'};
@@ -67,8 +66,8 @@ const listingCreate = {
         session: undefined,
         caseNumber: 'number',
         caseTitle: 'title',
-        caseType: caseTypeWht1.code,
-        hearingType: stubHearingTypes1[0].code,
+        caseTypeCode: caseTypeWht1.code,
+        hearingTypeCode: stubHearingTypes1[0].code,
         duration: moment.duration(30, 'minute'),
         scheduleStart: now,
         scheduleEnd: now,
@@ -109,7 +108,8 @@ describe('ListingCreateComponent', () => {
             ],
             declarations: [
                 ListingCreateComponent,
-                TransactionDialogComponent
+                TransactionDialogComponent,
+                ListingNoteListComponent
             ],
             providers: [
                 {provide: AppConfig, useValue: stubAppConfig},
@@ -140,7 +140,6 @@ describe('ListingCreateComponent', () => {
         store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([caseTypeWht1]));
         store.dispatch(new JudgeActions.GetComplete(stubJudges));
 
-        listingCreateNoteConfig = TestBed.get(ListingCreateNotesConfiguration);
         fixture = TestBed.createComponent(ListingCreateComponent);
         component = fixture.componentInstance;
         component.editMode = false;
@@ -148,7 +147,7 @@ describe('ListingCreateComponent', () => {
 
     describe('Initial state ', () => {
         it('should include priority', () => {
-            expect(component.errors).toEqual('');
+            expect(component.errors).toBeUndefined();
             expect(component.listing).toBeDefined();
             expect(component.listing.hearingPart.priority).toBe(Priority.Low);
         });
@@ -185,14 +184,6 @@ describe('ListingCreateComponent', () => {
                 entityId: undefined,
                 entityType: 'e'
             } as Note;
-
-            secondNote = {
-                id: undefined,
-                content: 'a',
-                type: 't',
-                entityId: undefined,
-                entityType: 'e'
-            } as Note;
         });
 
         it('with custom inputs should dispatch proper action', () => {
@@ -208,13 +199,12 @@ describe('ListingCreateComponent', () => {
             expect(createListingAction.type).toEqual(
                 HearingPartActionTypes.CreateListingRequest
             );
-            expect(createdListing.hearingPart.id).toBeDefined();
-            expect(createdListing.hearingPart.caseNumber).toEqual('number');
-            expect(createdListing.hearingPart.caseType).toEqual('case-type-code1');
-            expect(createdListing.hearingPart.hearingType).toEqual('hearing-type-code');
-            expect(createdListing.hearingPart.scheduleStart).toEqual(now);
-            expect(createdListing.hearingPart.scheduleEnd).toEqual(now);
-            expect(createdListing.notes).toEqual([]);
+            expect(createdListing.id).toBeDefined();
+            expect(createdListing.caseNumber).toEqual('number');
+            expect(createdListing.caseTypeCode).toEqual('case-type-code1');
+            expect(createdListing.hearingTypeCode).toEqual('hearing-type-code');
+            expect(createdListing.scheduleStart).toEqual(now);
+            expect(createdListing.scheduleEnd).toEqual(now);
         });
 
         it('with default inputs should dispatch proper action', () => {
@@ -228,126 +218,72 @@ describe('ListingCreateComponent', () => {
             expect(createListingAction.type).toEqual(
                 HearingPartActionTypes.CreateListingRequest
             );
-            expect(createListingAction.payload.hearingPart).toEqual(defaultListing.hearingPart);
+            expect(createListingAction.payload).toEqual(defaultListing.hearingPart);
         });
 
-        it('with some notes it should set default notes post-creation', () => {
-            component.listing.notes = [{...note, content: 'custom content'}];
+        it('with some notes it should not changed it after post-creation', () => {
+            const expectedNotes = [{...note, content: 'custom content'}];
+            component.listing.notes = expectedNotes;
 
             component.save();
-            component.afterCreate();
 
-            expect(component.listing.notes).toEqual(
-                listingCreateNoteConfig.defaultNotes()
-            );
-
-            it('should fail when start date is after end date', () => {
-                component.listing.hearingPart.scheduleStart = moment();
-                component.listing.hearingPart.scheduleEnd = moment().subtract(10, 'day');
-                component.save();
-
-                expect(component.success).toBe(false);
-                expect(component.listing).toBeDefined();
-                expect(component.listing.hearingPart.id).not.toBeUndefined();
-
-                const createFailed = storeSpy.calls.mostRecent()
-                    .args[0] as CreateFailed;
-                expect(createFailed.type).toEqual(HearingPartActionTypes.CreateFailed);
-            });
-
-            it('If start date is undefined', () => {
-                component.listing.hearingPart.scheduleStart = undefined;
-                component.listing.hearingPart.scheduleEnd = moment();
-
-                component.save();
-
-                expect(storeSpy).toHaveBeenCalledTimes(3);
-                expect(component.errors).toEqual('');
-            });
-
-            it('If end date is undefined', () => {
-                component.listing.hearingPart.scheduleStart = moment();
-                component.listing.hearingPart.scheduleEnd = undefined;
-
-                component.save();
-
-                expect(storeSpy).toHaveBeenCalledTimes(3);
-                expect(component.errors).toEqual('');
-            });
-
-            it('should succeed when start date is before end date', () => {
-                component.listing.hearingPart.scheduleStart = moment();
-                component.listing.hearingPart.scheduleEnd = moment().add(10, 'day');
-                component.save();
-
-                const createFailed = storeSpy.calls.mostRecent()
-                    .args[0] as CreateFailed;
-                expect(createFailed.type).not.toEqual(
-                    HearingPartActionTypes.CreateFailed
-                );
-                expect(component.listing).toBeDefined();
-                expect(component.success).toBe(true);
-            });
-
-            it('should dispatch proper action', () => {
-                component.save();
-
-                expect(storeSpy).toHaveBeenCalledTimes(3);
-
-                const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
-
-                expect(createListingAction.type).toEqual(
-                    HearingPartActionTypes.CreateListingRequest
-                );
-            });
-
-            it('should prepare listing request with id', () => {
-                component.save();
-
-                expect(storeSpy).toHaveBeenCalledTimes(3);
-
-                const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
-                const createdListing = createListingAction.payload;
-
-                expect(createdListing.hearingPart.id).toBeDefined();
-            });
+            expect(component.listing.notes).toEqual(expectedNotes);
         });
 
-        describe('should prepare notes', () => {
-            let createListingAction;
-            let createdListing;
+        it('If start date is undefined', () => {
+            component.listing.hearingPart.scheduleStart = undefined;
+            component.listing.hearingPart.scheduleEnd = moment();
 
-            beforeEach(() => {
-                fixture.detectChanges();
-                spyOn(component.noteList, 'getModifiedNotes').and.callFake(() => [
-                    note,
-                    secondNote
-                ]);
+            component.save();
 
-                component.save();
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+            expect(component.errors).toEqual('');
+        });
 
-                createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
-                createdListing = createListingAction.payload;
-            });
+        it('If end date is undefined', () => {
+            component.listing.hearingPart.scheduleStart = moment();
+            component.listing.hearingPart.scheduleEnd = undefined;
 
-            it('with properly generated ids', () => {
-                expect(createdListing.notes.length).toEqual(2);
-                expect(createdListing.notes[0].id).toBeDefined();
-                expect(createdListing.notes[1].id).toBeDefined();
-                expect(createdListing.notes[0].id).not.toEqual(
-                    createdListing.notes[1].id
-                );
-            });
+            component.save();
 
-            it('with properly generated parentIds', () => {
-                expect(createdListing.notes[0].entityId).toEqual(createdListing.hearingPart.id);
-                expect(createdListing.notes[1].entityId).toEqual(createdListing.hearingPart.id);
-            });
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+            expect(component.errors).toEqual('');
+        });
 
-            it('with properly generated entityType names', () => {
-                expect(createdListing.notes[0].entityType).toEqual('ListingRequest');
-                expect(createdListing.notes[1].entityType).toEqual('ListingRequest');
-            });
+        it('should succeed when start date is before end date', () => {
+            component.listing.hearingPart.scheduleStart = moment();
+            component.listing.hearingPart.scheduleEnd = moment().add(10, 'day');
+            component.save();
+
+            const createFailed = storeSpy.calls.mostRecent()
+                .args[0] as CreateFailed;
+            expect(createFailed.type).not.toEqual(
+                HearingPartActionTypes.CreateFailed
+            );
+            expect(component.listing).toBeDefined();
+        });
+
+        it('should dispatch proper action', () => {
+            component.save();
+
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+
+            const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+
+            expect(createListingAction.type).toEqual(
+                HearingPartActionTypes.CreateListingRequest
+            );
+        });
+
+        it('should prepare listing request with id', () => {
+            component.save();
+
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+
+            const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+            const createdListing = createListingAction.payload;
+
+            expect(createdListing.id).toBeDefined();
         });
 
         describe('save with edit mode', () => {
@@ -379,12 +315,6 @@ describe('ListingCreateComponent', () => {
                 component.data = listingCreate;
 
                 expect(component.listing).toEqual(listingCreate);
-            });
-
-            it('should set default notes if there are no notes in listing', () => {
-                component.data = listingCreate;
-
-                expect(component.listing.notes).toEqual(component.listingNotesConfig.defaultNotes());
             });
         });
     });

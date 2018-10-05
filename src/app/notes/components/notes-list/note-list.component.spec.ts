@@ -17,6 +17,8 @@ describe('NoteListComponent', () => {
             type: 't',
             entityId: 'p',
             entityType: 'e',
+            createdAt: undefined,
+            modifiedBy: undefined
         };
 
         this.secondNote = {
@@ -24,7 +26,9 @@ describe('NoteListComponent', () => {
             content: 'a',
             type: 't',
             entityId: 'p',
-            entityType: 'e'
+            entityType: 'e',
+            createdAt: undefined,
+            modifiedBy: undefined
         };
 
         this.noteVm = {
