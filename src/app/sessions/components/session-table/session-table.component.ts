@@ -15,6 +15,9 @@ export class SessionTableComponent implements OnChanges {
   @Output()
   selectSession = new EventEmitter();
 
+  @Output()
+  viewNotes = new EventEmitter();
+
   @Input() sessions: SessionViewModel[];
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -43,6 +46,14 @@ export class SessionTableComponent implements OnChanges {
     this.tableVisible = false;
 
     this.dataSource = new MatTableDataSource(this.sessions);
+  }
+
+  hasNotes(session: SessionViewModel): boolean {
+      return session.notes.length > 0;
+  }
+
+  showNotes(session: SessionViewModel): void {
+      this.viewNotes.emit(session);
   }
 
   parseTime(date: moment.Moment) {

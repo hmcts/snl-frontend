@@ -28,6 +28,8 @@ import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { safe } from '../../../utils/js-extensions';
+import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
+import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -119,6 +121,14 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     assignButtonEnabled() {
         return !!(safe(() => this.selectedHearingPart.id) && (safe(() => this.selectedSession.id)));
+    }
+
+    openNotesDialog(session: SessionViewModel) {
+        this.dialog.open(NotesListDialogComponent, {
+            data: session.notes.map(getNoteViewModel).map(enableDisplayCreationDetails),
+            hasBackdrop: false,
+            width: '30%'
+        })
     }
 
     private openSummaryDialog() {

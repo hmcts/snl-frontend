@@ -48,6 +48,15 @@
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="notes">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Notes </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span [class.clickable]="hasNotes(element)" (click)="showNotes(element)">
+        {{hasNotes(element) ? "Yes" : "No"}}
+      </span>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="hearingParts">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearings </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingParts?.length}} </mat-cell>

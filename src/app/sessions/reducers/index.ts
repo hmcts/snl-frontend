@@ -1,3 +1,4 @@
+import * as fromNotes from '../../notes/reducers/index';
 import * as fromRooms from '../../rooms/reducers/room.reducer'
 import * as fromJudgesIndex from '../../judges/reducers';
 import * as fromHearingPartIndex from '../../hearing-part/reducers';
@@ -83,8 +84,8 @@ export const {
 
 export const getFullSessions = createSelector(
     getAllSessions, getRooms, fromJudgesIndex.getJudges, fromHearingPartIndex.getFullHearingParts,
-    fromReferenceData.selectSessionTypesDictionary,
-    (sessions, rooms, judges, inputHearingParts, sessionTypes) => {
+    fromReferenceData.selectSessionTypesDictionary, fromNotes.getNotes,
+    (sessions, rooms, judges, inputHearingParts, sessionTypes, notes) => {
         let finalSessions: SessionViewModel[];
         if (sessions === undefined) {return []}
         finalSessions = Object.keys(sessions).map(sessionKey => {
@@ -94,6 +95,11 @@ export const getFullSessions = createSelector(
             const sessionType = (sessionTypes[sessionData.sessionTypeCode] === undefined) ?
                 {code: 'N/A', description: 'N/A'} as SessionType :
                 sessionTypes[sessionData.sessionTypeCode];
+
+            const filteredNotes = Object.values(notes).filter(note => note.entityId === sessionData.id);
+            const sortedNotes = [...filteredNotes].sort((left, right) => {
+                return moment(right.createdAt).diff(moment(left.createdAt));
+            })
 
             return {
                 id: sessionData.id,
@@ -107,7 +113,8 @@ export const getFullSessions = createSelector(
                 version: sessionData.version,
                 allocated: allocated,
                 utilization: calculateUtilized(sessionData.duration, allocated),
-                available: calculateAvailable(sessionData.duration, allocated)
+                available: calculateAvailable(sessionData.duration, allocated),
+                notes: sortedNotes
             } as SessionViewModel;
         });
 
