@@ -7,7 +7,7 @@ import { SessionViewModel } from '../../models/session.viewmodel';
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.css'],
+  styleUrls: ['./session-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionTableComponent implements OnChanges {
@@ -33,8 +33,9 @@ export class SessionTableComponent implements OnChanges {
       'utilization',
       'available',
       'duration',
+      'notes',
       'allocated',
-      'select session',
+      'select session'
   ];
 
   dataSource: MatTableDataSource<any>;
