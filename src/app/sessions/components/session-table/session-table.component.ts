@@ -54,7 +54,7 @@ export class SessionTableComponent implements OnChanges {
   }
 
   showNotes(session: SessionViewModel): void {
-      if(this.hasNotes(session)) {
+      if (this.hasNotes(session)) {
           this.viewNotes.emit(session);
       }
   }
