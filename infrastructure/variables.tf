@@ -31,7 +31,7 @@ variable "object_id" {
 } */
 
 variable "external_host_name" {
-  default = "snl-frontend.reform.hmcts.net"
+  default = ""
 }
 variable "subscription" {}
 
