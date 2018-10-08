@@ -31,9 +31,9 @@ export class SessionTableComponent implements OnChanges {
       'room',
       'hearingParts',
       'utilization',
+      'notes',
       'available',
       'duration',
-      'notes',
       'allocated',
       'select session'
   ];
@@ -54,7 +54,9 @@ export class SessionTableComponent implements OnChanges {
   }
 
   showNotes(session: SessionViewModel): void {
-      this.viewNotes.emit(session);
+      if(this.hasNotes(session)) {
+          this.viewNotes.emit(session);
+      }
   }
 
   parseTime(date: moment.Moment) {
