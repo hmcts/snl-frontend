@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { ReferenceDataService } from './services/reference-data.service';
-import { AppConfig } from '../../app.config';
 import { StoreModule } from '@ngrx/store';
 import * as fromHT from './reducers/hearing-type.reducer';
 import * as fromCT from './reducers/case-type.reducer';
@@ -17,7 +16,7 @@ import { ReferenceDataEffects } from './effects/reference-data.effects';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [AppConfig, ReferenceDataService]
+    providers: [ReferenceDataService]
 })
 export class ReferenceDataModule {
 }
