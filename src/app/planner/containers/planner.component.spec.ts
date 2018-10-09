@@ -198,7 +198,8 @@ describe('PlannerComponent', () => {
               hearingParts: undefined,
               allocated: undefined,
               utilization: undefined,
-              available: undefined
+              available: undefined,
+              notes: []
           }
       ];
 

@@ -427,7 +427,8 @@ function defaultFullMockedSession(): SessionViewModel {
     version: 1,
     allocated: moment.duration('PT30M'),
     utilization: 100,
-    available: moment.duration('PT0M')
+    available: moment.duration('PT0M'),
+    notes: []
   };
 }
 

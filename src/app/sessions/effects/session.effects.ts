@@ -17,6 +17,7 @@ import 'rxjs/add/operator/mergeMap';
 import { CoreNotification } from '../../features/notification/model/core-notification';
 import { State } from '../../app.state';
 import * as fromSessionIndex from '../reducers/index';
+import * as notesActions from '../../notes/actions/notes.action';
 
 @Injectable()
 export class SessionEffects {
@@ -87,7 +88,8 @@ export class SessionEffects {
     getSession: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Get>(sessionActions.SessionActionTypes.Get),
         mergeMap(action => this.sessionsService.getSession(action.payload).pipe(
-            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action.payload])])),
+            mergeMap((data => [new sessionActions.UpsertOne(data.entities.sessions[action.payload]),
+                new notesActions.GetByEntities(Object.keys(data.entities.sessions))])),
         )),
         catchError((err: HttpErrorResponse) => of(new sessionActions.CreateFailed(err.error)))
     );
@@ -102,7 +104,8 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
-                    new hearingPartsActions.UpsertMany(data.entities.hearingParts)
+                    new hearingPartsActions.UpsertMany(data.entities.hearingParts),
+                    new notesActions.GetByEntities(Object.keys(data.entities.sessions))
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
                 )
@@ -137,7 +140,9 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
-                    new hearingPartsActions.SearchComplete(data.entities.hearingParts)
+                    new hearingPartsActions.SearchComplete(data.entities.hearingParts),
+                    new notesActions.GetByEntities([...Object.keys(data.entities.sessions),
+                        ...Object.keys(data.entities.hearingParts)])
                 ]),
                 // If request fails, dispatch failed action
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed('Error: ' + err.error)))

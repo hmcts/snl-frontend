@@ -46,7 +46,8 @@ describe('SessionsStatisticsService', () => {
                 version: undefined,
                 allocated: undefined,
                 utilization: undefined,
-                available: undefined
+                available: undefined,
+                notes: []
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT20M'));
@@ -69,7 +70,8 @@ describe('SessionsStatisticsService', () => {
                 version: undefined,
                 allocated: undefined,
                 utilization: undefined,
-                available: undefined
+                available: undefined,
+                notes: []
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration('PT1H30M'));
@@ -88,7 +90,8 @@ describe('SessionsStatisticsService', () => {
                 version: undefined,
                 allocated: undefined,
                 utilization: undefined,
-                available: undefined
+                available: undefined,
+                notes: []
             };
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration(0));
