@@ -15,9 +15,9 @@ module "snl-frontend" {
   location             = "${var.location}"
   env                  = "${var.env}"
   ilbIp                = "${var.ilbIp}"
-  is_frontend          = "${var.env != "preview" ? 1: 0}"
+  is_frontend          = "${var.external_host_name != "" ? "1" : "0"}"
+  additional_host_name = "${var.external_host_name != "" ? var.external_host_name : "null"}"
   subscription         = "${var.subscription}"
-  additional_host_name = "${var.external_host_name}"
   common_tags          = "${var.common_tags}"
 
   app_settings = {

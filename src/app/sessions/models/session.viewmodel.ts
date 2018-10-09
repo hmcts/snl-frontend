@@ -3,6 +3,7 @@ import { Room } from '../../rooms/models/room.model';
 import * as moment from 'moment';
 import { HearingPartViewModel } from '../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../core/reference/models/session-type';
+import { Note } from '../../notes/models/note.model';
 
 export interface SessionViewModel {
     id: string;
@@ -17,4 +18,5 @@ export interface SessionViewModel {
     allocated: moment.Duration;
     utilization: number;
     available: moment.Duration;
+    notes: Note[]
 }

@@ -40,6 +40,7 @@
     <div>
       <app-session-table
               (selectSession)="selectSession($event)"
+              (viewNotes)="openNotesDialog($event)"
               [sessions]="filteredSessions">
       </app-session-table>
     </div>
