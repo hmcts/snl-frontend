@@ -25,7 +25,7 @@ import * as sessionsActions from '../../actions/session.action';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { Session } from '../../models/session.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -146,7 +146,7 @@ describe('SessionsListingsSearchComponent', () => {
         StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
-      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingPartModificationService, SessionsFilterService],
+      providers: [SessionsListingsSearchComponent, SessionsStatisticsService, HearingModificationService, SessionsFilterService],
       declarations: [TransactionDialogComponent]
     });
 
@@ -344,10 +344,10 @@ describe('SessionsListingsSearchComponent', () => {
       expect(
         passedObj instanceof hearingPartActions.AssignToSession
       ).toBeTruthy();
-      expect(sessionAssignmentPayload.hearingPartId).toEqual(
+      expect(sessionAssignmentPayload.hearingId).toEqual(
         mockedListedHearingPartVM.id
       );
-      expect(sessionAssignmentPayload.hearingPartVersion).toEqual(
+      expect(sessionAssignmentPayload.hearingVersion).toEqual(
         mockedListedHearingPartVM.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();

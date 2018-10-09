@@ -1,4 +1,4 @@
-import { UpdateHearingPartRequest } from './update-hearing-part-request';
+import { UpdateHearingRequest } from './update-hearing-request';
 import * as moment from 'moment'
 import { Note } from '../../notes/models/note.model';
 import { Priority } from './priority-model';
@@ -22,9 +22,10 @@ export interface HearingPartViewModel {
     communicationFacilitator: string;
     reservedJudge: Judge;
     reservedJudgeId: string;
+    hearingId: string;
 }
 
-export function mapToUpdateHearingPartRequest(hpvm: HearingPartViewModel): UpdateHearingPartRequest {
+export function mapToUpdateHearingPartRequest(hpvm: HearingPartViewModel): UpdateHearingRequest {
     return {
         id: hpvm.id,
         caseNumber: hpvm.caseNumber,

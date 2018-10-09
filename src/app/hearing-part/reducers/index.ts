@@ -45,7 +45,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         let finalHearingParts: HearingPartViewModel[];
         if (hearingParts === undefined) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
-            const {id, sessionId, hearingInfo } = hearingPart;
+            const {id, sessionId, version, hearingInfo } = hearingPart;
 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
@@ -62,18 +62,53 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 duration: moment.duration(hearingInfo.duration),
                 scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
                 scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
-                version: hearingInfo.version,
+                version,
                 reservedJudgeId: hearingInfo.reservedJudgeId,
                 communicationFacilitator: hearingInfo.communicationFacilitator,
                 priority: Priority[hearingInfo.priority],
                 caseType: caseTypes[hearingInfo.caseTypeCode],
                 hearingType: hearingTypes[hearingInfo.hearingTypeCode],
                 reservedJudge: judges[hearingInfo.reservedJudgeId],
+                hearingId: hearingInfo.id,
+                hearingVersion: hearingInfo.version,
                 notes: sortedNotes,
             };
         });
         return finalHearingParts;
-    });
+});
+
+export const getFullHearings = createSelector(
+    getFullHearingParts,
+    hearingParts => {
+        let uniqueHearingIds = hearingParts.map(hp => hp.hearingId)
+            .filter((value, index, self) => self.indexOf(value) === index);
+        let uniqueHearings = [];
+        uniqueHearingIds.forEach(id => {
+            uniqueHearings.push(hearingParts.find(hp => hp.hearingId === id));
+        });
+
+        uniqueHearings = uniqueHearings.map(uh => {
+            return {
+                id: uh.hearingId,
+                caseNumber: uh.caseNumber,
+                caseTitle: uh.caseTitle,
+                duration: uh.duration,
+                scheduleStart: uh.scheduleStart,
+                scheduleEnd: uh.scheduleEnd,
+                version: uh.hearingVersion,
+                reservedJudgeId: uh.reservedJudgeId,
+                communicationFacilitator: uh.communicationFacilitator,
+                priority: uh.priority,
+                caseType: uh.caseType,
+                hearingType: uh.hearingType,
+                reservedJudge: uh.reservedJudge,
+                notes: uh.notes
+            }
+        })
+
+        return uniqueHearings;
+    }
+);
 
 export const getHearingPartsLoading = createSelector(
     getHearingPartsEntitiesState,

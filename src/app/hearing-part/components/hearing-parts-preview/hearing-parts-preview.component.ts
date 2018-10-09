@@ -8,7 +8,7 @@ import { NotesListDialogComponent } from '../../../notes/components/notes-list-d
 import { priorityValue } from '../../models/priority-model';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
@@ -47,7 +47,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         'editor'
     ];
 
-    constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
+    constructor(public dialog: MatDialog, public hearingPartService: HearingModificationService) {
         this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
     }
 
@@ -138,7 +138,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     openEditDialog(hearingPart: HearingPartViewModel) {
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
-                hearingPart: mapToUpdateHearingPartRequest(hearingPart),
+                hearing: mapToUpdateHearingPartRequest(hearingPart),
                 notes: hearingPart.notes
             } as ListingCreate,
             hasBackdrop: true,

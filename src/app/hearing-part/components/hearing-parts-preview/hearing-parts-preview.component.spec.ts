@@ -12,7 +12,7 @@ import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import * as judgesReducers from '../../../judges/reducers';
 import * as transactionsReducers from '../../../features/transactions/reducers';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingPartsPreviewComponent } from './hearing-parts-preview.component';
@@ -32,7 +32,7 @@ const now = moment();
 const openDialogMockObjDeclined = {
     afterClosed: (): Observable<boolean> => Observable.of(false)
 };
-let hpms: HearingPartModificationService;
+let hpms: HearingModificationService;
 let component: HearingPartsPreviewComponent;
 let fixture: ComponentFixture<HearingPartsPreviewComponent>;
 
@@ -61,7 +61,7 @@ describe('HearingPartPreviewComponent', () => {
         NoteListComponent,
         NotesPreparerService,
         ListingCreateNotesConfiguration,
-        HearingPartModificationService,
+        HearingModificationService,
         { provide: MatDialog, useValue: matDialogSpy }
       ]
     });
@@ -75,7 +75,7 @@ describe('HearingPartPreviewComponent', () => {
     fixture = TestBed.createComponent(HearingPartsPreviewComponent);
     component = fixture.componentInstance;
     // store = TestBed.get(Store);
-    hpms = TestBed.get(HearingPartModificationService);
+    hpms = TestBed.get(HearingModificationService);
     spyOn(hpms, 'deleteHearingPart');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
     component.hearingParts = [generateHearingParts('123')];

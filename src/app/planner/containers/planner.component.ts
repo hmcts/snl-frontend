@@ -13,7 +13,7 @@ import { DialogWithActionsComponent } from '../../features/notification/componen
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { SessionAssignment } from '../../hearing-part/models/session-assignment';
-import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
+import { HearingModificationService } from '../../hearing-part/services/hearing-modification.service';
 import { v4 as uuid } from 'uuid';
 import * as fromHearingPartsActions from '../../hearing-part/actions/hearing-part.action';
 import * as fromHearingParts from '../../hearing-part/reducers/index';
@@ -39,7 +39,7 @@ export class PlannerComponent implements OnInit {
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
                 public sessionCreationService: SessionsCreationService,
-                public hearingModificationService: HearingPartModificationService,
+                public hearingModificationService: HearingModificationService,
                 private summaryMessageService: SummaryMessageService) {
         this.confirmationDialogOpen = false;
     }
@@ -127,8 +127,8 @@ export class PlannerComponent implements OnInit {
                 if (confirmed) {
                     let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
                     this.hearingModificationService.assignHearingPartWithSession({
-                        hearingPartId: hearingPartId,
-                        hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
+                        hearingId: hearingPartId,
+                        hearingVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
                         sessionId: selectedSessionId,
                         sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version,

@@ -22,7 +22,7 @@ import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
-import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
 import { asArray } from '../../../utils/array-utils';
 import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
@@ -52,10 +52,10 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
-                public hearingModificationService: HearingPartModificationService,
+                public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(
-          select(fromHearingParts.getFullHearingParts),
+          select(fromHearingParts.getFullHearings),
             map(asArray),
             map(this.sessionsFilterService.filterUnlistedHearingParts)
           ) as Observable<HearingPartViewModel[]>;
@@ -100,8 +100,8 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     assignToSession() {
         this.hearingModificationService.assignHearingPartWithSession({
-            hearingPartId: this.selectedHearingPart.id,
-            hearingPartVersion: this.selectedHearingPart.version,
+            hearingId: this.selectedHearingPart.id,
+            hearingVersion: this.selectedHearingPart.version,
             sessionId: this.selectedSession.id,
             sessionVersion: this.selectedSession.version,
             userTransactionId: uuid(),

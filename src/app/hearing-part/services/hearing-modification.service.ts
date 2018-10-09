@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
 
 @Injectable()
-export class HearingPartModificationService {
+export class HearingModificationService {
     constructor(private readonly store: Store<fromHearingParts.State>) {
     }
 
@@ -22,23 +22,23 @@ export class HearingPartModificationService {
     }
 
     createListingRequest(listing: ListingCreate) {
-        listing.hearingPart.userTransactionId = uuid();
+        listing.hearing.userTransactionId = uuid();
 
-        this.store.dispatch(new CreateListingRequest(listing.hearingPart));
+        this.store.dispatch(new CreateListingRequest(listing.hearing));
         this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new InitializeTransaction(
-                this.createTransaction(listing.hearingPart.id, listing.hearingPart.userTransactionId)
+                this.createTransaction(listing.hearing.id, listing.hearing.userTransactionId)
             )
         )
     }
 
     updateListingRequest(listing: ListingCreate) {
-        listing.hearingPart.userTransactionId = uuid();
+        listing.hearing.userTransactionId = uuid();
 
         this.store.dispatch(new UpdateListingRequest(listing));
         this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new InitializeTransaction(
-                this.createTransaction(listing.hearingPart.id, listing.hearingPart.userTransactionId)
+                this.createTransaction(listing.hearing.id, listing.hearing.userTransactionId)
             )
         )
     }

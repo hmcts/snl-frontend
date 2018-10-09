@@ -3,7 +3,7 @@ import { HearingPart } from '../models/hearing-part';
 import { SessionAssignment } from '../models/session-assignment';
 import { ListingCreate } from '../models/listing-create';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
-import { CreateHearingPartRequest } from '../models/create-hearing-part-request';
+import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 
 export enum HearingPartActionTypes {
@@ -64,7 +64,7 @@ export class Create implements Action {
 export class CreateListingRequest implements Action {
     readonly type = HearingPartActionTypes.CreateListingRequest;
 
-    constructor(public payload: CreateHearingPartRequest) {}
+    constructor(public payload: CreateHearingRequest) {}
 }
 
 export class UpdateListingRequest implements Action {

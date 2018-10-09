@@ -1,4 +1,4 @@
-import { CreateHearingPartRequest } from '../models/create-hearing-part-request';
+import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -9,7 +9,7 @@ import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
-import { UpdateHearingPartRequest } from '../models/update-hearing-part-request';
+import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 
 @Injectable()
@@ -32,18 +32,18 @@ export class HearingPartService {
 
     assignToSession(query: SessionAssignment): Observable<any> {
         return this.http
-            .put<HearingPartResponse>(`${this.config.getApiUrl()}/hearing-part/${query.hearingPartId}`,
+            .put<HearingPartResponse>(`${this.config.getApiUrl()}/hearing-part/${query.hearingId}`,
                 query);
     }
 
-    createListing(query: CreateHearingPartRequest): Observable<Transaction> {
+    createListing(query: CreateHearingRequest): Observable<Transaction> {
         return this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/create`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }
 
-    updateListing(query: UpdateHearingPartRequest): Observable<Transaction> {
+    updateListing(query: UpdateHearingRequest): Observable<Transaction> {
         return this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/update`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
