@@ -28,14 +28,14 @@
 
       <mat-form-field>
         <mat-select id="selectRoom" placeholder="{{roomsPlaceholder}}" [(value)]="createSessionForm.roomId">
-          <mat-option value="">(No room)</mat-option>
+          <mat-option>(No room)</mat-option>
           <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field>
         <mat-select id="selectJudge" placeholder="{{judgesPlaceholder}}" [(value)]="createSessionForm.personId">
-          <mat-option value="">(No judge)</mat-option>
+          <mat-option>(No judge)</mat-option>
           <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
         </mat-select>
       </mat-form-field>
