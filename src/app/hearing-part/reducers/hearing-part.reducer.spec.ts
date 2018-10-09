@@ -41,17 +41,20 @@ function generateHearingParts(id: string): HearingPart {
     return {
         id: id,
         sessionId: null,
-        caseNumber: null,
-        caseTitle: null,
-        caseTypeCode: null,
-        hearingTypeCode: null,
-        duration: null,
-        scheduleStart: null,
-        scheduleEnd: null,
-        version: null,
-        priority: null,
-        reservedJudgeId: null,
-        communicationFacilitator: null,
-        deleted: false
+        hearingInfo: {
+            id: null,
+            caseNumber: null,
+            caseTitle: null,
+            caseTypeCode: null,
+            hearingTypeCode: null,
+            duration: null,
+            scheduleStart: null,
+            scheduleEnd: null,
+            version: null,
+            priority: null,
+            reservedJudgeId: null,
+            communicationFacilitator: null,
+            deleted: false
+        }
     }
 };

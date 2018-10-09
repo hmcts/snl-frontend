@@ -74,18 +74,21 @@ const mockedNotes: Note[] = [
 const mockedHearingPartResponse: HearingPartResponse = {
   id: 'some-id',
   sessionId: undefined,
-  caseNumber: 'abc123',
-  caseTitle: 'some-case-title',
-  caseTypeCode: stubCaseType.code,
-  hearingTypeCode: stubHearingType.code,
-  duration: durationStringFormat,
-  scheduleStart: nowISOSting,
-  scheduleEnd: nowISOSting,
-  version: 2,
-  priority: Priority.Low,
-  reservedJudgeId: judgeId,
-  communicationFacilitator: 'interpreter',
-  deleted: false
+  hearingInfo: {
+      id: undefined,
+      caseNumber: 'abc123',
+      caseTitle: 'some-case-title',
+      caseTypeCode: stubCaseType.code,
+      hearingTypeCode: stubHearingType.code,
+      duration: durationStringFormat,
+      scheduleStart: nowISOSting,
+      scheduleEnd: nowISOSting,
+      version: 2,
+      priority: Priority.Low,
+      reservedJudgeId: judgeId,
+      communicationFacilitator: 'interpreter',
+      deleted: false
+  }
 }
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {

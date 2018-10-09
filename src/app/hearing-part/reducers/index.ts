@@ -45,31 +45,30 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         let finalHearingParts: HearingPartViewModel[];
         if (hearingParts === undefined) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
-            const {id, sessionId, caseNumber, caseTitle, duration, priority,
-                scheduleStart, scheduleEnd, version, reservedJudgeId, communicationFacilitator} = hearingPart;
+            const {id, sessionId, hearingInfo } = hearingPart;
 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
             })
 
-            const scheduleStartObj = moment(scheduleStart)
-            const scheduleEndObj = moment(scheduleEnd)
+            const scheduleStartObj = moment(hearingInfo.scheduleStart)
+            const scheduleEndObj = moment(hearingInfo.scheduleEnd)
             return {
                 id,
                 sessionId,
-                caseNumber,
-                caseTitle,
-                duration: moment.duration(duration),
+                caseNumber: hearingInfo.caseNumber,
+                caseTitle: hearingInfo.caseTitle,
+                duration: moment.duration(hearingInfo.duration),
                 scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
                 scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
-                version,
-                reservedJudgeId,
-                communicationFacilitator,
-                priority: Priority[priority],
-                caseType: caseTypes[hearingPart.caseTypeCode],
-                hearingType: hearingTypes[hearingPart.hearingTypeCode],
-                reservedJudge: judges[hearingPart.reservedJudgeId],
+                version: hearingInfo.version,
+                reservedJudgeId: hearingInfo.reservedJudgeId,
+                communicationFacilitator: hearingInfo.communicationFacilitator,
+                priority: Priority[hearingInfo.priority],
+                caseType: caseTypes[hearingInfo.caseTypeCode],
+                hearingType: hearingTypes[hearingInfo.hearingTypeCode],
+                reservedJudge: judges[hearingInfo.reservedJudgeId],
                 notes: sortedNotes,
             };
         });
