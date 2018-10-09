@@ -16,9 +16,9 @@ export class ProblemsPageComponent {
 
     fetchProblems(pageEvent: PageEvent) {
         this.problemsService
-            .getAll(pageEvent.pageSize, pageEvent.pageIndex)
+            .getPaginated(pageEvent.pageSize, pageEvent.pageIndex)
             .subscribe((pagedProblems: Page<Problem>) => {
-                this.problems = pagedProblems.content;
+                this.problems = pagedProblems.content || [];
                 this.totalCount = pagedProblems.totalElements
             })
     }

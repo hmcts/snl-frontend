@@ -13,7 +13,7 @@ export class ProblemsService {
 
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) { }
 
-    getAll(size = 20, page = 1): Observable<Page<Problem>> {
+    getPaginated(size, page): Observable<Page<Problem>> {
         return this.getProblems(size, page)
             .map((pagedProblemResponse: Page<ProblemResponse>) => {
                 const problems: Problem[] = pagedProblemResponse.content.map(problemResponse => {
@@ -26,8 +26,7 @@ export class ProblemsService {
     }
 
     get(): Observable<any> {
-        return this.getProblems()
-            .pipe(map(this.normalizeProblems));
+        return this.getProblems().pipe(map(this.normalizeProblems));
     }
 
     getForTransaction(id: string | number): Observable<any> {
@@ -36,9 +35,13 @@ export class ProblemsService {
             .pipe(map(this.normalizeProblems));
     }
 
-    private getProblems(size = 20, page = 1) {
+    private getProblems(size?, page?) {
+        let uri = '/problems'
+        if (size !== undefined && page !== undefined) {
+            uri += `?size=${size}&page=${page}`
+        }
         return this.http
-            .get<Page<ProblemResponse>>(`${this.config.getApiUrl()}/problems?size=${size}&page=${page}`)
+            .get<Page<ProblemResponse>>(`${this.config.getApiUrl()}${uri}`)
     }
 
     private normalizeProblems(problemsData) {
