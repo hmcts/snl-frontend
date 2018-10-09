@@ -1,6 +1,6 @@
 
 export interface HearingPartDeletion {
     userTransactionId: string,
-    hearingPartId: string,
-    hearingPartVersion: number,
+    hearingId: string,
+    hearingVersion: number,
 }

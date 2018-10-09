@@ -122,8 +122,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     afterDeleteClosed(confirmed, hearingPart) {
         if (confirmed) {
             this.hearingPartService.deleteHearingPart({
-                hearingPartId: hearingPart.id,
-                hearingPartVersion: hearingPart.version,
+                hearingId: hearingPart.id,
+                hearingVersion: hearingPart.version,
                 userTransactionId: undefined
             });
 

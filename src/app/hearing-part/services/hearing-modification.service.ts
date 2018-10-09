@@ -48,7 +48,7 @@ export class HearingModificationService {
 
         this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new Delete(hearingPartDeletion));
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(hearingPartDeletion.hearingPartId,
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(hearingPartDeletion.hearingId,
             hearingPartDeletion.userTransactionId)))
     }
 
