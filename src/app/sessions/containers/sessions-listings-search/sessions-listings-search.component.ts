@@ -55,7 +55,7 @@ export class SessionsListingsSearchComponent implements OnInit {
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
         this.hearingParts$ = this.store.pipe(
-          select(fromHearingParts.getFullHearings),
+          select(fromHearingParts.getFullUnlistedHearings),
             map(asArray),
             map(this.sessionsFilterService.filterUnlistedHearingParts)
           ) as Observable<HearingPartViewModel[]>;

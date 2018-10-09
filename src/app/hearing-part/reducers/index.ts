@@ -102,11 +102,19 @@ export const getFullHearings = createSelector(
                 caseType: uh.caseType,
                 hearingType: uh.hearingType,
                 reservedJudge: uh.reservedJudge,
-                notes: uh.notes
+                notes: uh.notes,
+                isListed: uh.sessionId !== null
             }
         })
 
         return uniqueHearings;
+    }
+);
+
+export const getFullUnlistedHearings = createSelector(
+    getFullHearings,
+    hearings => {
+        return hearings.filter(h => !h.isListed)
     }
 );
 
