@@ -78,12 +78,12 @@ describe('HearingPartPreviewComponent', () => {
     hpms = TestBed.get(HearingModificationService);
     spyOn(hpms, 'deleteHearingPart');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
-    component.hearingParts = [generateHearingParts('123')];
+    component.hearings = [generateHearingParts('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearingParts[0]).toEqual(generateHearingParts('123'));
+      expect(component.hearings[0]).toEqual(generateHearingParts('123'));
     });
   });
 

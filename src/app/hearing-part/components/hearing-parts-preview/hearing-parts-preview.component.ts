@@ -13,6 +13,7 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -21,7 +22,7 @@ import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/m
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
-    @Input() hearingParts: HearingPartViewModel[];
+    @Input() hearings: HearingViewmodel[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearingPart = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
@@ -29,7 +30,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     selectedHearingPart;
 
-    dataSource: MatTableDataSource<HearingPartViewModel>;
+    dataSource: MatTableDataSource<HearingViewmodel>;
     displayedColumns = [
         'caseNumber',
         'caseTitle',
@@ -48,15 +49,15 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     ];
 
     constructor(public dialog: MatDialog, public hearingPartService: HearingModificationService) {
-        this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
+        this.selectedHearingPart = new SelectionModel<HearingViewmodel>(false, []);
     }
 
     ngOnInit() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
     }
 
     ngOnChanges() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
 
         this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
@@ -97,11 +98,11 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
     }
 
-    hasNotes(hearingPart: HearingPartViewModel): boolean {
+    hasNotes(hearingPart: HearingViewmodel): boolean {
         return hearingPart.notes.length > 0;
     }
 
-    openNotesDialog(hearingPart: HearingPartViewModel) {
+    openNotesDialog(hearingPart: HearingViewmodel) {
         if (this.hasNotes(hearingPart)) {
             this.dialog.open(NotesListDialogComponent, {
                 data: hearingPart.notes.map(getNoteViewModel).map(enableDisplayCreationDetails),
@@ -111,7 +112,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
     }
 
-    openDeleteDialog(hearingPart: HearingPartViewModel) {
+    openDeleteDialog(hearingPart: HearingViewmodel) {
       this.dialog.open(DialogWithActionsComponent, {
         data: { message: `Do you want to remove the listing request for case number ${hearingPart.caseNumber} ?`}
       }).afterClosed().subscribe((confirmed) => {
@@ -135,7 +136,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
     }
 
-    openEditDialog(hearingPart: HearingPartViewModel) {
+    openEditDialog(hearingPart: HearingViewmodel) {
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
                 hearing: mapToUpdateHearingPartRequest(hearingPart),

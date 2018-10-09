@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
-import { SessionAssignment } from '../models/session-assignment';
+import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { ListingCreate } from '../models/listing-create';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
@@ -88,7 +88,7 @@ export class CreateFailed implements Action {
 export class AssignToSession implements Action {
     readonly type = HearingPartActionTypes.AssignToSession;
 
-    constructor(public payload: SessionAssignment) {}
+    constructor(public payload: HearingToSessionAssignment) {}
 }
 
 export class UpsertMany implements Action {

@@ -1,5 +1,5 @@
 
-export interface SessionAssignment {
+export interface HearingToSessionAssignment {
     sessionId: string,
     sessionVersion: number,
     userTransactionId: string,

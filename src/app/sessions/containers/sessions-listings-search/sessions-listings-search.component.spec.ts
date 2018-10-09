@@ -1,4 +1,4 @@
-import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
+import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
 import { Judge } from '../../../judges/models/judge.model';
 import * as sessionReducers from '../../reducers';
 import * as transactionsReducers from '../../../features/transactions/reducers';
@@ -166,7 +166,7 @@ describe('SessionsListingsSearchComponent', () => {
     it('should be defined', () => {
       expect(component).toBeDefined();
     });
-    it('should fetch hearingParts', () => {
+    it('should fetch hearings', () => {
       store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
       store.dispatch(new hearingPartActions.SearchComplete([mockedHearingPartResponse]));
@@ -339,7 +339,7 @@ describe('SessionsListingsSearchComponent', () => {
       component.assignToSession();
 
       const passedObj = storeSpy.calls.first().args[0];
-      const sessionAssignmentPayload: SessionAssignment = passedObj.payload;
+      const sessionAssignmentPayload: HearingToSessionAssignment = passedObj.payload;
 
       expect(
         passedObj instanceof hearingPartActions.AssignToSession
