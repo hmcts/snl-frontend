@@ -1,6 +1,7 @@
 import { ElementFinder, Key, element, by, ElementArrayFinder, ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
 import { Logger } from './logger';
+import { promise as wdpromise } from 'selenium-webdriver'
 
 export class ElementHelper {
   async clear(elem: ElementFinder, length?: number) {
@@ -64,17 +65,34 @@ export class ElementHelper {
   async elementThatContains(elements: ElementArrayFinder, ...values: string[]): Promise<ElementFinder> {
     return await elements
       .filter(el => {
-        return el.getText().then(text => {
-          const isRowContainsPassedValues = values.reduce(
+        const helper = this;
+        return new wdpromise.Promise(async function(resolve) {
+          resolve(await helper.doesElementContainAllValues(el, ...values));
+        });
+        //   el.getText().then(text => {
+        //   const isRowContainsPassedValues = values.reduce(
+        //     (previous, current) => {
+        //       return text.indexOf(current) !== -1 && previous;
+        //     },
+        //     true
+        //   );
+        //   return isRowContainsPassedValues;
+        // });
+      })
+      .first();
+  }
+
+  async doesElementContainAllValues(elementToCheck: ElementFinder, ...values: string[]): Promise<boolean> {
+    return await elementToCheck
+        .getText().then(text => {
+          // element text containsAllValues
+          return values.reduce(
             (previous, current) => {
               return text.indexOf(current) !== -1 && previous;
             },
             true
           );
-          return isRowContainsPassedValues;
         });
-      })
-      .first();
   }
 
   async browserWaitElementClickable(selectOptionLocator: ElementFinder) {

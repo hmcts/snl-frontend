@@ -44,7 +44,7 @@ export class TopMenu {
   async openPlannerPage(): Promise<void> {
       await browser.wait(ExpectedConditions.elementToBeClickable(this.plannerButtonElement), Wait.normal);
       await this.plannerButtonElement.click();
-      await this.plannerPage.waitUntilVisible();
+      await this.plannerPage.waitUntilPlannerIsLoadedAndVisible();
   }
 
   async openCalendarPage() {

@@ -1,8 +1,11 @@
-import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
+import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import moment = require('moment');
+import { Logger } from '../utils/logger';
+import { SessionDetailsDialogPage } from './session-details-dialog.po';
 
 export class PlannerPage {
+    private sessionDetailsDialog = new SessionDetailsDialogPage();
     private timelineEvent = by.className('fc-timeline-event');
     private plannerTitle = element(by.tagName('h2'));
 
@@ -49,14 +52,13 @@ export class PlannerPage {
         await this.waitForCalendarToLoadEvents();
     }
 
-    async waitUntilVisible() {
-        moment().isoWeekYear();
-        let expectedDate = moment().day(0).format('DD/MM') + ' - ' + moment().day(6).format('DD/MM/YYYY');
-        await browser.wait(ExpectedConditions.visibilityOf(this.plannerTitle), Wait.normal, expectedDate);
+    async waitUntilPlannerIsLoadedAndVisible() {
+        let currentWeekDateRange = moment().day(0).format('DD/MM') + ' - ' + moment().day(6).format('DD/MM/YYYY');
+        await browser.wait(ExpectedConditions.visibilityOf(this.plannerTitle), Wait.normal, currentWeekDateRange);
     }
 
     async getResourceIdByName(nameToSearch: string): Promise<string> {
-        return await element.all(by.className('fc-resource-area'))
+        let resourceId = await element.all(by.className('fc-resource-area'))
             .last()
             .all(by.tagName('tr'))
             .filter(tr => {
@@ -66,6 +68,9 @@ export class PlannerPage {
             })
             .first()
             .getAttribute('data-resource-id');
+
+        Logger.log('"' + nameToSearch + '" resource id: ' + resourceId);
+        return resourceId;
     }
 
     getRowWithEventsByResource(resourceId: string) {
@@ -80,7 +85,7 @@ export class PlannerPage {
             .first();
     }
 
-    getAllEventsForTheResource(resourceId: string) {
+    getAllEventsForTheResource(resourceId: string): ElementArrayFinder {
         return this.getRowWithEventsByResource(resourceId)
             .all(by.className('fc-title'));
     }
@@ -99,6 +104,14 @@ export class PlannerPage {
     }
 
     async getSessionEventTextById(id: string): Promise<string> {
+
         return await (await this.getSessionEventById(id)).getText();
+    }
+
+    async clickAndValidateDialogContent(event: ElementFinder, valuesToCheck: string[]) {
+        await this.clickOnEvent(event, valuesToCheck);
+        const idDialogDisplayed = await this.sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
+        expect(idDialogDisplayed).toBeTruthy();
+        await this.sessionDetailsDialog.close();
     }
 }
