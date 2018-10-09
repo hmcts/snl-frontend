@@ -24,7 +24,7 @@ let resourceId: string;
 let shouldContain: string[];
 let sessionsToCreate: SessionCreate[];
 
-fdescribe('Planner, check newly created sessions existence', () => {
+describe('Planner, check newly created sessions existence', () => {
 
     beforeAll(async () => {
         await loginFlow.relogin();

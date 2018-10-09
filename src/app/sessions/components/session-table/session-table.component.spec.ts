@@ -83,6 +83,7 @@ describe('SessionTableComponent', () => {
             {columnName: 'room', expected: sampleSessionViewModel.room.name},
             {columnName: 'hearingParts', expected: 0},
             {columnName: 'utilization', expected: 0},
+            {columnName: 'notes', expected: undefined},
             {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
             {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
             {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},

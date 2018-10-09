@@ -7,13 +7,16 @@ import { SessionViewModel } from '../../models/session.viewmodel';
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.css'],
+  styleUrls: ['./session-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionTableComponent implements OnChanges {
 
   @Output()
   selectSession = new EventEmitter();
+
+  @Output()
+  viewNotes = new EventEmitter();
 
   @Input() sessions: SessionViewModel[];
   @ViewChild(MatSort) sort: MatSort;
@@ -28,10 +31,11 @@ export class SessionTableComponent implements OnChanges {
       'room',
       'hearingParts',
       'utilization',
+      'notes',
       'available',
       'duration',
       'allocated',
-      'select session',
+      'select session'
   ];
 
   dataSource: MatTableDataSource<any>;
@@ -43,6 +47,16 @@ export class SessionTableComponent implements OnChanges {
     this.tableVisible = false;
 
     this.dataSource = new MatTableDataSource(this.sessions);
+  }
+
+  hasNotes(session: SessionViewModel): boolean {
+      return session.notes.length > 0;
+  }
+
+  showNotes(session: SessionViewModel): void {
+      if (this.hasNotes(session)) {
+          this.viewNotes.emit(session);
+      }
   }
 
   parseTime(date: moment.Moment) {
