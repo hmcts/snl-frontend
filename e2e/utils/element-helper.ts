@@ -69,15 +69,6 @@ export class ElementHelper {
         return new wdpromise.Promise(async function(resolve) {
           resolve(await helper.doesElementContainAllValues(el, ...values));
         });
-        //   el.getText().then(text => {
-        //   const isRowContainsPassedValues = values.reduce(
-        //     (previous, current) => {
-        //       return text.indexOf(current) !== -1 && previous;
-        //     },
-        //     true
-        //   );
-        //   return isRowContainsPassedValues;
-        // });
       })
       .first();
   }

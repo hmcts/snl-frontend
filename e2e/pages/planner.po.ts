@@ -104,7 +104,6 @@ export class PlannerPage {
     }
 
     async getSessionEventTextById(id: string): Promise<string> {
-
         return await (await this.getSessionEventById(id)).getText();
     }
 
