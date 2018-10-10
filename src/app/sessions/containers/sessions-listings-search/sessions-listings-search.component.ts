@@ -57,7 +57,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingParts$ = this.store.pipe(
           select(fromHearingParts.getFullUnlistedHearings),
             map(asArray),
-            map(this.sessionsFilterService.filterUnlistedHearingParts)
+          //  map(this.sessionsFilterService.filterUnlistedHearingParts)
           ) as Observable<HearingViewmodel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;

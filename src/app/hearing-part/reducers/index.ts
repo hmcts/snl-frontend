@@ -60,7 +60,6 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         if ((hearingParts === undefined) || (hearings === undefined)) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
             const {id, sessionId, version, hearingInfo } = hearingPart;
-            console.log(hearings);
             let hearing = hearings[hearingInfo];
 
             if (hearing === undefined) {
@@ -97,37 +96,42 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         return finalHearingParts;
 });
 
-export const getFullHearings = createSelector(
-    getFullHearingParts,
-    hearingParts => {
-        let uniqueHearingIds = hearingParts.map(hp => hp.hearingId)
-            .filter((value, index, self) => self.indexOf(value) === index);
-        let uniqueHearings = [];
-        uniqueHearingIds.forEach(id => {
-            uniqueHearings.push(hearingParts.find(hp => hp.hearingId === id));
+export const getFullHearings = createSelector(getAllHearingParts, getHearingsEntities, getNotes, getJudgesEntities,
+    fromReferenceData.selectHearingTypesDictionary, fromReferenceData.selectCaseTypesDictionary,
+    (hearingParts, hearingsEntities, notes, judges, hearingTypes, caseTypes) => {
+        let hearings = Object.values(hearingsEntities).map(h => {
+            const filteredNotes = Object.values(notes).filter(note => note.entityId === h.id);
+            const sortedNotes = [...filteredNotes].sort((left, right) => {
+                return moment(right.createdAt).diff(moment(left.createdAt));
+            })
+
+            const ownedHearingParts = hearingParts.filter(hp => hp.hearingInfo === h.id);
+            const unlisted = ownedHearingParts.filter(hp => hp.sessionId === null).length !== 0;
+
+            console.log(ownedHearingParts.filter(hp => hp.hearingInfo === h.id));
+
+            const scheduleStartObj = moment(h.scheduleStart)
+            const scheduleEndObj = moment(h.scheduleEnd)
+            return {
+                id: h.id,
+                caseNumber: h.caseNumber,
+                caseTitle: h.caseTitle,
+                duration: moment.duration(h.duration),
+                scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
+                scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
+                version: h.version,
+                reservedJudgeId: h.reservedJudgeId,
+                communicationFacilitator: h.communicationFacilitator,
+                priority: Priority[h.priority],
+                caseType: caseTypes[h.caseTypeCode],
+                hearingType: hearingTypes[h.hearingTypeCode],
+                reservedJudge: judges[h.reservedJudgeId],
+                notes: sortedNotes,
+                isListed: !unlisted
+            }
         });
 
-        uniqueHearings = uniqueHearings.map(uh => {
-            return {
-                id: uh.hearingId,
-                caseNumber: uh.caseNumber,
-                caseTitle: uh.caseTitle,
-                duration: uh.duration,
-                scheduleStart: uh.scheduleStart,
-                scheduleEnd: uh.scheduleEnd,
-                version: uh.hearingVersion,
-                reservedJudgeId: uh.reservedJudgeId,
-                communicationFacilitator: uh.communicationFacilitator,
-                priority: uh.priority,
-                caseType: uh.caseType,
-                hearingType: uh.hearingType,
-                reservedJudge: uh.reservedJudge,
-                notes: uh.notes,
-                isListed: uh.sessionId !== null
-            }
-        })
-
-        return uniqueHearings;
+        return hearings;
     }
 );
 

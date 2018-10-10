@@ -21,6 +21,7 @@ import { HEARING_PART_DIALOGS } from '../models/hearing-part-dialog-contents';
 import * as sessionTransactionActs from '../../features/transactions/actions/transaction.action';
 import * as notesActions from '../../notes/actions/notes.action';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
+import { HearingActionTypes } from '../actions/hearing.action';
 
 @Injectable()
 export class HearingPartEffects {
@@ -48,6 +49,17 @@ export class HearingPartEffects {
         )
     );
 
+
+    @Effect()
+    getHearingById$: Observable<Action> = this.actions$.pipe(
+        ofType<fromHearings.GetById>(HearingActionTypes.GetById),
+        mergeMap(action =>
+            this.hearingPartService.getHearingById(action.payload).pipe(
+                mergeMap(data => [new fromHearings.UpsertOne(data.entities.hearings[action.payload])]),
+                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status])))
+            )
+        )
+    );
     @Effect()
     searchHearing$: Observable<Action> = this.actions$.pipe(
         ofType<Search>(HearingPartActionTypes.Search),

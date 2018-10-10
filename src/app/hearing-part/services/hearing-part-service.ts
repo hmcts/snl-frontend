@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../app.config';
 import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { map } from 'rxjs/operators';
-import { hearingPart, hearingParts } from '../../core/schemas/data.schema';
+import { hearingInfo, hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
@@ -28,6 +28,12 @@ export class HearingPartService {
         return this.http
             .get<HearingPartResponse>(`${this.config.getApiUrl()}/hearing-part/${id}`)
                 .pipe(map(data => {return normalize(data, hearingPart)}));
+    }
+
+    getHearingById(id: string): Observable<any> {
+        return this.http
+            .get<HearingPartResponse>(`${this.config.getApiUrl()}/hearing/${id}`)
+                .pipe(map(data => {return normalize(data, hearingInfo)}));
     }
 
     assignToSession(query: HearingToSessionAssignment): Observable<any> {

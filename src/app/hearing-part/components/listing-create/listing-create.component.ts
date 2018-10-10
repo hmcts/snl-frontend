@@ -5,7 +5,7 @@ import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
-import { GetById } from '../../actions/hearing-part.action';
+import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
