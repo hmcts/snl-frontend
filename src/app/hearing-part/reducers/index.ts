@@ -1,5 +1,6 @@
 import * as fromRoot from '../../app.state';
 import * as fromHearingParts from './hearing-part.reducer';
+import * as fromHearings from './hearing.reducer';
 import * as fromReferenceData from '../../core/reference/reducers/index';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { getNotes } from '../../notes/reducers';
@@ -11,20 +12,33 @@ import { Priority } from '../models/priority-model';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
+    readonly hearings: fromHearings.State;
 }
 
 export interface State extends fromRoot.State {
     hearingParts: HearingPartsState;
+    hearings: HearingPartsState;
 }
 
 export const reducers: ActionReducerMap<HearingPartsState> = {
     hearingParts: fromHearingParts.reducer,
+    hearings: fromHearings.reducer
 };
 
 export const getHearingPartsState = createFeatureSelector<HearingPartsState>('hearingParts');
 export const getHearingPartsEntitiesState = createSelector(
     getHearingPartsState,
     state => state.hearingParts
+);
+
+export const getHearingsEntitiesState = createSelector(
+    getHearingPartsState,
+    state => state.hearings
+);
+
+export const getHearingsEntities = createSelector(
+    getHearingsEntitiesState,
+    fromHearings.getHearings
 );
 
 export const getHearingParts = createSelector(
@@ -40,37 +54,43 @@ export const {
 } = fromHearingParts.adapter.getSelectors(getHearingPartsEntitiesState);
 
 export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, getJudgesEntities,
-    fromReferenceData.selectHearingTypesDictionary, fromReferenceData.selectCaseTypesDictionary,
-    (hearingParts, notes, judges, hearingTypes, caseTypes) => {
+    fromReferenceData.selectHearingTypesDictionary, fromReferenceData.selectCaseTypesDictionary, getHearingsEntities,
+    (hearingParts, notes, judges, hearingTypes, caseTypes, hearings) => {
         let finalHearingParts: HearingPartViewModel[];
-        if (hearingParts === undefined) { return []; }
+        if ((hearingParts === undefined) || (hearings === undefined)) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
             const {id, sessionId, version, hearingInfo } = hearingPart;
+            console.log(hearings);
+            let hearing = hearings[hearingInfo];
+
+            if(hearing === undefined) {
+                return {};
+            }
 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
             })
 
-            const scheduleStartObj = moment(hearingInfo.scheduleStart)
-            const scheduleEndObj = moment(hearingInfo.scheduleEnd)
+            const scheduleStartObj = moment(hearing.scheduleStart)
+            const scheduleEndObj = moment(hearing.scheduleEnd)
             return {
                 id,
                 sessionId,
-                caseNumber: hearingInfo.caseNumber,
-                caseTitle: hearingInfo.caseTitle,
-                duration: moment.duration(hearingInfo.duration),
+                caseNumber: hearing.caseNumber,
+                caseTitle: hearing.caseTitle,
+                duration: moment.duration(hearing.duration),
                 scheduleStart: scheduleStartObj.isValid() ? scheduleStartObj : undefined,
                 scheduleEnd: scheduleEndObj.isValid() ? scheduleEndObj : undefined,
                 version,
-                reservedJudgeId: hearingInfo.reservedJudgeId,
-                communicationFacilitator: hearingInfo.communicationFacilitator,
-                priority: Priority[hearingInfo.priority],
-                caseType: caseTypes[hearingInfo.caseTypeCode],
-                hearingType: hearingTypes[hearingInfo.hearingTypeCode],
-                reservedJudge: judges[hearingInfo.reservedJudgeId],
-                hearingId: hearingInfo.id,
-                hearingVersion: hearingInfo.version,
+                reservedJudgeId: hearing.reservedJudgeId,
+                communicationFacilitator: hearing.communicationFacilitator,
+                priority: Priority[hearing.priority],
+                caseType: caseTypes[hearing.caseTypeCode],
+                hearingType: hearingTypes[hearing.hearingTypeCode],
+                reservedJudge: judges[hearing.reservedJudgeId],
+                hearingId: hearing.id,
+                hearingVersion: hearing.version,
                 notes: sortedNotes,
             };
         });

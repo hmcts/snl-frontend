@@ -3,7 +3,7 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { HearingPartViewModel, mapToUpdateHearingPartRequest } from '../../models/hearing-part.viewmodel';
+import { mapToUpdateHearingPartRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
 import { ListingCreate } from '../../models/listing-create';

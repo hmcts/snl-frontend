@@ -105,6 +105,7 @@ export class SessionEffects {
                     new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
                     new hearingPartsActions.UpsertMany(data.entities.hearingParts),
+                    new hearingPartsActions.UpsertMany(data.entities.hearings),
                     new notesActions.GetByEntities(Object.keys(data.entities.sessions))
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))

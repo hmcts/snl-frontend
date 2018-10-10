@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, mergeMap } from 'rxjs/operators';
+import { catchError, concatMap, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Action } from '@ngrx/store';
 import {
@@ -11,6 +11,7 @@ import {
     Search,
     SearchFailed, UpsertMany, UpsertOne
 } from '../actions/hearing-part.action';
+import * as fromHearings from '../actions/hearing.action';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HearingPartService } from '../services/hearing-part-service';
 import * as transactionActions from '../../features/transactions/actions/transaction.action';
@@ -52,6 +53,7 @@ export class HearingPartEffects {
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(action =>
           this.hearingPartService.searchHearingParts(action.payload).pipe(mergeMap(data => [
+            new fromHearings.UpsertMany(data.entities.hearings),
             new UpsertMany(data.entities.hearingParts),
             new sessionActions.UpsertMany(data.entities.sessions),
             new notesActions.GetByEntities(Object.keys(data.entities.hearingParts))

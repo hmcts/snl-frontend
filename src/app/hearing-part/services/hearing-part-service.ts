@@ -21,7 +21,7 @@ export class HearingPartService {
         return this.http
             .get<HearingPartResponse[]>(`${this.config.getApiUrl()}/hearing-part`, {
               params: new HttpParams({ fromObject: params })
-            }).pipe(map(data => {return normalize(data, hearingParts)}))
+            }).pipe(map(data => {let normalized = normalize(data, hearingParts); console.log(normalized); return normalized;}))
     }
 
     getById(id: string): Observable<any> {
