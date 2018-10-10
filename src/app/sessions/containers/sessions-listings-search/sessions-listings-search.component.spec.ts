@@ -325,7 +325,7 @@ describe('SessionsListingsSearchComponent', () => {
     });
   });
 
-  describe('selectHearingPart', () => {
+  describe('selectHearing', () => {
     it('should set selectedHearingPart', () => {
       component.selectHearingPart(mockedUnlistedHearingPartVM);
       expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingPartVM);

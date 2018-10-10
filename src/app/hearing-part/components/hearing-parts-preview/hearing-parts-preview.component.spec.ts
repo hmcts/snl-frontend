@@ -76,7 +76,7 @@ describe('HearingPartPreviewComponent', () => {
     component = fixture.componentInstance;
     // store = TestBed.get(Store);
     hpms = TestBed.get(HearingModificationService);
-    spyOn(hpms, 'deleteHearingPart');
+    spyOn(hpms, 'deleteHearing');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
     component.hearings = [generateHearingParts('123')];
   });
@@ -106,7 +106,7 @@ describe('HearingPartPreviewComponent', () => {
         component.openDeleteDialog({...generateHearingParts('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).toHaveBeenCalled();
+        expect(hpms.deleteHearing).toHaveBeenCalled();
     });
 
     it('confirming on edit dialog should call service method', () => {
@@ -124,7 +124,7 @@ describe('HearingPartPreviewComponent', () => {
         component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
+        expect(hpms.deleteHearing).not.toHaveBeenCalled();
     });
 
     it('declining on edit dialog should not call service method', () => {
@@ -133,7 +133,7 @@ describe('HearingPartPreviewComponent', () => {
         component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
+        expect(hpms.deleteHearing).not.toHaveBeenCalled();
     });
 
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {

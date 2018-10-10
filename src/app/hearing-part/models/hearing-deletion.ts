@@ -1,5 +1,5 @@
 
-export interface HearingPartDeletion {
+export interface HearingDeletion {
     userTransactionId: string,
     hearingId: string,
     hearingVersion: number,

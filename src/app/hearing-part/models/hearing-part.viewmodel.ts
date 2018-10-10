@@ -5,6 +5,7 @@ import { Priority } from './priority-model';
 import { Judge } from '../../judges/models/judge.model';
 import { HearingType } from '../../core/reference/models/hearing-type';
 import { CaseType } from '../../core/reference/models/case-type';
+import { HearingViewmodel } from './hearing.viewmodel';
 
 export interface HearingPartViewModel {
     id: string;
@@ -25,20 +26,20 @@ export interface HearingPartViewModel {
     hearingId: string;
 }
 
-export function mapToUpdateHearingPartRequest(hpvm: HearingPartViewModel): UpdateHearingRequest {
+export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {
     return {
-        id: hpvm.id,
-        caseNumber: hpvm.caseNumber,
-        caseTitle: hpvm.caseTitle,
-        caseTypeCode: hpvm.caseType.code,
-        hearingTypeCode: hpvm.hearingType.code,
-        duration: hpvm.duration,
-        scheduleStart: hpvm.scheduleStart,
-        scheduleEnd: hpvm.scheduleEnd,
-        version: hpvm.version,
-        priority: hpvm.priority,
-        reservedJudgeId: hpvm.reservedJudgeId,
-        communicationFacilitator: hpvm.communicationFacilitator,
+        id: hvm.id,
+        caseNumber: hvm.caseNumber,
+        caseTitle: hvm.caseTitle,
+        caseTypeCode: hvm.caseType.code,
+        hearingTypeCode: hvm.hearingType.code,
+        duration: hvm.duration,
+        scheduleStart: hvm.scheduleStart,
+        scheduleEnd: hvm.scheduleEnd,
+        version: hvm.version,
+        priority: hvm.priority,
+        reservedJudgeId: hvm.reservedJudgeId,
+        communicationFacilitator: hvm.communicationFacilitator,
         userTransactionId: undefined
     }
 }

@@ -31,7 +31,7 @@ const sessionsCreationServiceSpy = jasmine.createSpyObj(
 );
 const hearingPartModificationServiceSpy = jasmine.createSpyObj(
   'HearingModificationService',
-  ['assignHearingWithSession']
+  ['assignWithSession']
 );
 const event = <CustomEvent>{
   detail: {
@@ -230,7 +230,7 @@ describe('PlannerComponent', () => {
       matDialogSpy.open.calls.reset();
       component.drop(event);
       expect(
-        hearingPartModificationServiceSpy.assignHearingWithSession
+        hearingPartModificationServiceSpy.assignWithSession
       ).toHaveBeenCalled();
       expect(matDialogSpy.open).toHaveBeenCalledTimes(2);
     });

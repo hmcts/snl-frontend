@@ -3,12 +3,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../app.config';
-import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
+import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { map } from 'rxjs/operators';
 import { hearingInfo, hearingPart, hearingParts } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
-import { HearingPartDeletion } from '../models/hearing-part-deletion';
+import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 
@@ -21,7 +21,7 @@ export class HearingPartService {
         return this.http
             .get<HearingPartResponse[]>(`${this.config.getApiUrl()}/hearing-part`, {
               params: new HttpParams({ fromObject: params })
-            }).pipe(map(data => {let normalized = normalize(data, hearingParts); console.log(normalized); return normalized;}))
+            }).pipe(map(data => {return normalize(data, hearingParts)}))
     }
 
     getById(id: string): Observable<any> {
@@ -36,10 +36,9 @@ export class HearingPartService {
                 .pipe(map(data => {return normalize(data, hearingInfo)}));
     }
 
-    assignToSession(query: HearingToSessionAssignment): Observable<any> {
+    assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {
         return this.http
-            .put<HearingPartResponse>(`${this.config.getApiUrl()}/hearing-part/${query.hearingId}`,
-                query);
+            .put<HearingPartResponse>(this.getPath(assignment), assignment);
     }
 
     createListing(query: CreateHearingRequest): Observable<Transaction> {
@@ -56,11 +55,23 @@ export class HearingPartService {
             });
     }
 
-    deleteHearingPart(query: HearingPartDeletion): Observable<any> {
+    deleteHearingPart(query: HearingDeletion): Observable<any> {
         return this.http
             .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }
 
+    private getPath(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
+        let path = '';
+
+        let objectKeys: string[] = Object.keys(assignment).map(k => k.toString());
+        if (objectKeys.some(key => (key === 'hearingId'))) {
+            path = `${this.config.getApiUrl()}/hearing/${(assignment as HearingToSessionAssignment).hearingId}`
+        } else {
+            path = `${this.config.getApiUrl()}/hearing-part/${(assignment as HearingPartToSessionAssignment).hearingPartId}`
+        }
+
+        return path;
+    }
 }

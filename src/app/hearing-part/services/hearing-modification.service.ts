@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../reducers';
-import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
+import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { AssignToSession, CreateListingRequest, Delete, UpdateListingRequest } from '../actions/hearing-part.action';
 import { InitializeTransaction } from '../../features/transactions/actions/transaction.action';
 import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as ProblemsActions from '../../problems/actions/problem.action';
 import { ListingCreate } from '../models/listing-create';
 import { v4 as uuid } from 'uuid';
-import { HearingPartDeletion } from '../models/hearing-part-deletion';
+import { HearingDeletion } from '../models/hearing-deletion';
 import * as fromHearings from '../actions/hearing.action';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class HearingModificationService {
     constructor(private readonly store: Store<fromHearingParts.State>) {
     }
 
-    assignHearingWithSession(assignment: HearingToSessionAssignment) {
+    assignWithSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
         this.store.dispatch(new AssignToSession(assignment));
         this.store.dispatch(new ProblemsActions.RemoveAll());
         this.store.dispatch(new InitializeTransaction(this.createTransaction(assignment.sessionId, assignment.userTransactionId)))
@@ -44,13 +44,13 @@ export class HearingModificationService {
         )
     }
 
-    deleteHearingPart(hearingPartDeletion: HearingPartDeletion) {
-        hearingPartDeletion.userTransactionId = uuid();
+    deleteHearing(hearingDeletion: HearingDeletion) {
+        hearingDeletion.userTransactionId = uuid();
 
         this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new Delete(hearingPartDeletion));
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(hearingPartDeletion.hearingId,
-            hearingPartDeletion.userTransactionId)))
+        this.store.dispatch(new Delete(hearingDeletion));
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(hearingDeletion.hearingId,
+            hearingDeletion.userTransactionId)))
     }
 
     removeFromState(id: string) {

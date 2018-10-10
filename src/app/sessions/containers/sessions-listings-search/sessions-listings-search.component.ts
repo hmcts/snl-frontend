@@ -99,7 +99,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     assignToSession() {
-        this.hearingModificationService.assignHearingWithSession({
+        this.hearingModificationService.assignWithSession({
             hearingId: this.selectedHearingPart.id,
             hearingVersion: this.selectedHearingPart.version,
             sessionId: this.selectedSession.id,

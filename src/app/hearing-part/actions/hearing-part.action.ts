@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 import { HearingPart } from '../models/hearing-part';
-import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
+import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { ListingCreate } from '../models/listing-create';
-import { HearingPartDeletion } from '../models/hearing-part-deletion';
+import { HearingDeletion } from '../models/hearing-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 
@@ -88,7 +88,7 @@ export class CreateFailed implements Action {
 export class AssignToSession implements Action {
     readonly type = HearingPartActionTypes.AssignToSession;
 
-    constructor(public payload: HearingToSessionAssignment) {}
+    constructor(public payload: HearingToSessionAssignment | HearingPartToSessionAssignment) {}
 }
 
 export class UpsertMany implements Action {
@@ -106,7 +106,7 @@ export class UpsertOne implements Action {
 export class Delete implements Action {
   readonly  type = HearingPartActionTypes.Delete;
 
-  constructor(public payload: HearingPartDeletion) {}
+  constructor(public payload: HearingDeletion) {}
 }
 
 export class DeleteComplete implements Action {
