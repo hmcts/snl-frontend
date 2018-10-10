@@ -9,7 +9,6 @@ import * as ProblemsActions from '../../problems/actions/problem.action';
 import { ListingCreate } from '../models/listing-create';
 import { v4 as uuid } from 'uuid';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
-import * as fromHearingPartsActions from '../actions/hearing-part.action';
 import * as fromHearings from '../actions/hearing.action';
 
 @Injectable()
