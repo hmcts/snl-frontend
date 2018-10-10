@@ -63,8 +63,8 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
             console.log(hearings);
             let hearing = hearings[hearingInfo];
 
-            if(hearing === undefined) {
-                return {};
+            if (hearing === undefined) {
+                return {} as HearingPartViewModel;
             }
 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);

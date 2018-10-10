@@ -10,6 +10,7 @@ import { ListingCreate } from '../models/listing-create';
 import { v4 as uuid } from 'uuid';
 import { HearingPartDeletion } from '../models/hearing-part-deletion';
 import * as fromHearingPartsActions from '../actions/hearing-part.action';
+import * as fromHearings from '../actions/hearing.action';
 
 @Injectable()
 export class HearingModificationService {
@@ -54,7 +55,7 @@ export class HearingModificationService {
     }
 
     removeFromState(id: string) {
-        this.store.dispatch(new fromHearingPartsActions.Search());
+        this.store.dispatch(new fromHearings.DeleteComplete(id));
     }
 
     private createTransaction(id, transactionId): EntityTransaction {
