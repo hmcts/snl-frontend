@@ -1,0 +1,23 @@
+<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
+  <div fxFlex="25%">
+    <app-hearings-filter
+            (filter)="filter($event)"
+            [judges]="judges$ | async"
+            [caseTypes]="caseTypes$ | async"
+            [hearingTypes]="hearingTypes$ | async"
+            [startDate]="startDate"
+            [endDate]="endDate">
+    </app-hearings-filter>
+  </div>
+  <div fxFlex>
+    <div class="heading">
+      Listing Requests:
+    </div>
+
+    <div>
+      <app-hearing-search-table id="hearing-search-table"
+              [hearingParts]="hearingParts$ | async">
+      </app-hearing-search-table>
+    </div>
+  </div>
+</div>
