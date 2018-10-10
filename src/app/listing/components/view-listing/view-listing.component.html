@@ -1,0 +1,80 @@
+<mat-card>
+  <mat-grid-list cols="3" rowHeight="2:1">
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Hearing Type</mat-grid-tile-header>
+      {{hearing.hearingType}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Hearing Type</mat-grid-tile-header>
+      {{hearing.hearingType}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Priority</mat-grid-tile-header>
+      {{hearing.priority}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Hearing duration</mat-grid-tile-header>
+      {{hearing.duration.toString()}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>List between</mat-grid-tile-header>
+      {{hearing.scheduleStart.format()}} - {{hearing.scheduleEnd.format()}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Duration</mat-grid-tile-header>
+      {{hearing.duration.toString()}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Reserved for</mat-grid-tile-header>
+      {{hearing.reservedToJudge}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Communication facilitator</mat-grid-tile-header>
+      {{hearing.communicationFacilitator}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Special requirements</mat-grid-tile-header>
+      {{hearing.specialRequirements}}
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-grid-tile-header>Facility requirements</mat-grid-tile-header>
+      {{hearing.facilityRequirements}}
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+  <mat-tab-group>
+    <mat-tab label="Notes">
+      <mat-card>
+        <mat-list>
+          <mat-list-item *ngFor="let note of hearing.notes">
+            <div class="left">
+              {{note.content}}
+            </div>
+            <div class="right">
+              <strong>{{note.modifiedBy}}</strong><br>
+              {{note.createdAt.format()}}
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Scheduled listings">
+      <mat-card>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

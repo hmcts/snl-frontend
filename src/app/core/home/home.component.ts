@@ -118,7 +118,11 @@ export class HomeComponent implements OnInit {
                             href: 'reports/unlisted'
                         }
                     ]
-                }
+                },
+				{
+					text: 'View Hearing',
+					href: 'hearing'
+				},
             ];
         }
 
