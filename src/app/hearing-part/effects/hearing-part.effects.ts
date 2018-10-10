@@ -68,7 +68,7 @@ export class HearingPartEffects {
             new fromHearings.UpsertMany(data.entities.hearings),
             new UpsertMany(data.entities.hearingParts),
             new sessionActions.UpsertMany(data.entities.sessions),
-            new notesActions.GetByEntities(Object.keys(data.entities.hearingParts))
+            new notesActions.GetByEntities(Object.keys(data.entities.hearings))
         ]), catchError((err: HttpErrorResponse) => of(new SearchFailed(err.error))))
         )
     );
