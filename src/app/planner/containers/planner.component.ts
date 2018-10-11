@@ -20,6 +20,7 @@ import * as fromHearingParts from '../../hearing-part/reducers/index';
 import { Separator } from '../../core/callendar/transformers/data-with-simple-resource-transformer';
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 import { ITransactionDialogData } from '../../features/transactions/models/transaction-dialog-data.model';
+import * as SessionActions from '../../sessions/actions/session.action';
 
 @Component({
     selector: 'app-planner',
@@ -138,7 +139,7 @@ export class PlannerComponent implements OnInit {
 
                     this.openSummaryDialog().afterClosed().subscribe(() => {
                         this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
-                        this.fetchModifiedEntities();
+                        this.store.dispatch(new SessionActions.Get(selectedSessionId));
                     });
                 }
             });
