@@ -1,4 +1,4 @@
 {
-  "api_url": "${SNL_API_URL}",
-  "notes_url": "${SNL_NOTES_URL}"
+  "apiUrl": "${SNL_API_URL}",
+  "notesUrl": "${SNL_NOTES_URL}"
 }
