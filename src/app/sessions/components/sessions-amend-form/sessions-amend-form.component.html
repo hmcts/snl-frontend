@@ -3,7 +3,7 @@
     <mat-card-subtitle>Edit session</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content class="inputs-container">
+  <mat-card-content class="inputs-container" fxLayout="row" fxLayoutGap="5%">
     <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
@@ -44,5 +44,11 @@
         <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
       </div>
     </form>
+    <div style="padding-right: 2em">
+      <div fxLayout="column" fxLayoutGap="10%">
+          <app-note-list id="otherNoteList" class="free-text-notes-box" #freeTextNotesList [notes]="freeTextNoteViewModels"></app-note-list>
+      </div>
+  </div>
+    
   </mat-card-content>
 </mat-card>
