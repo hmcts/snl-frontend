@@ -40,7 +40,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     startDate: moment.Moment;
     endDate: moment.Moment;
-    hearingParts$: Observable<HearingViewmodel[]>;
+    hearings$: Observable<HearingViewmodel[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
@@ -54,10 +54,9 @@ export class SessionsListingsSearchComponent implements OnInit {
                 private readonly sessionsFilterService: SessionsFilterService,
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(
+        this.hearings$ = this.store.pipe(
           select(fromHearingParts.getFullUnlistedHearings),
             map(asArray),
-          //  map(this.sessionsFilterService.filterUnlistedHearingParts)
           ) as Observable<HearingViewmodel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;

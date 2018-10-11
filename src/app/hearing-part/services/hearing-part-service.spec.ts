@@ -1,4 +1,3 @@
-import { HearingPartResponse } from './../models/hearing-part-response';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { TestBed } from '@angular/core/testing';
@@ -13,9 +12,10 @@ const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 let hearingPartService: HearingPartService;
 let httpMock: HttpTestingController;
 
-const hearingPartResponse: HearingPartResponse = {
+const hearingPartResponse = {
     sessionId: undefined,
     id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
+    version: undefined,
     hearingInfo: {
         version: undefined,
         id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
@@ -36,25 +36,28 @@ const hearingPartResponse: HearingPartResponse = {
 const normalizedHearingPartsResponse = {
     entities: {
         hearingParts: {
-            'ba766510-e898-4919-8d3b-25f3e1b932aa':
-            {
+            'ba766510-e898-4919-8d3b-25f3e1b932aa': {
                 sessionId: undefined,
                 id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
-                hearing: {
-                    version: undefined,
-                    id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
-                    caseNumber: 'number-2018-08-27T09:55:24.172Z',
-                    caseTitle: 'title-2018-08-27T09:55:24.172Z',
-                    caseTypeCode: 'SCLAIMS',
-                    hearingTypeCode: 'Preliminary Hearing',
-                    duration: 'PT30M',
-                    scheduleStart: '2018-08-27T09:55:24.172Z',
-                    scheduleEnd: '2018-09-26T09:55:24.174Z',
-                    reservedJudgeId: null,
-                    communicationFacilitator: null,
-                    priority: null,
-                    deleted: false,
-                }
+                hearingInfo: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
+                version: undefined,
+            }
+        },
+        hearings: {
+            'ba766510-e898-4919-8d3b-25f3e1b932aa': {
+                version: undefined,
+                id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
+                caseNumber: 'number-2018-08-27T09:55:24.172Z',
+                caseTitle: 'title-2018-08-27T09:55:24.172Z',
+                caseTypeCode: 'SCLAIMS',
+                hearingTypeCode: 'Preliminary Hearing',
+                duration: 'PT30M',
+                scheduleStart: '2018-08-27T09:55:24.172Z',
+                scheduleEnd: '2018-09-26T09:55:24.174Z',
+                reservedJudgeId: null,
+                communicationFacilitator: null,
+                priority: null,
+                deleted: false
             }
         }
     }, result: ['ba766510-e898-4919-8d3b-25f3e1b932aa']
@@ -63,24 +66,29 @@ const normalizedHearingPartsResponse = {
 const normalizedHearingPartResponse = {
     entities: {
         hearingParts: {
-            'ba766510-e898-4919-8d3b-25f3e1b932aa': {
-                sessionId: undefined,
-                id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
-                hearing: {
-                    version: undefined,
+            'ba766510-e898-4919-8d3b-25f3e1b932aa':
+                {
+                    sessionId: undefined,
                     id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
-                    caseNumber: 'number-2018-08-27T09:55:24.172Z',
-                    caseTitle: 'title-2018-08-27T09:55:24.172Z',
-                    caseTypeCode: 'SCLAIMS',
-                    hearingTypeCode: 'Preliminary Hearing',
-                    duration: 'PT30M',
-                    scheduleStart: '2018-08-27T09:55:24.172Z',
-                    scheduleEnd: '2018-09-26T09:55:24.174Z',
-                    reservedJudgeId: null,
-                    communicationFacilitator: null,
-                    priority: null,
-                    deleted: false,
+                    hearingInfo: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
+                    version: undefined,
                 }
+        },
+        hearings: {
+            'ba766510-e898-4919-8d3b-25f3e1b932aa': {
+                version: undefined,
+                id: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
+                caseNumber: 'number-2018-08-27T09:55:24.172Z',
+                caseTitle: 'title-2018-08-27T09:55:24.172Z',
+                caseTypeCode: 'SCLAIMS',
+                hearingTypeCode: 'Preliminary Hearing',
+                duration: 'PT30M',
+                scheduleStart: '2018-08-27T09:55:24.172Z',
+                scheduleEnd: '2018-09-26T09:55:24.174Z',
+                reservedJudgeId: null,
+                communicationFacilitator: null,
+                priority: null,
+                deleted: false
             }
         }
     }, result: 'ba766510-e898-4919-8d3b-25f3e1b932aa'

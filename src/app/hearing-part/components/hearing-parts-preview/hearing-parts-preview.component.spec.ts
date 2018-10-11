@@ -23,6 +23,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const openDialogMockObjConfirmed = {
@@ -191,10 +192,9 @@ describe('HearingPartPreviewComponent', () => {
   });
 });
 
-function generateHearingParts(id: string): HearingPartViewModel {
+function generateHearingParts(id: string): HearingViewmodel {
     return {
         id: id,
-        sessionId: null,
         caseNumber: null,
         caseTitle: null,
         caseType: { code: '', description: '' } as CaseType,

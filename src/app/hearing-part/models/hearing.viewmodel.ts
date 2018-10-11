@@ -20,5 +20,4 @@ export interface HearingViewmodel {
     communicationFacilitator: string;
     reservedJudge: Judge;
     reservedJudgeId: string;
-    hearingId: string;
 }

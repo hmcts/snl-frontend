@@ -119,6 +119,7 @@ export class PlannerComponent implements OnInit {
 
     public drop(event) {
         const selectedSessionId = this.selectedSessionId;
+        this.latestEvent = event;
 
         if (!this.confirmationDialogOpen) {
             this.confirmationDialogRef = this.openConfirmationDialog();

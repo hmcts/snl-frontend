@@ -4,7 +4,7 @@ import { HearingToSessionAssignment } from '../models/hearing-to-session-assignm
 import { ListingCreate } from '../models/listing-create';
 import { HearingDeletion } from '../models/hearing-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
-import { HearingPartResponse } from '../models/hearing-part-response';
+import { Hearing } from '../models/hearing';
 
 export enum HearingActionTypes {
   GetById = '[Hearing] Get by id',
@@ -46,7 +46,7 @@ export class GetById implements Action {
 export class SearchComplete implements Action {
   readonly type = HearingActionTypes.SearchComplete;
 
-  constructor(public payload: HearingPartResponse[]) {}
+  constructor(public payload: Hearing[]) {}
 }
 
 export class SearchFailed implements Action {

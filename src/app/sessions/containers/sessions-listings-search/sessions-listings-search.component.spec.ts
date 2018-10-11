@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
 import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.action';
+import * as hearingActions from '../../../hearing-part/actions/hearing.action';
 import * as moment from 'moment';
 import * as roomActions from '../../../rooms/actions/room.action';
 import * as judgeActions from '../../../judges/actions/judge.action';
@@ -38,6 +39,7 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
+import { Hearing } from '../../../hearing-part/models/hearing';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
@@ -74,26 +76,14 @@ const mockedNotes: Note[] = [
 const mockedHearingPartResponse: HearingPartResponse = {
   id: 'some-id',
   sessionId: undefined,
-  hearingInfo: {
-      id: undefined,
-      caseNumber: 'abc123',
-      caseTitle: 'some-case-title',
-      caseTypeCode: stubCaseType.code,
-      hearingTypeCode: stubHearingType.code,
-      duration: durationStringFormat,
-      scheduleStart: nowISOSting,
-      scheduleEnd: nowISOSting,
-      version: 2,
-      priority: Priority.Low,
-      reservedJudgeId: judgeId,
-      communicationFacilitator: 'interpreter',
-      deleted: false
-  }
+  hearingInfo: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
+  version: undefined,
 }
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
     sessionId: undefined,
+    hearingId: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
     caseType: stubCaseType,
@@ -108,6 +98,22 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     notes: mockedNotes,
     reservedJudge: mockedJudges[0]
 };
+
+const mockedHearingResponse: Hearing = {
+    caseNumber: 'TEST WITH REMEKasdasdasd',
+    caseTitle: 'ASD',
+    caseTypeCode: 'fast-track',
+    communicationFacilitator: null,
+    deleted: false,
+    duration: 'PT2H3M',
+    hearingTypeCode: 'trial',
+    id: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
+    priority: 'Low',
+    reservedJudgeId: null,
+    scheduleEnd: null,
+    scheduleStart: null,
+    version: 2
+}
 
 // same as unlisted, but with session set to matching id in Session
 let mockedListedHearingPartVM: HearingPartViewModel = { ...mockedUnlistedHearingPartVM, sessionId: 'some-session-id' };
@@ -169,11 +175,12 @@ describe('SessionsListingsSearchComponent', () => {
     it('should fetch hearings', () => {
       store.dispatch(new referenceDataActions.GetAllCaseTypeComplete(stubCaseTypes));
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
+      store.dispatch(new hearingActions.SearchComplete([mockedHearingResponse]));
       store.dispatch(new hearingPartActions.SearchComplete([mockedHearingPartResponse]));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
-      component.hearingParts$.subscribe(hearingParts => {
+      component.hearings$.subscribe(hearingParts => {
         expect(hearingParts).toEqual([mockedUnlistedHearingPartVM]);
       });
     });
@@ -194,6 +201,7 @@ describe('SessionsListingsSearchComponent', () => {
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
       store.dispatch(new referenceDataActions.GetAllSessionTypeComplete(stubSessionTypes));
       store.dispatch(new notesActions.UpsertMany(mockedNotes));
+      store.dispatch(new hearingActions.SearchComplete([mockedHearingResponse]));
       store.dispatch(new hearingPartActions.SearchComplete(mockedListedHearingPartResponses));
       store.dispatch(new roomActions.GetComplete(mockedRooms));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
