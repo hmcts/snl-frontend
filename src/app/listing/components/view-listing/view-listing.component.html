@@ -1,61 +1,60 @@
 <mat-card>
-  <mat-grid-list cols="3" rowHeight="2:1">
+  <div class="grid">
+    <div class="tile">
+      <strong>Case type</strong><br>
+      {{hearing.caseType}}
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Hearing Type</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Hearing Type</strong><br>
       {{hearing.hearingType}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Hearing Type</mat-grid-tile-header>
-      {{hearing.hearingType}}
-    </mat-grid-tile>
-
-    <mat-grid-tile>
-      <mat-grid-tile-header>Priority</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Priority</strong><br>
       {{hearing.priority}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Hearing duration</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Hearing duration</strong><br>
       {{hearing.duration.toString()}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>List between</mat-grid-tile-header>
+    <div class="tile">
+      <strong>List between</strong><br>
       {{hearing.scheduleStart.format()}} - {{hearing.scheduleEnd.format()}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Duration</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Duration</strong><br>
       {{hearing.duration.toString()}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Reserved for</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Reserved for</strong><br>
       {{hearing.reservedToJudge}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Communication facilitator</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Communication facilitator</strong><br>
       {{hearing.communicationFacilitator}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-    </mat-grid-tile>
+    <div class="tile">
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Special requirements</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Special requirements</strong><br>
       {{hearing.specialRequirements}}
-    </mat-grid-tile>
+    </div>
 
-    <mat-grid-tile>
-      <mat-grid-tile-header>Facility requirements</mat-grid-tile-header>
+    <div class="tile">
+      <strong>Facility requirements</strong><br>
       {{hearing.facilityRequirements}}
-    </mat-grid-tile>
+    </div>
 
-  </mat-grid-list>
-
+    <div class="clear"></div>
+  </div>
   <mat-tab-group>
 
     <mat-tab label="Notes">

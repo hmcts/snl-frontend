@@ -20,8 +20,9 @@ mat-panel-title {
 }
 
 .listing-header .tile {
-  width: 100px;
+  width: 90px;
   float: left;
+  padding: 14px;
 }
 
 .scheduled-listings .listing .expand-button {
@@ -33,4 +34,18 @@ mat-panel-title {
 
 .clear {
   clear: both;
+}
+
+.mat-grid-tile .mat-grid-tile-header {
+  background: none;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0px;
+}
+
+.grid .tile {
+  width: 280px;
+  float: left;
+  min-height: 70px;
 }
