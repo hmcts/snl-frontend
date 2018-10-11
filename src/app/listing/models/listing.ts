@@ -12,6 +12,7 @@ export interface Session {
   duration: number,
   room: string,
   judge: string,
+  type: string,
   notes: Note[]
 }
 

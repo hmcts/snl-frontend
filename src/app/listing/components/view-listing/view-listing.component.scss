@@ -5,11 +5,32 @@ mat-card {
 
 .left {
   float: left;
+}
+
+.note .content {
   width: 600px;
 }
 
-.right {
-  float: right;
+.note .author-info {
   width: 300px;
+}
+
+mat-panel-title {
+  display: block;
+}
+
+.listing-header .tile {
+  width: 100px;
+  float: left;
+}
+
+.scheduled-listings .listing .expand-button {
+  text-align: right;
   clear: right;
+  float: right;
+  width: 200px;
+}
+
+.clear {
+  clear: both;
 }
