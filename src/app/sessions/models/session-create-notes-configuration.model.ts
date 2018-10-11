@@ -10,13 +10,15 @@ export class SessionCreateNotesConfiguration implements NotesConfiguration {
         this.entityName = 'Session';
     }
 
-    public defaultNotes(): Note[] {
-        const otherNote = {
+    public getNewFreeTextNote(): Note {
+        return {
             id: undefined,
             content: '',
             type: 'Other note'
         } as Note;
+    }
 
-        return [otherNote];
+    public defaultNotes(): Note[] {
+        return [this.getNewFreeTextNote()];
     }
 }
