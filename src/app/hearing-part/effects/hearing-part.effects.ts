@@ -77,7 +77,7 @@ export class HearingPartEffects {
     deleteHearing$: Observable<Action> = this.actions$.pipe(
       ofType<any>(HearingPartActionTypes.Delete),
       mergeMap(action =>
-        this.hearingPartService.deleteHearingPart(action.payload).pipe(
+        this.hearingPartService.deleteHearing(action.payload).pipe(
           mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
           catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(
               {err: err, id: action.payload.userTransactionId}))))

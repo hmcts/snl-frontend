@@ -38,7 +38,7 @@ export class HearingPartService {
 
     assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {
         return this.http
-            .put<HearingPartResponse>(this.getPath(assignment), assignment);
+            .put<HearingPartResponse>(this.getSessionAssignmentPath(assignment), assignment);
     }
 
     createListing(query: CreateHearingRequest): Observable<Transaction> {
@@ -55,21 +55,23 @@ export class HearingPartService {
             });
     }
 
-    deleteHearingPart(query: HearingDeletion): Observable<any> {
+    deleteHearing(query: HearingDeletion): Observable<any> {
         return this.http
             .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, JSON.stringify(query), {
                 headers: {'Content-Type': 'application/json'}
             });
     }
 
-    private getPath(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
+    private getSessionAssignmentPath(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
         let path = '';
 
         let objectKeys: string[] = Object.keys(assignment).map(k => k.toString());
         if (objectKeys.some(key => (key === 'hearingId'))) {
             path = `${this.config.getApiUrl()}/hearing/${(assignment as HearingToSessionAssignment).hearingId}`
-        } else {
+        } else if (objectKeys.some(key => (key === 'hearingPartId'))) {
             path = `${this.config.getApiUrl()}/hearing-part/${(assignment as HearingPartToSessionAssignment).hearingPartId}`
+        } else {
+            throw new Error('Cannot obtain URL for the given Session Assignment object!')
         }
 
         return path;
