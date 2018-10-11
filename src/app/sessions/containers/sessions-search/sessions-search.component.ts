@@ -84,6 +84,7 @@ export class SessionsSearchComponent implements OnInit {
             data: {
                 sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
+                notes: s.notes
             } as SessionAmmendDialogData,
             hasBackdrop: true,
             height: 'auto',
