@@ -118,7 +118,7 @@ export class CalendarComponent implements OnInit {
             el.append('  -  ' + hearing.hearingType.description);
             el.append(`  -   ${formatDuration(moment.duration(hearing.duration))}`);
         });
-
+        el.append('<span style="display: none;" id="' + event.detail.event.id + '"></span>');
         el = el.get(0);
         this.references.push(el);
     }

@@ -10,3 +10,7 @@ export enum SessionTypes {
     PRELIMINARY_HEARINGS = 'Preliminary Hearings (Small Claims / Fast Track / Multi Track)',
     K_FAST_TRACK_AND_APPLICATIONS = 'K-Fast Track and Applications',
 }
+
+export const SessionTypesCodes: { [id: string]: string } = {
+    'Fast Track - Trial Only': 'fast-track---trial-only',
+};
