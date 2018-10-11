@@ -1,7 +1,7 @@
 import { ProblemReference } from '../../models/problem-reference.model';
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, EventEmitter, Output, OnInit } from '@angular/core';
 import { Problem } from '../../models/problem.model';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
+import { MatPaginator, PageEvent } from '@angular/material';
 import { Moment } from 'moment';
 
 @Component({
@@ -9,24 +9,27 @@ import { Moment } from 'moment';
   templateUrl: './problems-table.component.html',
   styleUrls: ['./problems-table.component.scss']
 })
-export class ProblemsTableComponent {
+export class ProblemsTableComponent implements OnInit  {
   displayedColumns = ['severity', 'createdAt', 'message', 'references description'];
-  dataSource: MatTableDataSource<Problem>;
+  initialPageSize = 20
 
-  private _problems: Problem[];
-  @Input() set problems(problems: Problem[]) {
-    this._problems = problems;
-    this.dataSource = new MatTableDataSource(Object.values(this.problems));
-    this.dataSource.paginator = this.paginator;
-  }
-
-  get problems(): Problem[] {
-    return this._problems;
-  }
-
+  @Input() totalCount: number;
+  @Input() problems: Problem[]
+  @Output() nextPage = new EventEmitter<PageEvent>()
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor() {}
+
+  ngOnInit() {
+    this.paginator.page.subscribe(pageEvent => this.nextPage.emit(pageEvent))
+    this.nextPage.emit(
+      {
+        pageIndex: this.paginator.pageIndex,
+        pageSize: this.paginator.pageSize || this.initialPageSize,
+        length: undefined
+      }
+    )
+  }
 
   extractRefDescriptions(element: Problem): string[] {
     return element.references
