@@ -40,6 +40,7 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
 import { Hearing } from '../../../hearing-part/models/hearing';
+import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
@@ -67,7 +68,7 @@ const mockedNotes: Note[] = [
         id: 'note-id',
         content: 'nice content',
         type: 'Facility Requirements',
-        entityId: 'some-id',
+        entityId: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
         entityType: 'ListingRequest',
         createdAt: undefined,
         modifiedBy: undefined
@@ -75,17 +76,34 @@ const mockedNotes: Note[] = [
 
 const mockedHearingPartResponse: HearingPartResponse = {
   id: 'some-id',
-  sessionId: undefined,
+  sessionId: null,
   hearingInfo: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
-  version: undefined,
+  version: 2,
 }
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
-    sessionId: undefined,
+    sessionId: null,
     hearingId: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
     caseNumber: 'abc123',
-    caseTitle: 'some-case-title',
+    caseTitle: 'fast-track',
+    caseType: stubCaseType,
+    hearingType: stubHearingType,
+    duration: moment.duration(durationStringFormat),
+    scheduleStart: moment(nowISOSting),
+    scheduleEnd: moment(nowISOSting),
+    version: 2,
+    priority: Priority.Low,
+    reservedJudgeId: judgeId,
+    communicationFacilitator: 'interpreter',
+    notes: [],
+    reservedJudge: mockedJudges[0]
+};
+
+const mockedUnlistedHearingVM: HearingViewmodel = {
+    id: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
+    caseNumber: 'abc123',
+    caseTitle: 'fast-track',
     caseType: stubCaseType,
     hearingType: stubHearingType,
     duration: moment.duration(durationStringFormat),
@@ -96,22 +114,23 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter',
     notes: mockedNotes,
-    reservedJudge: mockedJudges[0]
-};
+    reservedJudge: mockedJudges[0],
+    isListed: false
+}
 
 const mockedHearingResponse: Hearing = {
-    caseNumber: 'TEST WITH REMEKasdasdasd',
-    caseTitle: 'ASD',
-    caseTypeCode: 'fast-track',
-    communicationFacilitator: null,
+    caseNumber: 'abc123',
+    caseTitle: 'fast-track',
+    caseTypeCode: 'some-case-type-code',
+    communicationFacilitator: 'interpreter',
     deleted: false,
-    duration: 'PT2H3M',
-    hearingTypeCode: 'trial',
+    duration: durationStringFormat,
+    hearingTypeCode: 'some-hearing-type-code',
     id: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
     priority: 'Low',
-    reservedJudgeId: null,
-    scheduleEnd: null,
-    scheduleStart: null,
+    reservedJudgeId: judgeId,
+    scheduleEnd: nowISOSting,
+    scheduleStart: nowISOSting,
     version: 2
 }
 
@@ -181,7 +200,7 @@ describe('SessionsListingsSearchComponent', () => {
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearings$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual([mockedUnlistedHearingPartVM]);
+        expect(hearingParts).toEqual([mockedUnlistedHearingVM]);
       });
     });
     it('should fetch rooms', () => {
@@ -335,15 +354,15 @@ describe('SessionsListingsSearchComponent', () => {
 
   describe('selectHearing', () => {
     it('should set selectedHearingPart', () => {
-      component.selectHearingPart(mockedUnlistedHearingPartVM);
-      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingPartVM);
+      component.selectHearingPart(mockedUnlistedHearingVM);
+      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingVM);
     });
   });
 
   describe('assignToSession', () => {
     it('should dispatch AssignToSession action', () => {
       component.selectedSession = mockedFullSession[0];
-      component.selectedHearingPart = mockedListedHearingPartVM;
+      component.selectedHearingPart = mockedUnlistedHearingVM;
       component.assignToSession();
 
       const passedObj = storeSpy.calls.first().args[0];
@@ -353,10 +372,10 @@ describe('SessionsListingsSearchComponent', () => {
         passedObj instanceof hearingPartActions.AssignToSession
       ).toBeTruthy();
       expect(sessionAssignmentPayload.hearingId).toEqual(
-        mockedListedHearingPartVM.id
+          mockedUnlistedHearingVM.id
       );
       expect(sessionAssignmentPayload.hearingVersion).toEqual(
-        mockedListedHearingPartVM.version
+          mockedUnlistedHearingVM.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
       expect(sessionAssignmentPayload.sessionId).toEqual(
@@ -382,14 +401,14 @@ describe('SessionsListingsSearchComponent', () => {
     describe('when selectedHearingPart is not null and selectedSession is set', () => {
       it('should return true ', () => {
         component.selectedSession = mockedFullSession[0];
-        component.selectedHearingPart = mockedUnlistedHearingPartVM;
+        component.selectedHearingPart = mockedUnlistedHearingVM;
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
     describe('when either selectedHearingPart is not null or selectedSession is not set', () => {
       it('should return false ', () => {
         component.selectedSession = undefined;
-        component.selectedHearingPart = mockedUnlistedHearingPartVM;
+        component.selectedHearingPart = mockedUnlistedHearingVM;
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {

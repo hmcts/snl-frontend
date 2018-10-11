@@ -16,7 +16,6 @@ import { HearingModificationService } from '../../services/hearing-modification.
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingPartsPreviewComponent } from './hearing-parts-preview.component';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { CaseType } from '../../../core/reference/models/case-type';
@@ -79,12 +78,12 @@ describe('HearingPartPreviewComponent', () => {
     hpms = TestBed.get(HearingModificationService);
     spyOn(hpms, 'deleteHearing');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
-    component.hearings = [generateHearingParts('123')];
+    component.hearings = [generateHearings('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearings[0]).toEqual(generateHearingParts('123'));
+      expect(component.hearings[0]).toEqual(generateHearings('123'));
     });
   });
 
@@ -96,7 +95,7 @@ describe('HearingPartPreviewComponent', () => {
     });
 
     it('has notes should properly verify notes of hearingparts', () => {
-        let hasNotes = component.hasNotes(generateHearingParts('asd'));
+        let hasNotes = component.hasNotes(generateHearings('asd'));
 
         expect(hasNotes).toBeFalsy();
     });
@@ -104,7 +103,7 @@ describe('HearingPartPreviewComponent', () => {
     it('confirming on delete dialog should call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
-        component.openDeleteDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openDeleteDialog({...generateHearings('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
         expect(hpms.deleteHearing).toHaveBeenCalled();
@@ -113,7 +112,7 @@ describe('HearingPartPreviewComponent', () => {
     it('confirming on edit dialog should call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
 
@@ -122,7 +121,7 @@ describe('HearingPartPreviewComponent', () => {
     it('declining on delete dialog should not call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
         expect(hpms.deleteHearing).not.toHaveBeenCalled();
@@ -131,14 +130,14 @@ describe('HearingPartPreviewComponent', () => {
     it('declining on edit dialog should not call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
         expect(hpms.deleteHearing).not.toHaveBeenCalled();
     });
 
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
-        const sampleHearingPart = {
+        const sampleHearing = {
             id: '-1',
             sessionId: null,
             caseNumber: 'cn-123',
@@ -151,23 +150,24 @@ describe('HearingPartPreviewComponent', () => {
             version: 0,
             priority: Priority.Low,
             reservedJudgeId: '0',
-            reservedJudge: { name: 'judge-name'},
+            reservedJudge: { id: 'id', name: 'judge-name'},
             communicationFacilitator: 'cf',
-            notes: []
-        } as HearingPartViewModel;
+            notes: [],
+            isListed: false
+        } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
-            { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
-            { columnName: 'caseTitle', expected: sampleHearingPart.caseTitle },
-            { columnName: 'caseType', expected: sampleHearingPart.caseType.description },
-            { columnName: 'hearingType', expected: sampleHearingPart.hearingType.description },
-            { columnName: 'duration', expected: sampleHearingPart.duration.asMilliseconds() },
-            { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
-            { columnName: 'priority', expected: priorityValue(sampleHearingPart.priority) },
-            { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
+            { columnName: 'caseNumber', expected: sampleHearing.caseNumber },
+            { columnName: 'caseTitle', expected: sampleHearing.caseTitle },
+            { columnName: 'caseType', expected: sampleHearing.caseType.description },
+            { columnName: 'hearingType', expected: sampleHearing.hearingType.description },
+            { columnName: 'duration', expected: sampleHearing.duration.asMilliseconds() },
+            { columnName: 'communicationFacilitator', expected: sampleHearing.communicationFacilitator },
+            { columnName: 'priority', expected: priorityValue(sampleHearing.priority) },
+            { columnName: 'reservedJudge', expected: sampleHearing.reservedJudge.name },
             { columnName: 'notes', expected: 'No' },
-            { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.unix() },
-            { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.unix() },
+            { columnName: 'scheduleStart', expected: sampleHearing.scheduleStart.unix() },
+            { columnName: 'scheduleEnd', expected: sampleHearing.scheduleEnd.unix() },
             { columnName: 'selectHearing', expected: undefined },
             { columnName: 'delete', expected: undefined },
             { columnName: 'editor', expected: undefined },
@@ -183,7 +183,7 @@ describe('HearingPartPreviewComponent', () => {
                 const expected = testCase.expected;
 
                 component.ngOnChanges();
-                const result = component.dataSource.sortingDataAccessor(sampleHearingPart, testCase.columnName);
+                const result = component.dataSource.sortingDataAccessor(sampleHearing, testCase.columnName);
 
                 expect(result).toBe(expected);
             });
@@ -192,7 +192,7 @@ describe('HearingPartPreviewComponent', () => {
   });
 });
 
-function generateHearingParts(id: string): HearingViewmodel {
+function generateHearings(id: string): HearingViewmodel {
     return {
         id: id,
         caseNumber: null,
@@ -207,6 +207,7 @@ function generateHearingParts(id: string): HearingViewmodel {
         reservedJudgeId: null,
         reservedJudge: null,
         communicationFacilitator: null,
-        notes: []
+        notes: [],
+        isListed: false
     }
 };

@@ -89,7 +89,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingType: hearingTypes[hearing.hearingTypeCode],
                 reservedJudge: judges[hearing.reservedJudgeId],
                 hearingId: hearing.id,
-                hearingVersion: hearing.version,
+                //hearingVersion: hearing.version,
                 notes: sortedNotes,
             };
         });

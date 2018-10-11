@@ -20,4 +20,5 @@ export interface HearingViewmodel {
     communicationFacilitator: string;
     reservedJudge: Judge;
     reservedJudgeId: string;
+    isListed: boolean;
 }

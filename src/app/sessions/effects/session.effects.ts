@@ -142,8 +142,8 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
+                    new hearingActions.SearchComplete(data.entities.hearings),
                     new hearingPartsActions.SearchComplete(data.entities.hearingParts),
-                    new hearingActions.SearchComplete(data.entities.hearingParts),
                     new notesActions.GetByEntities([...Object.keys(data.entities.sessions),
                         ...Object.keys(data.entities.hearingParts)])
                 ]),
