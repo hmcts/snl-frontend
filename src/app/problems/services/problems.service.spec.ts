@@ -2,7 +2,7 @@ import { ProblemsService } from './problems.service';
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppConfig } from '../../app.config';
-import { ProblemResponse, Problem } from '../models/problem.model';
+import { ProblemResponse, Problem, Page } from '../models/problem.model';
 import * as moment from 'moment';
 
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
@@ -105,7 +105,7 @@ describe('ProblemsService', () => {
 
     describe('getAll', () => {
         it('should fetch and map createdAt', () => {
-            const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems`;
+            const expectedUrl = `${mockedAppConfig.getApiUrl()}/problems?size=10&page=1`;
             const problemResponse: ProblemResponse = {
                 createdAt: '2018-10-03T12:06:56.386Z',
                 id: 'dd92a4b8896f9d555b70ffdff95fedfd',
@@ -120,19 +120,42 @@ describe('ProblemsService', () => {
                 severity: 'Critical',
                 type: 'Resource_missing'
             }
+            const pageProblemResponse: Page<ProblemResponse> = {
+                content: [ problemResponse ],
+                last: true,
+                totalElements: 1,
+                totalPages: 1,
+                size: 1,
+                number: 1,
+                first: true,
+                sort: null,
+                numberOfElements: 1
+            }
 
-            const mappedProblem: Problem = {
-                ...problemResponse,
-                createdAt: moment(problemResponse.createdAt)
+            const mappedProblem: Page<Problem> = {
+                content: [
+                    {
+                        ...problemResponse,
+                        createdAt: moment(problemResponse.createdAt)
+                    }
+                ],
+                last: true,
+                totalElements: 1,
+                totalPages: 1,
+                size: 1,
+                number: 1,
+                first: true,
+                sort: null,
+                numberOfElements: 1
             }
 
             problemsService
-                .getAll()
+                .getPaginated(10, 1)
                 .subscribe(problems => {
-                    expect(problems).toEqual([mappedProblem])
+                    expect(problems).toEqual(mappedProblem)
                 })
 
-            httpMock.expectOne(expectedUrl).flush([problemResponse]);
+            httpMock.expectOne(expectedUrl).flush(pageProblemResponse);
         })
     })
 
