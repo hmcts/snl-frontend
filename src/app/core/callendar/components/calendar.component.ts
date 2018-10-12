@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit {
         }
         this.ucCalendar.fullCalendar('refetchResources');
     }
-
+    @Input() editable = true;
     @Input() resourceColumns: any[] = undefined;
     @Input() dataTransformer: IcalendarTransformer<any>;
     @Input() defaultView: string;
@@ -76,7 +76,7 @@ export class CalendarComponent implements OnInit {
             defaultView: this.defaultView,
             minTime: moment.duration('09:00:00'),
             maxTime: moment.duration('17:30:00'),
-            editable: true,
+            editable: this.editable,
             droppable: true,
             eventLimit: false,
             header: this.header,
@@ -118,7 +118,7 @@ export class CalendarComponent implements OnInit {
             el.append('  -  ' + hearing.hearingType.description);
             el.append(`  -   ${formatDuration(moment.duration(hearing.duration))}`);
         });
-
+        el.append('<span style="display: none;" id="' + event.detail.event.id + '"></span>');
         el = el.get(0);
         this.references.push(el);
     }

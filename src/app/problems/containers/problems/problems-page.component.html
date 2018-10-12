@@ -1,3 +1,5 @@
 <app-problems-table
-        [problems]="problems">
+        [problems]="problems"
+        [totalCount]="totalCount"
+        (nextPage)="fetchProblems($event)">
 </app-problems-table>
