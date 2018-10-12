@@ -14,7 +14,7 @@ export class SummaryMessageService {
     constructor(private readonly store: Store<State>) { }
 
     public buildSummaryMessage(event): Observable<string> {
-        if(event.detail.event === undefined) {
+        if (event.detail.event === undefined) {
             return this.buildListHearingMsg();
         }
 

@@ -49,7 +49,6 @@ export class HearingPartEffects {
         )
     );
 
-
     @Effect()
     getHearingById$: Observable<Action> = this.actions$.pipe(
         ofType<fromHearings.GetById>(HearingActionTypes.GetById),
