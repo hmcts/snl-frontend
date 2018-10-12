@@ -3,6 +3,11 @@ variable "product" {
   default     = "snl"
   description = "Scheduling and Listing "
 }
+
+variable "raw_product" {
+  default               = "snl" // jenkins-library overrides product for PRs and adds e.g. pr-118-ccd
+}
+
 variable "component" {
   type        = "string"
   default     = "frontend"
@@ -31,9 +36,17 @@ variable "object_id" {
 } */
 
 variable "external_host_name" {
-  default = "snl-frontend.reform.hmcts.net"
+  default = ""
 }
 variable "subscription" {}
+
+variable "asp_rg" {
+  default = ""
+}
+
+variable "asp_name" {
+  default = ""
+}
 
 variable "common_tags" {
   type = "map"
