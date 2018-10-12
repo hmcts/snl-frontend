@@ -1,85 +1,27 @@
 import { Injectable } from '@angular/core';
-// import { AppConfig } from '../../app.config';
-// import { HttpClient } from '@angular/common/http';
-import { Priority } from '../../hearing-part/models/priority-model';
-import * as moment from 'moment';
+import { AppConfig } from '../../app.config';
+import { HttpClient } from '@angular/common/http';
 import { Hearing } from '../models/listing';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 
 @Injectable()
 export class ListingService {
   constructor(
-    // private readonly http: HttpClient, private readonly config: AppConfig
+    private readonly http: HttpClient,
+    private readonly config: AppConfig,
+    private readonly notesPopulatorService: NotesPopulatorService
   ) {
+
   }
 
-  getById(id: string): Hearing {
-    return {
-      id: 'uuid-1',
-      caseNumber: 'caseNumber',
-      caseTitle: 'caseTitle',
-      // todo add case type model
-      caseType: 'type',
-      // todo add hearing type model
-      hearingType: 'type',
-      // todo add duration model
-      duration: 10,
-      // todo use real date
-      scheduleStart: moment(),
-      // todo use real date
-      scheduleEnd: moment(),
-      priority: Priority.High,
-      communicationFacilitator: 'Tłumacz needed',
-      specialRequirements: 'special',
-      facilityRequirements: 'facility',
-      reservedToJudge: 'Sedzia Dredd',
-      notes: [
-        {
-          content: 'content of note',
-          createdAt: moment(),
-          modifiedBy: 'author of note'
-        },
-        {
-          content: 'content of note',
-          createdAt: moment(),
-          modifiedBy: 'author of note'
-        },
-        {
-          content: 'content of note',
-          createdAt: moment(),
-          modifiedBy: 'author of note'
-        }
-      ],
-      sessions: [
-        {
-          start: moment(),
-          duration: 10,
-          room: 'room name',
-          judge: 'judge name',
-          type: 'session type',
-          notes: [
-            {
-              content: 'session note',
-              createdAt: moment(),
-              modifiedBy: 'session note author'
-            },
-            {
-              content: 'session note',
-              createdAt: moment(),
-              modifiedBy: 'session note author'
-            },
-            {
-              content: 'session note',
-              createdAt: moment(),
-              modifiedBy: 'session note author'
-            },
-            {
-              content: 'session note',
-              createdAt: moment(),
-              modifiedBy: 'session note author'
-            }
-          ]
-        }
-      ]
-    }
+  getById(id: string): Observable<any> {
+    return this.http
+      .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
+      .pipe(map(data => {
+        this.notesPopulatorService.populateWithNotes(data);
+        return data;
+      }));
   }
 }

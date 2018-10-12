@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="hearing">
   <div class="grid">
     <div class="tile">
       <strong>Case type</strong><br>
@@ -22,7 +22,7 @@
 
     <div class="tile">
       <strong>List between</strong><br>
-      {{hearing.scheduleStart.format()}} - {{hearing.scheduleEnd.format()}}
+      {{hearing.scheduleStart}} - {{hearing.scheduleEnd}}
     </div>
 
     <div class="tile">
@@ -65,7 +65,7 @@
           </div>
           <div class="author-info">
             <strong>{{note.modifiedBy}}</strong><br>
-            {{note.createdAt.format()}}
+            {{formatDate(note.createdAt)}}
           </div>
         </mat-list-item>
       </mat-list>
@@ -78,13 +78,13 @@
             <mat-panel-title>
               <div class="listing-header">
                 <div class="tile">
-                  {{session.start.format()}}
+                  {{formatDate(session.start)}}
                 </div>
                 <div class="tile">
                   {{session.type}}
                 </div>
                 <div class="tile">
-                  Start {{session.start.format('HH:mm')}}
+                  Start {{formatDate(session.start)}}
                 </div>
                 <div class="tile">
                   {{session.duration.toString()}} mins
@@ -108,7 +108,7 @@
               </div>
               <div class="author-info">
                 <strong>{{note.modifiedBy}}</strong><br>
-                {{note.createdAt.format()}}
+                {{formatDate(note.createdAt)}}
               </div>
             </mat-list-item>
           </mat-list>
@@ -117,5 +117,4 @@
       </mat-accordion>
     </mat-tab>
   </mat-tab-group>
-
 </mat-card>

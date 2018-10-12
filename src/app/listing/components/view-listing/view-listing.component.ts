@@ -8,14 +8,22 @@ import { Hearing } from '../../models/listing';
   styleUrls: ['./view-listing.component.scss']
 })
 export class ViewListingComponent implements OnInit {
-  private hearing: Hearing;
+  hearing: Hearing;
 
   constructor(private readonly listingService: ListingService) {
   }
 
   ngOnInit() {
-    this.hearing = this.listingService.getById('fake-id');
-    this.hearing = this.hearing;
+    // todo change to ID from URL
+    this.listingService.getById('4535afdf-d7fc-4d8e-b682-c20c5fcdaf8a').subscribe(
+      (x) => {
+        this.hearing = x;
+      }
+    );
+  }
+
+  formatDate(date: string): string {
+    return moment(date).format()
   }
 
 }
