@@ -30,4 +30,8 @@ export class NavigationFlow {
     Logger.log(`Opening problems page`);
     await this.topMenu.openProblemsPage();
   }
+
+  async gotoPlannerPage() {
+      await this.topMenu.openPlannerPage();
+  }
 }

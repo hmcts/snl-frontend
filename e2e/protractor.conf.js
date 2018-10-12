@@ -19,6 +19,7 @@ exports.config = {
     },
     capabilities: {
         'browserName': 'chrome',
+        'directConnect': true,
         'acceptInsecureCerts': true,
         loggingPrefs: {
             'driver': 'INFO',
