@@ -12,12 +12,12 @@ import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { MatDialog } from '@angular/material';
 import { asArray } from '../../../utils/array-utils';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { HearingsFilterService } from '../../services/hearings-filter-service';
 import { HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 @Component({
     selector: 'app-hearings-search',
@@ -26,24 +26,24 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 })
 export class HearingsSearchComponent implements OnInit {
 
-    hearingParts$: Observable<HearingPartViewModel[]>;
+    hearings$: Observable<HearingViewmodel[]>;
     judges$: Observable<Judge[]>;
     filters$ = new Subject<HearingsFilters>();
     caseTypes$: Observable<CaseType[]>;
     hearingTypes$: Observable<HearingType[]>;
-    filteredHearings: HearingPartViewModel[] = [];
+    filteredHearings: HearingViewmodel[] = [];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly hearingsFilterService: HearingsFilterService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(
-            select(fromHearingParts.getFullHearingParts), map(asArray)
-        ) as Observable<HearingPartViewModel[]>;
+        this.hearings$ = this.store.pipe(
+            select(fromHearingParts.getFullHearings), map(asArray)
+        ) as Observable<HearingViewmodel[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
         this.hearingTypes$ = this.store.pipe(select(fromReferenceData.selectHearingTypes));
 
-        combineLatest(this.hearingParts$, this.filters$, this.filterHearings).subscribe((data) => { this.filteredHearings = data });
+        combineLatest(this.hearings$, this.filters$, this.filterHearings).subscribe((data) => { this.filteredHearings = data });
     }
 
     ngOnInit() {
@@ -56,7 +56,7 @@ export class HearingsSearchComponent implements OnInit {
         this.filters$.next(filterValues);
     }
 
-    filterHearings = (hearings: HearingPartViewModel[], filters: HearingsFilters): HearingPartViewModel[] => {
+    filterHearings = (hearings: HearingViewmodel[], filters: HearingsFilters): HearingViewmodel[] => {
         if (!filters) {
             return hearings;
         }

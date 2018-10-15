@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
-import { HearingModificationService } from '../../services/hearing-modification.service';
 import { priorityValue } from '../../models/priority-model';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 @Component({
     selector: 'app-hearing-search-table',
@@ -12,11 +11,11 @@ import { priorityValue } from '../../models/priority-model';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingSearchTableComponent implements OnInit, OnChanges {
-    @Input() hearings: HearingPartViewModel[];
+    @Input() hearings: HearingViewmodel[];
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    dataSource: MatTableDataSource<HearingPartViewModel>;
+    dataSource: MatTableDataSource<HearingViewmodel>;
     displayedColumns = [
         'caseNumber',
         'caseTitle',
@@ -25,14 +24,11 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         'hearingType',
         'communicationFacilitator',
         'reservedJudge',
-        'scheduleStart',
-        'scheduleEnd',
-        // TODO add below fields, when returned from the backend
-        // 'requestStatus',
-        // 'sessionDate',
+        'requestStatus',
+        'listingDate',
     ];
 
-    constructor(public dialog: MatDialog, public hearingPartService: HearingModificationService) {
+    constructor(public dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -54,9 +50,9 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
                 case 'priority':
                     return priorityValue(item[property]);
 
+                case 'listingDate':
                 case 'scheduleStart':
-                case 'scheduleEnd':
-                    return (item[property]) ? item[property].unix() : null;
+                    return (item['scheduleStart']) ? item['scheduleStart'].unix() : null;
 
                 default:
                     return item[property];
@@ -72,6 +68,14 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
             return moment(date).format('DD/MM/YYYY');
         } else {
             return null;
+        }
+    }
+
+    getStatusText(element: HearingViewmodel) {
+        if (element.isListed) {
+            return 'listed';
+        } else {
+            return 'unlisted';
         }
     }
 

@@ -46,14 +46,14 @@ matSortDirection="desc">
     <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleStart">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule From </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
+  <ng-container matColumnDef="requestStatus">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Request status </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{getStatusText(element)}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleEnd">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule To </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
+  <ng-container matColumnDef="listingDate">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Listing date </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

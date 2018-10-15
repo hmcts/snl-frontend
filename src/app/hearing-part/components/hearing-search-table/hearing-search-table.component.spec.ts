@@ -14,13 +14,13 @@ import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.p
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingSearchTableComponent } from './hearing-search-table.component';
-import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { MatDialog } from '@angular/material';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
 import { HearingModificationService } from '../../services/hearing-modification.service';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
@@ -67,18 +67,18 @@ describe('HearingSearchTableComponent', () => {
     component = fixture.componentInstance;
     hpms = TestBed.get(HearingModificationService);
     spyOn(hpms, 'deleteHearing');
-    component.hearings = [generateHearingParts('123')];
+    component.hearings = [generateHearing('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearings[0]).toEqual(generateHearingParts('123'));
+      expect(component.hearings[0]).toEqual(generateHearing('123'));
     });
   });
 
   describe('', () => {
     it('should define datasource', () => {
-        component.ngOnInit()
+        component.ngOnInit();
 
         expect(component.dataSource).toBeDefined();
     });
@@ -86,7 +86,6 @@ describe('HearingSearchTableComponent', () => {
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
         const sampleHearingPart = {
             id: '-1',
-            sessionId: null,
             caseNumber: 'cn-123',
             caseTitle: 'ctitle-123',
             caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
@@ -99,8 +98,9 @@ describe('HearingSearchTableComponent', () => {
             reservedJudgeId: '0',
             reservedJudge: { name: 'judge-name'},
             communicationFacilitator: 'cf',
-            notes: []
-        } as HearingPartViewModel;
+            notes: [],
+            isListed: true
+        } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
             { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
@@ -110,8 +110,8 @@ describe('HearingSearchTableComponent', () => {
             { columnName: 'hearingType', expected: sampleHearingPart.hearingType.description },
             { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
             { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
-            { columnName: 'scheduleStart', expected: sampleHearingPart.scheduleStart.unix() },
-            { columnName: 'scheduleEnd', expected: sampleHearingPart.scheduleEnd.unix() },
+            { columnName: 'listingDate', expected: sampleHearingPart.scheduleStart.unix() },
+            { columnName: 'requestStatus', expected: component.getStatusText(sampleHearingPart) },
         ];
 
         it(' tested columns should equal component displayedColumns field', () => {
@@ -133,10 +133,9 @@ describe('HearingSearchTableComponent', () => {
   });
 });
 
-function generateHearingParts(id: string): HearingPartViewModel {
+function generateHearing(id: string): HearingViewmodel {
     return {
         id: id,
-        sessionId: null,
         caseNumber: null,
         caseTitle: null,
         caseType: { code: '', description: '' } as CaseType,
@@ -150,6 +149,6 @@ function generateHearingParts(id: string): HearingPartViewModel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudge: null,
-        hearingId: null
+        isListed: false
     }
 }

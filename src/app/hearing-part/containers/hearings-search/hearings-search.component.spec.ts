@@ -132,7 +132,7 @@ describe('HearingsSearchComponent', () => {
       store.dispatch(new referenceDataActions.GetAllHearingTypeComplete(stubHearingTypes));
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
-      component.hearingParts$.subscribe(hearingParts => {
+      component.hearings$.subscribe(hearingParts => {
         expect(hearingParts).toEqual([]);
       });
 
