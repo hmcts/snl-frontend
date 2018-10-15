@@ -1,23 +1,11 @@
-import * as moment from 'moment'
 
-// TODO SL-1551: make hearings alike
 export interface HearingsFilters {
+    caseNumber: string,
+    caseTitle: string,
+    priorities: string[],
     caseTypes: string[];
     hearingTypes: string[];
+    communicationFacilitators: string[];
     judges: string[];
-    startDate: moment.Moment;
-    endDate: moment.Moment;
-    utilization: {
-        unlisted: UtilizationFilter,
-        partListed: UtilizationFilter,
-        fullyListed: UtilizationFilter,
-        overListed: UtilizationFilter,
-        custom: UtilizationFilter
-    };
-}
-
-export interface UtilizationFilter {
-    active: boolean,
-    from: number,
-    to: number
+    listingDetails: string;
 }

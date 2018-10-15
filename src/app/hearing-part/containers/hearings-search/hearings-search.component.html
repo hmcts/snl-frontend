@@ -5,8 +5,7 @@
             [judges]="judges$ | async"
             [caseTypes]="caseTypes$ | async"
             [hearingTypes]="hearingTypes$ | async"
-            [startDate]="startDate"
-            [endDate]="endDate">
+    >
     </app-hearings-filter>
   </div>
   <div fxFlex>
@@ -16,7 +15,7 @@
 
     <div>
       <app-hearing-search-table id="hearing-search-table"
-              [hearingParts]="hearingParts$ | async">
+              [hearingParts]="filteredHearings">
       </app-hearing-search-table>
     </div>
   </div>

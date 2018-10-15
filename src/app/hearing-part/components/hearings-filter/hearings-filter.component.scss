@@ -1,2 +1,12 @@
-#sessions-filter {
+.listing-details-rb-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.listing-details-rb {
+  margin: 5px;
+}
+
+.listing-details-selected-value {
+  margin: 15px 0;
 }

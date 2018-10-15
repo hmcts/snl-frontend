@@ -10,7 +10,6 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import * as judgesReducers from '../../../judges/reducers';
-import * as transactionsReducers from '../../../features/transactions/reducers';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
 import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -18,20 +17,13 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { HearingSearchTableComponent } from './hearing-search-table.component';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
 import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-const openDialogMockObjConfirmed = {
-    afterClosed: (): Observable<boolean> => Observable.of(true)
-};
 const now = moment();
-const openDialogMockObjDeclined = {
-    afterClosed: (): Observable<boolean> => Observable.of(false)
-};
 let hpms: HearingPartModificationService;
 let component: HearingSearchTableComponent;
 let fixture: ComponentFixture<HearingSearchTableComponent>;
@@ -46,7 +38,6 @@ describe('HearingSearchTableComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
-        StoreModule.forFeature('transactions', transactionsReducers.reducers),
         BrowserAnimationsModule
       ],
       declarations: [
@@ -92,48 +83,6 @@ describe('HearingSearchTableComponent', () => {
         component.ngOnInit()
 
         expect(component.dataSource).toBeDefined();
-    });
-
-    it('has notes should properly verify notes of hearingparts', () => {
-        let hasNotes = component.hasNotes(generateHearingParts('asd'));
-
-        expect(hasNotes).toBeFalsy();
-    });
-
-    it('confirming on delete dialog should call service method', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
-
-        component.openDeleteDialog({...generateHearingParts('asd'), caseNumber: '123'});
-
-        expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).toHaveBeenCalled();
-    });
-
-    it('confirming on edit dialog should call service method', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
-
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
-
-        expect(matDialogSpy.open).toHaveBeenCalled();
-
-    });
-
-    it('declining on delete dialog should not call service method', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
-
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
-
-        expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
-    });
-
-    it('declining on edit dialog should not call service method', () => {
-        matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
-
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
-
-        expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
     });
 
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {

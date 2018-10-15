@@ -4,17 +4,23 @@
   </mat-card-header>
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
-
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input id="startDate" matInput [matDatepicker]="picker" [(ngModel)]="filters.startDate" placeholder="Choose start date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+    <mat-form-field>
+      <input id="caseNumber" [(ngModel)]="filters.caseNumber"
+             (change)="filters.caseNumber = filters.caseNumber.trim()"
+             maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number" type="text">
     </mat-form-field>
 
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
-      <input id="endDate" matInput [matDatepicker]="pickerEnd" [(ngModel)]="filters.endDate" placeholder="Choose end date">
-      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-      <mat-datepicker #pickerEnd></mat-datepicker>
+    <mat-form-field>
+      <input id="caseTitle" [(ngModel)]="filters.caseTitle"
+             (change)="filters.caseTitle = filters.caseTitle.trim()"
+             maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title" type="text" >
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select id="selectPriority" placeholder="Select priority level" multiple [(value)] = "filters.priorities">
+          <mat-option *ngFor="let priority of priorities"
+                      value="{{priority}}">{{priority}}</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field>
@@ -32,7 +38,14 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select id="selectJudge"  placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.judges">
+      <mat-select id="selectCommunicationFacilitator" placeholder="Select communication facilitator need" multiple [(value)] = "filters.communicationFacilitators">
+        <mat-option *ngFor="let element of communicationFacilitators"
+                    value="{{element}}">{{element}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select id="selectJudge"  placeholder="Select reserved judges" multiple [(value)] = "filters.judges">
         <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>
@@ -43,21 +56,13 @@
     <mat-card-header>
       <mat-card-subtitle>Listing details</mat-card-subtitle>
     </mat-card-header>
-    <mat-checkbox id="unlistedCheckbox" [(ngModel)]="filters.utilization.unlisted.active">Unlisted</mat-checkbox>
-    <mat-checkbox id="partCheckbox" [(ngModel)]="filters.utilization.partListed.active">Part Listed</mat-checkbox>
-    <mat-checkbox id="fullyListedCheckbox" [(ngModel)]= "filters.utilization.fullyListed.active">Fully Listed</mat-checkbox>
-    <mat-checkbox id="overListedCheckbox" [(ngModel)]="filters.utilization.overListed.active">Over Listed</mat-checkbox>
-    <mat-checkbox id="customCheckbox" [(ngModel)]="filters.utilization.custom.active">Custom</mat-checkbox>
-    <div fxLayout="row" fxLayoutGap="10%">
-        <mat-form-field fxFlex="25%">
-          <input id="customFrom" matInput placeholder="from" type="number" [(ngModel)]="filters.utilization.custom.from">
-        </mat-form-field>
-        <p fxFlex="10%">-</p>
-        <mat-form-field fxFlex="25%">
-          <input id="customTo" matInput placeholder="to" type="number" [(ngModel)]="filters.utilization.custom.to">
-        </mat-form-field>
-        <p fxFlex="10%">%</p>
-    </div>
+    <mat-card-content>
+      <mat-radio-group class="listing-details-rb-group" [(ngModel)]="filters.listingDetails" fxLayout="column">
+        <mat-radio-button class="listing-details-rb" [value]="'listed'">Listed</mat-radio-button>
+        <mat-radio-button class="listing-details-rb" [value]="'unlisted'">Unlisted</mat-radio-button>
+        <mat-radio-button class="listing-details-rb" [value]="''">All</mat-radio-button>
+      </mat-radio-group>
+    </mat-card-content>
   </div>
 
   <button id="filter" mat-raised-button color="accent" fxFlexAlign="center" (click)="sendFilter()">Filter</button>
