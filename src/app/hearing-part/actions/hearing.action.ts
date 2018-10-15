@@ -94,7 +94,7 @@ export class AssignToSession implements Action {
 export class UpsertMany implements Action {
     readonly type = HearingActionTypes.UpsertMany;
 
-    constructor(public payload: string) {}
+    constructor(public payload: any) {}
 }
 
 export class UpsertOne implements Action {
