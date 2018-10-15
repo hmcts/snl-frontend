@@ -30,10 +30,10 @@ export class ListingCreateEffects {
     update$: Observable<Action> = this.actions$.pipe(
         ofType<UpdateListingRequest>(HearingPartActionTypes.UpdateListingRequest),
         mergeMap(action =>
-            this.hearingPartService.updateListing(action.payload.hearingPart).pipe(
+            this.hearingPartService.updateListing(action.payload.hearing).pipe(
                 mergeMap((transaction: Transaction) => [new transactionActions.UpdateTransaction(transaction)]),
                 catchError((err: any) => of(new transactionActions.TransactionFailure(
-                    {err: err, id: action.payload.hearingPart.userTransactionId}))
+                    {err: err, id: action.payload.hearing.userTransactionId}))
                 )
             )
         )
