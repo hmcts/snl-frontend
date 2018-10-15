@@ -29,21 +29,23 @@ export class NotesPopulatorService {
   }
 
   private populateWithSingleNote(o: any, notes: Note[], noteType: string, keyToPopulate: string) {
-    o[keyToPopulate] = notes.find(x => x.type == noteType && x.entityId == o.id).content;
+    o[keyToPopulate] = notes.find(x => x.type === noteType && x.entityId === o.id).content;
   }
 
   // finds every entityId in object recursively and returns array of entityId's
   private collectEntityIds(o: any, entityIds) {
     for (let key in o) {
-      let item = o[key];
-      // if there's placeholder for notes, add object id to array
-      if (key == 'notes') {
-        entityIds.push(o.id);
-      }
+      if (o.hasOwnProperty(key)) {
+        let item = o[key];
+        // if there's placeholder for notes, add object id to array
+        if (key === 'notes') {
+          entityIds.push(o.id);
+        }
 
-      // if there's an array of other items, we go deeper to find notes
-      if (item instanceof Array) {
-        item.map(x => entityIds.concat(this.collectEntityIds(x, entityIds)));
+        // if there's an array of other items, we go deeper to find notes
+        if (item instanceof Array) {
+          item.map(x => entityIds.concat(this.collectEntityIds(x, entityIds)));
+        }
       }
     }
 
@@ -57,16 +59,18 @@ export class NotesPopulatorService {
   // populates object with notes
   private populateWithOtherNotes(o: any, notes: Note[]) {
     for (let key in o) {
-      let item = o[key];
+      if (o.hasOwnProperty(key)) {
+        let item = o[key];
 
-      // if there's placeholder for notes, we try to match notes we got from NotesService
-      if (key == 'notes') {
-        o[key] = notes.filter(x => x.entityId == o.id);
-      }
+        // if there's placeholder for notes, we try to match notes we got from NotesService
+        if (key === 'notes') {
+          o[key] = notes.filter(x => x.entityId === o.id);
+        }
 
-      // if there's an array of other items, we go deeper to find note placeholders
-      if (item instanceof Array) {
-        item.map((x, k) => item[k] = this.populateWithOtherNotes(x, notes));
+        // if there's an array of other items, we go deeper to find note placeholders
+        if (item instanceof Array) {
+          item.map((x, k) => item[k] = this.populateWithOtherNotes(x, notes));
+        }
       }
     }
 
