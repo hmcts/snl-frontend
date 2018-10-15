@@ -28,4 +28,8 @@ export class ViewListingComponent implements OnInit {
   formatDate(date: string): string {
     return moment(date).format()
   }
+
+  formatDuration(duration: number): string {
+    return moment.unix(duration).format('HH:mm');
+  }
 }
