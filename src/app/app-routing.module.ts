@@ -26,7 +26,7 @@ const routes: Routes = [
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
-            {path: 'hearing', component: ViewListingComponent, canActivate: [AppConfigGuard]}
+            {path: 'hearing/:id', component: ViewListingComponent, canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard]
     },

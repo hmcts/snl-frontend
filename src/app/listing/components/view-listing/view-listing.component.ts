@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ListingService } from '../../services/listing.service';
 import { Hearing } from '../../models/listing';
 import * as moment from 'moment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-view-listing',
@@ -11,20 +12,20 @@ import * as moment from 'moment';
 export class ViewListingComponent implements OnInit {
   hearing: Hearing;
 
-  constructor(private readonly listingService: ListingService) {
+  constructor(
+    private route: ActivatedRoute,
+    private readonly listingService: ListingService
+  ) {
   }
 
   ngOnInit() {
-    // todo change to ID from URL
-    this.listingService.getById('4535afdf-d7fc-4d8e-b682-c20c5fcdaf8a').subscribe(
-      (x) => {
-        this.hearing = x;
-      }
-    );
+    const id = this.route.snapshot.paramMap.get('id')
+    this.listingService.getById(id).subscribe(h => {
+      this.hearing = h;
+    });
   }
 
   formatDate(date: string): string {
     return moment(date).format()
   }
-
 }

@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit {
         },
         {
           text: 'View Hearing',
-          href: 'hearing'
+          href: 'hearing/4535afdf-d7fc-4d8e-b682-c20c5fcdaf8a'
         },
       ];
     }
