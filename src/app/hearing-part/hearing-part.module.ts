@@ -23,6 +23,7 @@ import { HearingSearchTableComponent } from './components/hearing-search-table/h
 import { RouterModule } from '@angular/router';
 import { SessionsPageComponent } from '../sessions/containers/sessions-page/sessions-page.component';
 import { HearingsFilterService } from './services/hearings-filter-service';
+import { HearingModificationService } from './services/hearing-modification.service';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -61,7 +62,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingsFilterService, ListingCreateNotesConfiguration],
+  providers: [HearingPartService, HearingsFilterService, HearingModificationService, ListingCreateNotesConfiguration],
   entryComponents: [ListingCreateDialogComponent],
 })
 export class HearingPartModule { }

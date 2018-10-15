@@ -12,7 +12,6 @@ import * as caseTypeReducers from '../../../core/reference/reducers/case-type.re
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as judgesReducers from '../../../judges/reducers';
 import * as notesReducers from '../../../notes/reducers';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -26,6 +25,7 @@ import { HearingsFilterService } from '../../services/hearings-filter-service';
 import { HearingsFilters } from '../../models/hearings-filter.model';
 import { HearingPartResponse } from '../../models/hearing-part-response';
 import { Note } from '../../../notes/models/note.model';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 
 let storeSpy: jasmine.Spy;
 let component: HearingsSearchComponent;
@@ -52,24 +52,25 @@ const mockedNotes: Note[] = [
     }];
 
 const mockedHearingPartResponse: HearingPartResponse = {
-  id: 'some-id',
+  id: 'some-hp-id',
   sessionId: undefined,
-  caseNumber: 'abc123',
-  caseTitle: 'some-case-title',
-  caseTypeCode: stubCaseType.code,
-  hearingTypeCode: stubHearingType.code,
-  duration: durationStringFormat,
-  scheduleStart: nowISOSting,
-  scheduleEnd: nowISOSting,
+  // caseNumber: 'abc123',
+  // caseTitle: 'some-case-title',
+  // caseTypeCode: stubCaseType.code,
+  // hearingTypeCode: stubHearingType.code,
+  // duration: durationStringFormat,
+  // scheduleStart: nowISOSting,
+  // scheduleEnd: nowISOSting,
   version: 2,
-  priority: Priority.Low,
-  reservedJudgeId: judgeId,
-  communicationFacilitator: 'interpreter',
-  deleted: false
+  // priority: Priority.Low,
+  // reservedJudgeId: judgeId,
+  // communicationFacilitator: 'interpreter',
+  // deleted: false
+  hearingInfo: 'some-h-id'
 };
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
-    id: 'some-id',
+    id: 'some-h-id',
     sessionId: undefined,
     caseNumber: 'abc123',
     caseTitle: 'some-case-title',
@@ -83,7 +84,8 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter',
     notes: mockedNotes,
-    reservedJudge: mockedJudges[0]
+    reservedJudge: mockedJudges[0],
+    hearingId: 'some-hp-id'
 };
 
 // same as unlisted, but with session set to matching id in Session
@@ -105,7 +107,7 @@ describe('HearingsSearchComponent', () => {
         StoreModule.forFeature('hearingTypes', hearingTypeReducers.reducer),
         BrowserAnimationsModule
       ],
-      providers: [HearingsSearchComponent, SessionsStatisticsService, HearingPartModificationService, HearingsFilterService],
+      providers: [HearingsSearchComponent, SessionsStatisticsService, HearingModificationService, HearingsFilterService],
       declarations: [TransactionDialogComponent]
     });
 

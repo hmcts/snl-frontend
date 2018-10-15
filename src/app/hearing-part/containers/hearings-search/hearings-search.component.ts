@@ -65,8 +65,8 @@ export class HearingsSearchComponent implements OnInit {
             .filter(h => this.hearingsFilterService.filterByPropertyContainsAll(h.priority, filters.priorities))
             .filter(h => this.hearingsFilterService.filterByPropertyContains(h.caseNumber, filters.caseNumber))
             .filter(h => this.hearingsFilterService.filterByPropertyContains(h.caseTitle, filters.caseTitle))
-            // .filter(h => this.hearingsFilterService.filterByPropertyContainsAll(
-            //     h.communicationFacilitator, filters.communicationFacilitators))
+            .filter(h => this.hearingsFilterService.filterByPropertyContainsAll(
+                h.communicationFacilitator, filters.communicationFacilitators))
             .filter(h => this.hearingsFilterService.filterByCaseType(h, filters))
             .filter(h => this.hearingsFilterService.filterByHearingType(h, filters));
 

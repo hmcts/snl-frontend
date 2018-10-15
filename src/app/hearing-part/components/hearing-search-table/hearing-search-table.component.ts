@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, ViewChild
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { priorityValue } from '../../models/priority-model';
 
 @Component({
@@ -12,7 +12,7 @@ import { priorityValue } from '../../models/priority-model';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingSearchTableComponent implements OnInit, OnChanges {
-    @Input() hearingParts: HearingPartViewModel[];
+    @Input() hearings: HearingPartViewModel[];
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -32,15 +32,15 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         // 'sessionDate',
     ];
 
-    constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
+    constructor(public dialog: MatDialog, public hearingPartService: HearingModificationService) {
     }
 
     ngOnInit() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
     }
 
     ngOnChanges() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
 
         this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {

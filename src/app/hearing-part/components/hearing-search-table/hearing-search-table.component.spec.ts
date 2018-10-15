@@ -11,7 +11,6 @@ import { ListingCreateNotesConfiguration } from '../../models/listing-create-not
 import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import * as judgesReducers from '../../../judges/reducers';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingSearchTableComponent } from './hearing-search-table.component';
@@ -21,10 +20,11 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
-let hpms: HearingPartModificationService;
+let hpms: HearingModificationService;
 let component: HearingSearchTableComponent;
 let fixture: ComponentFixture<HearingSearchTableComponent>;
 
@@ -52,7 +52,7 @@ describe('HearingSearchTableComponent', () => {
         NoteListComponent,
         NotesPreparerService,
         ListingCreateNotesConfiguration,
-        HearingPartModificationService,
+        HearingModificationService,
         { provide: MatDialog, useValue: matDialogSpy }
       ]
     });
@@ -65,16 +65,14 @@ describe('HearingSearchTableComponent', () => {
 
     fixture = TestBed.createComponent(HearingSearchTableComponent);
     component = fixture.componentInstance;
-    // store = TestBed.get(Store);
-    hpms = TestBed.get(HearingPartModificationService);
-    spyOn(hpms, 'deleteHearingPart');
-    // storeSpy = spyOn(store, 'dispatch').and.callThrough();
-    component.hearingParts = [generateHearingParts('123')];
+    hpms = TestBed.get(HearingModificationService);
+    spyOn(hpms, 'deleteHearing');
+    component.hearings = [generateHearingParts('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearingParts[0]).toEqual(generateHearingParts('123'));
+      expect(component.hearings[0]).toEqual(generateHearingParts('123'));
     });
   });
 
@@ -146,11 +144,12 @@ function generateHearingParts(id: string): HearingPartViewModel {
         duration: null,
         scheduleStart: null,
         scheduleEnd: null,
+        notes: [],
         version: null,
         priority: null,
+        communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudge: null,
-        communicationFacilitator: null,
-        notes: []
+        hearingId: null
     }
-};
+}

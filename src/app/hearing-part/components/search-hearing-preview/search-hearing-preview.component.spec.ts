@@ -12,7 +12,6 @@ import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import * as judgesReducers from '../../../judges/reducers';
 import * as transactionsReducers from '../../../features/transactions/reducers';
 import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { SearchHearingPreviewComponent } from './search-hearing-preview.component';
@@ -23,6 +22,8 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
+import { HearingModificationService } from '../../services/hearing-modification.service';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const openDialogMockObjConfirmed = {
@@ -32,7 +33,7 @@ const now = moment();
 const openDialogMockObjDeclined = {
     afterClosed: (): Observable<boolean> => Observable.of(false)
 };
-let hpms: HearingPartModificationService;
+let hpms: HearingModificationService;
 let component: SearchHearingPreviewComponent;
 let fixture: ComponentFixture<SearchHearingPreviewComponent>;
 
@@ -61,7 +62,7 @@ describe('SearchHearingPreviewComponent', () => {
         NoteListComponent,
         NotesPreparerService,
         ListingCreateNotesConfiguration,
-        HearingPartModificationService,
+        HearingModificationService,
         { provide: MatDialog, useValue: matDialogSpy }
       ]
     });
@@ -75,15 +76,15 @@ describe('SearchHearingPreviewComponent', () => {
     fixture = TestBed.createComponent(SearchHearingPreviewComponent);
     component = fixture.componentInstance;
     // store = TestBed.get(Store);
-    hpms = TestBed.get(HearingPartModificationService);
-    spyOn(hpms, 'deleteHearingPart');
+    hpms = TestBed.get(HearingModificationService);
+    spyOn(hpms, 'deleteHearing');
     // storeSpy = spyOn(store, 'dispatch').and.callThrough();
-    component.hearingParts = [generateHearingParts('123')];
+    component.hearings = [generateHearingVm('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearingParts[0]).toEqual(generateHearingParts('123'));
+      expect(component.hearings[0]).toEqual(generateHearingVm('123'));
     });
   });
 
@@ -95,7 +96,7 @@ describe('SearchHearingPreviewComponent', () => {
     });
 
     it('has notes should properly verify notes of hearingparts', () => {
-        let hasNotes = component.hasNotes(generateHearingParts('asd'));
+        let hasNotes = component.hasNotes(generateHearingPartVm('asd'));
 
         expect(hasNotes).toBeFalsy();
     });
@@ -103,16 +104,16 @@ describe('SearchHearingPreviewComponent', () => {
     it('confirming on delete dialog should call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
-        component.openDeleteDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openDeleteDialog({...generateHearingPartVm('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).toHaveBeenCalled();
+        expect(hpms.deleteHearing).toHaveBeenCalled();
     });
 
     it('confirming on edit dialog should call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearingVm('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
 
@@ -121,25 +122,25 @@ describe('SearchHearingPreviewComponent', () => {
     it('declining on delete dialog should not call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearingVm('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
+        expect(hpms.deleteHearing).not.toHaveBeenCalled();
     });
 
     it('declining on edit dialog should not call service method', () => {
         matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
-        component.openEditDialog({...generateHearingParts('asd'), caseNumber: '123'});
+        component.openEditDialog({...generateHearingVm('asd'), caseNumber: '123'});
 
         expect(matDialogSpy.open).toHaveBeenCalled();
-        expect(hpms.deleteHearingPart).not.toHaveBeenCalled();
+        expect(hpms.deleteHearing).not.toHaveBeenCalled();
     });
 
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
         const sampleHearingPart = {
             id: '-1',
-            sessionId: null,
+            isListed: false,
             caseNumber: 'cn-123',
             caseTitle: 'ctitle-123',
             caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
@@ -153,7 +154,7 @@ describe('SearchHearingPreviewComponent', () => {
             reservedJudge: { name: 'judge-name'},
             communicationFacilitator: 'cf',
             notes: []
-        } as HearingPartViewModel;
+        } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
             { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
@@ -191,10 +192,9 @@ describe('SearchHearingPreviewComponent', () => {
   });
 });
 
-function generateHearingParts(id: string): HearingPartViewModel {
+function generateHearingVm(id: string): HearingViewmodel {
     return {
         id: id,
-        sessionId: null,
         caseNumber: null,
         caseTitle: null,
         caseType: { code: '', description: '' } as CaseType,
@@ -207,6 +207,28 @@ function generateHearingParts(id: string): HearingPartViewModel {
         reservedJudgeId: null,
         reservedJudge: null,
         communicationFacilitator: null,
-        notes: []
+        notes: [],
+        isListed: false
     }
-};
+}
+
+function generateHearingPartVm(id: string): HearingPartViewModel {
+    return {
+        id: id,
+        caseNumber: null,
+        caseTitle: null,
+        caseType: { code: '', description: '' } as CaseType,
+        hearingType: { code: '', description: '' } as HearingType,
+        duration: null,
+        scheduleStart: null,
+        scheduleEnd: null,
+        version: null,
+        priority: null,
+        reservedJudgeId: null,
+        reservedJudge: null,
+        communicationFacilitator: null,
+        notes: [],
+        sessionId: undefined,
+        hearingId: undefined
+    }
+}
