@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ListingService } from '../../services/listing.service';
 import { Hearing } from '../../models/listing';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-view-listing',

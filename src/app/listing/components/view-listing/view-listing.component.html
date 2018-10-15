@@ -1,4 +1,6 @@
 <mat-card *ngIf="hearing">
+  <h2>{{hearing.caseTitle}}</h2>
+  <h3>{{hearing.caseNumber}}</h3>
   <div class="grid">
     <div class="tile">
       <strong>Case type</strong><br>
@@ -22,7 +24,7 @@
 
     <div class="tile">
       <strong>List between</strong><br>
-      {{hearing.scheduleStart}} - {{hearing.scheduleEnd}}
+      {{formatDate(hearing.scheduleStart)}} - {{formatDate(hearing.scheduleEnd)}}
     </div>
 
     <div class="tile">
