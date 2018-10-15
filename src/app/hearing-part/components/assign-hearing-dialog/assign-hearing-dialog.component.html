@@ -1,0 +1,15 @@
+<div>
+  <div>Choose start time</div>
+  <div>
+    <form [formGroup]="formGroup" novalidate (ngSubmit)="onListHearing()" id="list-hearing-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+      <mat-form-field>
+        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="startTime">
+      </mat-form-field>
+
+      <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
+        <button type="submit" id="create" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!formGroup.valid">List Hearing</button>
+        <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
