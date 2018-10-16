@@ -33,3 +33,8 @@ export function disableDisplayCreationDetails(note: NoteViewmodel) {
     note.displayCreationDetails = false;
     return note;
 }
+
+export function setInputLabel(note: NoteViewmodel, inputLabel: string) {
+    note.inputLabel = inputLabel;
+    return note;
+}

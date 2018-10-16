@@ -11,12 +11,12 @@ export class HearingAssignmentNotesConfiguration implements NotesConfiguration {
     }
 
     public defaultNotes(): Note[] {
-        const otherNote = {
+        const note = {
             id: undefined,
             content: '',
-            type: 'Other note'
+            type: 'Listing note'
         } as Note;
 
-        return [otherNote];
+        return [note];
     }
 }

@@ -363,7 +363,7 @@ describe('SessionsListingsSearchComponent', () => {
     it('should dispatch AssignToSession action', () => {
       component.selectedSession = mockedFullSession[0];
       component.selectedHearingPart = mockedUnlistedHearingVM;
-      component.assignToSession();
+      component.assignToSession({ confirmed: true });
 
       const passedObj = storeSpy.calls.first().args[0];
       const sessionAssignmentPayload: HearingToSessionAssignment = passedObj.payload;
@@ -384,7 +384,7 @@ describe('SessionsListingsSearchComponent', () => {
       expect(sessionAssignmentPayload.sessionVersion).toEqual(
           mockedFullSession[0].version
       )
-      expect(sessionAssignmentPayload.start).toBeNull();
+      expect(sessionAssignmentPayload.start).toBeDefined();
     });
   });
 

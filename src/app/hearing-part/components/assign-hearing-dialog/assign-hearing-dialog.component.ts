@@ -25,7 +25,7 @@ export class AssignHearingDialogComponent implements OnInit {
   formGroup: FormGroup;
   startTime: string;
   notes: NoteViewmodel[];
-  
+
   private selectedHearingId: string;
 
   constructor(public dialogRef: MatDialogRef<any>,
@@ -65,10 +65,10 @@ export class AssignHearingDialogComponent implements OnInit {
   private initiateNotes() {
       this.notes = this.notesConfig.defaultNotes()
           .map(getNoteViewModel)
-          .map(disableDisplayCreationDetails);
+          .map(disableDisplayCreationDetails)
   }
 
-  prepareNotes() {
+  private prepareNotes() {
       let notes = this.notesPreparerService.prepare(
           this.noteList.getModifiedNotes(),
           this.selectedHearingId,
