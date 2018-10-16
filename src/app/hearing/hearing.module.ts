@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ViewListingComponent } from './components/view-listing/view-listing.component';
+import { ViewHearingComponent } from './components/view-hearing/view-hearing.component';
 import { FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
-import { ListingService } from './services/listing.service';
+import { HearingService } from './services/hearing.service';
 import { MatCardModule, MatDividerModule, MatExpansionModule, MatListModule, MatTabsModule } from '@angular/material';
 
 const COMPONENTS = [
-  ViewListingComponent
+  ViewHearingComponent
 ];
 
 @NgModule({
@@ -23,7 +23,7 @@ const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [ListingService]
+  providers: [HearingService]
 })
-export class ListingModule {
+export class HearingModule {
 }

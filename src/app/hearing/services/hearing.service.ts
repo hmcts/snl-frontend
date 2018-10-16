@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { HttpClient } from '@angular/common/http';
-import { Hearing } from '../models/listing';
+import { Hearing } from '../models/hearing';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 
 @Injectable()
-export class ListingService {
+export class HearingService {
   constructor(
     private readonly http: HttpClient,
     private readonly config: AppConfig,

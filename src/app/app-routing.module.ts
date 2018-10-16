@@ -9,7 +9,7 @@ import { CalendarContainerComponent } from './core/callendar/containers/calendar
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
 import { PlannerComponent } from './planner/containers/planner.component';
 import { SessionsListingsSearchComponent } from './sessions/containers/sessions-listings-search/sessions-listings-search.component';
-import { ViewListingComponent } from './listing/components/view-listing/view-listing.component';
+import { ViewHearingComponent } from './hearing/components/view-hearing/view-hearing.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -26,7 +26,7 @@ const routes: Routes = [
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
-            {path: 'hearing/:id', component: ViewListingComponent, canActivate: [AppConfigGuard]}
+            {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard]
     },

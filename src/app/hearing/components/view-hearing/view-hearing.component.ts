@@ -1,26 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { ListingService } from '../../services/listing.service';
-import { Hearing } from '../../models/listing';
+import { HearingService } from '../../services/hearing.service';
+import { Hearing } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-view-listing',
-  templateUrl: './view-listing.component.html',
-  styleUrls: ['./view-listing.component.scss']
+  selector: 'app-view-hearing',
+  templateUrl: './view-hearing.component.html',
+  styleUrls: ['./view-hearing.component.scss']
 })
-export class ViewListingComponent implements OnInit {
+export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
 
   constructor(
     private route: ActivatedRoute,
-    private readonly listingService: ListingService
+    private readonly hearingService: HearingService
   ) {
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')
-    this.listingService.getById(id).subscribe(h => {
+    this.hearingService.getById(id).subscribe(h => {
       this.hearing = h;
     });
   }
