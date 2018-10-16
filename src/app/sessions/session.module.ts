@@ -36,7 +36,6 @@ import { SessionsAmendFormComponent } from './components/sessions-amend-form/ses
 import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 import { NotesModule } from '../notes/notes.module';
 import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
-import { SessionNotesViewModelPreparerService } from './services/session-notes-viewmodel-preparer.service';
 
 export const COMPONENTS = [
     SessionsPageComponent,
@@ -91,6 +90,6 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService,
-      SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration, SessionNotesViewModelPreparerService]
+      SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration]
 })
 export class SessionModule { }
