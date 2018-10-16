@@ -6,10 +6,13 @@
         <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="startTime">
       </mat-form-field>
 
+      <app-note-list id="hearing-assignment-notes" #hearingAssignmentNotes [notes]="notes"></app-note-list>
+
       <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
         <button type="submit" id="create" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!formGroup.valid">List Hearing</button>
         <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="onCancel()">Cancel</button>
       </div>
     </form>
+
   </div>
 </div>

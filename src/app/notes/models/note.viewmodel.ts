@@ -28,3 +28,8 @@ export function enableDisplayCreationDetails(note: NoteViewmodel) {
     note.displayCreationDetails = true;
     return note;
 }
+
+export function disableDisplayCreationDetails(note: NoteViewmodel) {
+    note.displayCreationDetails = false;
+    return note;
+}
