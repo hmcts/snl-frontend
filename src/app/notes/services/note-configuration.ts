@@ -11,7 +11,7 @@ export class NoteConfiguration {
         return this.noteViewModel(noteType)
     }
 
-    private noteViewModel(type: string, inputLabel: string = undefined): NoteViewmodel {
+    private noteViewModel(type: NoteType, inputLabel: string = undefined): NoteViewmodel {
         inputLabel = inputLabel || type;
         return {
             id: undefined,
