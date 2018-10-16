@@ -22,6 +22,7 @@ const todayDate = now.format('DD/MM/YYYY');
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY');
 const sessionType = SessionTypes.FTRACK_TRIAL_ONLY;
 const sessionId = uuid();
+const note = `${uuid()}`;
 
 const filterFormValues: FilterSessionsComponentForm = {
     startDate: todayDate,
@@ -68,11 +69,11 @@ describe('Go to search session', () => {
         await navigationFlow.goToAmendSessionsListPage();
         await sessionAmendListPage.filterSession(filterFormValues);
         await sessionAmendListPage.amendSession(sessionId);
-
         const form: SessionAmendForm = {
             sessionTypeCode: SessionTypes.MTRACK_TRIAL_ONLY,
             startTime: '11:00',
-            durationInMinutes: 15
+            durationInMinutes: 15,
+            note: note
         };
 
         await sessionAmendDialog.amendSession(form);
@@ -85,5 +86,10 @@ describe('Go to search session', () => {
 
         await sessionAmendListPage.filterSession(filterFormPostAmend);
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()
+    });
+
+    it('added note should be visible', async () => {
+        await sessionAmendListPage.amendSession(sessionId);
+        expect(await sessionAmendDialog.getNotes()).toEqual([note]);
     });
 });
