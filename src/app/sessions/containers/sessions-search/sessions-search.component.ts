@@ -80,12 +80,12 @@ export class SessionsSearchComponent implements OnInit {
 
     openAmendDialog(s: SessionViewModel) {
         let sessionAmendForm: SessionAmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
-        this.dialog.open(SessionAmendDialogComponent, {
+        this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
             data: {
                 sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
                 notes: s.notes
-            } as SessionAmmendDialogData,
+            },
             hasBackdrop: true,
             height: 'auto',
             disableClose: true
