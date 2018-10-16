@@ -38,17 +38,18 @@
       <div>
         <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
       </div>
-
-      <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-        <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
-        <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
-      </div>
     </form>
+
     <div style="padding-right: 2em">
       <div fxLayout="column" fxLayoutGap="10%">
-          <app-note-list id="otherNoteList" class="free-text-notes-box" #freeTextNotesList [notes]="freeTextNoteViewModels"></app-note-list>
+          <app-note-list #newNoteList [notes]="newNoteViewModels"></app-note-list>
+          <app-note-list class="free-text-notes-box" [notes]="oldNoteViewModels" [disabled]="true"></app-note-list>
       </div>
-  </div>
-    
+    </div>
   </mat-card-content>
+
+  <mat-card-actions>
+      <button type="submit" id="amend" mat-raised-button color="accent" form="session-amend-form" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
+      <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+  </mat-card-actions>
 </mat-card>

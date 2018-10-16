@@ -14,8 +14,9 @@ import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import * as fromNotes from '../../../notes/actions/notes.action';
 import { Note } from '../../../notes/models/note.model';
-import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
-import { SessionNotesViewModelPreparerService } from '../../services/session-notes-viewmodel-preparer.service';
+import { NoteViewmodel, getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
+import { NoteType } from '../../../notes/models/note-type';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -25,8 +26,9 @@ import { SessionNotesViewModelPreparerService } from '../../services/session-not
 export class SessionsAmendFormComponent {
     amendSessionForm: SessionAmmendForm;
     sessionAmendFormGroup: FormGroup;
-    public freeTextNoteViewModels: NoteViewmodel[] = [];
-    @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
+    newNoteViewModels: NoteViewmodel[] = [this.sessionNotesConfig.noteViewModelOf(NoteType.OTHER_NOTE)];
+    oldNoteViewModels: NoteViewmodel[] = [];
+    @ViewChild('newNoteList') newNoteList: NoteListComponent;
 
     @Input() set sessionData(session: SessionAmmendForm) {
         this.amendSessionForm = session;
@@ -34,25 +36,20 @@ export class SessionsAmendFormComponent {
     }
 
     @Input() sessionTypes: SessionType[];
-    @Input() set notes(notes: Note[]) {
-        this.viewModelPreparerService.prepare(notes)
-            .forEach(this.disposeToProperArrays);
-    }
+    @Input() set notes(notes: Note[]) { this.oldNoteViewModels = notes.map(getNoteViewModel); }
     @Output() amendSessionAction = new EventEmitter<SessionAmmend>();
     @Output() cancelAction = new EventEmitter();
 
     constructor(public sessionCreationService: SessionsCreationService,
                 public dialog: MatDialog,
                 private notePreparerService: NotesPreparerService,
-                private viewModelPreparerService: SessionNotesViewModelPreparerService,
+                private sessionNotesConfig: SessionCreateNotesConfiguration,
                 private readonly store: Store<State>) {
     }
 
     amend() {
         const sessionAmend: SessionAmmend = this.prepareSessionAmend(this.amendSessionForm);
-
         this.sessionCreationService.amend(sessionAmend);
-
         this.openTransactionDialog().afterClosed().subscribe(() => {
             this.createNote();
             this.sessionCreationService.fetchUpdatedEntities();
@@ -70,14 +67,12 @@ export class SessionsAmendFormComponent {
 
     private prepareNotes() {
         let preparedFreeTextNotes = this.notePreparerService.prepare(
-            this.freeTextNoteList.getModifiedNotes(),
+            this.newNoteList.getModifiedNotes(),
             this.amendSessionForm.id,
-            this.viewModelPreparerService.notesConfig.entityName
+            this.sessionNotesConfig.entityName
         );
 
-        preparedFreeTextNotes = this.notePreparerService.removeEmptyNotes(preparedFreeTextNotes);
-
-        return [...preparedFreeTextNotes];
+        return preparedFreeTextNotes;
     }
 
     private openTransactionDialog() {
@@ -101,11 +96,5 @@ export class SessionsAmendFormComponent {
             startTime: new FormControl(this.amendSessionForm.startTime, [Validators.required]),
             durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
         });
-    }
-
-    private disposeToProperArrays = (n: NoteViewmodel) => {
-        if (n.type === 'Other note') {
-            this.freeTextNoteViewModels.push(n);
-        }
     }
 }
