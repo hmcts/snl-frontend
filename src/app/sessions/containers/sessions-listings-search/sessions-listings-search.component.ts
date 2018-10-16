@@ -108,7 +108,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             sessionId: this.selectedSession.id,
             sessionVersion: this.selectedSession.version,
             userTransactionId: uuid(),
-            start: moment(assignHearingData.startTime, 'HH:mm').toDate() // this.calculateStartOfHearing(this.selectedSession)
+            start: moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment);
 
         this.openSummaryDialog().afterClosed().subscribe(() => {
