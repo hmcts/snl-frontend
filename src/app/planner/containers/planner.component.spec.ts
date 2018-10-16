@@ -5,7 +5,7 @@ import { PlannerComponent } from './planner.component';
 import { MatDialog } from '@angular/material';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { State } from '../../app.state';
-import { HearingPartModificationService } from '../../hearing-part/services/hearing-part-modification-service';
+import { HearingModificationService } from '../../hearing-part/services/hearing-modification.service';
 import * as moment from 'moment';
 import { SessionQueryForDates } from '../../sessions/models/session-query.model';
 import { SearchForDates } from '../../sessions/actions/session.action';
@@ -30,8 +30,8 @@ const sessionsCreationServiceSpy = jasmine.createSpyObj(
   ['update', 'fetchUpdatedEntities']
 );
 const hearingPartModificationServiceSpy = jasmine.createSpyObj(
-  'HearingPartModificationService',
-  ['assignHearingPartWithSession']
+  'HearingModificationService',
+  ['assignWithSession']
 );
 const event = <CustomEvent>{
   detail: {
@@ -79,7 +79,7 @@ describe('PlannerComponent', () => {
           useValue: sessionsCreationServiceSpy
         },
         {
-          provide: HearingPartModificationService,
+          provide: HearingModificationService,
           useValue: hearingPartModificationServiceSpy
         },
         { provide: MatDialog, useValue: matDialogSpy },
@@ -230,7 +230,7 @@ describe('PlannerComponent', () => {
       matDialogSpy.open.calls.reset();
       component.drop(event);
       expect(
-        hearingPartModificationServiceSpy.assignHearingPartWithSession
+        hearingPartModificationServiceSpy.assignWithSession
       ).toHaveBeenCalled();
       expect(matDialogSpy.open).toHaveBeenCalledTimes(2);
     });

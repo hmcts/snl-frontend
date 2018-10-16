@@ -7,13 +7,16 @@ export const room = new schema.Entity('rooms');
 export const hearingPart = new schema.Entity('hearingParts', {});
 export const hearingParts = new schema.Array(hearingPart);
 
+export const hearingInfo = new schema.Entity('hearings', {hearingParts} as Schema);
+export const hearings = new schema.Array(hearingInfo);
+
 export const session = new schema.Entity('sessions', {
     person,
     room,
     hearingParts
 } as Schema);
 
-hearingPart.define({session} as Schema);
+hearingPart.define({session, hearingInfo} as Schema);
 
 export const sessions = new schema.Array(session);
 export const sessionsWithHearings = new schema.Entity('sessionsWithHearings', {sessions, hearingParts}  as Schema);

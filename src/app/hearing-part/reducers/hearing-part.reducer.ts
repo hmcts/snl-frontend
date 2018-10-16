@@ -59,3 +59,4 @@ export function reducer(state: State = initialState, action) {
 
 export const getHearingPartError = (state: State) => state.error;
 export const getHearingPartLoading = (state: State) => state.loading;
+export const getHearingPartEntities = (state: State) => state.entities;

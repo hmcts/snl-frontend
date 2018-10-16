@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
-import { Problem, ProblemResponse } from '../models/problem.model';
+import { Problem, ProblemResponse, Page } from '../models/problem.model';
 import { AppConfig } from '../../app.config';
 import { HttpClient } from '@angular/common/http';
 import { normalize } from 'normalizr';
@@ -13,20 +13,20 @@ export class ProblemsService {
 
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) { }
 
-    getAll(): Observable<Problem[]> {
-        return this.getProblems()
-            .map(problemResponses => {
-                const problems: Problem[] = problemResponses.map(problemResponse => {
+    getPaginated(size, page): Observable<Page<Problem>> {
+        return this.getProblems(size, page)
+            .map((pagedProblemResponse: Page<ProblemResponse>) => {
+                const problems: Problem[] = pagedProblemResponse.content.map(problemResponse => {
                     const createdAt = moment(problemResponse.createdAt);
                     return {...problemResponse, createdAt}
-                })
-                return problems
+                });
+
+                return {... pagedProblemResponse, content: problems}
             })
     }
 
     get(): Observable<any> {
-        return this.getProblems()
-            .pipe(map(this.normalizeProblems));
+        return this.getProblems().pipe(map(this.normalizeProblems));
     }
 
     getForTransaction(id: string | number): Observable<any> {
@@ -35,9 +35,13 @@ export class ProblemsService {
             .pipe(map(this.normalizeProblems));
     }
 
-    private getProblems() {
+    private getProblems(size?, page?) {
+        let uri = '/problems'
+        if (size !== undefined && page !== undefined) {
+            uri += `?size=${size}&page=${page}`
+        }
         return this.http
-            .get<ProblemResponse[]>(`${this.config.getApiUrl()}/problems`)
+            .get<Page<ProblemResponse>>(`${this.config.getApiUrl()}${uri}`)
     }
 
     private normalizeProblems(problemsData) {

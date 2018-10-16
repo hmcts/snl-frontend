@@ -87,7 +87,10 @@ describe('Amend Listing Request', () => {
   });
   describe('Click on notes indicator and verify the notes', () => {
       it('notes should be present', async () => {
-          let notePresent = await sessionSearchPage.checkIfHasNote(LISTING_NOTES.SPECIAL_REQUIREMENTS.selector, specReqNoteValue, caseNumber);
+          let notePresent = await sessionSearchPage.checkIfHasNote(
+              LISTING_NOTES.SPECIAL_REQUIREMENTS.selector,
+              specReqNoteValue, caseNumber
+          );
           expect(notePresent).toBeTruthy(`Expected note DOES NOT have text: ${specReqNoteValue}`);
       });
   });
