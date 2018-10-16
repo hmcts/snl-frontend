@@ -11,7 +11,7 @@ import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
 import { ListingCreateEffects } from './effects/listing-create.effects';
-import { HearingPartModificationService } from './services/hearing-part-modification-service';
+import { HearingModificationService } from './services/hearing-modification.service';
 import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
@@ -42,7 +42,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
+  providers: [HearingPartService, HearingModificationService, ListingCreateNotesConfiguration],
   entryComponents: [ListingCreateDialogComponent]
 })
 export class HearingPartModule { }

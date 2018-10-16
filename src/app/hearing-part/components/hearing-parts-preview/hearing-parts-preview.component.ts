@@ -3,16 +3,17 @@ import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/m
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { HearingPartViewModel, mapToUpdateHearingPartRequest } from '../../models/hearing-part.viewmodel';
+import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { priorityValue } from '../../models/priority-model';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { HearingViewmodel } from '../../models/hearing.viewmodel';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -21,15 +22,15 @@ import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
-    @Input() hearingParts: HearingPartViewModel[];
+    @Input() hearings: HearingViewmodel[];
     @Input() sessions: SessionViewModel[];
-    @Output() selectHearingPart = new EventEmitter();
+    @Output() selectHearing = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    selectedHearingPart;
+    selectedHearing;
 
-    dataSource: MatTableDataSource<HearingPartViewModel>;
+    dataSource: MatTableDataSource<HearingViewmodel>;
     displayedColumns = [
         'caseNumber',
         'caseTitle',
@@ -47,16 +48,16 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         'editor'
     ];
 
-    constructor(public dialog: MatDialog, public hearingPartService: HearingPartModificationService) {
-        this.selectedHearingPart = new SelectionModel<HearingPartViewModel>(false, []);
+    constructor(public dialog: MatDialog, public hearingService: HearingModificationService) {
+        this.selectedHearing = new SelectionModel<HearingViewmodel>(false, []);
     }
 
     ngOnInit() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
     }
 
     ngOnChanges() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearingParts));
+        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
 
         this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
@@ -97,49 +98,49 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         }
     }
 
-    hasNotes(hearingPart: HearingPartViewModel): boolean {
-        return hearingPart.notes.length > 0;
+    hasNotes(hearing: HearingViewmodel): boolean {
+        return hearing.notes.length > 0;
     }
 
-    openNotesDialog(hearingPart: HearingPartViewModel) {
-        if (this.hasNotes(hearingPart)) {
+    openNotesDialog(hearing: HearingViewmodel) {
+        if (this.hasNotes(hearing)) {
             this.dialog.open(NotesListDialogComponent, {
-                data: hearingPart.notes.map(getNoteViewModel),
+                data: hearing.notes.map(getNoteViewModel),
                 hasBackdrop: false,
                 width: '30%'
             })
         }
     }
 
-    openDeleteDialog(hearingPart: HearingPartViewModel) {
+    openDeleteDialog(hearing: HearingViewmodel) {
       this.dialog.open(DialogWithActionsComponent, {
-        data: { message: `Do you want to remove the listing request for case number ${hearingPart.caseNumber} ?`}
+        data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
       }).afterClosed().subscribe((confirmed) => {
-          this.afterDeleteClosed(confirmed, hearingPart)
+          this.afterDeleteClosed(confirmed, hearing)
       })
     }
 
-    afterDeleteClosed(confirmed, hearingPart) {
+    afterDeleteClosed(confirmed, hearing) {
         if (confirmed) {
-            this.hearingPartService.deleteHearingPart({
-                hearingPartId: hearingPart.id,
-                hearingPartVersion: hearingPart.version,
+            this.hearingService.deleteHearing({
+                hearingId: hearing.id,
+                hearingVersion: hearing.version,
                 userTransactionId: undefined
             });
 
             this.openTransactionDialog().afterClosed().subscribe((success) => {
                 if (success) {
-                    this.hearingPartService.removeFromState(hearingPart.id)
+                    this.hearingService.removeFromState(hearing.id)
                 }
             })
         }
     }
 
-    openEditDialog(hearingPart: HearingPartViewModel) {
+    openEditDialog(hearing: HearingViewmodel) {
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
-                hearingPart: mapToUpdateHearingPartRequest(hearingPart),
-                notes: hearingPart.notes
+                hearing: mapToUpdateHearingRequest(hearing),
+                notes: hearing.notes
             } as ListingCreate,
             hasBackdrop: true,
             height: 'auto'
@@ -149,13 +150,13 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
-            data: { actionTitle: 'Deleting hearing part' }
+            data: { actionTitle: 'Deleting hearing' }
         });
     }
 
     toggleHearing(hearing) {
-        this.selectedHearingPart.toggle(hearing);
-        this.selectHearingPart.emit(this.selectedHearingPart.isSelected(hearing) ? hearing : {});
+        this.selectedHearing.toggle(hearing);
+        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : {});
     }
 
     private getPropertyMemberOrNull(item: object, property: string, key: string ) {
