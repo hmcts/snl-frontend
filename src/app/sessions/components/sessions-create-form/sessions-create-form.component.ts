@@ -12,7 +12,8 @@ import * as Mapper from '../../mappers/create-session-form-session-create';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { NoteType } from '../../../notes/models/note-type';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -27,7 +28,7 @@ export class SessionsCreateFormComponent {
 
     @ViewChild(NoteListComponent) noteList: NoteListComponent;
 
-    noteViewModels: NoteViewmodel[];
+    newNoteViewModels: NoteViewmodel[];
     injectedSessionCreate: SessionCreate;
     createSessionForm: CreateSessionForm;
     roomsPlaceholder: string;
@@ -74,13 +75,7 @@ export class SessionsCreateFormComponent {
             sessionTypeCode: null
         };
         this.initiateFormGroup();
-        this.noteViewModels = sessionNotesConfig.defaultNotes()
-            .map(getNoteViewModel)
-            .map(n => this.setCustomInputLabel(n, 'Notes'))
-            .map(n => {
-                n.displayCreationDetails = false;
-                return n;
-            });
+        this.newNoteViewModels = [sessionNotesConfig.noteViewModelOf(NoteType.OTHER_NOTE)];
     }
 
     create() {
@@ -106,11 +101,6 @@ export class SessionsCreateFormComponent {
         );
 
         return this.notePreparerService.removeEmptyNotes(notes);
-    }
-
-    private setCustomInputLabel(note: NoteViewmodel, inputLabel: string) {
-        note.inputLabel = inputLabel;
-        return note;
     }
 
     private initiateFormGroup() {
