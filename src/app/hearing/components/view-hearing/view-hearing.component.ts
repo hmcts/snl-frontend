@@ -30,6 +30,8 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDuration(duration: number): string {
-    return moment.unix(duration).format('HH:mm');
+    const minutes = Math.ceil(duration/60);
+
+    return minutes + ' minutes';
   }
 }
