@@ -91,5 +91,6 @@ describe('Go to search session', () => {
     it('added note should be visible', async () => {
         await sessionAmendListPage.amendSession(sessionId);
         expect(await sessionAmendDialog.getNotes()).toEqual([note]);
+        await sessionAmendDialog.clickCancelButton();
     });
 });

@@ -1,8 +1,9 @@
-import { element, by } from 'protractor';
+import { element, by, ExpectedConditions, browser } from 'protractor';
 import { ElementHelper } from '../utils/element-helper';
 import { SessionAmendForm } from '../models/session-amend-form';
 import { Logger } from '../utils/logger';
 import { forEachSeries } from 'p-iteration';
+import { Wait } from '../enums/wait';
 
 export class SessionAmendDialog {
     private startTimeInput = element(by.id('startTime'));
@@ -11,6 +12,7 @@ export class SessionAmendDialog {
     private noteInput = element(by.css('#new-note textarea'));
     private oldNotesTextAreas = element.all(by.css('#old-notes textarea'));
     private createButton = element(by.id('amend'));
+    private cancelButton = element(by.id('cancel'));
     private elementHelper = new ElementHelper();
 
     async amendSession(form: SessionAmendForm) {
@@ -32,5 +34,14 @@ export class SessionAmendDialog {
         Logger.log('Displayed notes: ' + JSON.stringify(notes))
 
         return notes
+    }
+
+    async clickCancelButton() {
+        await this.cancelButton.click()
+        await browser.wait(
+            ExpectedConditions.invisibilityOf(this.cancelButton),
+            Wait.normal,
+            'Edit session dialog wont disappear'
+        );
     }
 }
