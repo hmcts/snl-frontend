@@ -5,6 +5,7 @@ import { Component, Input } from '@angular/core';
 import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { Note } from '../../../notes/models/note.model';
+import { NoteType } from '../../../notes/models/note-type';
 
 @Component({
     selector: 'app-note-list',
@@ -15,9 +16,15 @@ class MockNoteListComponent {
   @Input() disabled;
 }
 
+let notesConfiguration = new ListingCreateNotesConfiguration();
+let newNotePlaceholder = [notesConfiguration.getOrCreateNote([], NoteType.OTHER_NOTE)]
+const specAndReqNotesPlaceholders = [
+    notesConfiguration.getOrCreateNote([], NoteType.SPECIAL_REQUIREMENTS),
+    notesConfiguration.getOrCreateNote([], NoteType.FACILITY_REQUIREMENTS)
+]
+
 describe('ListingNoteListComponent', () => {
   let component: ListingNoteListComponent;
-  let notesConfiguration: ListingCreateNotesConfiguration;
   let fixture: ComponentFixture<ListingNoteListComponent>;
   let otherNote: Note;
   let specReqNote: Note;
@@ -31,7 +38,6 @@ describe('ListingNoteListComponent', () => {
   }));
 
   beforeEach(() => {
-    notesConfiguration = TestBed.get(ListingCreateNotesConfiguration);
     fixture = TestBed.createComponent(ListingNoteListComponent);
     component = fixture.componentInstance;
 
@@ -67,81 +73,28 @@ describe('ListingNoteListComponent', () => {
       component.notes = [];
       fixture.detectChanges();
 
-      let actualNotesCount = component.oldNoteViewModels.length + component.newNoteViewModels.length;
-      let expectedDefaultNotesCount = notesConfiguration.defaultNotes().length;
-      expect(actualNotesCount).toEqual(expectedDefaultNotesCount);
+      expect(component.specialNoteViewModels).toEqual(specAndReqNotesPlaceholders);
+      expect(component.newNoteViewModels.length).toEqual(1);
+      expect(component.oldNoteViewModels).toEqual([]);
     })
 
     it('which has "Other note" already, this note is preserved and new one is added', () => {
-        component.notes = [otherNote];
+        const otherNotes = [otherNote];
+        component.notes = otherNotes;
         fixture.detectChanges();
 
-        expect(component.oldNoteViewModels.length).toEqual(2);
-        expect(component.newNoteViewModels.length).toEqual(2);
+        expect(component.oldNoteViewModels.length).toEqual(otherNotes.length);
+        expect(component.newNoteViewModels).toEqual(newNotePlaceholder);
     })
 
     it('which has "Special Requirements" note already, this note is preserved', () => {
         component.notes = [specReqNote];
         fixture.detectChanges();
 
-        let specReqNoteViewModel = component.newNoteViewModels.find(n => n.type === 'Special Requirements');
+        let specReqNoteViewModel = component.specialNoteViewModels.find(n => n.type === NoteType.SPECIAL_REQUIREMENTS);
 
         expect(specReqNoteViewModel.content).toEqual(specReqNote.content);
         expect(specReqNoteViewModel.id).toEqual(specReqNote.id);
     })
-
-    it('all existing "Other notes" are readonly', () => {
-        component.notes = [otherNote];
-        fixture.detectChanges();
-
-        component.oldNoteViewModels
-            .filter(n => n.id !== undefined) // remove the new note
-            .forEach(n => {
-                expect(n.readonly).toBeTruthy()
-            });
-    })
-
-    it('newly added "Other note" is NOT readonly', () => {
-        component.notes = [otherNote];
-        fixture.detectChanges();
-
-        component.oldNoteViewModels
-            .filter(n => n.id === undefined) // remove the new note
-            .forEach(n => {
-                expect(n.readonly).toBeFalsy()
-            });
-    })
-
-    it('"Spec Req" and "Fac Req" notes are NOT readonly', () => {
-        component.notes = [];
-        fixture.detectChanges();
-
-        component.newNoteViewModels
-            .forEach(n => {
-                expect(n.readonly).toBeFalsy()
-            });
-    })
-
-    // it('already existing notes should display their creation details', () => {
-    //     component.notes = [otherNote];
-    //     fixture.detectChanges();
-
-    //     component.freeTextNoteViewModels
-    //         .filter(n => n.id !== undefined) // remove the new note
-    //         .forEach(n => {
-    //             expect(n.displayCreationDetails).toBeTruthy()
-    //         });
-    // })
-
-    // it('new notes should not display their creation details', () => {
-    //     component.notes = [otherNote];
-    //     fixture.detectChanges();
-
-    //     component.freeTextNoteViewModels
-    //         .filter(n => n.id === undefined) // remove the new note
-    //         .forEach(n => {
-    //             expect(n.displayCreationDetails).toBeFalsy()
-    //         });
-    // })
   })
 });
