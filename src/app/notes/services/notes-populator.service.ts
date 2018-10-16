@@ -15,36 +15,38 @@ export class NotesPopulatorService {
 
   // iterates recursively through the whole object to find where there are any placeholders for notes
   // fetches notes and populates those placeholders
-  public async populateWithNotes(o: any) {
-    const entityIds = this.collectEntityIds(o, [])
+  public async populateWithNotes(entity: any) {
+    const entityIds = this.collectEntityIds(entity, [])
 
     this.fetchNotes(entityIds).subscribe(
       (notes) => {
-        this.populateWithOtherNotes(o, notes.filter(x => x.type === NoteType.OtherNote));
+        this.populateWithOtherNotes(entity, notes.filter(item => item.type === NoteType.OtherNote));
         // those calls are specific for Hearing but if we stick to convention we can use them on other entities
-        this.populateWithSingleNote(o, notes, NoteType.SpecialRequirements, 'specialRequirements');
-        this.populateWithSingleNote(o, notes, NoteType.FacilityRequirements, 'facilityRequirements');
+        this.populateWithSingleNote(entity, notes, NoteType.SpecialRequirements, 'specialRequirements');
+        this.populateWithSingleNote(entity, notes, NoteType.FacilityRequirements, 'facilityRequirements');
       }
     )
   }
 
-  private populateWithSingleNote(o: any, notes: Note[], noteType: string, keyToPopulate: string) {
-    o[keyToPopulate] = notes.find(x => x.type === noteType && x.entityId === o.id).content;
+  private populateWithSingleNote(entity: any, notes: Note[], noteType: string, keyToPopulate: string) {
+    const note = notes.find(item => item.type === noteType && item.entityId === entity.id);
+    if(note != undefined) {
+      entity[keyToPopulate] = note.content;
+    }
   }
 
   // finds every entityId in object recursively and returns array of entityId's
-  private collectEntityIds(o: any, entityIds) {
-    for (let key in o) {
-      if (o.hasOwnProperty(key)) {
-        let item = o[key];
-        // if there's placeholder for notes, add object id to array
-        if (key === 'notes') {
-          entityIds.push(o.id);
+  private collectEntityIds(entity: any, entityIds) {
+    for (let key in entity) {
+      if (entity.hasOwnProperty(key)) {
+        if (key === 'id') {
+          entityIds.push(entity.id);
         }
 
+        let item = entity[key];
         // if there's an array of other items, we go deeper to find notes
         if (item instanceof Array) {
-          item.map(x => entityIds.concat(this.collectEntityIds(x, entityIds)));
+          item.map(item => entityIds.concat(this.collectEntityIds(item, entityIds)));
         }
       }
     }
@@ -57,23 +59,24 @@ export class NotesPopulatorService {
   }
 
   // populates object with notes
-  private populateWithOtherNotes(o: any, notes: Note[]) {
-    for (let key in o) {
-      if (o.hasOwnProperty(key)) {
-        let item = o[key];
+  private populateWithOtherNotes(entity: any, notes: Note[]) {
+    // if there's placeholder for notes, we try to match notes we got from NotesService
+    const thisEntityNotes = notes.filter(item => item.entityId === entity.id);
 
-        // if there's placeholder for notes, we try to match notes we got from NotesService
-        if (key === 'notes') {
-          o[key] = notes.filter(x => x.entityId === o.id);
-        }
+    if(thisEntityNotes) {
+      entity['notes'] = thisEntityNotes;
+    }
 
+    for (let key in entity) {
+      if (entity.hasOwnProperty(key)) {
+        let item = entity[key];
         // if there's an array of other items, we go deeper to find note placeholders
         if (item instanceof Array) {
-          item.map((x, k) => item[k] = this.populateWithOtherNotes(x, notes));
+          item.map((value, key) => item[key] = this.populateWithOtherNotes(value, notes));
         }
       }
     }
 
-    return o;
+    return entity;
   }
 }
