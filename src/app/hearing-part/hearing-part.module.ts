@@ -18,7 +18,6 @@ import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
 import { ListingCreateDialogComponent } from './components/listing-create-dialog/listing-create-dialog';
 import { ListingNoteListComponent } from './components/listing-note-list/listing-note-list.component';
-import { ListingNotesViewModelPreparerService } from './services/listing-notes-viewmodel-preparer.service';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -43,7 +42,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration, ListingNotesViewModelPreparerService],
+  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
   entryComponents: [ListingCreateDialogComponent]
 })
 export class HearingPartModule { }
