@@ -12,7 +12,7 @@ import { HearingPartModificationService } from '../../services/hearing-part-modi
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
-import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -104,7 +104,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     openNotesDialog(hearingPart: HearingPartViewModel) {
         if (this.hasNotes(hearingPart)) {
             this.dialog.open(NotesListDialogComponent, {
-                data: hearingPart.notes.map(getNoteViewModel).map(enableDisplayCreationDetails),
+                data: hearingPart.notes.map(getNoteViewModel),
                 hasBackdrop: false,
                 width: '30%'
             })
