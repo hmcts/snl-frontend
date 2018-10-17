@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { SessionType } from '../../../core/reference/models/session-type';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormGroupDirective } from '@angular/forms';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
 import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../../models/ammend/session-ammend.model';
@@ -29,6 +29,7 @@ export class SessionsAmendFormComponent {
     newNoteViewModels: NoteViewmodel[] = [this.sessionNotesConfig.noteViewModelOf(NoteType.OTHER_NOTE)];
     oldNoteViewModels: NoteViewmodel[] = [];
     @ViewChild('newNoteList') newNoteList: NoteListComponent;
+    @ViewChild('sessionAmendForm') sessionFormGroup: FormGroupDirective;
 
     @Input() set sessionData(session: SessionAmmendForm) {
         this.amendSessionForm = session;
