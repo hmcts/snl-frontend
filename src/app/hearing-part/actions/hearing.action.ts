@@ -6,6 +6,7 @@ import { HearingDeletion } from '../models/hearing-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { Hearing } from '../models/hearing';
 import { SearchHearingRequest } from '../models/search-hearing-request';
+import { HearingPartActionTypes } from './hearing-part.action';
 
 export enum HearingActionTypes {
   GetById = '[Hearing] Get by id',
@@ -23,6 +24,7 @@ export enum HearingActionTypes {
   AssignFailed = '[Hearing] Assign Failed',
   Delete = '[Hearing] Delete',
   DeleteComplete = '[Hearing] Delete Complete',
+  Clear = '[Hearing] Clear',
 }
 
 /**
@@ -114,4 +116,10 @@ export class DeleteComplete implements Action {
   readonly  type = HearingActionTypes.DeleteComplete;
 
   constructor(public payload: any) {}
+}
+
+export class Clear implements Action {
+    readonly  type = HearingActionTypes.Clear;
+
+    constructor() {}
 }

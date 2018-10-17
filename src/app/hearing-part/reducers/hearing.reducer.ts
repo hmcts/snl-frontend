@@ -35,6 +35,9 @@ export function reducer(state: State = initialState, action) {
     case HearingActionTypes.DeleteComplete: {
         return {...state, ...adapter.removeOne(action.payload, state)}
     }
+    case HearingActionTypes.Clear: {
+        return { ...initialState }
+    }
     default:
         return state;
   }
