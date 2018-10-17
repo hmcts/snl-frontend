@@ -8,6 +8,6 @@
       matInput 
       matTextareaAutosize="true" 
       placeholder="{{note.inputLabel}}" 
-      value="{{note.content}}"></textarea>
+      (change)="content.setValue(note.content.trim())"></textarea>
   </mat-form-field>
 </form>
