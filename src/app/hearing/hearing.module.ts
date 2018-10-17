@@ -4,7 +4,6 @@ import { ViewHearingComponent } from './components/view-hearing/view-hearing.com
 import { FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { HearingService } from './services/hearing.service';
-import { MatCardModule, MatDividerModule, MatExpansionModule, MatListModule, MatTabsModule } from '@angular/material';
 
 const COMPONENTS = [
   ViewHearingComponent
@@ -14,12 +13,7 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     AngularMaterialModule,
-    FormsModule,
-    MatCardModule,
-    MatDividerModule,
-    MatTabsModule,
-    MatListModule,
-    MatExpansionModule
+    FormsModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

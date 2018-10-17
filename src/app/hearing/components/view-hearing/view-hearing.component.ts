@@ -26,7 +26,7 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    return moment(date).format()
+    return moment(date).format('YYYY/MM/DD');
   }
 
   formatDuration(duration: number): string {

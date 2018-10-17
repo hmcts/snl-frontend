@@ -7,12 +7,14 @@ mat-card {
   float: left;
 }
 
-.note .content {
-  width: 600px;
-}
+.note {
+  .content {
+    width: 600px;
+  }
 
-.note .author-info {
-  width: 300px;
+  .author-info {
+    width: 300px;
+  }
 }
 
 mat-panel-title {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NotesService } from './notes.service';
 import { Note } from '../models/note.model';
+import moment = require('moment');
 
 export enum NoteType {
   SpecialRequirements = 'Special Requirements',
@@ -30,7 +31,7 @@ export class NotesPopulatorService {
 
   private populateWithSingleNote(entity: any, notes: Note[], noteType: string, keyToPopulate: string) {
     const note = notes.find(item => item.type === noteType && item.entityId === entity.id);
-    if(note != undefined) {
+    if (note != undefined) {
       entity[keyToPopulate] = note.content;
     }
   }
@@ -61,9 +62,13 @@ export class NotesPopulatorService {
   // populates object with notes
   private populateWithOtherNotes(entity: any, notes: Note[]) {
     // if there's placeholder for notes, we try to match notes we got from NotesService
-    const thisEntityNotes = notes.filter(item => item.entityId === entity.id);
+    const thisEntityNotes = notes
+      .filter(item => item.entityId === entity.id)
+      .sort((a, b) => {
+        return moment(a.createdAt) < moment(b.createdAt) ? 1 : 0
+      });
 
-    if(thisEntityNotes) {
+    if (thisEntityNotes) {
       entity['notes'] = thisEntityNotes;
     }
 
