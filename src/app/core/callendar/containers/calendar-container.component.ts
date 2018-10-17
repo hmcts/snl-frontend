@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { State } from '../../../app.state';
 import { Observable } from 'rxjs/Observable';
@@ -28,9 +28,13 @@ export class CalendarContainerComponent implements OnInit {
     constructor(private readonly store: Store<State>,
                 private readonly route: ActivatedRoute,
                 private readonly security: SecurityService,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                private zone: NgZone) {
         this.dataTransformer = new DefaultDataTransformer();
         this.sessions$ = this.store.select(fromReducer.getFullSessions);
+        // Due full calendar is not included in angular detection mechanism
+        // it wasn't showing up session on first view
+        this.sessions$.subscribe(() => this.zone.run(() => { /* no op */ }));
     }
 
     ngOnInit() {
