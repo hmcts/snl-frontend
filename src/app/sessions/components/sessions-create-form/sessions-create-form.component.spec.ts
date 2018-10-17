@@ -31,7 +31,7 @@ describe('SessionsCreateFormComponent', () => {
     describe('Creating the session', () => {
         it('should generate unique session id on subsequent creations', () => {
             let spy = spyOn(component.createSessionAction, 'emit');
-            component.noteViewModels = [];
+            component.newNoteViewModels = [];
             fixture.detectChanges();
 
             // @ts-ignore: saveArgumentsByValue not existent in jasmine-types but still works and exists in documentation:

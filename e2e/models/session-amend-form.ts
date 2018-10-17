@@ -1,5 +1,6 @@
 export interface SessionAmendForm {
     sessionTypeCode: string,
     startTime: string,
-    durationInMinutes: number
+    durationInMinutes: number,
+    note: string
 }

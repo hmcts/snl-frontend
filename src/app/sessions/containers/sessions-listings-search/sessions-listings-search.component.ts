@@ -28,7 +28,7 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
 
 @Component({
@@ -124,7 +124,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     openNotesDialog(session: SessionViewModel) {
         this.dialog.open(NotesListDialogComponent, {
-            data: session.notes.map(getNoteViewModel).map(enableDisplayCreationDetails),
+            data: session.notes.map(getNoteViewModel),
             hasBackdrop: false,
             width: '30%'
         })

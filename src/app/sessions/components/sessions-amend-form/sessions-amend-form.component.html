@@ -3,8 +3,8 @@
     <mat-card-subtitle>Edit session</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content class="inputs-container">
-    <form [formGroup]="sessionAmendFormGroup" novalidate (ngSubmit)="amend()" id="session-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+  <mat-card-content class="inputs-container" fxLayout="row" fxLayoutGap="5%">
+    <form [formGroup]="sessionAmendFormGroup" novalidate #sessionAmendForm="ngForm" (ngSubmit)="amend()" id="session-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
       
       <mat-form-field class="date-picker-element">
         <input matInput formControlName="startDate" id="startDate" [matDatepicker]="picker" [(ngModel)]="amendSessionForm.startDate">
@@ -38,11 +38,18 @@
       <div>
         <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
       </div>
-
-      <div fxLayout="row" fxFlexAlign="end" fxLayoutAlign="end" mat-dialog-actions>
-        <button type="submit" id="amend" mat-raised-button color="accent" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
-        <button type="button" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
-      </div>
     </form>
+
+    <div style="padding-right: 2em">
+      <div fxLayout="column" fxLayoutGap="10%">
+          <app-note-list id="new-note" #newNoteList [notes]="newNoteViewModels"></app-note-list>
+          <app-note-list id="old-notes" class="free-text-notes-box" [notes]="oldNoteViewModels" [disabled]="true"></app-note-list>
+      </div>
+    </div>
   </mat-card-content>
+
+  <mat-card-actions>
+      <button type="submit" id="amend" mat-raised-button color="accent" (click)="sessionAmendForm.ngSubmit.emit()" fxFlexAlign="center" [disabled]="!sessionAmendFormGroup.valid">Save</button>
+      <button type="button" id="cancel" mat-raised-button color="accent" fxFlexAlign="center" (click)="cancel()">Cancel</button>
+  </mat-card-actions>
 </mat-card>
