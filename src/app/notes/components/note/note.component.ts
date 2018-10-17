@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { NoteViewmodel } from '../../models/note.viewmodel';
 import { FormControl } from '@angular/forms';
@@ -9,21 +9,16 @@ import { FormControl } from '@angular/forms';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NoteComponent implements OnInit {
+export class NoteComponent {
+    content: FormControl;
     originalContent = null;
+
     private _note: NoteViewmodel;
     @Input() set note(note: NoteViewmodel) {
         this._note = note;
         this.originalContent = note.content;
-    }
-    get note(): NoteViewmodel { return this._note };
 
-    @Input() disabled = false;
-
-    content: FormControl;
-
-    ngOnInit(): void {
-        this.content = new FormControl({value: '', disabled: this.disabled});
+        this.content = new FormControl({value: note.content, disabled: this.disabled});
         this.content.valueChanges
             .subscribe((value) => {
                 this.note.modified = true;
@@ -33,4 +28,19 @@ export class NoteComponent implements OnInit {
                 }
             });
     }
+    get note(): NoteViewmodel { return this._note };
+
+    private _disabled = false
+    @Input() set disabled(disabled: boolean) {
+        this._disabled = disabled
+        if (this.content) {
+            if (disabled) {
+                this.content.disable()
+            } else {
+                this.content.enable()
+            }
+        }
+    }
+    get disable() { return this._disabled }
+
 }

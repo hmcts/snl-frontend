@@ -16,7 +16,7 @@ export class NoteConfiguration {
         return {
             id: undefined,
             type,
-            content: undefined,
+            content: '', // it needs to be an empty string as its required by formControl in NoteComponent
             entityId: undefined,
             entityType: undefined,
             createdAt: undefined,
