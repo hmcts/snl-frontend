@@ -1,6 +1,8 @@
 <mat-card *ngIf="hearing">
-  <h2>{{hearing.caseTitle}}</h2>
-  <h3>{{hearing.caseNumber}}</h3>
+  <h2>
+    <span class="case-number">{{hearing.caseNumber}}</span>
+    {{hearing.caseTitle}}
+  </h2>
   <div class="grid">
     <div class="tile">
       <strong>Case type</strong><br>
