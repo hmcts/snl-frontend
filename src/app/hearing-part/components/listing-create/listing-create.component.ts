@@ -5,13 +5,13 @@ import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
-import { GetById } from '../../actions/hearing-part.action';
+import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, MatSelectChange } from '@angular/material';
 import * as fromNotes from '../../../notes/actions/notes.action';
@@ -31,6 +31,7 @@ import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
+    @ViewChild('listingCreateForm') listingFormGroup: FormGroupDirective;
     @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
     @Input() set data(value: ListingCreate) {
@@ -54,7 +55,7 @@ export class ListingCreateComponent implements OnInit {
     get caseTypes(): CaseType[] { return this._caseTypes }
     set caseTypes(caseTypes: CaseType[]) {
         this._caseTypes = caseTypes
-        const caseTypeCode = safe(() => this.listing.hearingPart.caseTypeCode)
+        const caseTypeCode = safe(() => this.listing.hearing.caseTypeCode)
 
         if (caseTypeCode) {
             this.hearings = this.getHearingTypesFromCaseType(caseTypeCode);
@@ -71,7 +72,7 @@ export class ListingCreateComponent implements OnInit {
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
-                private readonly hearingPartModificationService: HearingPartModificationService) {
+                private readonly hearingPartModificationService: HearingModificationService) {
 
         this.store.select(getHearingPartsError).subscribe((error: any) => {
             this.errors = safe(() => error.message);
@@ -111,7 +112,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     create() {
-        this.listing.hearingPart.id = uuid();
+        this.listing.hearing.id = uuid();
 
         this.hearingPartModificationService.createListingRequest(this.listing);
         this.openDialog('Creating listing request');
@@ -123,7 +124,7 @@ export class ListingCreateComponent implements OnInit {
 
     updateDuration(durationValue) {
         if (durationValue !== undefined && durationValue !== null) {
-            this.listing.hearingPart.duration = moment.duration(durationValue, 'minute');
+            this.listing.hearing.duration = moment.duration(durationValue, 'minute');
         }
     }
 
@@ -143,7 +144,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onCaseTypeChanged(event: MatSelectChange) {
-        this.listing.hearingPart.hearingTypeCode = undefined;
+        this.listing.hearing.hearingTypeCode = undefined;
         let newHearings = [];
 
         if (!(event.value === undefined || event.value === null)) {
@@ -163,7 +164,7 @@ export class ListingCreateComponent implements OnInit {
 
     private defaultListing(): ListingCreate {
         return {
-            hearingPart: {
+            hearing: {
                 id: undefined,
                 caseNumber: undefined,
                 caseTitle: undefined,
@@ -185,28 +186,28 @@ export class ListingCreateComponent implements OnInit {
     private setFormGroup() {
         this.listingCreate = new FormGroup({
             caseNumber: new FormControl(
-                this.listing.hearingPart.caseNumber,
+                this.listing.hearing.caseNumber,
                 [Validators.required, Validators.maxLength(this.caseNumberMaxLength)]
             ),
             caseTitle: new FormControl(
-                this.listing.hearingPart.caseTitle,
+                this.listing.hearing.caseTitle,
                 [Validators.maxLength(this.caseTitleMaxLength)]
             ),
             caseTypeCode: new FormControl(
-                this.listing.hearingPart.caseTypeCode,
+                this.listing.hearing.caseTypeCode,
                 [Validators.required]
             ),
             hearingTypeCode: new FormControl(
-                this.listing.hearingPart.hearingTypeCode,
+                this.listing.hearing.hearingTypeCode,
                 [Validators.required]
             ),
             duration: new FormControl(
-                this.listing.hearingPart.duration ? this.listing.hearingPart.duration.asMinutes() : undefined,
+                this.listing.hearing.duration ? this.listing.hearing.duration.asMinutes() : undefined,
                 [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
             ),
             targetDates: new FormGroup({
-                targetFrom: new FormControl(this.listing.hearingPart.scheduleStart),
-                targetTo: new FormControl(this.listing.hearingPart.scheduleEnd),
+                targetFrom: new FormControl(this.listing.hearing.scheduleStart),
+                targetTo: new FormControl(this.listing.hearing.scheduleEnd),
             }, this.validateTargetDates)
         });
     }
@@ -230,6 +231,6 @@ export class ListingCreateComponent implements OnInit {
     }
 
     afterEdit() {
-        this.store.dispatch(new GetById(this.listing.hearingPart.id));
+        this.store.dispatch(new GetById(this.listing.hearing.id));
     }
 }

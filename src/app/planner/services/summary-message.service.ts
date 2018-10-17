@@ -14,6 +14,10 @@ export class SummaryMessageService {
     constructor(private readonly store: Store<State>) { }
 
     public buildSummaryMessage(event): Observable<string> {
+        if (event.detail.event === undefined) {
+            return this.buildListHearingMsg();
+        }
+
         const eventDetails = event.detail.event;
         let [resourceType, resourceId] = eventDetails.resourceId.split(`${Separator}`);
         const isTimeChanged = this.isTimeChanged(event);
@@ -64,5 +68,9 @@ export class SummaryMessageService {
         }
 
         return Observable.of(`${resourceName} has been unassigned`)
+    }
+
+    private buildListHearingMsg(): Observable<string> {
+        return Observable.of('Hearing part has been listed!')
     }
 }

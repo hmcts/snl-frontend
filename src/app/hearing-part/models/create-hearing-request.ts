@@ -1,7 +1,7 @@
 import * as moment from 'moment'
 import { Priority } from './priority-model';
 
-export interface CreateHearingPartRequest {
+export interface CreateHearingRequest {
     id: string;
     caseNumber: string;
     caseTitle: string;

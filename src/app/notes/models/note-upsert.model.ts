@@ -6,8 +6,6 @@ export interface NoteUpsert {
   content: string;
   entityId: string;
   entityType: string;
-  createdAt: string;
-  modifiedBy: string;
 }
 
 export function getNoteUpsertFromNoteViewModel(note: NoteViewmodel): NoteUpsert {
@@ -17,5 +15,5 @@ export function getNoteUpsertFromNoteViewModel(note: NoteViewmodel): NoteUpsert 
         type: note.type,
         entityId: note.entityId,
         entityType: note.entityType,
-    } as NoteUpsert
+    }
 }

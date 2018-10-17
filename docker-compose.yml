@@ -9,5 +9,6 @@ services:
     container_name: snl-frontend
     environment:
       - SNL_API_URL=http://localhost:8090
+      - SNL_NOTES_URL=http://localhost:8093
     ports:
       - 8084:80

@@ -1,7 +1,7 @@
-import { UpdateHearingPartRequest } from './update-hearing-part-request';
+import { UpdateHearingRequest } from './update-hearing-request';
 import { Note } from '../../notes/models/note.model';
 
 export interface ListingCreate {
-    hearingPart: UpdateHearingPartRequest;
+    hearing: UpdateHearingRequest;
     notes: Note[]
 }

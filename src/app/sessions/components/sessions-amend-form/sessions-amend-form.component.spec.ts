@@ -1,3 +1,5 @@
+import { NoteComponent } from './../../../notes/components/note/note.component';
+import { NoteListComponent } from './../../../notes/components/notes-list/note-list.component';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
@@ -9,6 +11,9 @@ import { Observable } from 'rxjs/Observable';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionToAmendSessionForm } from '../../mappers/amend-session-form-session-amend';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
+import { Store } from '@ngrx/store';
 
 let fixture: ComponentFixture<SessionsAmendFormComponent>;
 let component: SessionsAmendFormComponent;
@@ -33,16 +38,21 @@ let sessionViewmodel = {
 let session = SessionToAmendSessionForm(sessionViewmodel, [{code: 'code', description: 'descr'}]);
 
 const sessionCreationServiceSpy = jasmine.createSpyObj('SessionsCreationService', ['amend', 'fetchUpdatedEntities']);
+const storeSpy = jasmine.createSpyObj('Store', ['dispatch']);
+const notePreparerSpy: jasmine.SpyObj<NotesPreparerService> = jasmine.createSpyObj('NotesPreparerService', ['prepare']);
+notePreparerSpy.prepare.and.returnValue([])
 
 describe('SessionsAmendFormComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule],
-            declarations: [SessionsAmendFormComponent],
+            declarations: [NoteComponent, NoteListComponent, SessionsAmendFormComponent],
             providers: [
                 { provide: SessionsCreationService, useValue: sessionCreationServiceSpy },
-                { provide: MatDialog, useValue: matDialogSpy }
-
+                { provide: MatDialog, useValue: matDialogSpy },
+                { provide: Store, useValue: storeSpy },
+                { provide: NotesPreparerService, useValue: notePreparerSpy },
+                SessionCreateNotesConfiguration,
             ]
         });
         fixture = TestBed.createComponent(SessionsAmendFormComponent);
@@ -74,9 +84,10 @@ describe('SessionsAmendFormComponent', () => {
 
         it('the transaction dialog is open', () => {
             matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
-
+            const noteListComponent: jasmine.SpyObj<NoteListComponent> = jasmine.createSpyObj('NoteListComponent', ['getModifiedNotes'])
+            noteListComponent.getModifiedNotes.and.returnValue([]);
+            component.newNoteList = noteListComponent;
             component.sessionData = session;
-
             component.amend();
 
             expect(matDialogSpy.open).toHaveBeenCalled();
@@ -84,7 +95,6 @@ describe('SessionsAmendFormComponent', () => {
     });
 
     describe('Form validations', () => {
-
         it('Should create', () => {
             expect(component).toBeDefined();
         });
