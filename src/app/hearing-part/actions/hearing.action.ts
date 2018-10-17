@@ -5,6 +5,7 @@ import { ListingCreate } from '../models/listing-create';
 import { HearingDeletion } from '../models/hearing-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { Hearing } from '../models/hearing';
+import { SearchHearingRequest } from '../models/search-hearing-request';
 
 export enum HearingActionTypes {
   GetById = '[Hearing] Get by id',
@@ -34,7 +35,7 @@ export enum HearingActionTypes {
 export class Search implements Action {
   readonly type = HearingActionTypes.Search;
 
-  constructor(public payload?: object) {}
+  constructor(public payload?: SearchHearingRequest) {}
 }
 
 export class GetById implements Action {

@@ -7,6 +7,7 @@ import * as fromJudges from '../../../judges/reducers';
 import * as fromReferenceData from '../../../core/reference/reducers';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
+import * as fromHearingActions from '../../../hearing-part/actions/hearing.action';
 import { Judge } from '../../../judges/models/judge.model';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
@@ -16,8 +17,9 @@ import { HearingsFilterService } from '../../services/hearings-filter-service';
 import { HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
+import { HearingPartService } from '../../services/hearing-part-service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-hearings-search',
@@ -52,11 +54,14 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     filter(filterValues: HearingsFilters) {
-        this.store.dispatch(new fromHearingPartsActions.Search());
+        this.store.dispatch(new fromHearingActions.Search({
+            searchCriteria: [{'key': 'caseNumber', 'operation': 'equals', 'value': '123'}]
+        }))
         this.filters$.next(filterValues);
     }
 
     filterHearings = (hearings: HearingViewmodel[], filters: HearingsFilters): HearingViewmodel[] => {
+        return hearings;
         if (!filters) {
             return hearings;
         }
@@ -68,9 +73,13 @@ export class HearingsSearchComponent implements OnInit {
             .filter(h => this.hearingsFilterService.filterByPropertyContainsAll(
                 h.communicationFacilitator, filters.communicationFacilitators))
             .filter(h => this.hearingsFilterService.filterByCaseType(h, filters))
-            .filter(h => this.hearingsFilterService.filterByHearingType(h, filters));
+            .filter(h => this.hearingsFilterService.filterByHearingType(h, filters))
+            .filter(h => this.hearingsFilterService.filterbyListingDetails(h, filters));
 
         return retVal;
     };
 
+    onAmend(hearingId: string) {
+        console.log('TODO: Implement going to amendment screen! Id:' + hearingId)
+    }
 }

@@ -5,12 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../app.config';
 import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { map } from 'rxjs/operators';
-import { hearingInfo, hearingPart, hearingParts } from '../../core/schemas/data.schema';
+import { hearingInfo, hearingPart, hearingParts, hearings } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
+import { SearchHearingRequest } from '../models/search-hearing-request';
+import { Hearing } from '../models/hearing';
 
 @Injectable()
 export class HearingPartService {
@@ -34,6 +36,14 @@ export class HearingPartService {
         return this.http
             .get<HearingPartResponse>(`${this.config.getApiUrl()}/hearing/${id}`)
                 .pipe(map(data => {return normalize(data, hearingInfo)}));
+    }
+
+    searchHearings(request: SearchHearingRequest): Observable<any> {
+        return this.http
+            .post<HearingPartResponse>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+            })
+            .pipe(map(data => {return normalize(data, hearings)}));
     }
 
     assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {

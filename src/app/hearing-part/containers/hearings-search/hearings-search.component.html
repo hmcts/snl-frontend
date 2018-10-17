@@ -15,7 +15,8 @@
 
     <div>
       <app-hearing-search-table id="hearing-search-table"
-                                [hearings]="filteredHearings">
+                                [hearings]="filteredHearings"
+                                (onAmend)="onAmend($event)">
       </app-hearing-search-table>
     </div>
   </div>

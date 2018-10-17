@@ -54,4 +54,17 @@ export class HearingsFilterService {
         return filters.includes('');
     }
 
+    filterbyListingDetails(h: HearingViewmodel, f: HearingsFilters) {
+        if (f.listingDetails === 'all') {
+            return true;
+        }
+
+        const listingDetailsMap = {
+            'listed': true,
+            'unlisted': false
+        };
+
+        return h.isListed === listingDetailsMap[f.listingDetails];
+    }
+
 }

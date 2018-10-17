@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { priorityValue } from '../../models/priority-model';
@@ -11,9 +11,10 @@ import { HearingViewmodel } from '../../models/hearing.viewmodel';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingSearchTableComponent implements OnInit, OnChanges {
-    @Input() hearings: HearingViewmodel[];
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Input() hearings: HearingViewmodel[];
+    @Output() onAmend = new EventEmitter<string>();
 
     dataSource: MatTableDataSource<HearingViewmodel>;
     displayedColumns = [
@@ -26,6 +27,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         'reservedJudge',
         'requestStatus',
         'listingDate',
+        'amend'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -77,6 +79,10 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         } else {
             return 'unlisted';
         }
+    }
+
+    amend(hearing: HearingViewmodel) {
+        this.onAmend.emit(hearing.id);
     }
 
     private getPropertyMemberOrNull(item: object, property: string, key: string) {
