@@ -32,6 +32,14 @@ describe('SummaryMessageService', () => {
           store = TestBed.get(Store);
     });
 
+    describe('When event details are undefined', () => {
+        it('should build msg', () => {
+            summaryMessageService.buildSummaryMessage({detail: {event: undefined}}).subscribe(msg => {
+                expect(msg).toEqual('Hearing part has been listed!');
+            });
+        })
+    });
+
     describe('When only time has changed', () => {
         it('should return null', (done) => {
             const newResourceString = roomResourceString(roomA.id)

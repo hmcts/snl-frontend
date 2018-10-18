@@ -1,9 +1,8 @@
 import { Note } from '../../notes/models/note.model';
-import { NotesConfiguration } from '../../notes/models/notes-configuration';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class HearingAssignmentNotesConfiguration implements NotesConfiguration {
+export class HearingAssignmentNotesConfiguration {
     public readonly entityName;
 
     constructor() {

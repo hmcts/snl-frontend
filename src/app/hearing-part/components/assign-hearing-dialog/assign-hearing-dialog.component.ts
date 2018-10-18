@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
-import { disableDisplayCreationDetails, getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { HearingAssignmentNotesConfiguration } from '../../models/hearing-assignment-notes-configuration.model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
@@ -65,7 +65,6 @@ export class AssignHearingDialogComponent implements OnInit {
   private initiateNotes() {
       this.notes = this.notesConfig.defaultNotes()
           .map(getNoteViewModel)
-          .map(disableDisplayCreationDetails)
   }
 
   private prepareNotes() {

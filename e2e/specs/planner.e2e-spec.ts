@@ -95,7 +95,7 @@ describe('Planner, check newly created sessions existence', () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.JUDGE_LINDA);
 
             shouldContain = ['No Room', Judges.JUDGE_LINDA, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(
+            let found = await elementHelper.doesElementContainAllValues(
                 await plannerPage.getSessionEventById(sessionsToCreate[3].id), ...shouldContain);
             expect(found).toBeTruthy();
         });
@@ -113,15 +113,15 @@ describe('Planner, check newly created sessions existence', () => {
 
         it('There should be at least two Session allocated to Second judge - prepare', async () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.AMY_WESSOME);
-
-            const foundedEvents = plannerPage.getAllEventsForTheResource(resourceId).count();
-            expect(foundedEvents).toBeGreaterThanOrEqual(2);
+            const row = await plannerPage.getAllEventsForTheResource(resourceId)
+            const foundEvents = row.length;
+            expect(foundEvents).toBeGreaterThanOrEqual(2);
         });
 
         it('check first session', async () => {
             let event = await plannerPage.getSessionEventById(sessionsToCreate[1].id);
             shouldContain = ['No Room', Judges.AMY_WESSOME, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(event, ...shouldContain);
+            let found = await elementHelper.doesElementContainAllValues(event, ...shouldContain);
             expect(found).toBeTruthy();
 
             const valuesToCheck: string[] = [
@@ -136,7 +136,7 @@ describe('Planner, check newly created sessions existence', () => {
         it('check second session', async () => {
             let event = await plannerPage.getSessionEventById(sessionsToCreate[2].id);
             shouldContain = [Rooms.COURT_4, Judges.AMY_WESSOME, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(event, ...shouldContain);
+            let found = await elementHelper.doesElementContainAllValues(event, ...shouldContain);
             expect(found).toBeTruthy();
 
             const valuesToCheck: string[] = [
