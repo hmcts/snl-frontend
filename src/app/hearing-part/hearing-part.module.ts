@@ -22,8 +22,9 @@ import { HearingsSearchComponent } from './containers/hearings-search/hearings-s
 import { HearingSearchTableComponent } from './components/hearing-search-table/hearing-search-table.component';
 import { RouterModule } from '@angular/router';
 import { SessionsPageComponent } from '../sessions/containers/sessions-page/sessions-page.component';
-import { HearingsFilterService } from './services/hearings-filter-service';
+import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
+import { StoreService } from './services/store-service';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -62,7 +63,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingsFilterService, HearingModificationService, ListingCreateNotesConfiguration],
+  providers: [HearingPartService, SearchCriteriaService, HearingModificationService, ListingCreateNotesConfiguration, StoreService],
   entryComponents: [ListingCreateDialogComponent],
 })
 export class HearingPartModule { }

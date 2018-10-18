@@ -9,3 +9,14 @@ export interface HearingsFilters {
     judges: string[],
     listingDetails: string
 }
+
+export const DEFAULT_HEARING_FILTERS: HearingsFilters = {
+    caseNumber: '',
+    caseTitle: '',
+    priorities: [],
+    caseTypes: [],
+    hearingTypes: [],
+    communicationFacilitators: [],
+    judges: [],
+    listingDetails: 'all'
+}

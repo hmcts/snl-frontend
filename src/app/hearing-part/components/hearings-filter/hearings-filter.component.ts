@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
-import { HearingsFilters } from '../../models/hearings-filter.model';
+import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { Priority } from '../../models/priority-model';
@@ -25,16 +25,7 @@ export class HearingsFilterComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.filters = {
-            caseNumber: '',
-            caseTitle: '',
-            priorities: [],
-            caseTypes: [],
-            hearingTypes: [],
-            communicationFacilitators: [],
-            judges: [],
-            listingDetails: 'all'
-        } as HearingsFilters;
+        this.filters = DEFAULT_HEARING_FILTERS;
     }
 
     sendFilter() {

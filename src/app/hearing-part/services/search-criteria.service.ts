@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SearchCriteria } from '../models/search-criteria';
 
 @Injectable()
-export class HearingsFilterService {
+export class SearchCriteriaService {
 
     constructor() {
     }
@@ -18,14 +18,19 @@ export class HearingsFilterService {
             {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
             {key: 'reservedJudgeId', operation: 'in', value: filters.judges},
             {key: 'listingDetails', operation: 'listingStatus', value: filters.listingDetails},
-        ].filter( entry => {
-            return (entry.value !== '' || (Array.isArray(entry.value) && entry.value.length !== 0) );
-        });
-
-        criteria = criteria.filter(c => (c.operation !== 'in') ||
-            ((c.operation === 'in') && (c.value.length !== 0)))
+        ].filter(this.isValueAnEmptyString)
+         .filter(this.isValueAnEmptyArray);
 
         return criteria;
+    }
+
+    private isValueAnEmptyString(c: SearchCriteria): boolean {
+        return c.value !== ''
+    }
+
+    private isValueAnEmptyArray(c: SearchCriteria): boolean {
+        return (c.operation !== 'in') ||
+            ((c.operation === 'in') && (c.value.length !== 0))
     }
 
 }
