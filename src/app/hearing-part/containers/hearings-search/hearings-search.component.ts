@@ -17,6 +17,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { SearchCriteria } from '../../models/search-criteria';
+import { HearingsFilterService } from '../../services/hearings-filter-service';
 
 @Component({
     selector: 'app-hearings-search',
@@ -32,7 +33,8 @@ export class HearingsSearchComponent implements OnInit {
     filteredHearings: HearingViewmodel[] = [];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
-                public dialog: MatDialog) {
+                public dialog: MatDialog,
+                public hfs: HearingsFilterService) {
         this.store.pipe(select(fromHearingParts.getFullHearings)).subscribe(hearings => {
             this.filteredHearings = hearings as HearingViewmodel[]
         }) ;
@@ -54,20 +56,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     toSearchCriteria(filters: HearingsFilters): SearchCriteria[] {
-        let criterias = [
-            {key: 'caseNumber', operation: 'equals', value: filters.caseNumber},
-            {key: 'caseTitle', operation: 'like', value: filters.caseTitle},
-            {key: 'priority', operation: 'in', value: filters.priorities},
-            {key: 'caseType', operation: 'in', value: filters.caseTypes},
-            {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
-            {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
-            {key: 'judge', operation: 'in', value: filters.judges},
-            {key: 'listingDetails', operation: 'listing', value: filters.listingDetails},
-        ].filter( entry => {
-            return (entry.value !== '' || (Array.isArray(entry.value) && entry.value.length !== 0) );
-        }).slice();
-
-        return criterias;
+        return this.hfs.toSearchCriteria(filters);
     }
 
     onAmend(hearingId: string) {

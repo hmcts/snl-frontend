@@ -1,70 +1,31 @@
 import { HearingsFilters } from '../models/hearings-filter.model';
 import { Injectable } from '@angular/core';
-import { HearingViewmodel } from '../models/hearing.viewmodel';
+import { SearchCriteria } from '../models/search-criteria';
 
 @Injectable()
 export class HearingsFilterService {
 
-    // TODO missing spec file, also for session-filter
     constructor() {
     }
 
-    filterByCaseType(h: HearingViewmodel, filters: HearingsFilters) {
-        return filters.caseTypes.length === 0 ? true : filters.caseTypes.includes(h.caseType.code);
-    }
+    toSearchCriteria(filters: HearingsFilters): SearchCriteria[] {
+        let criteria = [
+            {key: 'caseNumber', operation: 'equals', value: filters.caseNumber},
+            {key: 'caseTitle', operation: 'like', value: filters.caseTitle},
+            {key: 'priority', operation: 'in', value: filters.priorities},
+            {key: 'caseType', operation: 'in', value: filters.caseTypes},
+            {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
+            {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
+            {key: 'judge', operation: 'in', value: filters.judges},
+            {key: 'listingDetails', operation: 'listingStatus', value: filters.listingDetails},
+        ].filter( entry => {
+            return (entry.value !== '' || (Array.isArray(entry.value) && entry.value.length !== 0) );
+        }).slice();
 
-    filterByHearingType(h: HearingViewmodel, filters: HearingsFilters) {
-        return filters.hearingTypes.length === 0 ? true : filters.hearingTypes.includes(h.hearingType.code);
-    }
+        criteria = criteria.filter(c => (c.operation !== 'in') ||
+            ((c.operation === 'in') && (c.value.length !== 0)))
 
-    filterByPropertyContains(searchIn: string, searchFor: string, allowNull = true) {
-        if (allowNull && (searchFor == null || searchFor === undefined || searchFor.trim() === '')) {
-            return true;
-        }
-        if (searchFor && searchIn) {
-            if (searchIn.search(searchFor) > -1) {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    filterByPropertyContainsAll(searchIn: string, searchForArray: string[]) {
-        if (searchForArray.length === 0) {
-            return true;
-        }
-        for (let searchFor of searchForArray) {
-            if (this.filterByPropertyContains(searchIn, searchFor, true)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    filterByProperty(property, filters) {
-        if (filters.length === 0) {
-            return true;
-        }
-
-        if (property) {
-            return filters.includes(property.id);
-        }
-
-        return filters.includes('');
-    }
-
-    filterbyListingDetails(h: HearingViewmodel, f: HearingsFilters) {
-        if (f.listingDetails === 'all') {
-            return true;
-        }
-
-        const listingDetailsMap = {
-            'listed': true,
-            'unlisted': false
-        };
-
-        return h.isListed === listingDetailsMap[f.listingDetails];
+        return criteria;
     }
 
 }
