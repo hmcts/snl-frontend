@@ -26,13 +26,33 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDate(date: string): string {
-    return moment(date).format()
+    return moment(date).format();
   }
 
   formatDuration(duration: number): string {
     const minutes = moment.duration(duration).asMinutes();
 
     return Math.ceil(minutes) + ' minutes';
+  }
+
+  getListBetween() {
+    if(!this.hearing.scheduleStart && !this.hearing.scheduleEnd) {
+      return '';
+    }
+
+    if(this.hearing.scheduleStart && !this.hearing.scheduleEnd) {
+      return 'after ' + this.formatDate(this.hearing.scheduleStart);
+    }
+
+    if(!this.hearing.scheduleStart && this.hearing.scheduleEnd) {
+      return 'before ' + this.formatDate(this.hearing.scheduleEnd);
+    }
+
+    if(this.hearing.scheduleStart && this.hearing.scheduleEnd) {
+      return this.formatDate(this.hearing.scheduleStart)
+        + ' - '
+        + this.formatDate(this.hearing.scheduleEnd);
+    }
   }
 
   isSessionPanelDisabled(session: Session) {
