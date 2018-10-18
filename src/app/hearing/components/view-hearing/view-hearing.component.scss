@@ -21,12 +21,18 @@ mat-panel-title {
   display: block;
 }
 
-.listing-header .tile {
-  width: 120px;
-  float: left;
-  padding: 14px;
-}
+.listing-header {
+  .tile {
+    width: 120px;
+    float: left;
+    padding: 14px;
+    border-left: 1px solid rgba(0,0,0,.05);
+  }
 
+  .tile.small {
+    width: 80px;
+  }
+}
 .scheduled-listings .listing .expand-button {
   text-align: right;
   clear: right;

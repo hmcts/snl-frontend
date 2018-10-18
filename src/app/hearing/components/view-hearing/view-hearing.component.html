@@ -79,7 +79,7 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div class="listing-header">
-                <div class="tile">
+                <div class="tile small">
                   {{formatDate(session.start)}}
                 </div>
                 <div class="tile">
@@ -88,14 +88,14 @@
                 <div class="tile">
                   Start {{formatDate(session.start)}}
                 </div>
-                <div class="tile">
-                  {{session.duration.toString()}} minutes
+                <div class="tile small">
+                  {{formatDuration(session.duration)}}
                 </div>
                 <div class="tile">
-                  {{session.room}}
+                  {{session.roomName}}
                 </div>
                 <div class="tile">
-                  {{session.judge}}
+                  {{session.judgeName}}
                 </div>
               </div>
               <div class="clear"></div>

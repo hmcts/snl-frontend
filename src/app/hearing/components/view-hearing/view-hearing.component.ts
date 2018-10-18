@@ -30,9 +30,9 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDuration(duration: number): string {
-    const minutes = Math.ceil(duration/60);
+    const minutes = moment.duration(duration).asMinutes();
 
-    return minutes + ' minutes';
+    return Math.ceil(minutes) + ' minutes';
   }
 
   isSessionPanelDisabled(session: Session) {
