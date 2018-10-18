@@ -365,6 +365,7 @@ describe('SessionsListingsSearchComponent', () => {
       const startTime = '10:30';
       component.selectedSession = mockedFullSession[0];
       component.selectedHearingPart = mockedUnlistedHearingVM;
+
       component.assignToSession({
           confirmed: true,
           startTime: startTime
@@ -389,6 +390,7 @@ describe('SessionsListingsSearchComponent', () => {
       expect(sessionAssignmentPayload.sessionVersion).toEqual(
           mockedFullSession[0].version
       )
+
       expect(sessionAssignmentPayload.start).toEqual(moment(startTime, 'HH:mm').toDate());
     });
   });

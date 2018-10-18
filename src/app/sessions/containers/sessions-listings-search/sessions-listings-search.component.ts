@@ -34,6 +34,7 @@ import {
     AssignHearingData,
     AssignHearingDialogComponent
 } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
+import * as fromNotes from '../../../notes/actions/notes.action';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -111,8 +112,12 @@ export class SessionsListingsSearchComponent implements OnInit {
             start: moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment);
 
-        this.openSummaryDialog().afterClosed().subscribe(() => {
+        this.openSummaryDialog().afterClosed().subscribe((accepted) => {
             this.store.dispatch(new fromHearingPartsActions.Search());
+            if (accepted) {
+                this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
+            }
+
             this.selectedHearingPart = undefined;
             this.selectedSession = undefined;
         });
@@ -127,7 +132,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     openAssignDialog() {
-        this.dialog.open(AssignHearingDialogComponent).afterClosed().subscribe((data: AssignHearingData) => {
+        this.dialog.open(AssignHearingDialogComponent, {
+            data: this.selectedHearingPart.id
+        }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
                 this.assignToSession(data)
             }
