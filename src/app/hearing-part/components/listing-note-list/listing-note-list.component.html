@@ -1,2 +1,3 @@
-<app-note-list id="noteList" #notesList [notes]="noteViewModels"></app-note-list>
-<app-note-list id="otherNoteList" class="free-text-notes-box" #freeTextNotesList [notes]="freeTextNoteViewModels"></app-note-list>
+<app-note-list id="specialNoteList" #specialNotesList [notes]="specialNoteViewModels"></app-note-list>
+<app-note-list id="newNoteList" #newNoteList [notes]="newNoteViewModels"></app-note-list>
+<app-note-list id="otherNoteList" class="free-text-notes-box" [notes]="oldNoteViewModels" [disabled]="true"></app-note-list>
