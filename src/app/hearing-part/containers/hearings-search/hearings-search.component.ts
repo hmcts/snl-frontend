@@ -33,7 +33,9 @@ export class HearingsSearchComponent implements OnInit {
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 public dialog: MatDialog) {
-        this.store.pipe(select(fromHearingParts.getFullHearings), map(asArray)).subscribe(hearings => this.filteredHearings = hearings) ;
+        this.store.pipe(select(fromHearingParts.getFullHearings)).subscribe(hearings => {
+            this.filteredHearings = hearings as HearingViewmodel[]
+        }) ;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
         this.caseTypes$ = this.store.pipe(select(fromReferenceData.selectCaseTypes));
         this.hearingTypes$ = this.store.pipe(select(fromReferenceData.selectHearingTypes));
@@ -52,8 +54,20 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     toSearchCriteria(filters: HearingsFilters): SearchCriteria[] {
-        // TODO: implement dynamic generation of SearchCriteria depending on 'filters' content
-        return [{'key': 'caseNumber', 'operation': 'equals', 'value': filters.caseNumber}]
+        let criterias = [
+            {key: 'caseNumber', operation: 'equals', value: filters.caseNumber},
+            {key: 'caseTitle', operation: 'like', value: filters.caseTitle},
+            {key: 'priority', operation: 'in', value: filters.priorities},
+            {key: 'caseType', operation: 'in', value: filters.caseTypes},
+            {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
+            {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
+            {key: 'judge', operation: 'in', value: filters.judges},
+            {key: 'listingDetails', operation: 'listing', value: filters.listingDetails},
+        ].filter( entry => {
+            return (entry.value !== '' || (Array.isArray(entry.value) && entry.value.length !== 0) );
+        }).slice();
+
+        return criterias;
     }
 
     onAmend(hearingId: string) {

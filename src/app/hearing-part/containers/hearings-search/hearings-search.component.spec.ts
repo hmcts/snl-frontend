@@ -216,6 +216,21 @@ describe('HearingsSearchComponent', () => {
     // });
 
   });
+
+  describe('toSearchCriteria', () => {
+     it('should return ...', () => {
+        let filters = {
+            caseNumber: '',
+            caseTitle: '',
+            priorities: [],
+            caseTypes: [],
+            hearingTypes: [],
+            communicationFacilitators: [],
+            judges: [],
+            listingDetails: 'all',
+        } as HearingsFilters;
+     });
+  });
 });
 
 // Helpers

@@ -6,7 +6,6 @@ import { HearingDeletion } from '../models/hearing-deletion';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { Hearing } from '../models/hearing';
 import { SearchHearingRequest } from '../models/search-hearing-request';
-import { HearingPartActionTypes } from './hearing-part.action';
 
 export enum HearingActionTypes {
   GetById = '[Hearing] Get by id',

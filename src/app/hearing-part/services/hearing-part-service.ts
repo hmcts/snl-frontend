@@ -12,7 +12,6 @@ import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 import { SearchHearingRequest } from '../models/search-hearing-request';
-import { Hearing } from '../models/hearing';
 
 @Injectable()
 export class HearingPartService {

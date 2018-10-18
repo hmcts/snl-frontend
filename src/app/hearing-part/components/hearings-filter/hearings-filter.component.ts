@@ -33,7 +33,7 @@ export class HearingsFilterComponent implements OnInit {
             hearingTypes: [],
             communicationFacilitators: [],
             judges: [],
-            listingDetails: ''
+            listingDetails: 'all'
         } as HearingsFilters;
     }
 
