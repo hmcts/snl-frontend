@@ -44,7 +44,7 @@ describe('HearingService', () => {
   })
 
   describe('getByid', () => {
-    fit('getById should return data from service populated with notes', () => {
+    it('getById should return data from service populated with notes', () => {
       const id = 'some-id';
 
       service.getById(id).subscribe((res: any) => {
