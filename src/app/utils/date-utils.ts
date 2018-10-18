@@ -15,5 +15,14 @@ export function getHttpFriendly(date: moment.Moment): string {
 }
 
 export function formatDuration(duration: moment.Duration): string {
-    return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
+    const durationMs = duration.asMilliseconds();
+    if (durationMs >= 86400000) {
+        const durationDays = Math.floor((durationMs / 86400000));
+        const durationHours = (durationDays * 24) + duration.hours();
+        return durationHours + ':' +
+            (duration.minutes() < 10 ? '0' + duration.minutes() : duration.minutes());
+
+    } else {
+        return moment.utc(durationMs).format('HH:mm');
+    }
 }
