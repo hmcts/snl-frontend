@@ -1,5 +1,5 @@
 import { getNoteFromViewModel } from './note.model';
-import { enableDisplayCreationDetails, NoteViewmodel } from './note.viewmodel';
+import { NoteViewmodel } from './note.viewmodel';
 
 let note = {
     id: '1',
@@ -14,10 +14,3 @@ describe('When converting NoteViewmodel to note', () => {
         expect(Object.keys(getNoteFromViewModel(note))).not.toContain('modified')
     });
 });
-
-describe('When enabling display creation details', () => {
-    it('display property should be true', () => {
-        enableDisplayCreationDetails(note);
-        expect(note.displayCreationDetails).toBeTruthy()
-    })
-})
