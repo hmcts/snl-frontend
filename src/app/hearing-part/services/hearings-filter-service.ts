@@ -16,11 +16,11 @@ export class HearingsFilterService {
             {key: 'caseType', operation: 'in', value: filters.caseTypes},
             {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
             {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
-            {key: 'judge', operation: 'in', value: filters.judges},
+            {key: 'reservedJudgeId', operation: 'in', value: filters.judges},
             {key: 'listingDetails', operation: 'listingStatus', value: filters.listingDetails},
         ].filter( entry => {
             return (entry.value !== '' || (Array.isArray(entry.value) && entry.value.length !== 0) );
-        }).slice();
+        });
 
         criteria = criteria.filter(c => (c.operation !== 'in') ||
             ((c.operation === 'in') && (c.value.length !== 0)))
