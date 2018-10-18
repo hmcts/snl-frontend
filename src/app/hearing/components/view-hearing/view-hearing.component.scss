@@ -22,7 +22,7 @@ mat-panel-title {
 }
 
 .listing-header .tile {
-  width: 115px;
+  width: 120px;
   float: left;
   padding: 14px;
 }
@@ -54,4 +54,9 @@ mat-panel-title {
 
 .case-number {
   font-weight: normal;
+}
+
+// easiest way to make session panel not expandable is to disable it, but by default it appears in gray
+.mat-expansion-panel-header[aria-disabled=true] {
+  color: rgba(0,0,0,.87);
 }

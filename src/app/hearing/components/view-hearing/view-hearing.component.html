@@ -75,7 +75,7 @@
 
     <mat-tab label="Scheduled listings">
       <mat-accordion>
-        <mat-expansion-panel [expanded]="true" *ngFor="let session of hearing.sessions">
+        <mat-expansion-panel [expanded]="false" *ngFor="let session of hearing.sessions" [disabled]="isSessionPanelDisabled(session)">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div class="listing-header">
