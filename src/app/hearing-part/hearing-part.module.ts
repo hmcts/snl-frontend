@@ -22,8 +22,6 @@ import { HearingAssignmentNotesConfiguration } from './models/hearing-assignment
 import { HearingsFilterComponent } from './components/hearings-filter/hearings-filter.component';
 import { HearingsSearchComponent } from './containers/hearings-search/hearings-search.component';
 import { HearingSearchTableComponent } from './components/hearing-search-table/hearing-search-table.component';
-import { RouterModule } from '@angular/router';
-import { SessionsPageComponent } from '../sessions/containers/sessions-page/sessions-page.component';
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
 
