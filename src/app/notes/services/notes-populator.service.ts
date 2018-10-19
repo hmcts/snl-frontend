@@ -16,7 +16,7 @@ export class NotesPopulatorService {
 
   // iterates recursively through the whole object to find where there are any placeholders for notes
   // fetches notes and populates those placeholders
-  public async populateWithNotes(entity: any) {
+  public populateWithNotes(entity: any) {
     const entityIds = this.collectEntityIds(entity, [])
 
     this.fetchNotes(entityIds).subscribe(
