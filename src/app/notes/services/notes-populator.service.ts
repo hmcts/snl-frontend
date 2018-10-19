@@ -68,7 +68,7 @@ export class NotesPopulatorService {
         return moment(a.createdAt).isBefore(moment(b.createdAt)) ? 1 : -1
       });
 
-    if (thisEntityNotes) {
+    if (thisEntityNotes.length > 0) {
       entity['notes'] = thisEntityNotes;
     }
 
