@@ -57,8 +57,7 @@ displayedColumnsExpectedValues = [
     { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
     { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
     { columnName: 'requestStatus', expected: 'listed' },
-    { columnName: 'listingDate', expected: sampleHearingPart.scheduleStart.unix() },
-    { columnName: 'amend', expected: undefined }
+    { columnName: 'listingDate', expected: sampleHearingPart.scheduleStart.unix() }
 ];
 
 describe('HearingSearchTableComponent', () => {
@@ -119,7 +118,8 @@ describe('HearingSearchTableComponent', () => {
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
 
         it(' tested columns should equal component displayedColumns field', () => {
-            const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
+            const columnsArray: string[] = [...displayedColumnsExpectedValues,
+                { columnName: 'amend', expected: undefined }].map(r => r.columnName);
             expect(component.displayedColumns).toEqual(columnsArray);
         });
 

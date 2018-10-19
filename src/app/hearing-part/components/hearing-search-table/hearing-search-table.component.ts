@@ -67,6 +67,8 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
                 case 'listingDate':
                 case 'scheduleStart':
                     return (item['scheduleStart']) ? item['scheduleStart'].unix() : null;
+                case 'requestStatus':
+                    return item['isListed'] ? 'listed' : 'unlisted';
 
                 default:
                     return item[property];
