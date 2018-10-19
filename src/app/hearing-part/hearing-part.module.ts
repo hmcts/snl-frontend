@@ -52,17 +52,6 @@ export const COMPONENTS = [
     FormsModule,
     StoreModule.forFeature('hearingParts', reducers),
     EffectsModule.forFeature([HearingPartEffects, ListingCreateEffects]),
-    RouterModule.forChild([{
-      path: '',
-      component: SessionsPageComponent,
-      children: [
-          { path: '', redirectTo: 'search', pathMatch: 'full' },
-          {
-              path: 'search',
-              component: HearingsSearchComponent,
-          }
-      ]},
-    ]),
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
