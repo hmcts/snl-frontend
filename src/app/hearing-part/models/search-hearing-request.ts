@@ -6,5 +6,5 @@ export interface SearchHearingRequest {
 }
 
 export const DEFAULT_SEARCH_HEARING_REQUEST: SearchHearingRequest = {
-    searchCriteria: DEFAULT_SEARCH_CRITERIA
+    searchCriteria: [DEFAULT_SEARCH_CRITERIA]
 }
