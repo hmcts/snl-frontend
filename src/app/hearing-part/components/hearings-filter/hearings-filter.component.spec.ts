@@ -12,6 +12,7 @@ describe('HearingsFilterComponent', () => {
         it('the initial variables are set', () => {
             expect(component.communicationFacilitators).toBeDefined()
             expect(component.priorities).toBeDefined()
+            expect(component.filters).toBeDefined()
         });
     });
 

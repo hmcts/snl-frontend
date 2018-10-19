@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
@@ -10,7 +10,7 @@ import { Priority } from '../../models/priority-model';
     templateUrl: './hearings-filter.component.html',
     styleUrls: ['./hearings-filter.component.scss']
 })
-export class HearingsFilterComponent implements OnInit {
+export class HearingsFilterComponent {
     @Output() onFilter = new EventEmitter();
 
     @Input() judges: Judge[];
@@ -19,13 +19,9 @@ export class HearingsFilterComponent implements OnInit {
 
     priorities = Object.keys(Priority);
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
-    filters: HearingsFilters;
+    filters: HearingsFilters = DEFAULT_HEARING_FILTERS;
 
     constructor() {}
-
-    ngOnInit() {
-        this.filters = DEFAULT_HEARING_FILTERS;
-    }
 
     sendFilter() {
         this.onFilter.emit(this.filters);
