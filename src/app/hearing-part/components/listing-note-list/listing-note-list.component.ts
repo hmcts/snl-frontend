@@ -1,106 +1,60 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ListingCreateNotesConfiguration } from './../../models/listing-create-notes-configuration.model';
+import { Component, Input, ViewChild } from '@angular/core';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
 import { Note } from '../../../notes/models/note.model';
-import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
-import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { NoteViewmodel, getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { NoteType } from '../../../notes/models/note-type';
 
 @Component({
   selector: 'app-listing-note-list',
   templateUrl: './listing-note-list.component.html',
   styleUrls: ['./listing-note-list.component.scss']
 })
-export class ListingNoteListComponent implements OnInit {
-  @ViewChild('notesList') noteList: NoteListComponent;
-  @ViewChild('freeTextNotesList') freeTextNoteList: NoteListComponent;
+export class ListingNoteListComponent {
+  @ViewChild('specialNotesList') specialNotesList: NoteListComponent;
+  @ViewChild('newNoteList') newNoteList: NoteListComponent;
 
-  private _notes: Note[];
-  public noteViewModels: NoteViewmodel[] = [];
-  public freeTextNoteViewModels: NoteViewmodel[] = [];
+  public specialNoteViewModels: NoteViewmodel[] = [];
+  public newNoteViewModels: NoteViewmodel[] = [this.listingNotesConfig.noteViewModelOf(NoteType.OTHER_NOTE)];
+  public oldNoteViewModels: NoteViewmodel[] = [];
 
-  @Input() set notes(value: Note[]) {
-      this._notes = value;
-  }
+  @Input() public entityId: string;
+  @Input() set notes(notes: Note[]) {
+    notes
+        .map(getNoteViewModel)
+        .forEach(this.disposeToProperArrays);
 
-  @Input()
-  public entityId: string;
-
-  ngOnInit() {
-      this.initiateNotes(this._notes);
+    this.specialNoteViewModels = [
+        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.SPECIAL_REQUIREMENTS),
+        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.FACILITY_REQUIREMENTS)
+    ]
   }
 
   constructor(readonly listingNotesConfig: ListingCreateNotesConfiguration,
             public notePreparerService: NotesPreparerService) { }
 
-  initiateNotes(notes: Note[]) {
-      this._notes = this.setNotesIfExist(notes);
-
-      this._notes.map(getNoteViewModel)
-          .map(this.disableShowingCreationDetailsOnNewNotes)
-          .map(this.makeExistingFreetextNotesReadonly)
-          .forEach(this.disposeToProperArrays);
-  }
-
   prepareNotes() {
-      let preparedNotes = this.notePreparerService.prepare(
-          this.noteList.getModifiedNotes(),
-          this.entityId,
-          this.listingNotesConfig.entityName
-      );
+    const preparedFreeTextNotes = this.notePreparerService.prepare(
+        this.specialNotesList.getModifiedNotes(),
+        this.entityId,
+        this.listingNotesConfig.entityName
+    );
 
-      let preparedFreeTextNotes = this.notePreparerService.prepare(
-          this.freeTextNoteList.getModifiedNotes(),
-          this.entityId,
-          this.listingNotesConfig.entityName
-      );
-      preparedFreeTextNotes = this.notePreparerService.removeEmptyNotes(preparedFreeTextNotes);
+    const preparedNotes = this.notePreparerService.prepare(
+        this.newNoteList.getModifiedNotes(),
+        this.entityId,
+        this.listingNotesConfig.entityName
+    );
 
-      return [...preparedNotes, ...preparedFreeTextNotes];
-  }
-
-  protected setNotesIfExist(notes: Note[]) {
-      let defaultNotes = this.listingNotesConfig.defaultNotes().map(defaultNote => {
-          const alreadyExistingNote = notes.find(note => note.type === defaultNote.type);
-          if (alreadyExistingNote !== undefined) {
-              notes = notes.filter(n => n.id !== alreadyExistingNote.id);
-          }
-
-          return alreadyExistingNote || defaultNote
-      });
-
-      let combinedNotes = [...defaultNotes, ...notes];
-
-      if (this.containsOldFreeTextNote(combinedNotes)) {
-          return [this.listingNotesConfig.getNewFreeTextNote(), ...combinedNotes];
-      } else {
-          return combinedNotes;
-      }
-  }
-
-  protected containsOldFreeTextNote(notes: Note[]) {
-      return notes.find(n => n.type === 'Other note' && n.id === undefined) === undefined;
-  }
-
-  protected disableShowingCreationDetailsOnNewNotes(note: NoteViewmodel): NoteViewmodel {
-      if (note.id === undefined) {
-          note.displayCreationDetails = false;
-      }
-      return note;
-  }
-
-  protected makeExistingFreetextNotesReadonly(n: NoteViewmodel): NoteViewmodel {
-      if (n.type === 'Other note' && n.id !== undefined) {
-          n.readonly = true;
-      }
-
-      return n;
+    return [...preparedNotes, ...preparedFreeTextNotes];
   }
 
   protected disposeToProperArrays = (n: NoteViewmodel) => {
-      if (n.type === 'Other note') {
-          this.freeTextNoteViewModels.push(n);
+      if (n.type === NoteType.OTHER_NOTE) {
+          this.oldNoteViewModels.push(n);
       } else {
-          this.noteViewModels.push(n);
+          this.specialNoteViewModels.push(n);
       }
   }
 }

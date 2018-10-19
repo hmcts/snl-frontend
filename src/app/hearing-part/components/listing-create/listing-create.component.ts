@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
@@ -31,6 +31,7 @@ import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
     styleUrls: ['./listing-create.component.scss']
 })
 export class ListingCreateComponent implements OnInit {
+    @ViewChild('listingCreateForm') listingFormGroup: FormGroupDirective;
     @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
     @Input() set data(value: ListingCreate) {

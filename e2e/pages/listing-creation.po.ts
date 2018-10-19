@@ -12,15 +12,15 @@ interface ListingNote {
 export const LISTING_NOTES: {[s: string]: ListingNote} = {
   SPECIAL_REQUIREMENTS: {
     selector: 'note-SpecialRequirements',
-    parentList: 'noteList'
+    parentList: 'specialNoteList'
   },
   FACILITY_REQUIREMENTS: {
     selector: 'note-FacilityRequirements',
-    parentList: 'noteList'
+    parentList: 'specialNoteList'
   },
   OTHER_NOTES: {
     selector: 'note-Othernote',
-    parentList: 'otherNoteList'
+    parentList: 'newNoteList'
   }
 };
 

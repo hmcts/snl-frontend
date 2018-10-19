@@ -26,16 +26,13 @@ export class NotesEffects {
     createMany$: Observable<Action> = this.actions$.pipe(
         ofType<CreateMany>(NoteActionTypes.CreateMany),
         filter(action => action.payload.length > 0),
-        map((action) => {
-            action.payload = action.payload.map(getNoteUpsertFromNoteViewModel);
-            return action
-        }),
-        mergeMap(action =>
-            this.notesService.upsertMany(action.payload).pipe(
+        mergeMap(action => {
+            const noteUpsert = action.payload.map(getNoteUpsertFromNoteViewModel);
+            return this.notesService.upsertMany(noteUpsert).pipe(
                 map(upsertedNotes => (new UpsertMany(upsertedNotes))),
                 catchError((err: HttpErrorResponse) => of(new Error(err.error)))
             )
-        )
+        })
     );
 
     @Effect()

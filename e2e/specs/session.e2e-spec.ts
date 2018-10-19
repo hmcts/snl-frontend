@@ -111,7 +111,8 @@ describe('Create Session and Listing Request, assign them despite problem, check
   });
   describe('Click on "assign" button,', () => {
     it('transaction dialog with problem that case types are different should be displayed', async () => {
-      await sessionSearchPage.clickAssignButton()
+      await sessionSearchPage.clickAssignButton();
+      await sessionSearchPage.acceptAssignWithCurrentTime();
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypesInvalidMsg)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
       await transactionDialogPage.clickAcceptButton();
