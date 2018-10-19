@@ -53,7 +53,7 @@ matSortDirection="desc">
 
   <ng-container matColumnDef="listingDate">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Listing date </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{parseDate(element.listingDate)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="amend">
