@@ -27,6 +27,39 @@ const now = moment();
 let hpms: HearingModificationService;
 let component: HearingSearchTableComponent;
 let fixture: ComponentFixture<HearingSearchTableComponent>;
+let displayedColumnsExpectedValues;
+let sampleHearingPart;
+
+sampleHearingPart = {
+    id: '-1',
+    caseNumber: 'cn-123',
+    caseTitle: 'ctitle-123',
+    caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
+    hearingType: { code: 'ht-code', description: 'ht-description' } as HearingType,
+    duration: moment.duration('PT10M'),
+    scheduleStart: now,
+    scheduleEnd: now,
+    version: 0,
+    priority: Priority.Low,
+    reservedJudgeId: '0',
+    reservedJudge: { name: 'judge-name'},
+    communicationFacilitator: 'cf',
+    notes: [],
+    isListed: true
+} as HearingViewmodel;
+
+displayedColumnsExpectedValues = [
+    { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
+    { columnName: 'caseTitle', expected: sampleHearingPart.caseTitle },
+    { columnName: 'priority', expected: priorityValue(sampleHearingPart.priority) },
+    { columnName: 'caseType', expected: sampleHearingPart.caseType.description },
+    { columnName: 'hearingType', expected: sampleHearingPart.hearingType.description },
+    { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
+    { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
+    { columnName: 'requestStatus', expected: 'listed' },
+    { columnName: 'listingDate', expected: sampleHearingPart.scheduleStart.unix() },
+    { columnName: 'amend', expected: undefined }
+];
 
 describe('HearingSearchTableComponent', () => {
   beforeEach(() => {
@@ -84,35 +117,6 @@ describe('HearingSearchTableComponent', () => {
     });
 
     describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
-        const sampleHearingPart = {
-            id: '-1',
-            caseNumber: 'cn-123',
-            caseTitle: 'ctitle-123',
-            caseType: { code: 'ct-code', description: 'ct-description' } as CaseType,
-            hearingType: { code: 'ht-code', description: 'ht-description' } as HearingType,
-            duration: moment.duration('PT10M'),
-            scheduleStart: now,
-            scheduleEnd: now,
-            version: 0,
-            priority: Priority.Low,
-            reservedJudgeId: '0',
-            reservedJudge: { name: 'judge-name'},
-            communicationFacilitator: 'cf',
-            notes: [],
-            isListed: true
-        } as HearingViewmodel;
-
-        const displayedColumnsExpectedValues = [
-            { columnName: 'caseNumber', expected: sampleHearingPart.caseNumber },
-            { columnName: 'caseTitle', expected: sampleHearingPart.caseTitle },
-            { columnName: 'priority', expected: priorityValue(sampleHearingPart.priority) },
-            { columnName: 'caseType', expected: sampleHearingPart.caseType.description },
-            { columnName: 'hearingType', expected: sampleHearingPart.hearingType.description },
-            { columnName: 'communicationFacilitator', expected: sampleHearingPart.communicationFacilitator },
-            { columnName: 'reservedJudge', expected: sampleHearingPart.reservedJudge.name },
-            { columnName: 'listingDate', expected: sampleHearingPart.scheduleStart.unix() },
-            { columnName: 'requestStatus', expected: component.getStatusText(sampleHearingPart) },
-        ];
 
         it(' tested columns should equal component displayedColumns field', () => {
             const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
@@ -149,6 +153,6 @@ function generateHearing(id: string): HearingViewmodel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudge: null,
-        isListed: false
+        isListed: true
     }
 }

@@ -11,7 +11,7 @@ import { Priority } from '../../models/priority-model';
     styleUrls: ['./hearings-filter.component.scss']
 })
 export class HearingsFilterComponent implements OnInit {
-    @Output() filter = new EventEmitter();
+    @Output() onFilter = new EventEmitter();
 
     @Input() judges: Judge[];
     @Input() caseTypes: CaseType[];
@@ -29,6 +29,6 @@ export class HearingsFilterComponent implements OnInit {
     }
 
     sendFilter() {
-        this.filter.emit(this.filters);
+        this.onFilter.emit(this.filters);
     }
 }

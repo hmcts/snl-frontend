@@ -67,4 +67,4 @@ matSortDirection="desc">
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator id="hearings-part-table-paginator" [length]="100" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator id="hearings-part-table-paginator" [length]="totalCount" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>

@@ -7,6 +7,17 @@ import * as fromRT from './reducers/room-type.reducer';
 import * as fromST from './reducers/session-type.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ReferenceDataEffects } from './effects/reference-data.effects';
+import { CaseTypeResolver } from './resolvers/case-type.resolver';
+import { HearingTypeResolver } from './resolvers/hearing-type.resolver';
+
+const services = [
+    ReferenceDataService
+];
+
+const resolvers = [
+    CaseTypeResolver,
+    HearingTypeResolver
+];
 
 @NgModule({
     imports: [
@@ -16,7 +27,7 @@ import { ReferenceDataEffects } from './effects/reference-data.effects';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [ReferenceDataService]
+    providers: [...services, ...resolvers]
 })
 export class ReferenceDataModule {
 }

@@ -12,6 +12,8 @@ import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 import { SearchHearingRequest } from '../models/search-hearing-request';
+import { HearingViewmodel } from '../models/hearing.viewmodel';
+import { Page } from '../../problems/models/problem.model';
 
 @Injectable()
 export class HearingPartService {
@@ -43,6 +45,13 @@ export class HearingPartService {
                 params: new HttpParams({ fromObject: request.httpParams })
             })
             .pipe(map(data => {return normalize(data, hearings)}));
+    }
+
+    searchHearingViewmodels(request: SearchHearingRequest): Observable<Page<HearingViewmodel>> {
+        return this.http
+            .post<Page<HearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+            })
     }
 
     assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {

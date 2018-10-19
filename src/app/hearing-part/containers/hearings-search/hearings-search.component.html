@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
   <div fxFlex="25%">
     <app-hearings-filter
-            (filter)="filter($event)"
+            (onFilter)="onFilter($event)"
             [judges]="judges$ | async"
             [caseTypes]="caseTypes$ | async"
             [hearingTypes]="hearingTypes$ | async">
@@ -15,7 +15,9 @@
     <div>
       <app-hearing-search-table id="hearing-search-table"
                                 [hearings]="filteredHearings"
-                                (onAmend)="onAmend($event)">
+                                [totalCount]="totalCount"
+                                (onAmend)="onAmend($event)"
+                                (onNextPage)="onNextPage($event)">
       </app-hearing-search-table>
     </div>
   </div>

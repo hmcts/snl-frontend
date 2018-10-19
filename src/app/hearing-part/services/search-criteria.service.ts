@@ -17,7 +17,7 @@ export class SearchCriteriaService {
             {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
             {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
             {key: 'reservedJudgeId', operation: 'in', value: filters.judges},
-            {key: 'listingDetails', operation: 'listingStatus', value: filters.listingDetails},
+            {key: 'listingStatus', operation: 'equals', value: filters.listingDetails},
         ].filter(this.isValueAnEmptyString)
          .filter(this.isValueAnEmptyArray);
 

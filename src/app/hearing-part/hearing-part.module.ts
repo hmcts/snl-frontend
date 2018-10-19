@@ -25,6 +25,9 @@ import { SessionsPageComponent } from '../sessions/containers/sessions-page/sess
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
 import { StoreService } from './services/store-service';
+import { CaseTypeResolver } from '../core/reference/resolvers/case-type.resolver';
+import { HearingTypeResolver } from '../core/reference/resolvers/hearing-type.resolver';
+import { JudgeResolver } from '../judges/resolvers/judge.resolver';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -56,7 +59,12 @@ export const COMPONENTS = [
           { path: '', redirectTo: 'search', pathMatch: 'full' },
           {
               path: 'search',
-              component: HearingsSearchComponent
+              component: HearingsSearchComponent,
+              resolve: {
+                  caseTypes: CaseTypeResolver,
+                  hearingTypes: HearingTypeResolver,
+                  judges: JudgeResolver
+              }
           }
       ]},
     ]),

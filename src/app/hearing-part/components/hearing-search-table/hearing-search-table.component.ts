@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    ViewChild
+} from '@angular/core';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import * as moment from 'moment';
 import { priorityValue } from '../../models/priority-model';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
@@ -14,7 +23,9 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @Input() hearings: HearingViewmodel[];
+    @Input() totalCount: number;
     @Output() onAmend = new EventEmitter<string>();
+    @Output() onNextPage = new EventEmitter<PageEvent>()
 
     dataSource: MatTableDataSource<HearingViewmodel>;
     displayedColumns = [
@@ -35,6 +46,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
+        this.paginator.page.subscribe(pageEvent => this.onNextPage.emit(pageEvent))
     }
 
     ngOnChanges() {
@@ -62,23 +74,14 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         };
 
         this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
     }
 
     parseDate(date) {
-        if (date) {
-            return moment(date).format('DD/MM/YYYY');
-        } else {
-            return null;
-        }
+        return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
     getStatusText(element: HearingViewmodel) {
-        if (element.isListed) {
-            return 'listed';
-        } else {
-            return 'unlisted';
-        }
+        return element.isListed ? 'listed' : 'unlisted';
     }
 
     amend(hearing: HearingViewmodel) {
