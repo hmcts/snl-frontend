@@ -31,7 +31,7 @@ export class NotesPopulatorService {
 
   private populateWithSingleNote(entity: any, notes: Note[], noteType: string, keyToPopulate: string) {
     const note = notes.find(item => item.type === noteType && item.entityId === entity.id);
-    if (note != undefined) {
+    if (note !== undefined) {
       entity[keyToPopulate] = note.content;
     }
   }
@@ -47,7 +47,7 @@ export class NotesPopulatorService {
         let item = entity[key];
         // if there's an array of other items, we go deeper to find notes
         if (item instanceof Array) {
-          item.map(item => entityIds.concat(this.collectEntityIds(item, entityIds)));
+          item.map(i => entityIds.concat(this.collectEntityIds(i, entityIds)));
         }
       }
     }
@@ -77,7 +77,7 @@ export class NotesPopulatorService {
         let item = entity[key];
         // if there's an array of other items, we go deeper to find note placeholders
         if (item instanceof Array) {
-          item.map((value, key) => item[key] = this.populateWithOtherNotes(value, notes));
+          item.map((value, k) => item[k] = this.populateWithOtherNotes(value, notes));
         }
       }
     }

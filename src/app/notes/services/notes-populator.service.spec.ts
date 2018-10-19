@@ -20,7 +20,7 @@ describe('NotesPopulatorService', () => {
   beforeEach(() => {
     service = new NotesPopulatorService(
       {
-        getByEntities: function(entitiesIds: string[]) {
+        getByEntities: function (entitiesIds: string[]) {
           return Observable.of([
             {
               entityId: PARENT_ENTITY_ID,
@@ -122,6 +122,5 @@ describe('NotesPopulatorService', () => {
 
     expect(inputEntity).toEqual(expectedResult);
   });
-
 
 });

@@ -36,22 +36,25 @@ export class ViewHearingComponent implements OnInit {
   }
 
   getListBetween() {
-    if(!this.hearing.scheduleStart && !this.hearing.scheduleEnd) {
+    const start = this.hearing.scheduleStart;
+    const end = this.hearing.scheduleEnd;
+
+    if (!start && !end) {
       return '';
     }
 
-    if(this.hearing.scheduleStart && !this.hearing.scheduleEnd) {
-      return 'after ' + this.formatDate(this.hearing.scheduleStart);
+    if (start && !end) {
+      return 'after ' + this.formatDate(start);
     }
 
-    if(!this.hearing.scheduleStart && this.hearing.scheduleEnd) {
-      return 'before ' + this.formatDate(this.hearing.scheduleEnd);
+    if (!start && end) {
+      return 'before ' + this.formatDate(end);
     }
 
-    if(this.hearing.scheduleStart && this.hearing.scheduleEnd) {
-      return this.formatDate(this.hearing.scheduleStart)
+    if (start && end) {
+      return this.formatDate(start)
         + ' - '
-        + this.formatDate(this.hearing.scheduleEnd);
+        + this.formatDate(end);
     }
   }
 
