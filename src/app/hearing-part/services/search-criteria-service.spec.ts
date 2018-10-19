@@ -29,7 +29,7 @@ describe('SearchCriteriaService', () => {
 
             expect(service.toSearchCriteria(customFilters)).toEqual([
                 {key: 'caseType', operation: 'in', value: ['a']},
-                {key: 'listingDetails', operation: 'listingStatus', value: 'all'}
+                {key: 'listingStatus', operation: 'equals', value: 'all'}
             ]);
         });
     });

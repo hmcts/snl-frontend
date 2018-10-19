@@ -1,61 +1,70 @@
 import { HearingsSearchComponent } from './hearings-search.component';
 import { Observable } from 'rxjs/Observable';
-import * as JudgeActions from '../../../judges/actions/judge.action';
-import * as fromHearingPartsActions from '../../actions/hearing-part.action';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
-import * as fromHearingActions from '../../actions/hearing.action';
 
 let component: HearingsSearchComponent;
-let storeService: any;
+let activeRoute: any;
 let searchCriteriaService: any;
+let hearingPartService: any;
 let hearingFilters: HearingsFilters;
+let searchCriteriaServiceResult = undefined;
 
 describe('HearingsSearchComponent', () => {
     beforeEach(() => {
-        storeService = jasmine.createSpyObj('storeService',
-            ['getCaseTypes$', 'getJudges$', 'getHearingTypes$', 'getFullHearings$', 'dispatch']);
-        storeService.getCaseTypes$.and.returnValue(Observable.of([]));
-        storeService.getJudges$.and.returnValue(Observable.of([]));
-        storeService.getHearingTypes$.and.returnValue(Observable.of([]));
-        storeService.getFullHearings$.and.returnValue(Observable.of([]));
-
+        activeRoute = {
+            snapshot: {
+                data: {
+                    judges: Observable.of([]),
+                    caseTypes: Observable.of([]),
+                    hearingTypes: Observable.of([]),
+                }
+            }
+        }
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
-        searchCriteriaService.toSearchCriteria.and.returnValue(undefined);
-        component = new HearingsSearchComponent(storeService, searchCriteriaService);
+        searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
+
+        hearingPartService = jasmine.createSpyObj('hearingPartService', ['searchHearingViewmodels']);
+        hearingPartService.searchHearingViewmodels.and.returnValue(Observable.of({
+            content: [],
+            totalElements: 0
+        }));
+
+        component = new HearingsSearchComponent(hearingPartService, activeRoute, searchCriteriaService);
         hearingFilters = DEFAULT_HEARING_FILTERS;
     });
 
     describe('When created', () => {
-        it('in constructor it should get reference data and full hearings', () => {
-            expect(storeService.getCaseTypes$).toHaveBeenCalled();
-            expect(storeService.getJudges$).toHaveBeenCalled();
-            expect(storeService.getHearingTypes$).toHaveBeenCalled();
-            expect(storeService.getFullHearings$).toHaveBeenCalled();
-        });
-
-        it('in OnInit it should call Judges and clear hearing parts state', () => {
-            component.ngOnInit();
-
-            expect(storeService.dispatch).toHaveBeenCalledWith(new JudgeActions.Get())
-            expect(storeService.dispatch).toHaveBeenCalledWith(new fromHearingPartsActions.Clear())
+        it('in constructor it should get reference data', () => {
+            expect(component.judges$).toEqual(activeRoute.snapshot.data.judges);
+            expect(component.caseTypes$).toEqual(activeRoute.snapshot.data.caseTypes);
+            expect(component.hearingTypes$).toEqual(activeRoute.snapshot.data.hearingTypes);
         });
     });
 
     describe('When filter', () => {
-        it('it should clear hearing part state', () => {
-            component.filter(hearingFilters);
-
-            expect(storeService.getCaseTypes$).toHaveBeenCalled();
-            expect(storeService.getJudges$).toHaveBeenCalled();
-            expect(storeService.getHearingTypes$).toHaveBeenCalled();
-            expect(storeService.getFullHearings$).toHaveBeenCalled();
-        });
-
         it('it should call for filtered hearings', () => {
-            component.filter(hearingFilters);
+            component.onFilter(hearingFilters);
+            expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
+                httpParams: {
+                    size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
+                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
+                },
+                searchCriteria: searchCriteriaServiceResult
+            })
+        });
+    });
 
-            expect(storeService.dispatch).toHaveBeenCalledWith(new fromHearingActions.Clear())
-            expect(storeService.dispatch).toHaveBeenCalledWith(new fromHearingActions.Search({searchCriteria: undefined}));
+    describe('When page changed', () => {
+        it('it should call for filtered hearings', () => {
+            let customPageSize = 100;
+            component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
+            expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
+                httpParams: {
+                    size: customPageSize,
+                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
+                },
+                searchCriteria: searchCriteriaServiceResult
+            })
         });
     });
 });

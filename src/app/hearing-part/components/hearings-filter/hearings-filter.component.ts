@@ -21,8 +21,7 @@ export class HearingsFilterComponent implements OnInit {
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     filters: HearingsFilters;
 
-    constructor() {
-    }
+    constructor() {}
 
     ngOnInit() {
         this.filters = DEFAULT_HEARING_FILTERS;

@@ -19,18 +19,24 @@ import { PageEvent } from '@angular/material';
 })
 export class HearingsSearchComponent {
 
+    public static DEFAULT_PAGING: PageEvent = {
+        pageSize: 10,
+        pageIndex: 0,
+        length: undefined
+    };
+
     judges$: Observable<Judge[]>;
     caseTypes$: Observable<CaseType[]>;
     hearingTypes$: Observable<HearingType[]>;
 
     filteredHearings: HearingViewmodel[] = [];
     latestFilters: HearingsFilters;
-    latestPaging: PageEvent;
+    latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
-    constructor(public hearingPartService: HearingPartService,
+    constructor(private hearingPartService: HearingPartService,
                 private route: ActivatedRoute,
-                public searchCriteriaService: SearchCriteriaService) {
+                private searchCriteriaService: SearchCriteriaService) {
         this.judges$ = this.route.snapshot.data.judges;
         this.caseTypes$ = this.route.snapshot.data.caseTypes;
         this.hearingTypes$ = this.route.snapshot.data.hearingTypes;
@@ -59,17 +65,10 @@ export class HearingsSearchComponent {
     }
 
     private toSearchHearingRequest(filters: HearingsFilters, pageEvent: PageEvent): SearchHearingRequest {
-        if (pageEvent === undefined) {
-            pageEvent = {
-                pageSize: 10,
-                pageIndex: 0
-            } as any
-        }
-
         return {
             httpParams: {
-                size: pageEvent.pageSize || 10,
-                page: pageEvent.pageIndex || 0,
+                size: pageEvent.pageSize,
+                page: pageEvent.pageIndex,
             },
             searchCriteria: this.searchCriteriaService.toSearchCriteria(filters)
         }

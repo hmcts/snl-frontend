@@ -24,7 +24,6 @@ import { RouterModule } from '@angular/router';
 import { SessionsPageComponent } from '../sessions/containers/sessions-page/sessions-page.component';
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
-import { StoreService } from './services/store-service';
 import { CaseTypeResolver } from '../core/reference/resolvers/case-type.resolver';
 import { HearingTypeResolver } from '../core/reference/resolvers/hearing-type.resolver';
 import { JudgeResolver } from '../judges/resolvers/judge.resolver';
@@ -71,7 +70,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, SearchCriteriaService, HearingModificationService, ListingCreateNotesConfiguration, StoreService],
+  providers: [HearingPartService, SearchCriteriaService, HearingModificationService, ListingCreateNotesConfiguration],
   entryComponents: [ListingCreateDialogComponent],
 })
 export class HearingPartModule { }

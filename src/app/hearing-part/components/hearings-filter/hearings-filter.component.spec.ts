@@ -18,7 +18,7 @@ describe('HearingsFilterComponent', () => {
     describe('When filter', () => {
         it('the filter emitter should be called with proper parameters', () => {
             const filters: HearingsFilters = DEFAULT_HEARING_FILTERS;
-            const filterEmit = spyOn(component.filter, 'emit');
+            const filterEmit = spyOn(component.onFilter, 'emit');
 
             component.filters = filters;
             component.sendFilter();
