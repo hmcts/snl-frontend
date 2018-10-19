@@ -15,12 +15,12 @@ describe('HearingsSearchComponent', () => {
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
 
-        judgeService = jasmine.createSpyObj('searchCriteriaService', ['get']);
-        judgeService.get.and.returnValue([]);
+        judgeService = jasmine.createSpyObj('judgeService', ['get']);
+        judgeService.get.and.returnValue(Observable.of([]));
 
         referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['getCaseTypes', 'getHearingTypes']);
-        referenceDataService.getCaseTypes.and.returnValue([]);
-        referenceDataService.getHearingTypes.and.returnValue([]);
+        referenceDataService.getCaseTypes.and.returnValue(Observable.of([]));
+        referenceDataService.getHearingTypes.and.returnValue(Observable.of([]));
 
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['searchHearingViewmodels']);
         hearingPartService.searchHearingViewmodels.and.returnValue(Observable.of({
@@ -34,6 +34,8 @@ describe('HearingsSearchComponent', () => {
 
     describe('When created', () => {
         it('in onInit it should get reference data', () => {
+            component.ngOnInit();
+
             expect(component.judges$).toEqual(Observable.of([]));
             expect(component.caseTypes$).toEqual(Observable.of([]));
             expect(component.hearingTypes$).toEqual(Observable.of([]));
