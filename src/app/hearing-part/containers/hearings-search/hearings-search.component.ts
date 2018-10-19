@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Judge } from '../../../judges/models/judge.model';
@@ -11,13 +11,15 @@ import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { HearingPartService } from '../../services/hearing-part-service';
 import { ActivatedRoute } from '@angular/router';
 import { PageEvent } from '@angular/material';
+import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
+import { JudgeService } from '../../../judges/services/judge.service';
 
 @Component({
     selector: 'app-hearings-search',
     templateUrl: './hearings-search.component.html',
     styleUrls: ['./hearings-search.component.scss']
 })
-export class HearingsSearchComponent {
+export class HearingsSearchComponent implements OnInit {
 
     public static DEFAULT_PAGING: PageEvent = {
         pageSize: 10,
@@ -35,11 +37,16 @@ export class HearingsSearchComponent {
     totalCount: number;
 
     constructor(private hearingPartService: HearingPartService,
+                private referenceDataService: ReferenceDataService,
+                private judgeService: JudgeService,
                 private route: ActivatedRoute,
                 private searchCriteriaService: SearchCriteriaService) {
-        this.judges$ = this.route.snapshot.data.judges;
-        this.caseTypes$ = this.route.snapshot.data.caseTypes;
-        this.hearingTypes$ = this.route.snapshot.data.hearingTypes;
+    }
+
+    ngOnInit() {
+        this.judges$ = this.judgeService.get();
+        this.caseTypes$ = this.referenceDataService.getCaseTypes();
+        this.hearingTypes$ = this.referenceDataService.getHearingTypes();
     }
 
     onAmend(hearingId: string) {

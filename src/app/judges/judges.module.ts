@@ -10,7 +10,6 @@ import { JudgeEffects } from './effects/judge.effects';
 import { CalendarContainerComponent } from '../core/callendar/containers/calendar-container.component';
 import { CoreModule } from '../core/core.module';
 import { FullCalendarModule } from '../common/ng-fullcalendar/module';
-import { JudgeResolver } from './resolvers/judge.resolver';
 
 @NgModule({
     imports: [
@@ -34,7 +33,7 @@ import { JudgeResolver } from './resolvers/judge.resolver';
         EffectsModule.forFeature([JudgeEffects])
     ],
     declarations: [MainComponent],
-    providers: [JudgeResolver]
+    providers: []
 })
 export class JudgesModule {
 }
