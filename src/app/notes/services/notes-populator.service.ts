@@ -65,7 +65,7 @@ export class NotesPopulatorService {
     const thisEntityNotes = notes
       .filter(item => item.entityId === entity.id)
       .sort((a, b) => {
-        return moment(a.createdAt) < moment(b.createdAt) ? 1 : 0
+        return moment(a.createdAt).isBefore(moment(b.createdAt)) ? 1 : -1
       });
 
     if (thisEntityNotes) {
