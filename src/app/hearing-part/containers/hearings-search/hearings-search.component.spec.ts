@@ -45,6 +45,7 @@ describe('HearingsSearchComponent', () => {
     describe('When filter', () => {
         it('it should call for filtered hearings', () => {
             component.onFilter(hearingFilters);
+
             expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
@@ -59,6 +60,7 @@ describe('HearingsSearchComponent', () => {
         it('it should call for filtered hearings', () => {
             let customPageSize = 100;
             component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
+
             expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: customPageSize,

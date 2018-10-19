@@ -6,6 +6,7 @@ import { AppConfig } from '../../app.config';
 import { HearingPartService } from './hearing-part-service';
 import moment = require('moment');
 import { v4 as uuid } from 'uuid';
+import { DEFAULT_SEARCH_HEARING_REQUEST } from '../models/search-hearing-request';
 
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
@@ -200,6 +201,16 @@ describe('HearingPartService', () => {
 
         it('should build proper url', () => {
             hearingPartService.updateListing(updateHearingPartRequest).subscribe();
+
+            httpMock.expectOne(expectedUrl).flush(hearingPartResponse);
+        });
+    });
+
+    describe('searchHearingViewmodels', () => {
+        const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing`;
+
+        it('should build proper url', () => {
+            hearingPartService.searchHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe();
 
             httpMock.expectOne(expectedUrl).flush(hearingPartResponse);
         });
