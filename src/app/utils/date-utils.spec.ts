@@ -36,5 +36,13 @@ describe('DateUtils', () => {
 
             expect(dateUtils.getHttpFriendly(momentDate)).toEqual('01-03-2013');
         })
-    })
+    });
+
+    describe('formatDuration', () => {
+        it('should format duration properly', () => {
+            const momentDuration = moment.duration(1500, 'minutes');
+
+            expect(dateUtils.formatDuration(momentDuration)).toEqual('25:00');
+        })
+    });
 });
