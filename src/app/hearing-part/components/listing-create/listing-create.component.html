@@ -6,7 +6,7 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
@@ -89,7 +89,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button id="save" mat-raised-button color="accent" form="list-form" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
+            <button id="save" mat-raised-button color="accent" (click)="listingCreateForm.ngSubmit.emit()" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>

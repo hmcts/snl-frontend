@@ -3,25 +3,24 @@ import { Observable } from 'rxjs/Observable';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 
 let component: HearingsSearchComponent;
-let activeRoute: any;
 let searchCriteriaService: any;
+let judgeService: any;
+let referenceDataService: any;
 let hearingPartService: any;
 let hearingFilters: HearingsFilters;
 let searchCriteriaServiceResult = undefined;
 
 describe('HearingsSearchComponent', () => {
     beforeEach(() => {
-        activeRoute = {
-            snapshot: {
-                data: {
-                    judges: Observable.of([]),
-                    caseTypes: Observable.of([]),
-                    hearingTypes: Observable.of([]),
-                }
-            }
-        }
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
+
+        judgeService = jasmine.createSpyObj('searchCriteriaService', ['get']);
+        judgeService.get.and.returnValue([]);
+
+        referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['getCaseTypes', 'getHearingTypes']);
+        referenceDataService.getCaseTypes.and.returnValue([]);
+        referenceDataService.getHearingTypes.and.returnValue([]);
 
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['searchHearingViewmodels']);
         hearingPartService.searchHearingViewmodels.and.returnValue(Observable.of({
@@ -29,15 +28,15 @@ describe('HearingsSearchComponent', () => {
             totalElements: 0
         }));
 
-        component = new HearingsSearchComponent(hearingPartService, activeRoute, searchCriteriaService);
+        component = new HearingsSearchComponent(hearingPartService, referenceDataService, judgeService, searchCriteriaService);
         hearingFilters = DEFAULT_HEARING_FILTERS;
     });
 
     describe('When created', () => {
-        it('in constructor it should get reference data', () => {
-            expect(component.judges$).toEqual(activeRoute.snapshot.data.judges);
-            expect(component.caseTypes$).toEqual(activeRoute.snapshot.data.caseTypes);
-            expect(component.hearingTypes$).toEqual(activeRoute.snapshot.data.hearingTypes);
+        it('in onInit it should get reference data', () => {
+            expect(component.judges$).toEqual(Observable.of([]));
+            expect(component.caseTypes$).toEqual(Observable.of([]));
+            expect(component.hearingTypes$).toEqual(Observable.of([]));
         });
     });
 

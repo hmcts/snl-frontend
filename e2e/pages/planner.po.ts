@@ -1,4 +1,4 @@
-import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions, WebElement } from 'protractor';
 import { Wait } from '../enums/wait';
 import moment = require('moment');
 import { Logger } from '../utils/logger';
@@ -73,8 +73,8 @@ export class PlannerPage {
         return resourceId;
     }
 
-    getRowWithEventsByResource(resourceId: string) {
-        return element.all(by.className('fc-time-area'))
+    async getRowWithEventsByResource(resourceId: string): Promise<WebElement> {
+        return await element.all(by.className('fc-time-area'))
             .last()
             .all(by.tagName('tr'))
             .filter(el => {
@@ -82,12 +82,12 @@ export class PlannerPage {
                     return value === resourceId;
                 });
             })
-            .first();
+            .first().getWebElement();
     }
 
-    getAllEventsForTheResource(resourceId: string): ElementArrayFinder {
-        return this.getRowWithEventsByResource(resourceId)
-            .all(by.className('fc-title'));
+    async getAllEventsForTheResource(resourceId: string): Promise<WebElement[]> {
+        const row = await this.getRowWithEventsByResource(resourceId)
+        return await row.findElements(by.className('fc-title'))
     }
 
     async clickOnEvent(elementToClick: ElementFinder, values: string[]) {
