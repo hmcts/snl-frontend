@@ -61,17 +61,6 @@ export class HearingPartEffects {
     );
 
     @Effect()
-    searchHearings: Observable<Action> = this.actions$.pipe(
-        ofType<fromHearings.Search>(HearingActionTypes.Search),
-        mergeMap(action =>
-            this.hearingPartService.searchHearings(action.payload).pipe(
-                mergeMap(data => [new fromHearings.UpsertMany(data.entities.hearings)]),
-                catchError((err) => of(new notificationActions.OpenDialog(HEARING_PART_DIALOGS[err.status])))
-            )
-        )
-    );
-
-    @Effect()
     searchHearing$: Observable<Action> = this.actions$.pipe(
         ofType<Search>(HearingPartActionTypes.Search),
         mergeMap(action =>

@@ -11,7 +11,7 @@ const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 let httpMock: HttpTestingController;
 let referenceDataService: ReferenceDataService;
 
-describe('StoreService', () => {
+describe('ReferenceDataService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],

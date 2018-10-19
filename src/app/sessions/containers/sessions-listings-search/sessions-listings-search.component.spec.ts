@@ -268,7 +268,7 @@ describe('SessionsListingsSearchComponent', () => {
     });
   });
 
-  describe('filterHearings', () => {
+  describe('filterSessions', () => {
     let sessionFilter: SessionFilters;
     beforeEach(() => {
       sessionFilter = defaultSessionFilter();

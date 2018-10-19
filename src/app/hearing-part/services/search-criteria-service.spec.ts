@@ -20,7 +20,7 @@ describe('SearchCriteriaService', () => {
         } as HearingsFilters;
     });
 
-    describe('toSearchCriteria', () => {
+    describe('When creating search criteria', () => {
         it('should build searchcriteria array', () => {
             let customFilters = {
                 ...filters,
@@ -29,6 +29,18 @@ describe('SearchCriteriaService', () => {
 
             expect(service.toSearchCriteria(customFilters)).toEqual([
                 {key: 'caseType', operation: 'in', value: ['a']},
+                {key: 'listingStatus', operation: 'equals', value: 'all'}
+            ]);
+        });
+
+        it('with reservervedJudgeId as "" then action is "in or null"', () => {
+            let customFilters = {
+                ...filters,
+                judges: ['', 'b']
+            };
+
+            expect(service.toSearchCriteria(customFilters)).toEqual([
+                {key: 'reservedJudgeId', operation: 'in or null', value: ['b']},
                 {key: 'listingStatus', operation: 'equals', value: 'all'}
             ]);
         });
