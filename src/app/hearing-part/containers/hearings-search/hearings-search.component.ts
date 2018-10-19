@@ -9,7 +9,6 @@ import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { HearingPartService } from '../../services/hearing-part-service';
-import { ActivatedRoute } from '@angular/router';
 import { PageEvent } from '@angular/material';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 import { JudgeService } from '../../../judges/services/judge.service';
@@ -39,7 +38,6 @@ export class HearingsSearchComponent implements OnInit {
     constructor(private hearingPartService: HearingPartService,
                 private referenceDataService: ReferenceDataService,
                 private judgeService: JudgeService,
-                private route: ActivatedRoute,
                 private searchCriteriaService: SearchCriteriaService) {
     }
 

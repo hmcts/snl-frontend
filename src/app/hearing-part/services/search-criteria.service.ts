@@ -21,6 +21,11 @@ export class SearchCriteriaService {
         ].filter(this.isValueAnEmptyString)
          .filter(this.isValueAnEmptyArray);
 
+        let reservedJudgesCriterion = criteria.find(criterion => criterion.key === 'reservedJudgeId')
+        if (reservedJudgesCriterion !== undefined && reservedJudgesCriterion.value.includes('')) {
+            reservedJudgesCriterion.operation = 'in or null'
+            reservedJudgesCriterion.value = (reservedJudgesCriterion.value as string[]).filter(v => v !== '')
+        }
         return criteria;
     }
 

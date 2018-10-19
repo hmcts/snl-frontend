@@ -46,7 +46,7 @@
 
     <mat-form-field>
       <mat-select id="selectJudge"  placeholder="Select reserved judges" multiple [(value)] = "filters.judges">
-        <mat-option value="nojudge">(No judge)</mat-option>
+        <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>
     </mat-form-field>
