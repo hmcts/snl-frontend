@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NotesService } from './notes.service';
 import { Note } from '../models/note.model';
-import moment = require('moment');
+import * as moment from 'moment';
 
 export enum NoteType {
   SpecialRequirements = 'Special Requirements',

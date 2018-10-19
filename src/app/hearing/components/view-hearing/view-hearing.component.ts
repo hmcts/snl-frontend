@@ -29,7 +29,7 @@ export class ViewHearingComponent implements OnInit {
     return moment(date).format();
   }
 
-  formatDuration(duration: number): string {
+  formatDuration(duration: string): string {
     const minutes = moment.duration(duration).asMinutes();
 
     return Math.ceil(minutes) + ' minutes';

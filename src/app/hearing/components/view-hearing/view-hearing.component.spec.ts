@@ -68,7 +68,7 @@ describe('ViewHearingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('getBetween returns proper AFTER period', () => {
+  it('getBetween returns proper AFTER period', () => {
     component.hearing = {
       scheduleStart: ISO_START_DATE,
       scheduleEnd: null
@@ -77,7 +77,7 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual('after ' + START_DATE);
   });
 
-  fit('getBetween returns proper BEFORE period', () => {
+  it('getBetween returns proper BEFORE period', () => {
     component.hearing = {
       scheduleStart: null,
       scheduleEnd: ISO_END_DATE
@@ -86,7 +86,7 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual('before ' + END_DATE);
   });
 
-  fit('getBetween returns proper FULL period', () => {
+  it('getBetween returns proper FULL period', () => {
     component.hearing = {
       scheduleStart: ISO_START_DATE,
       scheduleEnd: ISO_END_DATE
@@ -95,7 +95,7 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual( START_DATE + ' - ' + END_DATE);
   });
 
-  fit('getBetween returns proper NULL period', () => {
+  it('getBetween returns proper NULL period', () => {
     component.hearing = {
       scheduleStart: null,
       scheduleEnd: null
@@ -105,7 +105,7 @@ describe('ViewHearingComponent', () => {
   });
 
   it('formatDuration formats duration with minutes', () => {
-    const duration = component.formatDuration(10000);
-    expect(duration).toEqual('167 minutes');
+    const duration = component.formatDuration('PT30M');
+    expect(duration).toEqual('30 minutes');
   });
 });
