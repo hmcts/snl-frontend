@@ -48,7 +48,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        console.log('TODO: Implement going to amendment screen! Id:' + hearingId)
+        // 'TODO: Implement going to amendment screen!
     }
 
     onNextPage(pageEvent: PageEvent) {
