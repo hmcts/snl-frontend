@@ -15,6 +15,7 @@ export function getHttpFriendly(date: moment.Moment): string {
 }
 
 export function formatDuration(duration: moment.Duration): string {
+    duration = moment.duration(duration);
     const durationMs = duration.asMilliseconds();
     const durationOfOneDayInMs = 86400000;
     if (durationMs >= durationOfOneDayInMs) {
