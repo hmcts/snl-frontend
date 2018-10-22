@@ -28,12 +28,12 @@ matSortDirection="desc">
 
   <ng-container matColumnDef="caseType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseType?.description}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.caseTypeDescription}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="hearingType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.hearingTypeDescription}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">
@@ -43,7 +43,7 @@ matSortDirection="desc">
 
   <ng-container matColumnDef="reservedJudge">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.reservedJudgeName}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="requestStatus">

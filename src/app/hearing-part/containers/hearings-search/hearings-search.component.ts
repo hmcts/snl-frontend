@@ -5,13 +5,13 @@ import { Judge } from '../../../judges/models/judge.model';
 import { HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
-import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { HearingPartService } from '../../services/hearing-part-service';
 import { PageEvent } from '@angular/material';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 import { JudgeService } from '../../../judges/services/judge.service';
+import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 
 @Component({
     selector: 'app-hearings-search',
@@ -30,7 +30,7 @@ export class HearingsSearchComponent implements OnInit {
     caseTypes$: Observable<CaseType[]>;
     hearingTypes$: Observable<HearingType[]>;
 
-    filteredHearings: HearingViewmodel[] = [];
+    filteredHearings: FilteredHearingViewmodel[] = [];
     latestFilters: HearingsFilters;
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
@@ -62,7 +62,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     private fetchHearings(filterValues: HearingsFilters, pageEvent: PageEvent) {
-        this.hearingPartService.searchHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
+        this.hearingPartService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
             .subscribe(hearings => {
                 this.filteredHearings = hearings.content || [];
                 this.totalCount = hearings.totalElements;

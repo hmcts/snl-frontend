@@ -12,8 +12,9 @@ import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
 import { SearchHearingRequest } from '../models/search-hearing-request';
-import { HearingViewmodel } from '../models/hearing.viewmodel';
 import { Page } from '../../problems/models/problem.model';
+import { FilteredHearingViewmodel } from '../models/filtered-hearing-viewmodel';
+import * as moment from 'moment';
 
 @Injectable()
 export class HearingPartService {
@@ -47,11 +48,19 @@ export class HearingPartService {
             .pipe(map(data => {return normalize(data, hearings)}));
     }
 
-    searchHearingViewmodels(request: SearchHearingRequest): Observable<Page<HearingViewmodel>> {
+    seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {
         return this.http
-            .post<Page<HearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+            .post<Page<FilteredHearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
                 params: new HttpParams({ fromObject: request.httpParams })
-            })
+            }).pipe(map((hearingPage: Page<FilteredHearingViewmodel>) => {
+                hearingPage.content = hearingPage.content.map(hearing => {
+                    hearing.scheduleStart = moment(hearing.scheduleStart);
+                    hearing.scheduleEnd = moment(hearing.scheduleEnd);
+                    hearing.listingDate = moment(hearing.listingDate);
+                    return hearing;
+                });
+                return {...hearingPage, content: hearingPage.content}
+            }))
     }
 
     assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {

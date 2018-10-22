@@ -21,6 +21,7 @@ import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
+import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
@@ -137,22 +138,24 @@ describe('HearingSearchTableComponent', () => {
   });
 });
 
-function generateHearing(id: string): HearingViewmodel {
+function generateHearing(id: string): FilteredHearingViewmodel {
     return {
         id: id,
         caseNumber: null,
         caseTitle: null,
-        caseType: { code: '', description: '' } as CaseType,
-        hearingType: { code: '', description: '' } as HearingType,
+        caseTypeCode: '',
+        caseTypeDescription: '',
+        hearingTypeCode: '',
+        hearingTypeDescription: '',
         duration: null,
         scheduleStart: null,
         scheduleEnd: null,
-        notes: [],
         version: null,
         priority: null,
         communicationFacilitator: null,
         reservedJudgeId: null,
-        reservedJudge: null,
-        isListed: true
+        reservedJudgeName: null,
+        isListed: true,
+        listingDate: null
     }
 }

@@ -22,8 +22,8 @@ describe('HearingsSearchComponent', () => {
         referenceDataService.getCaseTypes.and.returnValue(Observable.of([]));
         referenceDataService.getHearingTypes.and.returnValue(Observable.of([]));
 
-        hearingPartService = jasmine.createSpyObj('hearingPartService', ['searchHearingViewmodels']);
-        hearingPartService.searchHearingViewmodels.and.returnValue(Observable.of({
+        hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
+        hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of({
             content: [],
             totalElements: 0
         }));
@@ -46,7 +46,7 @@ describe('HearingsSearchComponent', () => {
         it('it should call for filtered hearings', () => {
             component.onFilter(hearingFilters);
 
-            expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
+            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
                     page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
@@ -61,7 +61,7 @@ describe('HearingsSearchComponent', () => {
             let customPageSize = 100;
             component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
 
-            expect(hearingPartService.searchHearingViewmodels).toHaveBeenCalledWith({
+            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: customPageSize,
                     page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,

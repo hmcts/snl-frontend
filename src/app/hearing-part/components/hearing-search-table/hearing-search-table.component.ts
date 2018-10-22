@@ -11,8 +11,8 @@ import {
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import * as moment from 'moment';
 import { priorityValue } from '../../models/priority-model';
-import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { getPropertyMemberOrNull } from '../../../utils/js-extensions';
+import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 
 @Component({
     selector: 'app-hearing-search-table',
@@ -23,12 +23,12 @@ import { getPropertyMemberOrNull } from '../../../utils/js-extensions';
 export class HearingSearchTableComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
-    @Input() hearings: HearingViewmodel[];
+    @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
     @Output() onAmend = new EventEmitter<string>();
     @Output() onNextPage = new EventEmitter<PageEvent>()
 
-    dataSource: MatTableDataSource<HearingViewmodel>;
+    dataSource: MatTableDataSource<FilteredHearingViewmodel>;
     displayedColumns = [
         'caseNumber',
         'caseTitle',
@@ -83,11 +83,11 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
-    getStatusText(element: HearingViewmodel) {
+    getStatusText(element: FilteredHearingViewmodel) {
         return element.isListed ? 'listed' : 'unlisted';
     }
 
-    amend(hearing: HearingViewmodel) {
+    amend(hearing: FilteredHearingViewmodel) {
         this.onAmend.emit(hearing.id);
     }
 }
