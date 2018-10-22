@@ -17,6 +17,8 @@ export class HearingsFilterComponent {
     @Input() caseTypes: CaseType[];
     @Input() hearingTypes: HearingType[];
 
+    caseTitleMaxLength = 200;
+    caseNumberMaxLength = 200;
     priorities = Object.keys(Priority);
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
     filters: HearingsFilters = DEFAULT_HEARING_FILTERS;
