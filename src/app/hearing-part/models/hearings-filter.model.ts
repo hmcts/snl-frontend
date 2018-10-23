@@ -1,3 +1,4 @@
+import { ListingStatus } from './listing-status-model';
 
 export interface HearingsFilters {
     caseNumber: string,
@@ -7,7 +8,7 @@ export interface HearingsFilters {
     hearingTypes: string[],
     communicationFacilitators: string[],
     judges: string[],
-    listingDetails: string
+    listingStatus: ListingStatus
 }
 
 export const DEFAULT_HEARING_FILTERS: HearingsFilters = {
@@ -18,5 +19,5 @@ export const DEFAULT_HEARING_FILTERS: HearingsFilters = {
     hearingTypes: [],
     communicationFacilitators: [],
     judges: [],
-    listingDetails: 'all'
+    listingStatus: ListingStatus.All
 }
