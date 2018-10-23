@@ -47,7 +47,7 @@ export class NotesPopulatorService {
         let item = entity[key];
         // if there's an array of other items, we go deeper to find notes
         if (item instanceof Array) {
-          item.map(i => entityIds.concat(this.collectEntityIds(i, entityIds)));
+          item.forEach(i => entityIds.concat(this.collectEntityIds(i, entityIds)));
         }
       }
     }
@@ -77,7 +77,7 @@ export class NotesPopulatorService {
         let item = entity[key];
         // if there's an array of other items, we go deeper to find note placeholders
         if (item instanceof Array) {
-          item.map((value, k) => item[k] = this.populateWithOtherNotes(value, notes));
+          item.forEach((value, k) => item[k] = this.populateWithOtherNotes(value, notes));
         }
       }
     }
