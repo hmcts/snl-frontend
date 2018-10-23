@@ -28,14 +28,14 @@ describe('SearchCriteriaService', () => {
             ]);
         });
 
-        it('with reservedJudgeId as "" then action is "in or null"', () => {
+        it('with reservedJudge.id as "" then action is "in or null"', () => {
             let customFilters = {
                 ...filters,
                 judges: ['', 'b']
             };
 
             expect(service.toSearchCriteria(customFilters)).toEqual([
-                {key: 'reservedJudgeId', operation: 'in or null', value: ['b']},
+                {key: 'reservedJudge.id', operation: 'in or null', value: ['b']},
             ]);
         });
 

@@ -17,12 +17,12 @@ export class SearchCriteriaService {
             {key: 'caseType', operation: 'in', value: filters.caseTypes},
             {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
             {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
-            {key: 'reservedJudgeId', operation: 'in', value: filters.judges},
+            {key: 'reservedJudge.id', operation: 'in', value: filters.judges},
             {key: 'listingStatus', operation: 'equals', value: filters.listingStatus},
         ].filter(this.isValueAnEmptyString)
          .filter(this.isValueAnEmptyArray);
 
-        let reservedJudgesCriterion = criteria.find(criterion => criterion.key === 'reservedJudgeId')
+        let reservedJudgesCriterion = criteria.find(criterion => criterion.key === 'reservedJudge.id')
         if (reservedJudgesCriterion !== undefined && reservedJudgesCriterion.value.includes('')) {
             reservedJudgesCriterion.operation = 'in or null';
             reservedJudgesCriterion.value = (reservedJudgesCriterion.value as string[]).filter(v => v !== '')
