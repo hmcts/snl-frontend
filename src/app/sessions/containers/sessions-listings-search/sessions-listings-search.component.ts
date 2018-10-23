@@ -110,7 +110,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             hearingVersion: this.selectedHearing.version,
             sessionsData: this.selectedSessions.map(session => {return {sessionId: session.id, sessionVersion: session.version}}),
             userTransactionId: uuid(),
-            start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
+            start: this.selectedSessions.length === 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment;
 
         this.hearingModificationService.assignWithSession(assignment);
