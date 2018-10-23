@@ -126,7 +126,7 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
                 reservedJudge: judges[h.reservedJudgeId],
                 notes: sortedNotes,
                 isListed: !unlisted,
-                numberOfSessionsNeeded: 2 // @TODO: change after backend is ready
+                numberOfSessionsNeeded: 1 // @TODO: change after backend is ready
             }
         });
 

@@ -132,8 +132,8 @@ export class PlannerComponent implements OnInit {
                         hearingPartId: hearingPartId,
                         hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
-                        sessionsData: [{sessionId: selectedSessionId,
-                            sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version}],
+                        sessionData: {sessionId: selectedSessionId,
+                            sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version},
                         start: null
                     } as HearingPartToSessionAssignment);
 

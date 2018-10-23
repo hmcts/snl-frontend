@@ -19,7 +19,7 @@ export class HearingModificationService {
     assignWithSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
         this.store.dispatch(new AssignToSession(assignment));
         this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(assignment.sessionsData[0].sessionId, assignment.userTransactionId)))
+        this.store.dispatch(new InitializeTransaction(this.createTransaction(null, assignment.userTransactionId)))
     }
 
     createListingRequest(listing: ListingCreate) {
