@@ -103,15 +103,13 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
             const filteredNotes = Object.values(notes).filter(note => note.entityId === h.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
-            })
+            });
 
             const ownedHearingParts = hearingParts.filter(hp => hp.hearingInfo === h.id);
             const unlisted = ownedHearingParts.filter(hp => hp.sessionId === null).length !== 0;
 
-            console.log(ownedHearingParts.filter(hp => hp.hearingInfo === h.id));
-
-            const scheduleStartObj = moment(h.scheduleStart)
-            const scheduleEndObj = moment(h.scheduleEnd)
+            const scheduleStartObj = moment(h.scheduleStart);
+            const scheduleEndObj = moment(h.scheduleEnd);
             return {
                 id: h.id,
                 caseNumber: h.caseNumber,
@@ -127,7 +125,8 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
                 hearingType: hearingTypes[h.hearingTypeCode],
                 reservedJudge: judges[h.reservedJudgeId],
                 notes: sortedNotes,
-                isListed: !unlisted
+                isListed: !unlisted,
+                numberOfSessionsNeeded: 2 // @TODO: change after backend is ready
             }
         });
 

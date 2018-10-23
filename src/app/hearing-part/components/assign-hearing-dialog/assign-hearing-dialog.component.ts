@@ -27,12 +27,14 @@ export class AssignHearingDialogComponent implements OnInit {
   notes: NoteViewmodel[];
 
   private selectedHearingId: string;
+  startTimeDisplayed: boolean;
 
   constructor(public dialogRef: MatDialogRef<any>,
-              @Inject(MAT_DIALOG_DATA) public data: string,
+              @Inject(MAT_DIALOG_DATA) public data: any,
               public notesConfig: HearingAssignmentNotesConfiguration,
               public notesPreparerService: NotesPreparerService) {
-    this.selectedHearingId = data;
+    this.selectedHearingId = data.hearingId;
+    this.startTimeDisplayed = data.startTimeDisplayed;
   }
 
   ngOnInit() {

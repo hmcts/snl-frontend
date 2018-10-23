@@ -49,11 +49,12 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
-    selectedSession: SessionViewModel;
-    selectedHearingPart: HearingViewmodel;
+    selectedSessions: SessionViewModel[];
+    selectedHearing: HearingViewmodel;
     filters$ = new Subject<SessionFilters>();
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
+    errorMessageToDisplay: string;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -99,18 +100,20 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     selectHearingPart(hearingPart: HearingViewmodel) {
-        this.selectedHearingPart = hearingPart;
+        this.selectedHearing = hearingPart;
     }
 
-    assignToSession(assignHearingData: AssignHearingData) {
-        this.hearingModificationService.assignWithSession({
-            hearingId: this.selectedHearingPart.id,
-            hearingVersion: this.selectedHearingPart.version,
-            sessionId: this.selectedSession.id,
-            sessionVersion: this.selectedSession.version,
+    assignToSessions(assignHearingData: AssignHearingData) {
+
+        let assignment = {
+            hearingId: this.selectedHearing.id,
+            hearingVersion: this.selectedHearing.version,
+            sessionsData: this.selectedSessions.map(session => {return {sessionId: session.id, sessionVersion: session.version}}),
             userTransactionId: uuid(),
-            start: moment(assignHearingData.startTime, 'HH:mm').toDate()
-        } as HearingToSessionAssignment);
+            start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
+        } as HearingToSessionAssignment;
+
+        this.hearingModificationService.assignWithSession(assignment);
 
         this.openSummaryDialog().afterClosed().subscribe((accepted) => {
             this.store.dispatch(new fromHearingPartsActions.Search());
@@ -118,25 +121,40 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
             }
 
-            this.selectedHearingPart = undefined;
-            this.selectedSession = undefined;
+            this.selectedHearing = undefined;
+            this.selectedSessions = undefined;
         });
     }
 
-    selectSession(session: SessionViewModel) {
-        this.selectedSession = session;
+    selectSession(session: SessionViewModel[]) {
+        this.selectedSessions = session;
     }
 
     assignButtonEnabled() {
-        return !!(safe(() => this.selectedHearingPart.id) && (safe(() => this.selectedSession.id)));
+        if ((safe(() => this.selectedHearing.numberOfSessionsNeeded) === safe(() => this.selectedSessions.length))
+            && (this.selectedHearing !== undefined)) {
+            this.errorMessageToDisplay = '';
+            return this.checkIfOnlyOneJudgeSelected();
+        } else {
+            this.errorMessageToDisplay = 'not enough sessions selected';
+        }
+    }
+
+    private checkIfOnlyOneJudgeSelected() {
+        if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
+            this.errorMessageToDisplay = 'only one judge should be specified';
+            return false;
+        } else {
+          return true;
+        }
     }
 
     openAssignDialog() {
         this.dialog.open(AssignHearingDialogComponent, {
-            data: this.selectedHearingPart.id
+            data: {hearingId: this.selectedHearing.id, startTimeDisplayed: !(this.selectedSessions.length > 1)}
         }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
-                this.assignToSession(data)
+                this.assignToSessions(data)
             }
         })
     }

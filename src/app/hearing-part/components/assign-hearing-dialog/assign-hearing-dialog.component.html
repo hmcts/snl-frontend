@@ -2,9 +2,11 @@
   <div>Choose start time</div>
   <div>
     <form [formGroup]="formGroup" novalidate (ngSubmit)="onListHearing()" id="list-hearing-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
-      <mat-form-field>
-        <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="startTime">
-      </mat-form-field>
+      <div *ngIf="startTimeDisplayed">
+        <mat-form-field>
+          <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="startTime">
+        </mat-form-field>
+      </div>
 
       <app-note-list id="hearing-assignment-notes" #hearingAssignmentNotes [notes]="notes"></app-note-list>
 

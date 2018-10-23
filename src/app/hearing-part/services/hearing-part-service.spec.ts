@@ -175,7 +175,7 @@ describe('HearingPartService', () => {
         });
     })
 
-    describe('assignToSession', () => {
+    describe('assignToSessions', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing-part/ba766510-e898-4919-8d3b-25f3e1b932aa`;
 
         it('should build proper url', () => {

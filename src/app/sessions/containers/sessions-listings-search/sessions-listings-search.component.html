@@ -26,12 +26,15 @@
       Actions:
     </div>
 
-    <button [disabled]="!assignButtonEnabled()" mat-raised-button
-            color="accent"
-            fxFlexAlign="center"
-            (click)="openAssignDialog()"
-            class="get-sessions-button"
-            id="assign">List Hearing</button>
+    <div fxLayout="col">
+      <button [disabled]="!assignButtonEnabled()" mat-raised-button
+              color="accent"
+              fxFlexAlign="center"
+              (click)="openAssignDialog()"
+              class="get-sessions-button"
+              id="assign">List Hearing</button>
+      <p>{{errorMessageToDisplay}}</p>
+    </div>
 
     <div class="heading">
       Sessions:
@@ -39,7 +42,7 @@
 
     <div>
       <app-session-table
-              (selectSession)="selectSession($event)"
+              (selectSessions)="selectSession($event)"
               (viewNotes)="openNotesDialog($event)"
               [sessions]="filteredSessions">
       </app-session-table>
