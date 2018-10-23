@@ -136,13 +136,13 @@ export class SessionsListingsSearchComponent implements OnInit {
             this.errorMessageToDisplay = '';
             return this.checkIfOnlyOneJudgeSelected();
         } else {
-            this.errorMessageToDisplay = 'not enough sessions selected';
+            this.errorMessageToDisplay = 'Incorrect number of sessions selected';
         }
     }
 
     private checkIfOnlyOneJudgeSelected() {
         if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
-            this.errorMessageToDisplay = 'only one judge should be specified';
+            this.errorMessageToDisplay = 'Only one judge should be specified';
             return false;
         } else {
           return true;

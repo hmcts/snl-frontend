@@ -40,6 +40,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         'communicationFacilitator',
         'priority',
         'reservedJudge',
+        'requiredSessions',
         'notes',
         'scheduleStart',
         'scheduleEnd',
