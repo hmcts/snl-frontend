@@ -16,9 +16,43 @@ const app = express();
 
 const PORT = process.env.PORT || 3451;
 const DIST_FOLDER = join(process.cwd());
+const helmet = require('helmet');
+
 
 app.use(cors())
 app.options('*', cors()) // include before other routes
+
+//helmetjs configuration
+app.use(helmet());
+
+// Referrer policy configuration
+app.use(helmet.referrerPolicy({
+    policy: 'origin'
+}));
+
+//CSP settings
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ['\'self\''],
+        fontSrc: ['\'self\' data:'],
+        scriptSrc: [
+            '\'self\'',
+            'www.google-analytics.com'
+        ],
+        connectSrc: ['\'self\''],
+        mediaSrc: ['\'self\''],
+        frameSrc: ['\'none\''],
+        imgSrc: ['\'self\'', 'www.google-analytics.com'],
+        frameAncestors: ['\'self\'']
+    },
+    browserSniff: true,
+    setAllHeaders: true
+}));
+app.use(helmet.hidePoweredBy({ setTo: 'shhh..Its a secret' }));
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.noCache());
+app.use(helmet.ieNoOpen());
+
 
 app.all('/*', function(req, res, next) {
     let allowedOrigins = [CONFIG.apiUrl, CONFIG.notesUrl];
@@ -72,3 +106,4 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Node server listening on http://localhost:${PORT}`);
 });
+
