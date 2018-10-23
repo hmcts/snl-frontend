@@ -122,9 +122,9 @@ export class ListingCreateComponent implements OnInit {
         this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
     }
 
-    updateDuration(durationValue) {
+    updateDuration(durationValue, unit) {
         if (durationValue !== undefined && durationValue !== null) {
-            this.listing.hearing.duration = moment.duration(durationValue, 'minute');
+            this.listing.hearing.duration = moment.duration(durationValue, unit);
         }
     }
 
@@ -178,6 +178,7 @@ export class ListingCreateComponent implements OnInit {
                 reservedJudgeId: undefined,
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
+                numberOfSessions: 1
             },
             notes: []
         };
@@ -201,10 +202,15 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.hearingTypeCode,
                 [Validators.required]
             ),
-            duration: new FormControl(
-                this.listing.hearing.duration ? this.listing.hearing.duration.asMinutes() : undefined,
-                [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
-            ),
+            listingType: new FormGroup({
+                duration: new FormControl(
+                    this.listing.hearing.duration ? this.listing.hearing.duration.asMinutes() : undefined,
+                    [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
+                ),
+                numberOfSessions: new FormControl(
+                    this.listing.hearing.numberOfSessions, [Validators.min(1)]
+                )
+            }),
             targetDates: new FormGroup({
                 targetFrom: new FormControl(this.listing.hearing.scheduleStart),
                 targetTo: new FormControl(this.listing.hearing.scheduleEnd),
