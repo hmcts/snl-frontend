@@ -9,6 +9,10 @@ let referenceDataService: any;
 let hearingPartService: any;
 let hearingFilters: HearingsFilters;
 let searchCriteriaServiceResult = undefined;
+let hearingPartServiceResult = {
+    content: [],
+    totalElements: 7
+}
 
 describe('HearingsSearchComponent', () => {
     beforeEach(() => {
@@ -23,10 +27,7 @@ describe('HearingsSearchComponent', () => {
         referenceDataService.getHearingTypes.and.returnValue(Observable.of([]));
 
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
-        hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of({
-            content: [],
-            totalElements: 0
-        }));
+        hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
         component = new HearingsSearchComponent(hearingPartService, referenceDataService, judgeService, searchCriteriaService);
         hearingFilters = DEFAULT_HEARING_FILTERS;
@@ -43,7 +44,7 @@ describe('HearingsSearchComponent', () => {
     });
 
     describe('When filter', () => {
-        it('it should call for filtered hearings', () => {
+        it('it should call for filtered hearings and update totalCount and hearings properties', () => {
             component.onFilter(hearingFilters);
 
             expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
@@ -52,7 +53,10 @@ describe('HearingsSearchComponent', () => {
                     page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
                 },
                 searchCriteria: searchCriteriaServiceResult
-            })
+            });
+
+            expect(component.totalCount).toEqual(hearingPartServiceResult.totalElements);
+            expect(component.filteredHearings).toEqual(hearingPartServiceResult.content);
         });
     });
 
