@@ -67,6 +67,7 @@ export class PlannerPage {
                 });
             })
             .first()
+            .getWebElement()
             .getAttribute('data-resource-id');
 
         Logger.log('"' + nameToSearch + '" resource id: ' + resourceId);
@@ -109,8 +110,8 @@ export class PlannerPage {
 
     async clickAndValidateDialogContent(event: ElementFinder, valuesToCheck: string[]) {
         await this.clickOnEvent(event, valuesToCheck);
-        const idDialogDisplayed = await this.sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
-        expect(idDialogDisplayed).toBeTruthy();
+        const isDialogDisplayed = await this.sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
+        await expect(isDialogDisplayed).toBeTruthy();
         await this.sessionDetailsDialog.close();
     }
 }

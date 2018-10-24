@@ -27,7 +27,7 @@ let sessionsToCreate: SessionCreate[];
 describe('Planner, check newly created sessions existence', () => {
 
     beforeAll(async () => {
-        await loginFlow.relogin();
+        await loginFlow.loginIfNeeded();
         await navigationFlow.gotoPlannerPage();
         await plannerPage.clickJudgeViewButton();
         await plannerPage.openDayView();

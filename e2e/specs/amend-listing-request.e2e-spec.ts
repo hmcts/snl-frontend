@@ -1,5 +1,5 @@
-import { LoginFlow } from './../flows/login.flow';
-import { NavigationFlow } from './../flows/navigation.flow';
+import { LoginFlow } from '../flows/login.flow';
+import { NavigationFlow } from '../flows/navigation.flow';
 import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { v4 as uuid } from 'uuid';
@@ -8,7 +8,7 @@ import { LISTING_NOTES, ListingCreationPage } from '../pages/listing-creation.po
 import * as moment from 'moment';
 import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
-import { API }from '../utils/api';
+import { API } from '../utils/api';
 import { CreateListingRequestBody } from '../models/create-listing-request-body';
 
 const now = moment()
@@ -35,11 +35,11 @@ const otherHearingType = HearingTypes.ADJOURNED;
 const specReqNoteValue = 'SPEC REQ';
 
 const displayedListingRequestData = {
-  caseNumber,
-  caseTitle,
-  caseType,
-  hearingType,
-  priority
+    caseNumber,
+    caseTitle,
+    caseType,
+    hearingType,
+    priority
 };
 
 const listingRequestCreate: CreateListingRequestBody = {
@@ -48,7 +48,7 @@ const listingRequestCreate: CreateListingRequestBody = {
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
-    await loginFlow.relogin()
+    await loginFlow.loginIfNeeded()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
