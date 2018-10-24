@@ -49,12 +49,13 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
-    selectedSessions: SessionViewModel[];
-    selectedHearing: HearingViewmodel;
+    selectedSessions: SessionViewModel[] = [];
+    selectedHearing: HearingViewmodel = undefined;
     filters$ = new Subject<SessionFilters>();
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
-    errorMessageToDisplay: string;
+    errorMessage: string;
+    numberOfSessionsNeeded: number = 0;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -99,8 +100,13 @@ export class SessionsListingsSearchComponent implements OnInit {
             .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
     }
 
-    selectHearingPart(hearingPart: HearingViewmodel) {
-        this.selectedHearing = hearingPart;
+    selectHearing(hearing: HearingViewmodel) {
+        this.selectedHearing = hearing;
+        this.numberOfSessionsNeeded = hearing !== undefined ? hearing.numberOfSessionsNeeded : 0;
+    }
+
+    selectSession(sessions: SessionViewModel[]) {
+        this.selectedSessions = sessions;
     }
 
     assignToSessions(assignHearingData: AssignHearingData) {
@@ -126,23 +132,22 @@ export class SessionsListingsSearchComponent implements OnInit {
         });
     }
 
-    selectSession(session: SessionViewModel[]) {
-        this.selectedSessions = session;
-    }
-
     assignButtonEnabled() {
-        if ((safe(() => this.selectedHearing.numberOfSessionsNeeded) === safe(() => this.selectedSessions.length))
-            && (this.selectedHearing !== undefined)) {
-            this.errorMessageToDisplay = '';
+        if (this.selectedHearing === undefined && (this.selectedSessions.length === 0)) {
+            this.errorMessage = '';
+            return false;
+        }
+        if (this.numberOfSessionsNeeded === this.selectedSessions.length && this.selectedHearing !== undefined) {
+            this.errorMessage = '';
             return this.checkIfOnlyOneJudgeSelected();
         } else {
-            this.errorMessageToDisplay = 'Incorrect number of sessions selected';
+            this.errorMessage = 'Incorrect number of sessions selected';
         }
     }
 
     private checkIfOnlyOneJudgeSelected() {
         if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
-            this.errorMessageToDisplay = 'Only one judge should be specified';
+            this.errorMessage = 'Only one judge should be specified';
             return false;
         } else {
           return true;

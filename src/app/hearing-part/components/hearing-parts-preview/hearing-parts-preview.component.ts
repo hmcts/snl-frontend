@@ -148,16 +148,16 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         })
     }
 
+    toggleHearing(hearing) {
+        this.selectedHearing.toggle(hearing);
+        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : undefined);
+    }
+
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
         });
-    }
-
-    toggleHearing(hearing) {
-        this.selectedHearing.toggle(hearing);
-        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : {});
     }
 
     private getPropertyMemberOrNull(item: object, property: string, key: string ) {

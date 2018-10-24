@@ -18,7 +18,7 @@
       <app-hearing-parts-preview id="hearing-part-preview"
                                  [hearings]="hearings$ | async"
               [sessions]="sessions$ | async"
-                                 (selectHearing)="selectHearingPart($event)">
+                                 (selectHearing)="selectHearing($event)">
       </app-hearing-parts-preview>
     </div>
 
@@ -33,7 +33,7 @@
               (click)="openAssignDialog()"
               class="get-sessions-button"
               id="assign">List Hearing</button>
-      <span class="error-message">{{errorMessageToDisplay}}</span>
+      <span class="error-message">{{errorMessage}}</span>
     </div>
 
     <div class="heading">
