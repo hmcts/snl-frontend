@@ -64,6 +64,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             switch (property) {
                 case 'duration':
                     return moment.duration(item[property]).asMilliseconds();
+                case 'requiredSessions':
+                    return item['numberOfSessionsNeeded'];
 
                 case 'reservedJudge':
                     return this.getPropertyMemberOrNull(item, property, 'name');
