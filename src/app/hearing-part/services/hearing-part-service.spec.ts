@@ -117,7 +117,8 @@ const createHearingPartRequest: CreateHearingRequest = {
     reservedJudgeId: null,
     communicationFacilitator: null,
     priority: null,
-    userTransactionId: uuid()
+    userTransactionId: uuid(),
+    numberOfSessions: 1
 };
 
 const updateHearingPartRequest: UpdateHearingRequest = {

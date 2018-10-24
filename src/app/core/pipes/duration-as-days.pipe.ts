@@ -8,6 +8,6 @@ export class DurationAsDaysPipe implements PipeTransform {
         if (!duration) {
             return undefined;
         }
-        return moment.duration(duration).asDays();
+        return Math.ceil(moment.duration(duration).asDays());
     }
 }

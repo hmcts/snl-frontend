@@ -36,22 +36,21 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-tab-group formGroupName="listingType">
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            Single session
-                        </ng-template>
+                <mat-tab-group formGroupName="listingType"
+                               [selectedIndex]="listingTypeSelection.value"
+                               (selectedIndexChange)="listingTypeSelection.setValue($event)">
+                    <mat-tab label="Single session">
+                        <div class="tab-content">
                         <mat-form-field>
-                            <input id="duration-minutes" formControlName="duration" [ngModel]="durationMinutes | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" >
+                            <input id="duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" >
                             <span matSuffix>Minutes</span>
                         </mat-form-field>
+                        </div>
                     </mat-tab>
-                    <mat-tab>
-                        <ng-template mat-tab-label>
-                            Multi session
-                        </ng-template>
+                    <mat-tab label="Multi session">
+                        <div class="tab-content">
                         <mat-form-field>
-                            <input id="duration-days" formControlName="duration" [ngModel]="durationDays | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" >
+                            <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" >
                             <span matSuffix>Days</span>
                         </mat-form-field>
 
@@ -59,6 +58,7 @@
                             <input id="number-of-sessions" formControlName="numberOfSessions" [ngModel]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="1" >
                             <span matSuffix>Sessions</span>
                         </mat-form-field>
+                        </div>
                     </mat-tab>
                 </mat-tab-group>
 

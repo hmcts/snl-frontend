@@ -99,7 +99,8 @@ describe('HearingAction', () => {
                     reservedJudgeId: 'john',
                     communicationFacilitator: '123',
                     userTransactionId: '123',
-                    version: 1
+                    version: 1,
+                    numberOfSessions: 1
                 },
                 notes: []
             };
@@ -126,7 +127,8 @@ describe('HearingAction', () => {
                 priority: Priority.Low,
                 reservedJudgeId: 'judge',
                 communicationFacilitator: 'translator',
-                userTransactionId: '123'
+                userTransactionId: '123',
+                numberOfSessions: 1
             };
             const action = new CreateListingRequest(payload);
 

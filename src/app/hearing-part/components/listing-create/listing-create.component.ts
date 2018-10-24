@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
-import { AbstractControl, FormControl, FormGroup, Validators, FormGroupDirective } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
@@ -50,12 +50,17 @@ export class ListingCreateComponent implements OnInit {
     judges: Judge[] = [];
     hearings: HearingType[] = [];
     noteViewModels: NoteViewmodel[] = [];
+    listingTypeSelection = new FormControl();
+    public listing: ListingCreate;
 
     private _caseTypes: CaseType[] = [];
-    get caseTypes(): CaseType[] { return this._caseTypes }
+    get caseTypes(): CaseType[] {
+        return this._caseTypes;
+    }
+
     set caseTypes(caseTypes: CaseType[]) {
-        this._caseTypes = caseTypes
-        const caseTypeCode = safe(() => this.listing.hearing.caseTypeCode)
+        this._caseTypes = caseTypes;
+        const caseTypeCode = safe(() => this.listing.hearing.caseTypeCode);
 
         if (caseTypeCode) {
             this.hearings = this.getHearingTypesFromCaseType(caseTypeCode);
@@ -64,11 +69,9 @@ export class ListingCreateComponent implements OnInit {
 
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
-    numberOfSeconds = 60
+    numberOfSeconds = 60;
     binIntMaxValue = 9223372036854775807;
     limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
-
-    public listing: ListingCreate;
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -96,12 +99,13 @@ export class ListingCreateComponent implements OnInit {
     }
 
     save() {
+        this.prepareListingTypeData();
         if (this.editMode) {
             this.edit();
         } else {
             this.create();
         }
-        this.errors = ''
+        this.errors = '';
     }
 
     edit() {
@@ -152,6 +156,19 @@ export class ListingCreateComponent implements OnInit {
             newHearings = this.getHearingTypesFromCaseType(selectedCode);
         }
         this.hearings = newHearings;
+    }
+
+    afterClosed(confirmed) {
+        if (confirmed) {
+            this.createNotes();
+        }
+        if (this.editMode) {
+            this.afterEdit();
+        }
+    }
+
+    afterEdit() {
+        this.store.dispatch(new GetById(this.listing.hearing.id));
     }
 
     private initiateListing() {
@@ -227,16 +244,19 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
-    afterClosed(confirmed) {
-        if (confirmed) {
-            this.createNotes();
-        }
-        if (this.editMode) {
-            this.afterEdit();
+    private prepareListingTypeData() {
+        switch (this.listingTypeSelection.value) {
+            case ListingTypeTab.Single:
+                this.listing.hearing.numberOfSessions = 1;
+                break;
+            case ListingTypeTab.Multi:
+                this.listing.hearing.duration = moment.duration(Math.ceil(this.listing.hearing.duration.asDays()), 'days');
+                break;
         }
     }
+}
 
-    afterEdit() {
-        this.store.dispatch(new GetById(this.listing.hearing.id));
-    }
+export enum ListingTypeTab {
+    Single = 0,
+    Multi = 1,
 }
