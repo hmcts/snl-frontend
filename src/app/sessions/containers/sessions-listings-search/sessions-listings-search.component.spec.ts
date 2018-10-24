@@ -117,7 +117,7 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     notes: mockedNotes,
     reservedJudge: mockedJudges[0],
     isListed: false,
-    numberOfSessionsNeeded: 0
+    numberOfSessionsNeeded: 1
 }
 
 const mockedHearingResponse: Hearing = {
@@ -133,7 +133,8 @@ const mockedHearingResponse: Hearing = {
     reservedJudgeId: judgeId,
     scheduleEnd: nowISOSting,
     scheduleStart: nowISOSting,
-    version: 2
+    version: 2,
+    numberOfSessionsNeeded: 1
 }
 
 // same as unlisted, but with session set to matching id in Session
@@ -240,7 +241,7 @@ describe('SessionsListingsSearchComponent', () => {
       expect(component.selectedHearing).toBeUndefined();
     });
     it('should set selectedSessions to empty obj', () => {
-      expect(component.selectedSessions).toBeUndefined();
+      expect(component.selectedSessions).toEqual([]);
     });
   });
 
@@ -399,7 +400,7 @@ describe('SessionsListingsSearchComponent', () => {
   describe('selectSessions', () => {
     it('should set selectSessions', () => {
       const expectedSelectedSession = mockedFullSession;
-      expect(component.selectedSessions).toBeUndefined();
+      expect(component.selectedSessions).toEqual([]);
       component.selectSession(expectedSelectedSession);
       expect(component.selectedSessions).toEqual(expectedSelectedSession);
     });
@@ -408,20 +409,20 @@ describe('SessionsListingsSearchComponent', () => {
   describe('assignButtonEnabled', () => {
     describe('when selectedHearing is not null and selectedSessions is set', () => {
       it('should return true ', () => {
-        component.selectedSessions = mockedFullSession;
-        component.selectedHearing = mockedUnlistedHearingVM;
+        component.selectHearing(mockedUnlistedHearingVM);
+        component.selectSession(mockedFullSession);
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
     describe('when either selectedHearing is not null or selectedSessions is not set', () => {
       it('should return false ', () => {
-        component.selectedSessions = undefined;
-        component.selectedHearing = mockedUnlistedHearingVM;
+        component.selectSession([]);
+        component.selectHearing(mockedUnlistedHearingVM);
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {
-        component.selectedSessions = undefined;
-        component.selectedHearing = undefined;
+        component.selectSession([]);
+        component.selectHearing(undefined);
         expect(component.assignButtonEnabled()).toEqual(false);
       });
     });

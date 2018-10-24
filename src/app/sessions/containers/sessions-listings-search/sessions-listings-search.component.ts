@@ -140,6 +140,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             return this.checkIfOnlyOneJudgeSelected();
         } else {
             this.errorMessage = 'Incorrect number of sessions selected';
+            return false;
         }
     }
 
