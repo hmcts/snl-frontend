@@ -135,7 +135,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         if (this.selectedHearing === undefined) {
             this.errorMessage = '';
             return false;
-        } else if(this.numberOfSessionsNeeded === this.selectedSessions.length) {
+        } else if (this.numberOfSessionsNeeded === this.selectedSessions.length) {
             this.errorMessage = '';
             return this.checkIfOnlyOneJudgeSelected();
         } else {

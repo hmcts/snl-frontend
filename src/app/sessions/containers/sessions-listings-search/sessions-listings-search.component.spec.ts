@@ -116,7 +116,8 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     communicationFacilitator: 'interpreter',
     notes: mockedNotes,
     reservedJudge: mockedJudges[0],
-    isListed: false
+    isListed: false,
+    numberOfSessionsNeeded: 0
 }
 
 const mockedHearingResponse: Hearing = {
@@ -363,7 +364,7 @@ describe('SessionsListingsSearchComponent', () => {
   describe('assignToSessions', () => {
     it('should dispatch AssignToSession action', () => {
       const startTime = '10:30';
-      component.selectedSessions = mockedFullSession[0];
+      component.selectedSessions = [mockedFullSession[0]];
       component.selectedHearing = mockedUnlistedHearingVM;
 
       component.assignToSessions({
@@ -384,10 +385,10 @@ describe('SessionsListingsSearchComponent', () => {
           mockedUnlistedHearingVM.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
-      expect(sessionAssignmentPayload.sessionId).toEqual(
+      expect(sessionAssignmentPayload.sessionsData[0].sessionId).toEqual(
         mockedFullSession[0].id
       );
-      expect(sessionAssignmentPayload.sessionVersion).toEqual(
+      expect(sessionAssignmentPayload.sessionsData[0].sessionVersion).toEqual(
           mockedFullSession[0].version
       )
 
@@ -397,7 +398,7 @@ describe('SessionsListingsSearchComponent', () => {
 
   describe('selectSessions', () => {
     it('should set selectSessions', () => {
-      const expectedSelectedSession = mockedFullSession[0];
+      const expectedSelectedSession = mockedFullSession;
       expect(component.selectedSessions).toBeUndefined();
       component.selectSession(expectedSelectedSession);
       expect(component.selectedSessions).toEqual(expectedSelectedSession);
@@ -407,7 +408,7 @@ describe('SessionsListingsSearchComponent', () => {
   describe('assignButtonEnabled', () => {
     describe('when selectedHearing is not null and selectedSessions is set', () => {
       it('should return true ', () => {
-        component.selectedSessions = mockedFullSession[0];
+        component.selectedSessions = mockedFullSession;
         component.selectedHearing = mockedUnlistedHearingVM;
         expect(component.assignButtonEnabled()).toEqual(true);
       });
