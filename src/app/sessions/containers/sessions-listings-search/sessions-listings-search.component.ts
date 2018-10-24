@@ -55,7 +55,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
     errorMessage: string;
-    numberOfSessionsNeeded: number = 0;
+    numberOfSessionsNeeded = 0;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -110,7 +110,6 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     assignToSessions(assignHearingData: AssignHearingData) {
-
         let assignment = {
             hearingId: this.selectedHearing.id,
             hearingVersion: this.selectedHearing.version,
@@ -133,24 +132,14 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     assignButtonEnabled() {
-        if (this.selectedHearing === undefined && (this.selectedSessions.length === 0)) {
+        if (this.selectedHearing === undefined) {
             this.errorMessage = '';
             return false;
-        }
-        if (this.numberOfSessionsNeeded === this.selectedSessions.length && this.selectedHearing !== undefined) {
+        } else if(this.numberOfSessionsNeeded === this.selectedSessions.length) {
             this.errorMessage = '';
             return this.checkIfOnlyOneJudgeSelected();
         } else {
             this.errorMessage = 'Incorrect number of sessions selected';
-        }
-    }
-
-    private checkIfOnlyOneJudgeSelected() {
-        if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
-            this.errorMessage = 'Only one judge should be specified';
-            return false;
-        } else {
-          return true;
         }
     }
 
@@ -170,6 +159,15 @@ export class SessionsListingsSearchComponent implements OnInit {
             hasBackdrop: false,
             width: '30%'
         })
+    }
+
+    private checkIfOnlyOneJudgeSelected() {
+        if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
+            this.errorMessage = 'The selected sessions belong to various judges';
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private openSummaryDialog() {
