@@ -43,8 +43,9 @@ const displayedListingRequestData = {
 };
 
 const listingRequestCreate: CreateListingRequestBody = {
-    id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial'
-}
+    id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial',
+    numberOfSessions: 1
+};
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
@@ -77,7 +78,7 @@ describe('Amend Listing Request', () => {
         duration: otherDuration,
         fromDate: todayDate,
         endDate: tomorrowDate
-      }
+      };
       await listingCreationPage.setNoteValue(LISTING_NOTES.SPECIAL_REQUIREMENTS, specReqNoteValue);
       await listingCreationPage.createListingRequest(listingForm)
       await transactionDialogPage.clickAcceptButton();

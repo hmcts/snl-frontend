@@ -1,4 +1,4 @@
-import { ListingCreationForm } from './../models/listing-creation-form';
+import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 import { SessionCreationPage } from '../pages/session-creation.po';
 import { LoginFlow } from '../flows/login.flow';

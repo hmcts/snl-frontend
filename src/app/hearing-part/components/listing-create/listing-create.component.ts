@@ -246,6 +246,7 @@ export class ListingCreateComponent implements OnInit {
 
     private prepareListingTypeData() {
         switch (this.listingTypeSelection.value) {
+            case null:
             case ListingTypeTab.Single:
                 this.listing.hearing.numberOfSessions = 1;
                 break;
