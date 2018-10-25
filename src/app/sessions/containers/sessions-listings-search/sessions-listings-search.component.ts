@@ -167,8 +167,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     private checkIfOnlyOneJudgeSelected() {
-        if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
-            this.errorMessage = 'The selected sessions belong to various judges';
+        if (!this.selectedSessions.every((val, i, arr) =>
+            safe(() => val.person.id) === safe(() => arr[0].person.id) && val.person !== undefined)) {
+            this.errorMessage = 'All selected sessions should have the same judge assigned';
             return false;
         } else {
             return true;
