@@ -28,28 +28,28 @@ export class PlannerPage {
 
     async clickNextButton() {
         await element(by.className('fc-next-button')).click();
-        Logger.log('\'Next\' button clicked')
+        Logger.log('"Next" button clicked')
     }
 
     async clickPrevButton() {
         await element(by.className('fc-prev-button')).click();
-        Logger.log('\'Previous\' button clicked')
+        Logger.log('"Previous" button clicked')
     }
 
     async clickJudgeViewButton() {
         await element(by.id('planner-judge-view-btn')).click();
-        Logger.log('\'Judge view\' button clicked')
+        Logger.log('"Judge view" button clicked')
     }
 
     async clickRoomViewButton() {
         await element(by.id('planner-room-view-btn')).click();
-        Logger.log('\'Room view\' button clicked')
+        Logger.log('"Room view" button clicked')
     }
 
     async clickTodayButton() {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.todayButton))
         await this.todayButton.click();
-        Logger.log('\'Today\' button clicked')
+        Logger.log('"Today" button clicked')
     }
 
     async openDayView() {
@@ -68,18 +68,6 @@ export class PlannerPage {
     }
 
     async getResourceIdByName(nameToSearch: string): Promise<string> {
-        // let resourceId = await element.all(by.className('fc-resource-area'))
-        //     .last()
-        //     .all(by.tagName('tr'))
-        //     .filter(tr => {
-        //     return tr.element(by.className('fc-cell-text')).getText().then(value => {
-        //         return value === nameToSearch;
-        //     });
-        // })
-        // .first()
-        // .getWebElement()
-        // .getAttribute('data-resource-id');
-
         const trs = await element.all(by.className('fc-resource-area'))
             .last()
             .all(by.tagName('tr')).getWebElements();
