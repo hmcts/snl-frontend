@@ -16,9 +16,9 @@
 
     <div>
       <app-hearing-parts-preview id="hearing-part-preview"
-              [hearingParts]="hearingParts$ | async"
+                                 [hearings]="hearings$ | async"
               [sessions]="sessions$ | async"
-              (selectHearingPart)="selectHearingPart($event)">
+                                 (selectHearing)="selectHearingPart($event)">
       </app-hearing-parts-preview>
     </div>
 
@@ -29,7 +29,7 @@
     <button [disabled]="!assignButtonEnabled()" mat-raised-button
             color="accent"
             fxFlexAlign="center"
-            (click)="assignToSession()"
+            (click)="openAssignDialog()"
             class="get-sessions-button"
             id="assign">List Hearing</button>
 

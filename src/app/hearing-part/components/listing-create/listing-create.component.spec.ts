@@ -40,7 +40,7 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as notesReducers from '../../../notes/reducers';
 import { MatSelectChange } from '@angular/material';
-import { HearingPartModificationService } from '../../services/hearing-part-modification-service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import moment = require('moment');
@@ -61,7 +61,7 @@ const stubHearingTypes2: HearingType[] = [{code: 'hearing-type-code2', descripti
 const caseTypeWht1 = {code: 'case-type-code1', description: 'case-type1', hearingTypes: stubHearingTypes1} as CaseType;
 const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearingTypes: stubHearingTypes2} as CaseType;
 const listingCreate = {
-    hearingPart: {
+    hearing: {
         id: undefined,
         session: undefined,
         caseNumber: 'number',
@@ -122,7 +122,7 @@ describe('ListingCreateComponent', () => {
                 DurationAsMinutesPipe,
                 JudgeService,
                 HearingPartService,
-                HearingPartModificationService
+                HearingModificationService
             ]
         }).compileComponents();
 
@@ -149,7 +149,7 @@ describe('ListingCreateComponent', () => {
         it('should include priority', () => {
             expect(component.errors).toBeUndefined();
             expect(component.listing).toBeDefined();
-            expect(component.listing.hearingPart.priority).toBe(Priority.Low);
+            expect(component.listing.hearing.priority).toBe(Priority.Low);
         });
 
         it('should get judges from store', () => {
@@ -218,7 +218,7 @@ describe('ListingCreateComponent', () => {
             expect(createListingAction.type).toEqual(
                 HearingPartActionTypes.CreateListingRequest
             );
-            expect(createListingAction.payload).toEqual(defaultListing.hearingPart);
+            expect(createListingAction.payload).toEqual(defaultListing.hearing);
         });
 
         it('with some notes it should not changed it after post-creation', () => {
@@ -231,8 +231,8 @@ describe('ListingCreateComponent', () => {
         });
 
         it('If start date is undefined', () => {
-            component.listing.hearingPart.scheduleStart = undefined;
-            component.listing.hearingPart.scheduleEnd = moment();
+            component.listing.hearing.scheduleStart = undefined;
+            component.listing.hearing.scheduleEnd = moment();
 
             component.save();
 
@@ -241,8 +241,8 @@ describe('ListingCreateComponent', () => {
         });
 
         it('If end date is undefined', () => {
-            component.listing.hearingPart.scheduleStart = moment();
-            component.listing.hearingPart.scheduleEnd = undefined;
+            component.listing.hearing.scheduleStart = moment();
+            component.listing.hearing.scheduleEnd = undefined;
 
             component.save();
 
@@ -251,8 +251,8 @@ describe('ListingCreateComponent', () => {
         });
 
         it('should succeed when start date is before end date', () => {
-            component.listing.hearingPart.scheduleStart = moment();
-            component.listing.hearingPart.scheduleEnd = moment().add(10, 'day');
+            component.listing.hearing.scheduleStart = moment();
+            component.listing.hearing.scheduleEnd = moment().add(10, 'day');
             component.save();
 
             const createFailed = storeSpy.calls.mostRecent()

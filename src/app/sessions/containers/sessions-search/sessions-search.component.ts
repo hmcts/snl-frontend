@@ -27,7 +27,7 @@ import { SessionAmendDialogComponent } from '../../components/session-amend-dial
 import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
 import { RoomType } from '../../../core/reference/models/room-type';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
-import { SessionAmendForm } from '../../../../../e2e/models/session-amend-form';
+import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
 
 @Component({
     selector: 'app-sessions-search',
@@ -79,12 +79,13 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     openAmendDialog(s: SessionViewModel) {
-        let sessionAmendForm: SessionAmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
-        this.dialog.open(SessionAmendDialogComponent, {
+        let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
+        this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
             data: {
                 sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
-            } as SessionAmmendDialogData,
+                notes: s.notes
+            },
             hasBackdrop: true,
             height: 'auto',
             disableClose: true

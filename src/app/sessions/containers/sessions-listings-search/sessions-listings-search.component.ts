@@ -21,15 +21,20 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
-import { SessionAssignment } from '../../../hearing-part/models/session-assignment';
-import { HearingPartModificationService } from '../../../hearing-part/services/hearing-part-modification-service';
+import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
+import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
 import { asArray } from '../../../utils/array-utils';
-import { HearingPartViewModel } from '../../../hearing-part/models/hearing-part.viewmodel';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { enableDisplayCreationDetails, getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
+import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
+import {
+    AssignHearingData,
+    AssignHearingDialogComponent
+} from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
+import * as fromNotes from '../../../notes/actions/notes.action';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -40,25 +45,24 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     startDate: moment.Moment;
     endDate: moment.Moment;
-    hearingParts$: Observable<HearingPartViewModel[]>;
+    hearings$: Observable<HearingViewmodel[]>;
     sessions$: Observable<SessionViewModel[]>;
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
     selectedSession: SessionViewModel;
-    selectedHearingPart: HearingPartViewModel;
+    selectedHearingPart: HearingViewmodel;
     filters$ = new Subject<SessionFilters>();
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
-                public hearingModificationService: HearingPartModificationService,
+                public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
-        this.hearingParts$ = this.store.pipe(
-          select(fromHearingParts.getFullHearingParts),
+        this.hearings$ = this.store.pipe(
+          select(fromHearingParts.getFullUnlistedHearings),
             map(asArray),
-            map(this.sessionsFilterService.filterUnlistedHearingParts)
-          ) as Observable<HearingPartViewModel[]>;
+          ) as Observable<HearingViewmodel[]>;
 
         this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
         this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
@@ -94,24 +98,28 @@ export class SessionsListingsSearchComponent implements OnInit {
             .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
     }
 
-    selectHearingPart(hearingPart: HearingPartViewModel) {
+    selectHearingPart(hearingPart: HearingViewmodel) {
         this.selectedHearingPart = hearingPart;
     }
 
-    assignToSession() {
-        this.hearingModificationService.assignHearingPartWithSession({
-            hearingPartId: this.selectedHearingPart.id,
-            hearingPartVersion: this.selectedHearingPart.version,
+    assignToSession(assignHearingData: AssignHearingData) {
+        this.hearingModificationService.assignWithSession({
+            hearingId: this.selectedHearingPart.id,
+            hearingVersion: this.selectedHearingPart.version,
             sessionId: this.selectedSession.id,
             sessionVersion: this.selectedSession.version,
             userTransactionId: uuid(),
-            start: null // this.calculateStartOfHearing(this.selectedSession)
-        } as SessionAssignment);
+            start: moment(assignHearingData.startTime, 'HH:mm').toDate()
+        } as HearingToSessionAssignment);
 
-        this.openSummaryDialog().afterClosed().subscribe(() => {
+        this.openSummaryDialog().afterClosed().subscribe((accepted) => {
             this.store.dispatch(new fromHearingPartsActions.Search());
-            this.selectedHearingPart = undefined
-            this.selectedSession = undefined
+            if (accepted) {
+                this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
+            }
+
+            this.selectedHearingPart = undefined;
+            this.selectedSession = undefined;
         });
     }
 
@@ -123,9 +131,19 @@ export class SessionsListingsSearchComponent implements OnInit {
         return !!(safe(() => this.selectedHearingPart.id) && (safe(() => this.selectedSession.id)));
     }
 
+    openAssignDialog() {
+        this.dialog.open(AssignHearingDialogComponent, {
+            data: this.selectedHearingPart.id
+        }).afterClosed().subscribe((data: AssignHearingData) => {
+            if (data.confirmed) {
+                this.assignToSession(data)
+            }
+        })
+    }
+
     openNotesDialog(session: SessionViewModel) {
         this.dialog.open(NotesListDialogComponent, {
-            data: session.notes.map(getNoteViewModel).map(enableDisplayCreationDetails),
+            data: session.notes.map(getNoteViewModel),
             hasBackdrop: false,
             width: '30%'
         })

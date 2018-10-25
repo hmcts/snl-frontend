@@ -11,13 +11,15 @@ import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
 import { ListingCreateEffects } from './effects/listing-create.effects';
-import { HearingPartModificationService } from './services/hearing-part-modification-service';
+import { HearingModificationService } from './services/hearing-modification.service';
 import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
 import { ListingCreateNotesConfiguration } from './models/listing-create-notes-configuration.model';
 import { ListingCreateDialogComponent } from './components/listing-create-dialog/listing-create-dialog';
 import { ListingNoteListComponent } from './components/listing-note-list/listing-note-list.component';
+import { AssignHearingDialogComponent } from './components/assign-hearing-dialog/assign-hearing-dialog.component';
+import { HearingAssignmentNotesConfiguration } from './models/hearing-assignment-notes-configuration.model';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -25,7 +27,8 @@ export const COMPONENTS = [
     DraggableHearingPartComponent,
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
-    ListingNoteListComponent
+    ListingNoteListComponent,
+    AssignHearingDialogComponent
 ];
 
 @NgModule({
@@ -42,7 +45,7 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingPartModificationService, ListingCreateNotesConfiguration],
-  entryComponents: [ListingCreateDialogComponent]
+  providers: [HearingPartService, HearingModificationService, ListingCreateNotesConfiguration, HearingAssignmentNotesConfiguration],
+  entryComponents: [ListingCreateDialogComponent, AssignHearingDialogComponent]
 })
 export class HearingPartModule { }

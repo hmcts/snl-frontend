@@ -10,6 +10,7 @@ import * as transactionActions from '../../features/transactions/actions/transac
 import * as roomActions from '../../rooms/actions/room.action';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as hearingPartsActions from '../../hearing-part/actions/hearing-part.action';
+import * as hearingActions from '../../hearing-part/actions/hearing.action';
 import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/observable/timer';
@@ -105,6 +106,7 @@ export class SessionEffects {
                     new roomActions.UpsertMany(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
                     new hearingPartsActions.UpsertMany(data.entities.hearingParts),
+                    new hearingActions.UpsertMany(data.entities.hearings),
                     new notesActions.GetByEntities(Object.keys(data.entities.sessions))
                 ]),
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err))
@@ -140,6 +142,7 @@ export class SessionEffects {
                     new sessionActions.SearchComplete(data.entities.sessions),
                     new roomActions.GetComplete(data.entities.rooms),
                     new judgeActions.UpsertMany(data.entities.persons),
+                    new hearingActions.SearchComplete(data.entities.hearings),
                     new hearingPartsActions.SearchComplete(data.entities.hearingParts),
                     new notesActions.GetByEntities([...Object.keys(data.entities.sessions),
                         ...Object.keys(data.entities.hearingParts)])

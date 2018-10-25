@@ -6,24 +6,24 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
-                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearingPart.caseNumber"
-                           (change)="listing.hearingPart.caseNumber = listing.hearingPart.caseNumber.trim()"
+                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearing.caseNumber"
+                           (change)="listing.hearing.caseNumber = listing.hearing.caseNumber.trim()"
                            maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearingPart.caseTitle"
-                           (change)="listing.hearingPart.caseTitle = listing.hearingPart.caseTitle.trim()"
+                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearing.caseTitle"
+                           (change)="listing.hearing.caseTitle = listing.hearing.caseTitle.trim()"
                            maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title" type="text" >
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-select id="selectCaseType" formControlName="caseTypeCode" placeholder="Case type *"
-                                [(ngModel)]="listing.hearingPart.caseTypeCode"
+                                [(ngModel)]="listing.hearing.caseTypeCode"
                                 (selectionChange)="onCaseTypeChanged($event)">
                         <mat-option *ngFor="let case of caseTypes" selected="case.code === listing.hearingPart.caseTypeCode" [value]="case.code">{{case.description}}</mat-option>
                     </mat-select>
@@ -31,31 +31,31 @@
 
                 <mat-form-field>
                     <mat-select id="selectHearingPart" formControlName="hearingTypeCode"
-                                placeholder="Hearing type *" [(ngModel)]="listing.hearingPart.hearingTypeCode">
+                                placeholder="Hearing type *" [(ngModel)]="listing.hearing.hearingTypeCode">
                         <mat-option *ngFor="let hearing of hearings" selected="hearing.code == listing.hearingPart.hearingTypeCode" [value]="hearing.code">{{hearing.description}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input id="duration" formControlName="duration" [ngModel]="listing.hearingPart.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
+                    <input id="duration" formControlName="duration" [ngModel]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
                     <span matSuffix>Minutes</span>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select placeholder="Priority level" [(value)]="listing.hearingPart.priority" required>
+                    <mat-select placeholder="Priority level" [(value)]="listing.hearing.priority" required>
                         <mat-option *ngFor="let priority of priorityValues" value="{{priority}}">{{priority}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearingPart.communicationFacilitator">
+                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearing.communicationFacilitator">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearingPart.reservedJudgeId">
+                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearing.reservedJudgeId">
                         <mat-option>None</mat-option>
                         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
                     </mat-select>
@@ -67,13 +67,13 @@
                         <i>Target from</i> must be before <i>Target to</i>!
                     </div>
                     <mat-form-field class="date-picker-element">
-                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom" [(ngModel)]="listing.hearingPart.scheduleStart" placeholder="From:" re>
+                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom" [(ngModel)]="listing.hearing.scheduleStart" placeholder="From:" re>
                         <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                         <mat-datepicker #pickerStart></mat-datepicker>
                     </mat-form-field>
 
                     <mat-form-field class="date-picker-element">
-                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.hearingPart.scheduleEnd" placeholder="To:">
+                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.hearing.scheduleEnd" placeholder="To:">
                         <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                         <mat-datepicker #pickerEnd></mat-datepicker>
                     </mat-form-field>
@@ -82,14 +82,14 @@
 
             <div style="padding-right: 2em">
                 <div fxLayout="column" fxLayoutGap="10%">
-                    <app-listing-note-list #notesComponent [notes]="this.listing.notes" [entityId]="this.listing.hearingPart.id"></app-listing-note-list>
+                    <app-listing-note-list #notesComponent [notes]="this.listing.notes" [entityId]="this.listing.hearing.id"></app-listing-note-list>
                 </div>
             </div>
 
         </mat-card-content>
 
         <mat-card-actions>
-            <button id="save" mat-raised-button color="accent" form="list-form" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
+            <button id="save" mat-raised-button color="accent" (click)="listingCreateForm.ngSubmit.emit()" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>
