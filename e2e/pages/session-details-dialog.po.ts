@@ -1,5 +1,5 @@
 import { ElementHelper } from '../utils/element-helper';
-import { by, element } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Logger } from '../utils/logger';
 
 export class SessionDetailsDialogPage {
@@ -25,5 +25,6 @@ export class SessionDetailsDialogPage {
 
   async close() {
     await element(by.id('close')).click();
+    await browser.wait(ExpectedConditions.invisibilityOf(element(by.css('app-details-dialog'))));
   }
 }

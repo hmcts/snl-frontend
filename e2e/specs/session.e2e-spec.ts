@@ -123,10 +123,10 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToCalendarPage()
       await browser.waitForAngular();
       await calendarPage.clickOnEventWith(startTimeAMFormat)
-      const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
+      const isDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
         sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType
       );
-      expect(idDialogDisplayed).toBeTruthy()
+      expect(isDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
     });
   });

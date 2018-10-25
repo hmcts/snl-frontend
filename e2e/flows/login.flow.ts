@@ -3,6 +3,7 @@ import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';
 import { ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
+import { Logger } from '../utils/logger';
 
 export class LoginFlow {
     loginPage = new LoginPage();
@@ -15,9 +16,15 @@ export class LoginFlow {
         );
     }
 
-    async loginIfNeeded(): Promise<void> {
+    private async goHome() {
         await browser.get('/');
-        await browser.sleep(5000);
+        await browser.wait(ExpectedConditions.urlContains('/home/'), Wait.short)
+            .catch(() => Promise.resolve(false));
+        Logger.log('Done waiting for homepage')
+    }
+
+    async loginIfNeeded(): Promise<void> {
+        await this.goHome()
         const isLoginPageDisplayed = await this.loginPage.isPresent();
         if (isLoginPageDisplayed) {
             await this.login();
@@ -25,8 +32,7 @@ export class LoginFlow {
     }
 
     async logoutIfNeeded() {
-        await browser.get('/');
-        await browser.sleep(5000);
+        await this.goHome()
         const isLoginPageDisplayed = await this.loginPage.isPresent();
         if (!isLoginPageDisplayed) {
             await this.topMenu.clickOnLogoutButton()

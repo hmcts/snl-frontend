@@ -47,21 +47,18 @@ describe('Planner, check newly created sessions existence', () => {
     });
 
     describe('Check if newly created sessions are on planner ', () => {
-        it('Create sessions ', async () => {
+        it('Create Sessions via API', async () => {
             numberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
-            expect(numberOfVisibleEvents).not.toEqual(0);
+
             for (let session of sessionsToCreate) {
                 expect(await API.createSession(session)).toEqual(200);
                 Logger.log('Created session: id: ' + session.id + ' start: ' + session.start.toISOString());
             }
         });
 
-        it('Refresh the view ', async () => {
+        it('Refreshed view should show new sessions ', async () => {
             await plannerPage.clickNextButton();
             await plannerPage.clickPrevButton();
-        });
-
-        it('Refreshed view should show new sessions ', async () => {
             let newNumberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
             visibleElementsDiff = Math.abs(newNumberOfVisibleEvents - numberOfVisibleEvents);
             Logger.log('Sessions number, before call: ' +
