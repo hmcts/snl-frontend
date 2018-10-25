@@ -3,6 +3,7 @@ import { HearingService } from '../../services/hearing.service';
 import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators/map';
 
 @Component({
   selector: 'app-view-hearing',
@@ -11,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
-
+  hearingId
   constructor(
     private route: ActivatedRoute,
     private readonly hearingService: HearingService
@@ -19,10 +20,16 @@ export class ViewHearingComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id')
-    this.hearingService.getById(id).subscribe(h => {
-      this.hearing = h;
-    });
+    this.hearingId = this.route.snapshot.paramMap.get('id');
+    this.hearingService.hearings
+      .map(hearings => hearings.find(h => h.id === this.hearingId))
+      .subscribe(hearing => this.hearing = hearing);
+
+      this.fetchHearing()
+  }
+
+  private fetchHearing() {
+    this.hearingService.getById(this.hearingId);
   }
 
   formatDate(date: string): string {
