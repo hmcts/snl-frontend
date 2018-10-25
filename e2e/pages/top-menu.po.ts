@@ -28,13 +28,6 @@ export class TopMenu {
     }
 
     async openNewListingRequestPage() {
-        const listings = await this.parentElement.element(this.listingsButtonSelector);
-        await browser.wait(
-            ExpectedConditions.elementToBeClickable(listings),
-            Wait.normal,
-            'Cant find Listings menu button'
-        );
-        await listings.click();
         await this.openListingSubMenu('New Listing Request');
         await this.listingCreatePage.waitUntilVisible();
     }
@@ -75,7 +68,13 @@ export class TopMenu {
     }
 
     private async openListingSubMenu(optionName: string): Promise<void> {
-        await this.parentElement.element(this.listingsButtonSelector).click();
+        const listings = await this.parentElement.element(this.listingsButtonSelector);
+        await browser.wait(
+            ExpectedConditions.elementToBeClickable(listings),
+            Wait.normal,
+            'Cant find Listings menu button'
+        );
+        await listings.click();
         const subElement = element(by.linkText(optionName));
         await browser.wait(
             ExpectedConditions.elementToBeClickable(subElement),
