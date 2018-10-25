@@ -39,6 +39,7 @@ import { AuthHttpInterceptor } from './security/services/auth-http-interceptor';
 import { SecurityContext } from './security/services/security-context.service';
 import { HmctsModule } from './hmcts/hmcts.module';
 import { GovukModule } from './govuk/govuk.module';
+import { HearingModule } from './hearing/hearing.module';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -87,7 +88,8 @@ export class XhrInterceptor implements HttpInterceptor {
         NotesModule,
         TransactionsModule,
         HmctsModule,
-        GovukModule
+        GovukModule,
+        HearingModule
     ],
     providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
