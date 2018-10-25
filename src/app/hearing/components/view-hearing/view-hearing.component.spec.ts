@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/Observable';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Hearing } from '../../models/hearing';
 import * as moment from 'moment';
-// import { Observable } from 'rxjs/Observable';
 
 const HEARING_ID = 'some-id';
 
