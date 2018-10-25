@@ -54,11 +54,12 @@ describe('Problem list tests', () => {
             await navigationFlow.goToProblemsPage();
         });
 
-        afterEach(async () => {
-            await browser.manage().logs().get('browser').then(browserLog => {
-                browserLog.forEach(log => console.error(log.message));
-            });
-        });
+        // TODO: fix epipe write epipe
+        // afterEach(async () => {
+        //     await browser.manage().logs().get('browser').then(browserLog => {
+        //         browserLog.forEach(log => console.error(log.message));
+        //     });
+        // });
 
         it('Remember number of problems', async () => {
             problemsBeforeAction = (await API.getProblems()) as any[]

@@ -71,26 +71,25 @@ export class PlannerPage {
         // let resourceId = await element.all(by.className('fc-resource-area'))
         //     .last()
         //     .all(by.tagName('tr'))
+        //     .filter(tr => {
+        //     return tr.element(by.className('fc-cell-text')).getText().then(value => {
+        //         return value === nameToSearch;
+        //     });
+        // })
+        // .first()
+        // .getWebElement()
+        // .getAttribute('data-resource-id');
 
         const trs = await element.all(by.className('fc-resource-area'))
             .last()
             .all(by.tagName('tr')).getWebElements();
 
         const filteredTrs = await filterSeries(trs, async (tr) => {
-            const value = await tr.getAttribute('fc-cell-text')
+            const value = await tr.findElement(by.className('fc-cell-text')).getText()
             return value === nameToSearch;
         });
 
         const dataResourceId = await filteredTrs[0].getAttribute('data-resource-id')
-            // .filter(tr => {
-            //     return tr.element(by.className('fc-cell-text')).getText().then(value => {
-            //         return value === nameToSearch;
-            //     });
-            // })
-            // .first()
-            // .getWebElement()
-            // .getAttribute('data-resource-id');
-
         Logger.log('"' + nameToSearch + '" resource id: ' + dataResourceId);
         return dataResourceId;
     }

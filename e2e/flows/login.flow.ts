@@ -17,10 +17,12 @@ export class LoginFlow {
     }
 
     private async goHome() {
-        await browser.get('/');
-        await browser.wait(ExpectedConditions.urlContains('/home/'), Wait.short)
-            .catch(() => Promise.resolve(false));
-        Logger.log('Done waiting for homepage')
+        if (!this.loginPage.isPresent()) {
+            await browser.get('/');
+            await browser.wait(ExpectedConditions.urlContains('/home/'), Wait.short)
+                .catch(() => Promise.resolve(false));
+            Logger.log('Done waiting for homepage')
+        }
     }
 
     async loginIfNeeded(): Promise<void> {

@@ -6,6 +6,7 @@ import { SessionSearchPage } from './session-search.po';
 import { SessionAmendListPage } from './session-amend-list.po';
 import { ProblemsPage } from './problems.po';
 import { PlannerPage } from './planner.po';
+import { Logger } from '../utils/logger';
 
 export class TopMenu {
     private parentElement = element(by.css('nav.hmcts-primary-navigation'));
@@ -27,13 +28,14 @@ export class TopMenu {
     }
 
     async openNewListingRequestPage() {
-        const listings = this.parentElement.element(this.listingsButtonSelector);
+        const listings = await this.parentElement.element(this.listingsButtonSelector);
         await browser.wait(
             ExpectedConditions.elementToBeClickable(listings),
             Wait.normal,
             'Cant find Listings menu button'
         );
         await listings.click();
+        await this.openListingSubMenu('New Listing Request');
         await this.listingCreatePage.waitUntilVisible();
     }
 
@@ -81,5 +83,6 @@ export class TopMenu {
             `Cant find ${optionName} menu button`
         );
         await subElement.click();
+        Logger.log(optionName + ' button clicked')
     }
 }
