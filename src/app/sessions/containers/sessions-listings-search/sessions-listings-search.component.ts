@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { SearchForDates } from '../../actions/session.action';
 import { Observable } from 'rxjs/Observable';
@@ -35,6 +35,8 @@ import {
     AssignHearingDialogComponent
 } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 import * as fromNotes from '../../../notes/actions/notes.action';
+import { HearingPartsPreviewComponent } from '../../../hearing-part/components/hearing-parts-preview/hearing-parts-preview.component';
+import { SessionTableComponent } from '../../components/session-table/session-table.component';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -42,6 +44,9 @@ import * as fromNotes from '../../../notes/actions/notes.action';
     styleUrls: ['./sessions-listings-search.component.scss']
 })
 export class SessionsListingsSearchComponent implements OnInit {
+
+    @ViewChild(HearingPartsPreviewComponent) hearingPartsTable;
+    @ViewChild(SessionTableComponent) sessionsTable;
 
     startDate: moment.Moment;
     endDate: moment.Moment;
@@ -126,8 +131,7 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
             }
 
-            this.selectedHearing = undefined;
-            this.selectedSessions = undefined;
+            this.resetSelections();
         });
     }
 
@@ -183,6 +187,8 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     private resetSelections() {
+        this.sessionsTable.clearSelection();
+        this.hearingPartsTable.clearSelection();
         this.selectedSessions = [];
         this.selectedHearing = undefined;
     }

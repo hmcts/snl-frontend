@@ -120,7 +120,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
       this.dialog.open(DialogWithActionsComponent, {
         data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
       }).afterClosed().subscribe((confirmed) => {
-          this.afterDeleteClosed(confirmed, hearing)
+          this.afterDeleteClosed(confirmed, hearing);
+          this.clearSelection();
       })
     }
 
@@ -136,6 +137,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 if (success) {
                     this.hearingService.removeFromState(hearing.id)
                 }
+
+                this.clearSelection()
             })
         }
     }
@@ -156,6 +159,10 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     toggleHearing(hearing) {
         this.selectedHearing.toggle(hearing);
         this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : undefined);
+    }
+
+    clearSelection() {
+        this.selectedHearing.clear();
     }
 
     private openTransactionDialog() {

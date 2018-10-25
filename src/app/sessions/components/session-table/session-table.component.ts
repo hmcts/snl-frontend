@@ -72,6 +72,10 @@ export class SessionTableComponent implements OnChanges {
     this.selectSessions.emit(this.selectedSesssions.selected)
   }
 
+  clearSelection() {
+      this.selectedSesssions.clear();
+  }
+
   ngOnChanges() {
       if (this.sessions) {
           this.tableVisible = true;
