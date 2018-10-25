@@ -162,6 +162,10 @@ export class SessionsListingsSearchComponent implements OnInit {
         })
     }
 
+    onEdit() {
+        this.resetSelections();
+    }
+
     private checkIfOnlyOneJudgeSelected() {
         if (!this.selectedSessions.every((val, i, arr) => safe(() => val.person.id) === safe(() => arr[0].person.id))) {
             this.errorMessage = 'The selected sessions belong to various judges';
@@ -177,4 +181,10 @@ export class SessionsListingsSearchComponent implements OnInit {
             data: 'Assigning hearing part to session'
         });
     }
+
+    private resetSelections() {
+        this.selectedSessions = [];
+        this.selectedHearing = undefined;
+    }
+
 }

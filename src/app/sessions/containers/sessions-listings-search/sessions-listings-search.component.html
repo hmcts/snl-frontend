@@ -18,6 +18,7 @@
       <app-hearing-parts-preview id="hearing-part-preview"
                                  [hearings]="hearings$ | async"
               [sessions]="sessions$ | async"
+                                 (onEdit)="onEdit($event)"
                                  (selectHearing)="selectHearing($event)">
       </app-hearing-parts-preview>
     </div>

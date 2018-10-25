@@ -25,6 +25,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearings: HearingViewmodel[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearing = new EventEmitter();
+    @Output() onEdit = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -147,7 +148,9 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             } as ListingCreate,
             hasBackdrop: true,
             height: 'auto'
-        })
+        });
+
+        this.onEdit.emit();
     }
 
     toggleHearing(hearing) {
