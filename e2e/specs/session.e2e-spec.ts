@@ -1,4 +1,4 @@
-import { ListingCreationForm } from './../models/listing-creation-form';
+import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 import { SessionCreationPage } from '../pages/session-creation.po';
 import { LoginFlow } from '../flows/login.flow';
@@ -71,7 +71,7 @@ let numberOfVisibleEvents: number;
 
 describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
   beforeAll(async () => {
-    await loginFlow.relogin();
+    await loginFlow.loginIfNeeded();
     await navigationFlow.goToCalendarPage()
   });
   describe('Remember number of visible events in calendar, Go to new session page and create session', () => {
@@ -123,10 +123,10 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToCalendarPage()
       await browser.waitForAngular();
       await calendarPage.clickOnEventWith(startTimeAMFormat)
-      const idDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
+      const isDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
         sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType
       );
-      expect(idDialogDisplayed).toBeTruthy()
+      expect(isDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
     });
   });
