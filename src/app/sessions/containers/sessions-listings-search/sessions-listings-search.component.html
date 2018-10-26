@@ -17,8 +17,8 @@
     <div>
       <app-hearing-parts-preview id="hearing-part-preview"
                                  [hearings]="hearings$ | async"
-              [sessions]="sessions$ | async"
-                                 (onEdit)="onEdit($event)"
+                                 [sessions]="sessions$ | async"
+                                 (onClearSelection)="onHearingsClearSelection()"
                                  (selectHearing)="selectHearing($event)">
       </app-hearing-parts-preview>
     </div>

@@ -166,8 +166,14 @@ export class SessionsListingsSearchComponent implements OnInit {
         })
     }
 
-    onEdit() {
+    onHearingsClearSelection() {
         this.resetSelections();
+        this.sessionsTable.clearSelection();
+    }
+
+    onSessionsClearSelection() {
+        this.resetSelections();
+        this.hearingPartsTable.clearSelection();
     }
 
     private checkIfOnlyOneJudgeSelected() {
@@ -188,10 +194,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     private resetSelections() {
-        this.sessionsTable.clearSelection();
-        this.hearingPartsTable.clearSelection();
         this.selectedSessions = [];
         this.selectedHearing = undefined;
     }
-
 }
