@@ -22,14 +22,6 @@ import { ITransactionDialogData } from '../../models/transaction-dialog-data.mod
   styleUrls: ['./transaction-dialog.component.scss']
 })
 export class TransactionDialogComponent {
-  public static DEFAULT_DIALOG_CONFIG = {
-      data: {},
-      width: 'auto',
-      minWidth: 350,
-      hasBackdrop: true,
-      disableClose: true
-  }
-
   problems$: Observable<Problem[]>;
   transactionStatus$: Observable<EntityTransaction>;
   transacted$: Observable<boolean>;

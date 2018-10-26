@@ -19,6 +19,7 @@ import * as refData from '../../../core/reference/reducers/index';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import * as fromNotes from '../../../notes/actions/notes.action';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-sessions-create',
@@ -65,7 +66,7 @@ export class SessionsCreateComponent implements OnInit {
 
     private openDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Creating session' }
         });
     }

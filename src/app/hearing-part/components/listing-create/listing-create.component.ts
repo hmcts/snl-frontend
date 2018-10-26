@@ -24,6 +24,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-listing-create',
@@ -214,7 +215,7 @@ export class ListingCreateComponent implements OnInit {
 
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle }
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);

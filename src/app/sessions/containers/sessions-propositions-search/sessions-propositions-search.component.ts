@@ -1,3 +1,4 @@
+import { DEFAULT_DIALOG_CONFIG } from './../../../features/transactions/models/default-dialog-confg';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as RoomActions from '../../../rooms/actions/room.action';
@@ -96,8 +97,7 @@ export class SessionsPropositionsSearchComponent implements OnInit {
         }
 
         return this.dialog.open(SessionEditOrCreateDialogComponent, {
-            width: 'auto',
-            minWidth: 350,
+            ...DEFAULT_DIALOG_CONFIG,
             data: {
                 sessionData: {
                     userTransactionId: undefined,
@@ -113,14 +113,13 @@ export class SessionsPropositionsSearchComponent implements OnInit {
                 sessionTypes$: this.sessionTypes$,
                 onCreateSessionAction: session => this.dialogSessionCreateClicked(session),
                 onCancelAction: () => this.closeSessionCreateDialog()
-            },
-            hasBackdrop: true
+            }
         });
     }
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Creating adhoc session' }
         });
     }

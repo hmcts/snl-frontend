@@ -35,6 +35,7 @@ import {
     AssignHearingDialogComponent
 } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 import * as fromNotes from '../../../notes/actions/notes.action';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -151,7 +152,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     private openSummaryDialog() {
         return this.dialog.open(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: 'Assigning hearing part to session'
         });
     }
