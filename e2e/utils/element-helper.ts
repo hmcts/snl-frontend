@@ -25,6 +25,7 @@ export class ElementHelper {
 
   async typeValue(htmlElement: ElementFinder, value: any): Promise<void> {
     await this.clear(htmlElement);
+    await browser.wait(ExpectedConditions.elementToBeClickable(htmlElement));
     await htmlElement.sendKeys(value);
   }
 
@@ -41,6 +42,7 @@ export class ElementHelper {
     await this.browserWaitElementClickable(selectOptionLocator);
     Logger.log(`Clicking: ${selectOptionLocator.locator()}`)
     await selectOptionLocator.click();
+    await this.browserWaitElementClickable(element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect)))
     Logger.log(`Clicking element containing text: ${textToSelect}`)
     await element(by.cssContainingText('mat-option > span.mat-option-text', textToSelect))
       .click();
