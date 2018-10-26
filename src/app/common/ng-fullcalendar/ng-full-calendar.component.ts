@@ -136,7 +136,6 @@ export class NgFullCalendarComponent implements AfterViewInit {
             for (let i = 0; i < elem.length; i++) {
                 elem[i].dispatchEvent(widgetEvent);
             }
-            element.css('overflow-y', 'visible');
         };
         this.options.eventClick = (event) => {
             let detail: UpdateEventModel = { event: event, duration: null, revertFunc: null };
