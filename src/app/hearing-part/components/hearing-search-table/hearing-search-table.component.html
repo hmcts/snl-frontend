@@ -13,7 +13,9 @@ matSortDirection="desc">
 
   <ng-container matColumnDef="caseNumber">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Number </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
+    <mat-cell *matCellDef="let element">
+      <a id="view-hearing-{{element.id}}" routerLink="/home/hearing/{{element.id}}">{{element.caseNumber}}</a>
+    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="caseTitle">
