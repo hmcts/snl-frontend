@@ -1,5 +1,4 @@
-<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort matSortActive="priority"
-matSortDirection="desc">
+<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource">
   <!-- Position Column -->
   <ng-container matColumnDef="selectHearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
@@ -12,52 +11,52 @@ matSortDirection="desc">
   </ng-container>
 
   <ng-container matColumnDef="caseNumber">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Number </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Case Number </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="caseTitle">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Title </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Case Title </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="priority">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Priority </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Priority </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="caseType">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Case Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseTypeDescription}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="hearingType">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingTypeDescription}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="communicationFacilitator">
-    <mat-header-cell class="communicationFacilitator" *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
+    <mat-header-cell class="communicationFacilitator" *matHeaderCellDef > Communication Facilitator </mat-header-cell>
     <mat-cell class="communicationFacilitator" *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="reservedJudge">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Reserved to Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.reservedJudgeName}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="requestStatus">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Request status </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Request status </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{getStatusText(element)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="listingDate">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Listing date </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Listing date </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseDate(element.listingDate)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="amend">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Amend </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef > Amend </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span [class.clickable]="true" (click)="amend(element)">Amend</span>
     </mat-cell>

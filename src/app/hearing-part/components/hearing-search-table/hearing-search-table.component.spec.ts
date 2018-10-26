@@ -123,17 +123,6 @@ describe('HearingSearchTableComponent', () => {
                 { columnName: 'amend', expected: undefined }].map(r => r.columnName);
             expect(component.displayedColumns).toEqual(columnsArray);
         });
-
-        for (let testCase of displayedColumnsExpectedValues) {
-            it(`${testCase.columnName} should return proper value`, () => {
-                const expected = testCase.expected;
-
-                component.ngOnChanges();
-                const result = component.dataSource.sortingDataAccessor(sampleHearingPart, testCase.columnName);
-
-                expect(result).toBe(expected);
-            });
-        }
     });
   });
 });
