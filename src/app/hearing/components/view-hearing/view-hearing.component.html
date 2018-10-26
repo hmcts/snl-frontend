@@ -3,6 +3,16 @@
     <span class="case-number">{{hearing.caseNumber}}</span>
     {{hearing.caseTitle}}
   </h2>
+
+  <button
+  mat-raised-button
+  style="margin-bottom:20px"
+  color="accent"
+  id="unlist"
+  (click)="openConfirmationDialog()"
+  [disabled]="!isListed()">Unlist</button>
+  
+
   <div class="grid">
     <div class="tile">
       <strong>Case type</strong><br>
