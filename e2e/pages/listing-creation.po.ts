@@ -31,6 +31,8 @@ export class ListingCreationPage {
   private selectCaseTypeSelectOption = this.parentElement.element(by.id('selectCaseType'));
   private selectHearingPartSelectOption = this.parentElement.element(by.id('selectHearingPart'));
   private durationMinutesInput = this.parentElement.element(by.id('duration-minutes'));
+  private durationDaysInput = this.parentElement.element(by.id('duration-days'));
+  private numberOfSessionsInput = this.parentElement.element(by.id('number-of-sessions'));
   private fromDateInput = this.parentElement.element(by.id('fromDate'));
   private endDateInput = this.parentElement.element(by.id('endDate'));
   private saveButton = this.parentElement.element(by.id('save'));
@@ -41,9 +43,16 @@ export class ListingCreationPage {
     await this.elementHelper.typeValue(this.caseTitleInput, listingCreationForm.caseTitle);
     await this.elementHelper.selectValueFromSingleSelectOption(this.selectCaseTypeSelectOption, listingCreationForm.caseType);
     await this.elementHelper.selectValueFromSingleSelectOption(this.selectHearingPartSelectOption, listingCreationForm.hearingType);
-    await this.elementHelper.typeValue(this.durationMinutesInput, listingCreationForm.duration);
     await this.elementHelper.typeDate(this.fromDateInput, listingCreationForm.fromDate);
     await this.elementHelper.typeDate(this.endDateInput, listingCreationForm.endDate);
+    if (listingCreationForm.numberOfSessions === 1) {
+        await element(by.id('single-session-radio')).click();
+        await this.elementHelper.typeValue(this.durationMinutesInput, listingCreationForm.durationMinutes);
+    } else if (listingCreationForm.numberOfSessions > 1) {
+        await element(by.id('multi-session-radio')).click();
+        await this.elementHelper.typeValue(this.durationDaysInput, listingCreationForm.durationDays);
+        await this.elementHelper.typeValue(this.numberOfSessionsInput, listingCreationForm.numberOfSessions);
+    }
     return await this.saveButton.click();
   }
 

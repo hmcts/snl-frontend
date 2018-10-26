@@ -13,7 +13,7 @@ import { Judge } from '../../../judges/models/judge.model';
 import * as fromJudges from '../../../judges/reducers';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { MatDialog, MatSelectChange } from '@angular/material';
+import { MatDialog, MatRadioChange, MatSelectChange } from '@angular/material';
 import * as fromNotes from '../../../notes/actions/notes.action';
 import * as fromReferenceData from '../../../core/reference/reducers';
 import { CaseType } from '../../../core/reference/models/case-type';
@@ -24,6 +24,11 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+
+export enum ListingTypeTab {
+    Single = 0,
+    Multi = 1,
+}
 
 @Component({
     selector: 'app-listing-create',
@@ -43,15 +48,14 @@ export class ListingCreateComponent implements OnInit {
 
     @Output() onSave = new EventEmitter();
 
-    listingCreate: FormGroup;
     communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
-    errors = '';
+
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
     hearings: HearingType[] = [];
     noteViewModels: NoteViewmodel[] = [];
-    listingTypeSelection = new FormControl();
-    public listing: ListingCreate;
+    listingCreate: FormGroup;
+    errors = '';
 
     private _caseTypes: CaseType[] = [];
     get caseTypes(): CaseType[] {
@@ -67,6 +71,8 @@ export class ListingCreateComponent implements OnInit {
         }
     }
 
+    public chosenListingType = 0;
+    public listing: ListingCreate;
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
     numberOfSeconds = 60;
@@ -96,6 +102,12 @@ export class ListingCreateComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new JudgeActions.Get());
+        this.chosenListingType = ListingTypeTab.Single;
+        if (this.editMode) {
+            if (this.listing.hearing.duration.asHours() >= 24) {
+                this.chosenListingType = ListingTypeTab.Multi;
+            }
+        }
     }
 
     save() {
@@ -117,7 +129,7 @@ export class ListingCreateComponent implements OnInit {
 
     create() {
         this.listing.hearing.id = uuid();
-
+        console.log('chosenListingType: ' + this.chosenListingType)
         this.hearingPartModificationService.createListingRequest(this.listing);
         this.openDialog('Creating listing request');
     }
@@ -171,6 +183,12 @@ export class ListingCreateComponent implements OnInit {
         this.store.dispatch(new GetById(this.listing.hearing.id));
     }
 
+    onListingTypeChange(event: MatRadioChange) {
+        console.log(event);
+        this.chosenListingType = Number.parseInt(event.value);
+        console.log(this.chosenListingType);
+    }
+
     private initiateListing() {
         this.listing = this.defaultListing();
     }
@@ -219,6 +237,9 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.hearingTypeCode,
                 [Validators.required]
             ),
+            listingTypeRadio: new FormControl(
+                this.chosenListingType, [Validators.required]
+            ),
             listingType: new FormGroup({
                 duration: new FormControl(
                     this.listing.hearing.duration ? this.listing.hearing.duration.asMinutes() : undefined,
@@ -245,9 +266,12 @@ export class ListingCreateComponent implements OnInit {
     }
 
     private prepareListingTypeData() {
-        switch (this.listingTypeSelection.value) {
+        switch (this.chosenListingType) {
             case null:
             case ListingTypeTab.Single:
+                if (this.listing.hearing.duration.asMinutes() >= 24 * 60) {
+                    this.listing.hearing.duration = moment.duration(24 * 60 - 1);
+                }
                 this.listing.hearing.numberOfSessions = 1;
                 break;
             case ListingTypeTab.Multi:
@@ -255,9 +279,4 @@ export class ListingCreateComponent implements OnInit {
                 break;
         }
     }
-}
-
-export enum ListingTypeTab {
-    Single = 0,
-    Multi = 1,
 }

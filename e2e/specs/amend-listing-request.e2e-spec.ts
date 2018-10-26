@@ -75,14 +75,17 @@ describe('Amend Listing Request', () => {
         caseTitle: newCaseTitle,
         caseType: otherCaseType,
         hearingType: otherHearingType,
-        duration: otherDuration,
+        durationMinutes: otherDuration,
+        durationDays: null,
+        numberOfSessions: 1,
         fromDate: todayDate,
         endDate: tomorrowDate
       };
       await listingCreationPage.setNoteValue(LISTING_NOTES.SPECIAL_REQUIREMENTS, specReqNoteValue);
-      await listingCreationPage.createListingRequest(listingForm)
+      await listingCreationPage.createListingRequest(listingForm);
       await transactionDialogPage.clickAcceptButton();
-      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(listingForm));
+      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(
+          newCaseNumber, newCaseTitle, otherCaseType, otherHearingType, otherDuration.toString(), todayDate, tomorrowDate);
       expect(isListingRequestDisplayed).toBeTruthy()
     });
   });

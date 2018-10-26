@@ -17,7 +17,9 @@ export const listingCreationForm: ListingCreationForm = {
   caseTitle,
   caseType: listingRequestCaseType,
   hearingType: hearingType,
-  duration: duration,
+  durationMinutes: duration,
+  durationDays: null,
+  numberOfSessions: 1,
   fromDate: todayDate,
   endDate: tomorrowDate
-}
+};
