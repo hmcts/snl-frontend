@@ -131,7 +131,8 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
             }
 
-            this.resetSelections();
+            this.onHearingsClearSelection();
+            this.onSessionsClearSelection();
         });
     }
 

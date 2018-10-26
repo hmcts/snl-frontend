@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
