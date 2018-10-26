@@ -213,7 +213,7 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
-            component.listingTypeSelection.setValue(ListingTypeTab.Multi);
+            component.chosenListingType = ListingTypeTab.Multi;
 
             component.save();
 
@@ -235,13 +235,13 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.numberOfSessions).toEqual(5);
         });
 
-        it('should dispatch action with 1 as a numberOfSessions ' +
+        it('should dispatch action with 1 as a numberOfSessions and max minutes for a day, ' +
             'when multi-session numberOfSessions was set higher and option changed to singe-session ', () => {
             component.listing = listingCreate;
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
-            component.listingTypeSelection.setValue(ListingTypeTab.Single);
+            component.chosenListingType = ListingTypeTab.Single;
 
             component.save();
 
@@ -253,7 +253,7 @@ describe('ListingCreateComponent', () => {
             expect(createListingAction.type).toEqual(
                 HearingPartActionTypes.CreateListingRequest
             );
-            expect(createdListing.duration).toEqual(threeDaysDuration);
+            expect(createdListing.duration).toEqual(moment.duration(60 * 24 - 1), 'minutes');
             expect(createdListing.numberOfSessions).toEqual(1);
         });
 

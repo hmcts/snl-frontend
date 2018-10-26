@@ -269,7 +269,7 @@ export class ListingCreateComponent implements OnInit {
         switch (this.chosenListingType) {
             case null:
             case ListingTypeTab.Single:
-                if (this.listing.hearing.duration.asMinutes() >= 24 * 60) {
+                if (this.listing.hearing.duration && this.listing.hearing.duration.asMinutes() >= 24 * 60) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1);
                 }
                 this.listing.hearing.numberOfSessions = 1;
