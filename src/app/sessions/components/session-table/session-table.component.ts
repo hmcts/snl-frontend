@@ -8,8 +8,7 @@ import { formatDuration } from '../../../utils/date-utils';
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./session-table.component.scss']
 })
 export class SessionTableComponent implements OnChanges {
 
