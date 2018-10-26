@@ -54,7 +54,7 @@ export class SessionsSearchComponent implements OnInit {
             select(fromHearingParts.getFullHearingParts),
             map(asArray),
             map(sessionsFilterService.filterUnlistedHearingParts)
-        ) as Observable<HearingPartViewModel[]>;
+        );
 
         this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
         this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
@@ -68,7 +68,7 @@ export class SessionsSearchComponent implements OnInit {
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
 
-        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
+        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data });
     }
 
     ngOnInit() {
@@ -92,6 +92,7 @@ export class SessionsSearchComponent implements OnInit {
         })
     }
 
+    // TODO move to service
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
         if (!filters) {
             return sessions;

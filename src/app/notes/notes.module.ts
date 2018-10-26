@@ -12,6 +12,7 @@ import { NoteComponent } from './components/note/note.component';
 import { NoteListComponent } from './components/notes-list/note-list.component';
 import { NotesPreparerService } from './services/notes-preparer.service';
 import { NotesListDialogComponent } from './components/notes-list-dialog/notes-list-dialog.component';
+import { NotesPopulatorService } from './services/notes-populator.service';
 
 const COMPONENTS = [
     NoteComponent,
@@ -31,7 +32,7 @@ const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [NotesService, NotesPreparerService],
+    providers: [NotesService, NotesPreparerService, NotesPopulatorService],
     entryComponents: [NotesListDialogComponent]
 })
 export class NotesModule {

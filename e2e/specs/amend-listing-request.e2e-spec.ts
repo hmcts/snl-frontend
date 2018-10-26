@@ -1,5 +1,5 @@
-import { LoginFlow } from './../flows/login.flow';
-import { NavigationFlow } from './../flows/navigation.flow';
+import { LoginFlow } from '../flows/login.flow';
+import { NavigationFlow } from '../flows/navigation.flow';
 import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { v4 as uuid } from 'uuid';
@@ -49,7 +49,7 @@ const listingRequestCreate: CreateListingRequestBody = {
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
-    await loginFlow.relogin()
+    await loginFlow.loginIfNeeded()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
