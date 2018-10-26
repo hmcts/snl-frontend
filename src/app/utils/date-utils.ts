@@ -15,5 +15,16 @@ export function getHttpFriendly(date: moment.Moment): string {
 }
 
 export function formatDuration(duration: moment.Duration): string {
-    return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
+    duration = moment.duration(duration);
+    const durationMs = duration.asMilliseconds();
+    const durationOfOneDayInMs = 86400000;
+    if (durationMs >= durationOfOneDayInMs) {
+        const durationDays = Math.floor((durationMs / durationOfOneDayInMs));
+        const durationHours = (durationDays * 24) + duration.hours();
+        return durationHours + ':' +
+            (duration.minutes() < 10 ? '0' + duration.minutes() : duration.minutes());
+
+    } else {
+        return moment.utc(durationMs).format('HH:mm');
+    }
 }
