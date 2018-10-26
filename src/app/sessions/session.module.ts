@@ -38,21 +38,21 @@ import { NotesModule } from '../notes/notes.module';
 import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
 
 export const COMPONENTS = [
-    SessionsPageComponent,
-    SessionsCreateComponent,
-    SessionTableComponent,
-    SessionsFilterComponent,
-    DetailsDialogComponent,
-    SessionsCreateFormComponent,
-    SessionEditOrCreateDialogComponent,
-    SessionsPropositionsSearchComponent,
-    SessionsPropositionsTableComponent,
-    SessionsPropositionsFormComponent,
-    SessionsSearchComponent,
-    SessionAmendmentTableComponent,
-    SessionsListingsSearchComponent,
-    SessionsAmendFormComponent,
-    SessionAmendDialogComponent
+  SessionsPageComponent,
+  SessionsCreateComponent,
+  SessionTableComponent,
+  SessionsFilterComponent,
+  DetailsDialogComponent,
+  SessionsCreateFormComponent,
+  SessionEditOrCreateDialogComponent,
+  SessionsPropositionsSearchComponent,
+  SessionsPropositionsTableComponent,
+  SessionsPropositionsFormComponent,
+  SessionsSearchComponent,
+  SessionAmendmentTableComponent,
+  SessionsListingsSearchComponent,
+  SessionsAmendFormComponent,
+  SessionAmendDialogComponent
 ];
 
 @NgModule({
@@ -69,27 +69,29 @@ export const COMPONENTS = [
     StoreModule.forFeature('sessions', reducers),
     EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects]),
     RouterModule.forChild([{
-        path: '',
-        component: SessionsPageComponent,
-        children: [
-            { path: '', redirectTo: 'search', pathMatch: 'full' },
-            {
-                path: 'search',
-                component: SessionsSearchComponent
-            }, {
-                path: 'create',
-                component: SessionsCreateComponent
-            }, {
-                path: 'search-proposition',
-                component: SessionsPropositionsSearchComponent
-            }
-        ]},
+      path: '',
+      component: SessionsPageComponent,
+      children: [
+        {path: '', redirectTo: 'search', pathMatch: 'full'},
+        {
+          path: 'search',
+          component: SessionsSearchComponent
+        }, {
+          path: 'create',
+          component: SessionsCreateComponent
+        }, {
+          path: 'search-proposition',
+          component: SessionsPropositionsSearchComponent
+        }
+      ]
+    },
     ]),
   ],
   entryComponents: [DetailsDialogComponent, SessionEditOrCreateDialogComponent, SessionAmendDialogComponent],
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService,
-      SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration]
+    SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration]
 })
-export class SessionModule { }
+export class SessionModule {
+}

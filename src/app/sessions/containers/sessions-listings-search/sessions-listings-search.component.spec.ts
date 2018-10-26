@@ -41,6 +41,7 @@ import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
 import { Hearing } from '../../../hearing-part/models/hearing';
 import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
+import { AssignHearingData } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
@@ -361,9 +362,14 @@ describe('SessionsListingsSearchComponent', () => {
 
   describe('assignToSession', () => {
     it('should dispatch AssignToSession action', () => {
+      const startTime = '10:30';
       component.selectedSession = mockedFullSession[0];
       component.selectedHearingPart = mockedUnlistedHearingVM;
-      component.assignToSession();
+
+      component.assignToSession({
+          confirmed: true,
+          startTime: startTime
+      } as AssignHearingData);
 
       const passedObj = storeSpy.calls.first().args[0];
       const sessionAssignmentPayload: HearingToSessionAssignment = passedObj.payload;
@@ -384,7 +390,8 @@ describe('SessionsListingsSearchComponent', () => {
       expect(sessionAssignmentPayload.sessionVersion).toEqual(
           mockedFullSession[0].version
       )
-      expect(sessionAssignmentPayload.start).toBeNull();
+
+      expect(sessionAssignmentPayload.start).toEqual(moment(startTime, 'HH:mm').toDate());
     });
   });
 

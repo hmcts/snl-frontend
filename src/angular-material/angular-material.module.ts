@@ -1,30 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-    MatButtonModule,
-    MatCheckboxModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatCardModule,
-    MatDialogModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSnackBarModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatProgressSpinnerModule,
-    DateAdapter,
-    MAT_DATE_LOCALE,
-    MAT_DATE_FORMATS,
-    MatSortModule
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatFormFieldModule,
+  MatCardModule,
+  MatDialogModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatRadioModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSnackBarModule,
+  MatTableModule,
+  MatToolbarModule,
+  MatMenuModule,
+  MatProgressSpinnerModule,
+  DateAdapter,
+  MAT_DATE_LOCALE,
+  MAT_DATE_FORMATS,
+  MatSortModule, MatTabsModule, MatExpansionModule, MatDividerModule
 } from '@angular/material';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '../../node_modules/@angular/material-moment-adapter';
 import { AppConfig } from '../app/app.config';
@@ -53,7 +53,12 @@ import { AppConfig } from '../app/app.config';
     MatMenuModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatSortModule
+    MatSortModule,
+    MatTabsModule,
+    MatCardModule,
+    MatDividerModule,
+    MatTabsModule,
+    MatExpansionModule
   ],
   exports: [
     MatCardModule,
@@ -76,7 +81,12 @@ import { AppConfig } from '../app/app.config';
     MatMenuModule,
     MatDialogModule,
     MatProgressSpinnerModule,
-    MatSortModule
+    MatSortModule,
+    MatTabsModule,
+    MatCardModule,
+    MatDividerModule,
+    MatTabsModule,
+    MatExpansionModule
   ],
   declarations: [],
   providers: [

@@ -17,11 +17,17 @@ export class SessionSearchPage {
     private sessionsTablePaginator = new Paginator(element(by.id('sessions-table-paginator')));
     private listingRequestsTable = new Table(element(by.id('hearings-part-table')));
     private listingRequestsTablePaginator = new Paginator(element(by.id('hearings-part-table-paginator')));
+    private listHearingButton = element(by.id('listHearingButton'));
     public assignButton = element(by.id('assign'));
 
     async clickAssignButton() {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
         await this.assignButton.click()
+    }
+
+    async acceptAssignWithCurrentTime() {
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.listHearingButton), Wait.normal, 'List hearing button not visible');
+        await this.listHearingButton.click()
     }
 
     async filterSession(formValues: FilterSessionsComponentForm) {

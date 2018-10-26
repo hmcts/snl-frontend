@@ -3,6 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import { formatDuration } from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-session-table',
@@ -64,7 +65,7 @@ export class SessionTableComponent implements OnChanges {
   }
 
   humanizeDuration(duration) {
-      return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
+      return formatDuration(moment.duration(duration));
   }
 
   toggleSession(session: SessionViewModel) {
