@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { DurationAsDaysPipe } from '../core/pipes/duration-as-days.pipe';
 
 export function isDateRangeValid(start: moment.Moment, end: moment.Moment): boolean {
     return (
@@ -19,11 +20,8 @@ export function formatDuration(duration: moment.Duration): string {
     const durationMs = duration.asMilliseconds();
     const durationOfOneDayInMs = 86400000;
     if (durationMs >= durationOfOneDayInMs) {
-        const durationDays = Math.floor((durationMs / durationOfOneDayInMs));
-        const durationHours = (durationDays * 24) + duration.hours();
-        return durationHours + ':' +
-            (duration.minutes() < 10 ? '0' + duration.minutes() : duration.minutes());
-
+        const daysNumber = new DurationAsDaysPipe().transform(duration);
+        return daysNumber + ' D';
     } else {
         return moment.utc(durationMs).format('HH:mm');
     }
