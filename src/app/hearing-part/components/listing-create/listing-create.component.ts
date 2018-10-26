@@ -24,6 +24,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -78,6 +79,7 @@ export class ListingCreateComponent implements OnInit {
     numberOfSeconds = 60;
     binIntMaxValue = 9223372036854775807;
     limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
+    private asDaysPipe = new DurationAsDaysPipe();
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -275,7 +277,7 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.numberOfSessions = 1;
                 break;
             case ListingTypeTab.Multi:
-                this.listing.hearing.duration = moment.duration(Math.ceil(this.listing.hearing.duration.asDays()), 'days');
+                this.listing.hearing.duration = moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days');
                 break;
         }
     }

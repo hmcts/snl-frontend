@@ -51,7 +51,7 @@
                 <div formGroupName="listingType">
                     <div *ngIf="chosenListingType === 0">
                         <mat-form-field>
-                            <input id="duration-duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" >
+                            <input id="duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" >
                             <span matSuffix>Minutes</span>
                         </mat-form-field>
                     </div>
