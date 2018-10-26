@@ -81,7 +81,7 @@ export class ViewHearingComponent implements OnInit {
 
   public confirmationDialogClosed = (confirmed: boolean) => {
     if (confirmed) {
-      this.hearingService.unlist(this.hearing.id, this.hearing.version).subscribe();
+      this.hearingService.unlist(this.hearing).subscribe();
       this.openSummaryDialog().afterClosed().subscribe((success) => {
           if (success) {
               this.fetchHearing();

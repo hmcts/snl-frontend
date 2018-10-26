@@ -33,10 +33,16 @@ export interface Hearing {
   notes: Note[],
   sessions: Session[],
   version: string
+  hearingPartsVersions: VersionInfo[]
+}
+
+export interface VersionInfo {
+  id: string,
+  version: string
 }
 
 export interface UnlistHearingRequest {
   hearingId: string,
-  hearingVersion: string,
+  hearingPartsVersions: VersionInfo[],
   userTransactionId: string
 }

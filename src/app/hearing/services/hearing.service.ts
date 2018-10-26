@@ -30,10 +30,10 @@ export class HearingService {
       });
   }
 
-  unlist(hearingId: string, version: string): Observable<Transaction> {
+  unlist(hearing: Hearing): Observable<Transaction> {
     const unlistHearingRequest: UnlistHearingRequest = {
-      hearingId,
-      hearingVersion: version,
+      hearingId: hearing.id,
+      hearingPartsVersions: hearing.hearingPartsVersions,
       userTransactionId: uuid()
     }
 
