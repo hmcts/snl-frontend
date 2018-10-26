@@ -31,5 +31,12 @@ export interface Hearing {
   facilityRequirements: string,
   reservedToJudge: string,
   notes: Note[],
-  sessions: Session[]
+  sessions: Session[],
+  version: string
+}
+
+export interface UnlistHearingRequest {
+  hearingId: string,
+  hearingVersion: string,
+  userTransactionId: string
 }
