@@ -1,38 +1,45 @@
-import { TopMenu } from './../pages/top-menu.po';
+import { TopMenu } from '../pages/top-menu.po';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';
 import { ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
+import { Logger } from '../utils/logger';
 
 export class LoginFlow {
-  loginPage = new LoginPage();
-  topMenu = new TopMenu();
+    loginPage = new LoginPage();
+    topMenu = new TopMenu();
 
-  async login() {
-    await this.loginPage.login(
-      Credentials.ValidOfficerUsername,
-      Credentials.ValidOfficerPassword
-    );
-  }
-
-  async loginIfNeeded(): Promise<void> {
-    const isLoginPageDisplayed = await this.loginPage.isPresent();
-    if (isLoginPageDisplayed) {
-      await this.login();
+    private async goHome() {
+        if (!this.loginPage.isPresent()) {
+            await browser.get('/');
+            await browser.wait(ExpectedConditions.urlContains('/home/'), Wait.short)
+                .catch(() => Promise.resolve(false));
+            Logger.log('Done waiting for homepage')
+        }
     }
-  }
 
-  async logoutIfNeeded() {
-    const isLoginPageDisplayed = await this.loginPage.isPresent();
-    if (!isLoginPageDisplayed) {
-      await this.topMenu.clickOnLogoutButton()
-      await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL havent appear')
-      await this.loginPage.waitUntilLoaded()
+    async login() {
+        await this.loginPage.login(
+            Credentials.ValidOfficerUsername,
+            Credentials.ValidOfficerPassword
+        );
     }
-  }
 
-  async relogin() {
-    await this.logoutIfNeeded();
-    await this.loginIfNeeded();
-  }
+    async loginIfNeeded(): Promise<void> {
+        await this.goHome()
+        const isLoginPageDisplayed = await this.loginPage.isPresent();
+        if (isLoginPageDisplayed) {
+            await this.login();
+        }
+    }
+
+    async logoutIfNeeded() {
+        await this.goHome()
+        const isLoginPageDisplayed = await this.loginPage.isPresent();
+        if (!isLoginPageDisplayed) {
+            await this.topMenu.clickOnLogoutButton()
+            await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL didn\'t appear')
+            await this.loginPage.waitUntilLoaded()
+        }
+    }
 }
