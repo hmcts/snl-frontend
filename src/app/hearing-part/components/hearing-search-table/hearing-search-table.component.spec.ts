@@ -127,6 +127,12 @@ describe('HearingSearchTableComponent', () => {
         });
     });
   });
+
+    describe('buildViewHearingUrl', () => {
+        it('should build correct url', () => {
+            expect(component.buildViewHearingUrl('random-id')).toEqual('/home/hearing/random-id');
+        })
+    });
 });
 
 function generateHearing(id: string): FilteredHearingViewmodel {

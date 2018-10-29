@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class ViewHearingPage {
-    private header = element(by.css('h2'));
+    private header = element(by.id('case-number'));
 
     async waitUntilVisible() {
         await browser.wait(
@@ -14,7 +14,7 @@ export class ViewHearingPage {
         return this;
     }
 
-    async getHeaderText() {
+    getHeaderText() {
         return this.header.getText();
     }
 }

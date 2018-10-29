@@ -13,7 +13,7 @@
   <ng-container matColumnDef="caseNumber">
     <mat-header-cell *matHeaderCellDef> Case Number</mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <a id="view-hearing-{{element.id}}" routerLink="/home/hearing/{{element.id}}">{{element.caseNumber}}</a>
+      <a id="view-hearing-{{element.id}}" routerLink="{{buildViewHearingUrl(element.id)}}">{{element.caseNumber}}</a>
     </mat-cell>
   </ng-container>
 
