@@ -131,7 +131,6 @@ export class ListingCreateComponent implements OnInit {
 
     create() {
         this.listing.hearing.id = uuid();
-        console.log('chosenListingType: ' + this.chosenListingType)
         this.hearingPartModificationService.createListingRequest(this.listing);
         this.openDialog('Creating listing request');
     }
@@ -269,15 +268,15 @@ export class ListingCreateComponent implements OnInit {
 
     private prepareListingTypeData() {
         switch (this.chosenListingType) {
-            case null:
+            case ListingTypeTab.Multi:
+                this.listing.hearing.duration = moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days');
+                break;
             case ListingTypeTab.Single:
+            default:
                 if (this.listing.hearing.duration && this.listing.hearing.duration.asMinutes() >= 24 * 60) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1);
                 }
                 this.listing.hearing.numberOfSessions = 1;
-                break;
-            case ListingTypeTab.Multi:
-                this.listing.hearing.duration = moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days');
                 break;
         }
     }
