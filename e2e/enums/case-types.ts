@@ -6,7 +6,6 @@ export enum CaseTypes {
     NONE = ''
 }
 
-// todo merge those two enums in one enum with objects
 export enum CaseTypeCodes {
     SCLAIMS = 'small-claims',
     FTRACK = 'fast-track',
