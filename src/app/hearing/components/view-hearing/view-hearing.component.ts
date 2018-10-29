@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { MatDialog } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { HearingActions } from '../../models/hearin-actions';
 
 @Component({
   selector: 'app-view-hearing',
@@ -15,6 +16,7 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 })
 export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
+  hearingActions = HearingActions
 
   constructor(
     private route: ActivatedRoute,
@@ -60,6 +62,15 @@ export class ViewHearingComponent implements OnInit {
     }
   }
 
+  onActionChanged(event: {value: HearingActions}) {
+    switch (event.value) {
+      case HearingActions.Unlist:
+        this.openConfirmationDialog();
+      break;
+      default: /* no-op */
+    }
+  }
+
   isSessionPanelDisabled(session: Session) {
     return session.notes === undefined || session.notes.length === 0;
   }
@@ -72,8 +83,11 @@ export class ViewHearingComponent implements OnInit {
     const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
         ...DEFAULT_DIALOG_CONFIG,
         data: {
-            message: 'Are you sure you want to unlist this hearing?'
+            title: 'Unlist hearing',
+            message: 'Are you sure you want to unlist this hearing?' +
+            'Once you do this you will need to relist the hearing and all subsequent hearing parts',
         },
+        width: '350px'
     });
 
     confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
