@@ -24,6 +24,7 @@ export interface HearingPartViewModel {
     reservedJudge: Judge;
     reservedJudgeId: string;
     hearingId: string;
+    start: moment.Moment;
 }
 
 export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {
@@ -40,6 +41,6 @@ export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingR
         priority: hvm.priority,
         reservedJudgeId: hvm.reservedJudgeId,
         communicationFacilitator: hvm.communicationFacilitator,
-        userTransactionId: undefined
+        userTransactionId: undefined,
     }
 }

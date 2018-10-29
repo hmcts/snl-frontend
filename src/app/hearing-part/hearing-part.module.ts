@@ -20,6 +20,7 @@ import { ListingCreateDialogComponent } from './components/listing-create-dialog
 import { ListingNoteListComponent } from './components/listing-note-list/listing-note-list.component';
 import { AssignHearingDialogComponent } from './components/assign-hearing-dialog/assign-hearing-dialog.component';
 import { HearingAssignmentNotesConfiguration } from './models/hearing-assignment-notes-configuration.model';
+import { DateTimeToTime } from '../core/pipes/dateTime-time.pipe';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -28,7 +29,8 @@ export const COMPONENTS = [
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
     ListingNoteListComponent,
-    AssignHearingDialogComponent
+    AssignHearingDialogComponent,
+    DateTimeToTime
 ];
 
 @NgModule({

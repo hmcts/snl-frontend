@@ -2,5 +2,6 @@
   <span fxFlex>{{hearingPart.caseNumber}}</span>
   <span fxFlex>{{hearingPart.caseTitle}}</span>
   <span fxFlex="30%">{{hearingPart.hearingType.description}}</span>
+  <span fxFlex="15%">{{hearingPart.start | appDateTimeToTime}}</span>
   <span fxFlex="15%">{{hearingPart.duration | appDurationFormat}}</span>
 </div>

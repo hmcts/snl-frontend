@@ -69,10 +69,11 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
-            })
+            });
 
-            const scheduleStartObj = moment(hearing.scheduleStart)
-            const scheduleEndObj = moment(hearing.scheduleEnd)
+            const scheduleStartObj = moment(hearing.scheduleStart);
+            const scheduleEndObj = moment(hearing.scheduleEnd);
+            const startObj = moment(hearing.start);
             return {
                 id,
                 sessionId,
@@ -91,6 +92,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingId: hearing.id,
                 // hearingVersion: hearing.version,
                 notes: sortedNotes,
+                start: startObj.isValid() ? startObj : undefined,
             };
         });
         return finalHearingParts;
@@ -103,15 +105,15 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
             const filteredNotes = Object.values(notes).filter(note => note.entityId === h.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
-            })
+            });
 
             const ownedHearingParts = hearingParts.filter(hp => hp.hearingInfo === h.id);
             const unlisted = ownedHearingParts.filter(hp => hp.sessionId === null).length !== 0;
 
             console.log(ownedHearingParts.filter(hp => hp.hearingInfo === h.id));
 
-            const scheduleStartObj = moment(h.scheduleStart)
-            const scheduleEndObj = moment(h.scheduleEnd)
+            const scheduleStartObj = moment(h.scheduleStart);
+            const scheduleEndObj = moment(h.scheduleEnd);
             return {
                 id: h.id,
                 caseNumber: h.caseNumber,

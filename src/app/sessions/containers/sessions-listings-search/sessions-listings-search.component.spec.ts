@@ -80,7 +80,7 @@ const mockedHearingPartResponse: HearingPartResponse = {
   sessionId: null,
   hearingInfo: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
   version: 2,
-}
+};
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
@@ -98,7 +98,8 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter',
     notes: [],
-    reservedJudge: mockedJudges[0]
+    reservedJudge: mockedJudges[0],
+    start: moment(nowISOSting)
 };
 
 const mockedUnlistedHearingVM: HearingViewmodel = {
@@ -117,7 +118,7 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     notes: mockedNotes,
     reservedJudge: mockedJudges[0],
     isListed: false
-}
+};
 
 const mockedHearingResponse: Hearing = {
     caseNumber: 'abc123',
@@ -132,8 +133,9 @@ const mockedHearingResponse: Hearing = {
     reservedJudgeId: judgeId,
     scheduleEnd: nowISOSting,
     scheduleStart: nowISOSting,
-    version: 2
-}
+    version: 2,
+    start: nowISOSting
+};
 
 // same as unlisted, but with session set to matching id in Session
 let mockedListedHearingPartVM: HearingPartViewModel = { ...mockedUnlistedHearingPartVM, sessionId: 'some-session-id' };

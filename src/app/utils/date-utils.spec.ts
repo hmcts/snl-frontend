@@ -57,4 +57,12 @@ describe('DateUtils', () => {
             expect(dateUtils.formatDuration(momentDuration)).toEqual('23:59');
         });
     });
+
+    describe('formatStartTime', () => {
+        it('should display time from dateTime', () => {
+            const momentDate = moment.utc('2018-10-19 16:32:00+00');
+
+            expect(dateUtils.formatStartTime(momentDate)).toEqual('16:32');
+        });
+    });
 });
