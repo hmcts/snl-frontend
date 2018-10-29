@@ -25,6 +25,7 @@ import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
+import * as HearingUtils from '../../utils/hearing-utils';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -188,6 +189,10 @@ export class ListingCreateComponent implements OnInit {
         this.chosenListingType = Number.parseInt(event.value);
     }
 
+    isMultiSession(): boolean {
+        return HearingUtils.isMultiSessionListing(this.listing);
+    }
+
     private initiateListing() {
         this.listing = this.defaultListing();
     }
@@ -240,8 +245,10 @@ export class ListingCreateComponent implements OnInit {
                 this.chosenListingType, [Validators.required]
             ),
             listingType: new FormGroup({
-                duration: new FormControl(
-                    this.listing.hearing.duration ? this.listing.hearing.duration.asMinutes() : undefined,
+                duration: new FormControl({
+                        value: this.getDurationToDisplay(),
+                        disabled: this.editMode && this.isMultiSession()
+                    },
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
                 numberOfSessions: new FormControl(
@@ -255,10 +262,21 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
+    private getDurationToDisplay() {
+        if (this.listing.hearing.duration) {
+            if (this.chosenListingType === ListingTypeTab.Multi) {
+                return this.asDaysPipe.transform(this.listing.hearing.duration);
+            } else {
+                return this.listing.hearing.duration.asMinutes();
+            }
+        }
+        return undefined;
+    }
+
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
-            data: { actionTitle }
+            data: {actionTitle}
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);
         });
