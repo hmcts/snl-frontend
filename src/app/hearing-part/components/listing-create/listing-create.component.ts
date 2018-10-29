@@ -274,7 +274,7 @@ export class ListingCreateComponent implements OnInit {
                 break;
             case ListingTypeTab.Single:
             default:
-                if (this.listing.hearing.duration && this.listing.hearing.duration.asMinutes() >= 24 * 60) {
+                if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
                 this.listing.hearing.numberOfSessions = 1;
