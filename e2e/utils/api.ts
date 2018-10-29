@@ -10,95 +10,95 @@ const apiURL = (process.env.TEST_URL) ? 'http://snl-api-aat.service.core-compute
 console.log('API URL: ' + apiURL)
 
 export class API {
-  private static baseUrl = apiURL;
-  private static applicationJSONHeader = {'Content-Type': 'application/json'}
-  private static headers = {'Authorization': '', ...API.applicationJSONHeader}
+    private static baseUrl = apiURL;
+    private static applicationJSONHeader = {'Content-Type': 'application/json'}
+    private static headers = {'Authorization': '', ...API.applicationJSONHeader}
 
-  static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
-    await API.login();
-    const options = {
-      method: 'PUT',
-      uri: `${API.baseUrl}/hearing-part/create`,
-      body: JSON.stringify(body),
-      headers: API.headers,
-      resolveWithFullResponse: true
-    }
-    const response = await rp(options)
-    await API.commitUserTransaction(body)
+    static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
+        await API.login();
+        const options = {
+            method: 'PUT',
+            uri: `${API.baseUrl}/hearing-part/create`,
+            body: JSON.stringify(body),
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        await API.commitUserTransaction(body)
 
-    return response.statusCode;
-  }
-
-  static async createSession(body: SessionCreate) {
-    await API.login();
-    const options = {
-      method: 'PUT',
-      uri: `${API.baseUrl}/sessions`,
-      body: JSON.stringify(body),
-      headers: API.headers,
-      resolveWithFullResponse: true
-    }
-    const response = await rp(options)
-    await API.commitUserTransaction(body)
-
-    return response.statusCode;
-  }
-
-  static async getProblems() {
-    await API.login();
-    const options = {
-      method: 'GET',
-      uri: `${API.baseUrl}/problems`,
-      headers: API.headers,
-      resolveWithFullResponse: true
-    }
-    const response = await rp(options)
-    const responseBody = JSON.parse(response.body)
-    return responseBody;
-  }
-
-  static async getHearingParts() {
-    await API.login();
-    const options = {
-      method: 'GET',
-      uri: `${API.baseUrl}/hearing-part`,
-      headers: API.headers,
-      resolveWithFullResponse: true
-    }
-    const response = await rp(options)
-    const responseBody = JSON.parse(response.body)
-    return responseBody;
-  }
-
-  private static async login() {
-    if (API.headers.Authorization.length > 0) {
-      return
+        return response.statusCode;
     }
 
-    const options = {
-      method: 'POST',
-      uri: `${API.baseUrl}/security/signin`,
-      body: JSON.stringify({
-        username: Credentials.ValidOfficerUsername,
-        password: Credentials.ValidOfficerPassword
-      }),
-      headers: API.applicationJSONHeader,
-      resolveWithFullResponse: true,
-    };
+    static async createSession(body: SessionCreate) {
+        await API.login();
+        const options = {
+            method: 'PUT',
+            uri: `${API.baseUrl}/sessions`,
+            body: JSON.stringify(body),
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        await API.commitUserTransaction(body)
 
-    const response = await rp(options)
-    const responseBody = JSON.parse(response.body)
-    API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
-  }
-
-  private static async commitUserTransaction(body: { userTransactionId: string }) {
-    const commitUserTransactionOptions = {
-      method: 'POST',
-      uri: `${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
-      body: body,
-      headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
-      json: true // Automatically stringifies the body to JSON
+        return response.statusCode;
     }
-    await rp(commitUserTransactionOptions)
-  }
+
+    static async getProblems() {
+        await API.login();
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/problems`,
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
+        return responseBody;
+    }
+
+    static async getHearingParts() {
+        await API.login();
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/hearing-part`,
+            headers: API.headers,
+            resolveWithFullResponse: true
+        }
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
+        return responseBody;
+    }
+
+    private static async login() {
+        if (API.headers.Authorization.length > 0) {
+            return
+        }
+
+        const options = {
+            method: 'POST',
+            uri: `${API.baseUrl}/security/signin`,
+            body: JSON.stringify({
+                username: Credentials.ValidOfficerUsername,
+                password: Credentials.ValidOfficerPassword
+            }),
+            headers: API.applicationJSONHeader,
+            resolveWithFullResponse: true,
+        };
+
+        const response = await rp(options)
+        const responseBody = JSON.parse(response.body)
+        API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
+    }
+
+    private static async commitUserTransaction(body: { userTransactionId: string }) {
+        const commitUserTransactionOptions = {
+            method: 'POST',
+            uri: `${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
+            body: body,
+            headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
+            json: true // Automatically stringifies the body to JSON
+        }
+        await rp(commitUserTransactionOptions)
+    }
 }

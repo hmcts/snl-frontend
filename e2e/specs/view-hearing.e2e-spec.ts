@@ -19,47 +19,47 @@ const caseNumber = `vh-${new Date().toLocaleString()}`;
 const id = uuid();
 
 const createListingRequestWithCaseNumberAndId = async function (caseNumber: string, id: string): Promise<number> {
-  return API.createListingRequest(
-    {
-      id: id,
-      caseNumber: caseNumber,
-      caseTitle: '',
-      caseTypeCode: CaseTypeCodes.FTRACK,
-      hearingTypeCode: HearingTypeCodes.ADJOURNED,
-      duration: 'PT30M',
-      priority: Priority.High,
-      userTransactionId: uuid()
-    } as CreateListingRequestBody
-  );
+    return API.createListingRequest(
+        {
+            id: id,
+            caseNumber: caseNumber,
+            caseTitle: '',
+            caseTypeCode: CaseTypeCodes.FTRACK,
+            hearingTypeCode: HearingTypeCodes.ADJOURNED,
+            duration: 'PT30M',
+            priority: Priority.High,
+            userTransactionId: uuid()
+        } as CreateListingRequestBody
+    );
 }
 
 describe('View Hearing details', () => {
-  beforeAll(async () => {
-    await loginFlow.relogin();
-  });
-
-  describe('I can search for listing request and view it', () => {
-    it('Given there is a Listing Request', async () => {
-      const statusCode = await createListingRequestWithCaseNumberAndId(caseNumber, id);
-      expect(statusCode).toEqual(200);
+    beforeAll(async () => {
+        await loginFlow.loginIfNeeded();
     });
 
-    it('When I search for it', async () => {
-      await navigationFlow.gotoSearchListingRequestPage();
-      await searchListingRequestPage.clickFilterButton();
-      await searchListingRequestPage.changeMaxItemsPerPage('100');
-      const isDisplayed = await searchListingRequestPage.isListingRequestDisplayed(caseNumber);
-      expect(isDisplayed).toEqual(true);
-    });
+    describe('I can search for listing request and view it', () => {
+        it('Given there is a Listing Request', async () => {
+            const statusCode = await createListingRequestWithCaseNumberAndId(caseNumber, id);
+            expect(statusCode).toEqual(200);
+        });
 
-    it('And click on it', async () => {
-      searchListingRequestPage.clickListingRequest(id);
-    });
+        it('When I search for it', async () => {
+            await navigationFlow.gotoSearchListingRequestPage();
+            await searchListingRequestPage.clickFilterButton();
+            //await searchListingRequestPage.changeMaxItemsPerPage('100');
+            const isDisplayed = await searchListingRequestPage.isListingRequestDisplayed(caseNumber);
+            expect(isDisplayed).toEqual(true);
+        });
 
-    it('Then Listing Request opens in new page', async () => {
-      await viewHearingPage.waitUntilVisible();
-      expect(await viewHearingPage.getHeaderText()).toEqual(caseNumber);
+        it('And click on it', async () => {
+            searchListingRequestPage.clickListingRequest(id);
+        });
+
+        it('Then Listing Request opens in new page', async () => {
+            await viewHearingPage.waitUntilVisible();
+            expect(await viewHearingPage.getHeaderText()).toEqual(caseNumber);
+        });
     });
-  });
 
 });
