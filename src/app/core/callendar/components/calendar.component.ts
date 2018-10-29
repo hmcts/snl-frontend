@@ -113,8 +113,10 @@ export class CalendarComponent implements OnInit {
         // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element.css('overflow-y', 'auto');
         event.detail.event.hearingParts.forEach(hearing => {
+            console.log(hearing.caseNumber);
             el.append('</br>');
-            el.append(hearing.caseTitle);
+            el.append(hearing.caseNumber);
+            el.append('  -  ' + hearing.caseTitle);
             el.append('  -  ' + hearing.hearingType.description);
             el.append(`  -   ${formatDuration(moment.duration(hearing.duration))}`);
         });
