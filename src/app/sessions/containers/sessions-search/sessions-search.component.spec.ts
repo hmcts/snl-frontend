@@ -38,7 +38,7 @@ const mockedSessionType: SessionType[] = [{code: 'session-type-code', descriptio
     sessionType: mockedSessionType[0],
     person: undefined,
     room: undefined,
-    hearingParts: undefined,
+    hearingParts: [],
     jurisdiction: undefined,
     version: 0,
     allocated: undefined,
