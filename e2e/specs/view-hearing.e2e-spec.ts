@@ -58,7 +58,7 @@ describe('View Hearing details', () => {
 
     it('Then Listing Request opens in new page', async () => {
       await viewHearingPage.waitUntilVisible();
-      await expect(viewHearingPage.getHeaderText()).toEqual(caseNumber);
+      expect(await viewHearingPage.getHeaderText()).toEqual(caseNumber);
     });
   });
 
