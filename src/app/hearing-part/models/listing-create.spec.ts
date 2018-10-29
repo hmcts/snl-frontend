@@ -1,6 +1,5 @@
-import { isMultiSessionListing } from './hearing-utils';
 import moment = require('moment');
-import { ListingCreate } from '../models/listing-create';
+import { isMultiSessionListing, ListingCreate } from './listing-create';
 
 describe('isMultiSessionListing', () => {
     it('should return false for undefined listing', () => {
@@ -18,6 +17,14 @@ describe('isMultiSessionListing', () => {
     it('should return true for duration longer then a day listing.hearing', () => {
         const listing = { hearing: {
             duration: moment.duration(1441, 'minutes')
+        }} as ListingCreate;
+        const result = isMultiSessionListing(listing);
+        expect(result).toEqual(true);
+    });
+
+    it('should return true for duration long as a day listing.hearing', () => {
+        const listing = { hearing: {
+            duration: moment.duration(1440, 'minutes')
         }} as ListingCreate;
         const result = isMultiSessionListing(listing);
         expect(result).toEqual(true);

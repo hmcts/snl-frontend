@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { ListingCreate } from '../../models/listing-create';
+import { ListingCreate, isMultiSessionListing } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
@@ -26,7 +26,6 @@ import { ListingNoteListComponent } from '../listing-note-list/listing-note-list
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
-import * as HearingUtils from '../../utils/hearing-utils';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -78,7 +77,7 @@ export class ListingCreateComponent implements OnInit {
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
     numberOfSeconds = 60;
-    binIntMaxValue = 86399;
+    binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
     private asDaysPipe = new DurationAsDaysPipe();
 
@@ -190,7 +189,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     isMultiSession(): boolean {
-        return HearingUtils.isMultiSessionListing(this.listing);
+        return isMultiSessionListing(this.listing);
     }
 
     private initiateListing() {
