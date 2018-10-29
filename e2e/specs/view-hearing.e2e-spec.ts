@@ -47,7 +47,6 @@ describe('View Hearing details', () => {
         it('When I search for it', async () => {
             await navigationFlow.gotoSearchListingRequestPage();
             await searchListingRequestPage.clickFilterButton();
-            //await searchListingRequestPage.changeMaxItemsPerPage('100');
             const isDisplayed = await searchListingRequestPage.isListingRequestDisplayed(caseNumber);
             expect(isDisplayed).toEqual(true);
         });
