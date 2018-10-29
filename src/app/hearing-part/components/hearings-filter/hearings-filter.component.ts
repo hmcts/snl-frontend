@@ -5,6 +5,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { Priority } from '../../models/priority-model';
 import { ListingStatus } from '../../models/listing-status-model';
+import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 
 @Component({
     selector: 'app-hearings-filter',
@@ -36,7 +37,7 @@ export class HearingsFilterComponent {
             label: 'Unlisted'
         } ,
     };
-    communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
+    communicationFacilitators = Object.values(CommunicationFacilitators);
     filters: HearingsFilters = DEFAULT_HEARING_FILTERS;
 
     constructor() {}
