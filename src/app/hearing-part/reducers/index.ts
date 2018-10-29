@@ -108,8 +108,6 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
             const ownedHearingParts = hearingParts.filter(hp => hp.hearingInfo === h.id);
             const unlisted = ownedHearingParts.filter(hp => hp.sessionId === null).length !== 0;
 
-            console.log(ownedHearingParts.filter(hp => hp.hearingInfo === h.id));
-
             const scheduleStartObj = moment(h.scheduleStart)
             const scheduleEndObj = moment(h.scheduleEnd)
             return {

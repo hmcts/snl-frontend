@@ -5,12 +5,16 @@ import { Observable } from 'rxjs/Observable';
 import { AppConfig } from '../../app.config';
 import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { map } from 'rxjs/operators';
-import { hearingInfo, hearingPart, hearingParts } from '../../core/schemas/data.schema';
+import { hearingInfo, hearingPart, hearingParts, hearings } from '../../core/schemas/data.schema';
 import { normalize } from 'normalizr';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
 import { HearingDeletion } from '../models/hearing-deletion';
 import { UpdateHearingRequest } from '../models/update-hearing-request';
 import { HearingPartResponse } from '../models/hearing-part-response';
+import { SearchHearingRequest } from '../models/search-hearing-request';
+import { Page } from '../../problems/models/problem.model';
+import { FilteredHearingViewmodel } from '../models/filtered-hearing-viewmodel';
+import * as moment from 'moment';
 
 @Injectable()
 export class HearingPartService {
@@ -34,6 +38,29 @@ export class HearingPartService {
         return this.http
             .get<HearingPartResponse>(`${this.config.getApiUrl()}/hearing/${id}`)
                 .pipe(map(data => {return normalize(data, hearingInfo)}));
+    }
+
+    searchHearings(request: SearchHearingRequest): Observable<any> {
+        return this.http
+            .post<HearingPartResponse>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+            })
+            .pipe(map(data => {return normalize(data, hearings)}));
+    }
+
+    seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {
+        return this.http
+            .post<Page<FilteredHearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+            }).pipe(map((hearingPage: Page<FilteredHearingViewmodel>) => {
+                hearingPage.content = hearingPage.content.map(hearing => {
+                    hearing.scheduleStart = moment(hearing.scheduleStart);
+                    hearing.scheduleEnd = moment(hearing.scheduleEnd);
+                    hearing.listingDate = moment(hearing.listingDate);
+                    return hearing;
+                });
+                return {...hearingPage, content: hearingPage.content}
+            }))
     }
 
     assignToSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment): Observable<any> {
