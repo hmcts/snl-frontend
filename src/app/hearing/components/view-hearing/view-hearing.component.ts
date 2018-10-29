@@ -85,7 +85,7 @@ export class ViewHearingComponent implements OnInit {
         data: {
             title: 'Unlist hearing',
             message: 'Are you sure you want to unlist this hearing?' +
-            'Once you do this you will need to relist the hearing and all subsequent hearing parts',
+            'Once you do this you will need to relist the hearing and all subsequent hearing parts.',
         },
         width: '350px'
     });
