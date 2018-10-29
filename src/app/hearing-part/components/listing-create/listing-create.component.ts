@@ -58,8 +58,6 @@ export class ListingCreateComponent implements OnInit {
     judges: Judge[] = [];
     hearings: HearingType[] = [];
     noteViewModels: NoteViewmodel[] = [];
-    listingCreate: FormGroup;
-    errors = '';
 
     private _caseTypes: CaseType[] = [];
     get caseTypes(): CaseType[] {
