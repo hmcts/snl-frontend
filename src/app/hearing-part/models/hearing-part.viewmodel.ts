@@ -24,6 +24,7 @@ export interface HearingPartViewModel {
     reservedJudge: Judge;
     reservedJudgeId: string;
     hearingId: string;
+    belongsToMultiSession: boolean;
 }
 
 export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {
