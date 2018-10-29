@@ -8,6 +8,16 @@ export class DurationAsDaysPipe implements PipeTransform {
         if (!duration) {
             return undefined;
         }
-        return Math.ceil(moment.duration(duration).asDays());
+        return this.ceilToFirstToHalf(moment.duration(duration).asDays());
+    }
+
+    private ceilToFirstToHalf(value) {
+        const roundedValue = Math.round(value * 10) / 10;
+        const modulo = (roundedValue * 10) % 10;
+        if (modulo >= 1) {
+            return Math.floor(roundedValue) + 0.5;
+        } else {
+            return Math.floor(roundedValue);
+        }
     }
 }

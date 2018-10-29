@@ -77,7 +77,7 @@ export class ListingCreateComponent implements OnInit {
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
     numberOfSeconds = 60;
-    binIntMaxValue = 9223372036854775807;
+    binIntMaxValue = 86399;
     limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
     private asDaysPipe = new DurationAsDaysPipe();
 
@@ -185,9 +185,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onListingTypeChange(event: MatRadioChange) {
-        console.log(event);
         this.chosenListingType = Number.parseInt(event.value);
-        console.log(this.chosenListingType);
     }
 
     private initiateListing() {
@@ -269,12 +267,15 @@ export class ListingCreateComponent implements OnInit {
     private prepareListingTypeData() {
         switch (this.chosenListingType) {
             case ListingTypeTab.Multi:
-                this.listing.hearing.duration = moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days');
+                // Crazy conversions as otherwise value of 1.5day is send as P1.5D instead of P1DT12H
+                this.listing.hearing.duration = moment.duration(
+                    moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
+                    , 'minutes');
                 break;
             case ListingTypeTab.Single:
             default:
                 if (this.listing.hearing.duration && this.listing.hearing.duration.asMinutes() >= 24 * 60) {
-                    this.listing.hearing.duration = moment.duration(24 * 60 - 1);
+                    this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
                 this.listing.hearing.numberOfSessions = 1;
                 break;

@@ -231,7 +231,7 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.hearingTypeCode).toEqual('hearing-type-code');
             expect(createdListing.scheduleStart).toEqual(now);
             expect(createdListing.scheduleEnd).toEqual(now);
-            expect(createdListing.duration).toEqual(threeDaysDuration);
+            expect(createdListing.duration).toEqual(moment.duration(threeDaysDuration.asMilliseconds()));
             expect(createdListing.numberOfSessions).toEqual(5);
         });
 
@@ -253,7 +253,9 @@ describe('ListingCreateComponent', () => {
             expect(createListingAction.type).toEqual(
                 HearingPartActionTypes.CreateListingRequest
             );
-            expect(createdListing.duration).toEqual(moment.duration(60 * 24 - 1), 'minutes');
+            expect(createdListing.duration).toEqual(
+                moment.duration(moment.duration(60 * 24 - 1, 'minutes').asMilliseconds())
+            );
             expect(createdListing.numberOfSessions).toEqual(1);
         });
 

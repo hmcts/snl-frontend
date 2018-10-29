@@ -48,7 +48,7 @@ describe('DateUtils', () => {
         it('should format properly for duration > 24h', () => {
             const momentDuration = moment.duration(1523, 'minutes'); // a day and a bit
 
-            expect(dateUtils.formatDuration(momentDuration)).toEqual('2 D');
+            expect(dateUtils.formatDuration(momentDuration)).toEqual('1.5 D');
         });
 
         it('should format properly for duration == 24h', () => {
