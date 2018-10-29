@@ -8,10 +8,8 @@ import {
     Output,
     ViewChild
 } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatDialog, MatPaginator, MatTableDataSource, PageEvent } from '@angular/material';
 import * as moment from 'moment';
-import { priorityValue } from '../../models/priority-model';
-import { getPropertyMemberOrNull } from '../../../utils/js-extensions';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 
 @Component({
@@ -21,7 +19,6 @@ import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmode
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingSearchTableComponent implements OnInit, OnChanges {
-    @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
@@ -52,31 +49,6 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-
-        this.dataSource.sortingDataAccessor = (item, property) => {
-            switch (property) {
-                case 'reservedJudge':
-                    return getPropertyMemberOrNull(item, property, 'name');
-
-                case 'caseType':
-                case 'hearingType':
-                    return getPropertyMemberOrNull(item, property, 'description');
-
-                case 'priority':
-                    return priorityValue(item[property]);
-
-                case 'listingDate':
-                case 'scheduleStart':
-                    return (item['scheduleStart']) ? item['scheduleStart'].unix() : null;
-                case 'requestStatus':
-                    return item['isListed'] ? 'listed' : 'unlisted';
-
-                default:
-                    return item[property];
-            }
-        };
-
-        this.dataSource.sort = this.sort;
     }
 
     parseDate(date) {

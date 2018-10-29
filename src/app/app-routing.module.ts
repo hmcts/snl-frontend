@@ -26,8 +26,7 @@ const routes: Routes = [
             {path: 'poc', component: PocComponent, canActivate: [AppConfigGuard]},
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
-            {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
-            {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard]}
+            {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
