@@ -89,6 +89,9 @@ export class HomeComponent implements OnInit {
               text: 'New Listing Request',
               href: 'listing'
             }, {
+              text: 'Search Listing Request',
+              href: 'listinghearings/search'
+            }, {
               text: 'New Session',
               href: 'sessions/create'
             },

@@ -24,6 +24,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import * as HearingUtils from '../../utils/hearing-utils';
 
@@ -50,8 +51,9 @@ export class ListingCreateComponent implements OnInit {
 
     @Output() onSave = new EventEmitter();
 
-    communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
-
+    listingCreate: FormGroup;
+    communicationFacilitators = Object.values(CommunicationFacilitators);
+    errors = '';
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];
     hearings: HearingType[] = [];
