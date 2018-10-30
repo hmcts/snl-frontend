@@ -34,4 +34,8 @@ export class NavigationFlow {
   async gotoPlannerPage() {
       await this.topMenu.openPlannerPage();
   }
+
+  async gotoSearchListingRequestPage() {
+    await this.topMenu.openSearchListingRequestPage();
+  }
 }

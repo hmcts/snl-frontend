@@ -6,6 +6,7 @@ import { SessionSearchPage } from './session-search.po';
 import { SessionAmendListPage } from './session-amend-list.po';
 import { ProblemsPage } from './problems.po';
 import { PlannerPage } from './planner.po';
+import { SearchListingRequestPage } from './search-listing-request.po';
 import { Logger } from '../utils/logger';
 
 export class TopMenu {
@@ -18,6 +19,7 @@ export class TopMenu {
     private sessionCreatePage = new SessionCreationPage()
     private sessionSearchPage = new SessionSearchPage()
     private listingCreatePage = new ListingCreationPage()
+    private searchListingRequestPage = new SearchListingRequestPage();
     private sessionAmendListPage = new SessionAmendListPage();
     private problemsPage = new ProblemsPage();
     private plannerPage = new PlannerPage();
@@ -35,6 +37,11 @@ export class TopMenu {
     async openListHearingPage(): Promise<void> {
         await this.openListingSubMenu('List Hearings');
         await this.sessionSearchPage.waitUntilVisible();
+    }
+
+    async openSearchListingRequestPage(): Promise<void> {
+        await this.openListingSubMenu('Search Listing Request');
+        await this.searchListingRequestPage.waitUntilVisible();
     }
 
     async openSessionsAmendListPage(): Promise<void> {
