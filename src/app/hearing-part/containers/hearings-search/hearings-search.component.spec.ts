@@ -6,7 +6,7 @@ import { Priority } from '../../models/priority-model';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-const hearingModificationService = jasmine.createSpyObj('HearingModificationService', ['open', 'deleteHearing']);
+const hearingModificationService = jasmine.createSpyObj('HearingModificationService', ['open', 'deleteHearing', 'removeFromState']);
 
 const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)

@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromHearingParts from '../reducers';
 import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
-import { AssignToSession, CreateListingRequest, Delete, UpdateListingRequest } from '../actions/hearing-part.action';
+import {
+    AssignToSession,
+    CreateListingRequest,
+    Delete,
+    UpdateListingRequest,
+    DeleteByHearingId
+} from '../actions/hearing-part.action';
 import { InitializeTransaction } from '../../features/transactions/actions/transaction.action';
 import { EntityTransaction } from '../../features/transactions/models/transaction-status.model';
 import * as ProblemsActions from '../../problems/actions/problem.action';
@@ -55,6 +61,8 @@ export class HearingModificationService {
 
     removeFromState(id: string) {
         this.store.dispatch(new fromHearings.DeleteComplete(id));
+        this.store.dispatch(new ProblemsActions.RemoveAll());
+        this.store.dispatch(new DeleteByHearingId(id));
     }
 
     private createTransaction(id, transactionId): EntityTransaction {

@@ -84,8 +84,10 @@ export class HearingsSearchComponent implements OnInit {
             });
 
             this.openTransactionDialog().afterClosed().subscribe((success) => {
+                this.fetchHearings(this.latestFilters, this.latestPaging);
+
                 if (success) {
-                    this.fetchHearings(this.latestFilters, this.latestPaging);
+                    this.hearingService.removeFromState(hearing.id);
                 }
             })
         }
