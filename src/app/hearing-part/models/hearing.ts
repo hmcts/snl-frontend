@@ -12,5 +12,4 @@ export interface Hearing {
     communicationFacilitator: string;
     deleted: boolean;
     version: number;
-    start: string;
 }

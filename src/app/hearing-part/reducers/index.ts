@@ -59,7 +59,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         let finalHearingParts: HearingPartViewModel[];
         if ((hearingParts === undefined) || (hearings === undefined)) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
-            const {id, sessionId, version, hearingInfo } = hearingPart;
+            const {id, sessionId, version, hearingInfo, start } = hearingPart;
             let hearing = hearings[hearingInfo];
 
             if (hearing === undefined) {
@@ -73,7 +73,6 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
 
             const scheduleStartObj = moment(hearing.scheduleStart);
             const scheduleEndObj = moment(hearing.scheduleEnd);
-            const startObj = moment(hearing.start);
             return {
                 id,
                 sessionId,
@@ -92,7 +91,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingId: hearing.id,
                 // hearingVersion: hearing.version,
                 notes: sortedNotes,
-                start: startObj.isValid() ? startObj : undefined,
+                start: moment(start)
             };
         });
         return finalHearingParts;
