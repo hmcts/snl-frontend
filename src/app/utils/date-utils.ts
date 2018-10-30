@@ -30,5 +30,5 @@ export function formatDuration(duration: moment.Duration): string {
 }
 
 export function formatStartTime(duration: moment.Moment): string {
-    return moment.utc(duration).format('HH:mm');
+    return moment(duration).format('HH:mm');
 }

@@ -10,6 +10,7 @@ import { SessionTypes } from '../enums/session-types';
 import { HearingTypes } from '../enums/hearing-types';
 import { Paginator } from '../components/paginator';
 import { Logger } from '../utils/logger';
+import { ElementHelper } from '../utils/element-helper';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
@@ -19,14 +20,17 @@ export class SessionSearchPage {
     private listingRequestsTablePaginator = new Paginator(element(by.id('hearings-part-table-paginator')));
     private listHearingButton = element(by.id('listHearingButton'));
     public assignButton = element(by.id('assign'));
+    public startTime = element(by.id('startTime'));
+    private elementHelper = new ElementHelper();
 
     async clickAssignButton() {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
         await this.assignButton.click()
     }
 
-    async acceptAssignWithCurrentTime() {
+    async acceptAssignWithCurrentTime(time) {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.listHearingButton), Wait.normal, 'List hearing button not visible');
+        await this.elementHelper.typeValue(this.startTime, time);
         await this.listHearingButton.click()
     }
 

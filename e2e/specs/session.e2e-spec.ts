@@ -27,6 +27,7 @@ const room = Rooms.COURT_4
 const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
+const assignListingStartTime = now.add('1', 'hours').format('HH:mm')
 const listingRequestCaseType = CaseTypes.K_SMALL_CLAIMS // must be other than sessionCaseType
 const listingRequestHearingType = HearingTypes.K_ASAJ;
 const caseTypesInvalidMsg = 'Session of type ' + sessionType + ' is not suitable for this listing request'
@@ -112,7 +113,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
   describe('Click on "assign" button,', () => {
     it('transaction dialog with problem that case types are different should be displayed', async () => {
       await sessionSearchPage.clickAssignButton();
-      await sessionSearchPage.acceptAssignWithCurrentTime();
+      await sessionSearchPage.acceptAssignWithCurrentTime(assignListingStartTime);
       const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypesInvalidMsg)
       expect(isCaseTypeProblemDisplayed).toBeTruthy()
       await transactionDialogPage.clickAcceptButton();
@@ -124,7 +125,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await browser.waitForAngular();
       await calendarPage.clickOnEventWith(startTimeAMFormat)
       const isDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
-        sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType
+        sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType, caseNumber, assignListingStartTime
       );
       expect(isDialogDisplayed).toBeTruthy()
       await sessionDetailsDialogPage.close()
