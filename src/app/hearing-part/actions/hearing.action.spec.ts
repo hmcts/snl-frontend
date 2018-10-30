@@ -35,12 +35,16 @@ describe('HearingAction', () => {
     describe('Assing to session', () => {
         it('should create an action', () => {
             const payload: HearingToSessionAssignment = {
-                sessionId: '123',
-                sessionVersion: 1,
                 userTransactionId: '123',
                 start: new Date(),
                 hearingId: '123',
                 hearingVersion: 1,
+                sessionsData: [
+                    {
+                        sessionVersion: 1,
+                        sessionId: '123'
+                    }
+                ]
             };
             const action = new AssignToSession(payload);
 
