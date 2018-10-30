@@ -24,6 +24,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 
 @Component({
     selector: 'app-listing-create',
@@ -44,7 +45,7 @@ export class ListingCreateComponent implements OnInit {
     @Output() onSave = new EventEmitter();
 
     listingCreate: FormGroup;
-    communicationFacilitators = ['Sign Language', 'Interpreter', 'Digital Assistance', 'Custom'];
+    communicationFacilitators = Object.values(CommunicationFacilitators);
     errors = '';
     priorityValues = Object.values(Priority);
     judges: Judge[] = [];

@@ -21,7 +21,7 @@ export enum HearingPartActionTypes {
   UpsertOne = '[HearingPart] Upsert One',
   AssignFailed = '[HearingPart] Assign Failed',
   Delete = '[HearingPart] Delete',
-  DeleteComplete = '[HearingPart] Delete Complete',
+  DeleteComplete = '[HearingPart] Delete Complete'
 }
 
 /**

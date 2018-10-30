@@ -75,11 +75,11 @@ const navigationItemsForOfficer = [
                 text: 'Search Sessions',
                 href: 'sessions/search'
             }, {
-                text: 'Find availability',
-                href: 'sessions/search-proposition'
-            }, {
                 text: 'New Listing Request',
                 href: 'listing'
+            }, {
+                text: 'Search Listing Request',
+                href: 'listinghearings/search'
             }, {
                 text: 'New Session',
                 href: 'sessions/create'

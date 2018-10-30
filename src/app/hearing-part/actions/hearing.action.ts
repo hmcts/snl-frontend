@@ -8,7 +8,6 @@ import { Hearing } from '../models/hearing';
 
 export enum HearingActionTypes {
   GetById = '[Hearing] Get by id',
-  Search = '[Hearing] Search',
   SearchFailed = '[Hearing] Search Failed',
   SearchComplete = '[Hearing] Search Complete',
   Create = '[Hearing] Create',
@@ -31,11 +30,6 @@ export enum HearingActionTypes {
  *
  * See Discriminated Unions: https://www.typescriptlang.org/docs/handbook/advanced-types.html#discriminated-unions
  */
-export class Search implements Action {
-  readonly type = HearingActionTypes.Search;
-
-  constructor(public payload?: object) {}
-}
 
 export class GetById implements Action {
   readonly type = HearingActionTypes.GetById;

@@ -5,7 +5,7 @@ import {
     CreateFailed,
     CreateListingRequest,
     Delete, GetById,
-    HearingActionTypes, Search, SearchFailed,
+    HearingActionTypes, SearchFailed,
     UpdateListingRequest
 } from './hearing.action';
 import { HearingToSessionAssignment } from '../models/hearing-to-session-assignment';
@@ -177,18 +177,6 @@ describe('HearingAction', () => {
 
             expect({ ...action }).toEqual({
                 type: HearingActionTypes.GetById,
-                payload
-            });
-        });
-    });
-
-    describe('Search', () => {
-        it('should create an action', () => {
-            const payload = {id: '123'};
-            const action = new Search(payload);
-
-            expect({ ...action }).toEqual({
-                type: HearingActionTypes.Search,
                 payload
             });
         });

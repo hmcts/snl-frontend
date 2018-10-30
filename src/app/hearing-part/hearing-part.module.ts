@@ -11,7 +11,6 @@ import { HearingPartService } from './services/hearing-part-service';
 import { EffectsModule } from '@ngrx/effects';
 import { HearingPartEffects } from './effects/hearing-part.effects';
 import { ListingCreateEffects } from './effects/listing-create.effects';
-import { HearingModificationService } from './services/hearing-modification.service';
 import { DraggableHearingPartComponent } from './components/draggable-hearing-part/draggable-hearing-part.component';
 import { CoreModule } from '../core/core.module';
 import { NotesModule } from '../notes/notes.module';
@@ -20,6 +19,11 @@ import { ListingCreateDialogComponent } from './components/listing-create-dialog
 import { ListingNoteListComponent } from './components/listing-note-list/listing-note-list.component';
 import { AssignHearingDialogComponent } from './components/assign-hearing-dialog/assign-hearing-dialog.component';
 import { HearingAssignmentNotesConfiguration } from './models/hearing-assignment-notes-configuration.model';
+import { HearingsFilterComponent } from './components/hearings-filter/hearings-filter.component';
+import { HearingsSearchComponent } from './containers/hearings-search/hearings-search.component';
+import { HearingSearchTableComponent } from './components/hearing-search-table/hearing-search-table.component';
+import { SearchCriteriaService } from './services/search-criteria.service';
+import { HearingModificationService } from './services/hearing-modification.service';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -27,6 +31,10 @@ export const COMPONENTS = [
     DraggableHearingPartComponent,
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
+    ListingNoteListComponent,
+    HearingsFilterComponent,
+    HearingsSearchComponent,
+    HearingSearchTableComponent,
     ListingNoteListComponent,
     AssignHearingDialogComponent
 ];
@@ -45,7 +53,11 @@ export const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingPartService, HearingModificationService, ListingCreateNotesConfiguration, HearingAssignmentNotesConfiguration],
-  entryComponents: [ListingCreateDialogComponent, AssignHearingDialogComponent]
+  providers: [HearingPartService,
+      SearchCriteriaService,
+      HearingModificationService,
+      ListingCreateNotesConfiguration,
+      HearingAssignmentNotesConfiguration],
+  entryComponents: [ListingCreateDialogComponent, AssignHearingDialogComponent],
 })
 export class HearingPartModule { }

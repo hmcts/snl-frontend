@@ -1,6 +1,5 @@
 <mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort matSortActive="priority"
 matSortDirection="desc">
-  <!-- Position Column -->
   <ng-container matColumnDef="selectHearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
     <mat-cell *matCellDef="let element">

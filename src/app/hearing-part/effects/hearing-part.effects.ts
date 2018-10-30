@@ -59,6 +59,7 @@ export class HearingPartEffects {
             )
         )
     );
+
     @Effect()
     searchHearing$: Observable<Action> = this.actions$.pipe(
         ofType<Search>(HearingPartActionTypes.Search),
