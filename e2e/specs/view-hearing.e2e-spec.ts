@@ -34,7 +34,7 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
     );
 };
 
-fdescribe('View Hearing details', () => {
+describe('View Hearing details', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
     });
