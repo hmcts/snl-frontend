@@ -98,7 +98,8 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter',
     notes: [],
-    reservedJudge: mockedJudges[0]
+    reservedJudge: mockedJudges[0],
+    belongsToMultiSession: false
 };
 
 const mockedUnlistedHearingVM: HearingViewmodel = {
