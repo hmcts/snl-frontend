@@ -14,4 +14,5 @@ export interface CreateHearingRequest {
     reservedJudgeId: string;
     communicationFacilitator: string;
     userTransactionId: string;
+    numberOfSessions: number;
 }
