@@ -15,6 +15,7 @@ import { HearingActions } from '../../models/hearin-actions';
   styleUrls: ['./view-hearing.component.scss']
 })
 export class ViewHearingComponent implements OnInit {
+  hearingId: string
   hearing: Hearing;
   hearingActions = HearingActions
 
@@ -26,6 +27,11 @@ export class ViewHearingComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.hearingId = this.route.snapshot.paramMap.get('id');
+    this.hearingService.hearings
+      .map(hearings => hearings.find(h => h.id === this.hearingId))
+      .subscribe(hearing => this.hearing = hearing);
+
     this.fetchHearing();
   }
 
@@ -95,7 +101,7 @@ export class ViewHearingComponent implements OnInit {
 
   public confirmationDialogClosed = (confirmed: boolean) => {
     if (confirmed) {
-      this.hearingService.unlist(this.hearing).subscribe();
+      this.hearingService.unlist(this.hearing)
       this.openSummaryDialog().afterClosed().subscribe((success) => {
           if (success) {
               this.fetchHearing();
@@ -113,6 +119,6 @@ export class ViewHearingComponent implements OnInit {
 
   private fetchHearing() {
     const id = this.route.snapshot.paramMap.get('id')
-    this.hearingService.getById(id).subscribe(h => this.hearing = h);
+    this.hearingService.getById(id);
   }
 }
