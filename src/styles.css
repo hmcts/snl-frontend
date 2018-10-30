@@ -20,3 +20,7 @@ html * {
 mat-dialog-container {
     max-height: 90vh;
 }
+
+.snl-informative-legend {
+    font-style: italic;
+}

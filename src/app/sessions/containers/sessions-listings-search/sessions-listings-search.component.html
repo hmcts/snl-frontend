@@ -17,8 +17,9 @@
     <div>
       <app-hearing-parts-preview id="hearing-part-preview"
                                  [hearings]="hearings$ | async"
-              [sessions]="sessions$ | async"
-                                 (selectHearing)="selectHearingPart($event)">
+                                 [sessions]="sessions$ | async"
+                                 (onClearSelection)="onHearingsClearSelection()"
+                                 (selectHearing)="selectHearing($event)">
       </app-hearing-parts-preview>
     </div>
 
@@ -26,12 +27,15 @@
       Actions:
     </div>
 
-    <button [disabled]="!assignButtonEnabled()" mat-raised-button
-            color="accent"
-            fxFlexAlign="center"
-            (click)="openAssignDialog()"
-            class="get-sessions-button"
-            id="assign">List Hearing</button>
+    <div fxLayout="col">
+      <button [disabled]="!assignButtonEnabled()" mat-raised-button
+              color="accent"
+              fxFlexAlign="center"
+              (click)="openAssignDialog()"
+              class="get-sessions-button"
+              id="assign">List Hearing</button>
+      <span class="error-message">{{errorMessage}}</span>
+    </div>
 
     <div class="heading">
       Sessions:
@@ -39,7 +43,7 @@
 
     <div>
       <app-session-table
-              (selectSession)="selectSession($event)"
+              (selectSessions)="selectSession($event)"
               (viewNotes)="openNotesDialog($event)"
               [sessions]="filteredSessions">
       </app-session-table>

@@ -40,6 +40,11 @@ matSortDirection="desc">
     <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="requiredSessions">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Required sessions </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numberOfSessionsNeeded}} </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="hearingType">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>

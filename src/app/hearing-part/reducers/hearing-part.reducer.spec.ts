@@ -1,11 +1,14 @@
 import { HearingPart } from './../models/hearing-part';
 import { reducer, initialState, State, getHearingPartEntities } from './hearing-part.reducer';
 import { SearchComplete } from '../actions/hearing-part.action';
+import * as moment from 'moment';
 
 const hearingPartIdA = 'some-id-A';
 const hearingPartA = generateHearingParts(hearingPartIdA);
 const hearingPartIdB = 'some-id-B';
 const hearingPartB = generateHearingParts(hearingPartIdB);
+const nowMoment = moment();
+const nowISOSting = nowMoment.toISOString();
 const hearingParts: HearingPart[] = [
     hearingPartA,
     hearingPartB
@@ -37,6 +40,7 @@ function generateHearingParts(id: string): HearingPart {
         id: id,
         sessionId: null,
         hearingInfo: '',
-        version: null
+        version: null,
+        start: nowISOSting
     }
-};
+}

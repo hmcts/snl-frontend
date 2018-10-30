@@ -89,9 +89,9 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingType: hearingTypes[hearing.hearingTypeCode],
                 reservedJudge: judges[hearing.reservedJudgeId],
                 hearingId: hearing.id,
-                // hearingVersion: hearing.version,
                 notes: sortedNotes,
-                start: moment(start)
+                start: moment(start),
+                belongsToMultiSession: hearing.numberOfSessionsNeeded > 1
             };
         });
         return finalHearingParts;
@@ -126,7 +126,8 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
                 hearingType: hearingTypes[h.hearingTypeCode],
                 reservedJudge: judges[h.reservedJudgeId],
                 notes: sortedNotes,
-                isListed: !unlisted
+                isListed: !unlisted,
+                numberOfSessionsNeeded: h.numberOfSessionsNeeded
             }
         });
 
