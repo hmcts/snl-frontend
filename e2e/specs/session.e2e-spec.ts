@@ -37,10 +37,12 @@ const listingCreationForm: ListingCreationForm = {
     caseTitle,
     caseType: listingRequestCaseType,
     hearingType: listingRequestHearingType,
-    duration: duration,
+    durationMinutes: duration,
+    durationDays: null,
+    numberOfSessions: 1,
     fromDate: todayDate,
     endDate: tomorrowDate
-}
+};
 const formValues: FilterSessionsComponentForm = {
     startDate: todayDate,
     endDate: tomorrowDate,
