@@ -36,7 +36,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         'reservedJudge',
         'requestStatus',
         'listingDate',
-        'amend'
+        'delete'
     ];
 
     constructor(public dialog: MatDialog) {
