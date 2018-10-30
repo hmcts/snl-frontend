@@ -6,6 +6,7 @@ import { AppConfig } from '../../app.config';
 import { HearingPartService } from './hearing-part-service';
 import moment = require('moment');
 import { v4 as uuid } from 'uuid';
+import { HearingPartToSessionAssignment } from '../models/hearing-to-session-assignment';
 import { DEFAULT_SEARCH_HEARING_REQUEST } from '../models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
 
@@ -96,13 +97,15 @@ const normalizedHearingPartResponse = {
     }, result: 'ba766510-e898-4919-8d3b-25f3e1b932aa'
 };
 
-const sessionAssignment = {
-    sessionId: 'session-id',
-    sessionVersion: 0,
+const sessionAssignment: HearingPartToSessionAssignment = {
     userTransactionId: 'transaction-id',
     hearingPartId: 'ba766510-e898-4919-8d3b-25f3e1b932aa',
     hearingPartVersion: 0,
-    start: new Date()
+    start: new Date(),
+    sessionData: {
+        sessionId: 'session-id',
+        sessionVersion: 0
+    }
 };
 
 const hearingParts = [hearingPartResponse];
@@ -209,7 +212,7 @@ describe('HearingPartService', () => {
         });
     })
 
-    describe('assignToSession', () => {
+    describe('assignToSessions', () => {
         const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing-part/ba766510-e898-4919-8d3b-25f3e1b932aa`;
 
         it('should build proper url', () => {

@@ -24,3 +24,6 @@ mat-dialog-container {
 a {
     cursor: pointer;
 }
+.snl-informative-legend {
+    font-style: italic;
+}
