@@ -1,4 +1,4 @@
-import { LoginFlow } from './../flows/login.flow';
+import { LoginFlow } from '../flows/login.flow';
 import { browser, ExpectedConditions } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';

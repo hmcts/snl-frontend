@@ -19,7 +19,8 @@ export class TransactionDialogPage {
 
   async clickRollbackButton(): Promise<any> {
     const rollbackButton = element(by.id('rollbackButton'));
-    return await this.clickDialogButton(rollbackButton, 'Rollback')
+    await this.clickDialogButton(rollbackButton, 'Rollback')
+    return await browser.wait(ExpectedConditions.invisibilityOf(this.parentElement))
   }
 
   async isActionCreationSummaryDisplayed(): Promise<boolean> {

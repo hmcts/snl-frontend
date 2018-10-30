@@ -10,7 +10,6 @@ import { session, sessions, sessionsWithHearings } from '../../core/schemas/data
 import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
-import { SessionPropositionQuery } from '../models/session-proposition-query.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
 
 @Injectable()
@@ -70,32 +69,11 @@ export class SessionsService {
             .put<string>(`${this.config.getApiUrl()}/sessions/update`, update);
     }
 
-    searchSessionPropositions(params: SessionPropositionQuery) {
-        return this.http.get( this.createSearchUrl(params) )
-    }
-
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {
         return `${this.config.getApiUrl()}` +
                 `/sessions/judge-diary` +
                 `?judge=${parameters.judgeUsername}` +
                 `&startDate=${getHttpFriendly(parameters.startDate)}` +
                 `&endDate=${getHttpFriendly(parameters.endDate)}`;
-    }
-
-    private createSearchUrl(params: SessionPropositionQuery) {
-        const from = params.from.startOf('day').format('YYYY-MM-DD HH:mm');
-        const to = params.to.endOf('day').format('YYYY-MM-DD HH:mm');
-        const durationInSeconds = params.durationInMinutes * 60;
-
-        let query = `${this.config.getApiUrl()}/search?from=${from}&to=${to}&durationInSeconds=${durationInSeconds}`;
-
-        if (params.roomId !== null && params.roomId !== '') {
-            query += `&room=${params.roomId}`;
-        }
-        if (params.judgeId !== null && params.judgeId !== '') {
-            query += `&judge=${params.judgeId}`;
-        }
-
-        return query;
     }
 }

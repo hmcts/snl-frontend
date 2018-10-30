@@ -9,8 +9,6 @@ import * as fromReferenceData from '../../core/reference/reducers';
 import { ActionReducerMap, createFeatureSelector, createSelector } from '@ngrx/store';
 import { SessionViewModel } from '../models/session.viewmodel';
 import { Session } from '../models/session.model';
-import { SessionProposition } from '../models/session-proposition.model';
-import { SessionPropositionView } from '../models/session-proposition-view.model';
 import * as moment from 'moment';
 import { Dictionary } from '@ngrx/entity/src/models';
 import { SessionsStatisticsService } from '../services/sessions-statistics-service';
@@ -63,16 +61,6 @@ export const getSessionsLoading = createSelector(
 export const getSessionsError = createSelector(
     getSessionsEntitiesState,
     state => state.error
-);
-
-export const getSessionsPropositions = createSelector(
-    getSessionsEntitiesState,
-    state => state.sessionPropositions
-);
-
-export const getSessionsPropositionLoading = createSelector(
-    getSessionsEntitiesState,
-    state => state.loadingPropositions
 );
 
 export const {
@@ -136,23 +124,6 @@ function calculateUtilized(duration: number, allocated: moment.Duration): number
 function calculateAvailable(duration: number, allocated: moment.Duration) {
   return sessionsStatsService.calculateAvailableDuration(moment.duration(duration), allocated);
 }
-
-export const getFullSessionPropositions = createSelector(getSessionsPropositions, getRooms, fromJudgesIndex.getJudges,
-    (sessions, rooms, judges) => {
-        let finalSessions: SessionPropositionView[];
-        if (sessions === undefined) { return []; }
-        finalSessions = sessions.map((sessionProposition: SessionProposition) => {
-            return {
-                startTime: moment(sessionProposition.start).format('HH:mm'),
-                endTime: moment(sessionProposition.end).format('HH:mm'),
-                date: moment(sessionProposition.start).format('DD MMM YYYY'),
-                availability: moment.duration(moment(sessionProposition.end).diff(moment(sessionProposition.start))).humanize(),
-                room: rooms[sessionProposition.roomId],
-                judge: judges[sessionProposition.judgeId],
-            };
-        });
-        return finalSessions;
-    });
 
 export const getSessionViewModelById = (id: string) => createSelector(getFullSessions, (svm: SessionViewModel[]) => {
     return svm.find(s => s.id === id);

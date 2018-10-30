@@ -9,6 +9,7 @@ import { CalendarContainerComponent } from './core/callendar/containers/calendar
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
 import { PlannerComponent } from './planner/containers/planner.component';
 import { SessionsListingsSearchComponent } from './sessions/containers/sessions-listings-search/sessions-listings-search.component';
+import { HearingsSearchComponent } from './hearing-part/containers/hearings-search/hearings-search.component';
 import { ViewHearingComponent } from './hearing/components/view-hearing/view-hearing.component';
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
             {path: 'poc', component: PocComponent, canActivate: [AppConfigGuard]},
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
+            {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
