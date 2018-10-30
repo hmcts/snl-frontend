@@ -18,22 +18,23 @@ const viewHearingPage: ViewHearingPage = new ViewHearingPage();
 const caseNumber = `vh-${new Date().toLocaleString()}`;
 const id = uuid();
 
-const createListingRequestWithCaseNumberAndId = async function (caseNumber: string, id: string): Promise<number> {
+const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber: string, givenId: string): Promise<number> {
     return API.createListingRequest(
         {
-            id: id,
-            caseNumber: caseNumber,
+            id: givenId,
+            caseNumber: givenCaseNumber,
             caseTitle: '',
             caseTypeCode: CaseTypeCodes.FTRACK,
             hearingTypeCode: HearingTypeCodes.ADJOURNED,
             duration: 'PT30M',
             priority: Priority.High,
-            userTransactionId: uuid()
+            userTransactionId: uuid(),
+            numberOfSessions: 1
         } as CreateListingRequestBody
     );
-}
+};
 
-describe('View Hearing details', () => {
+fdescribe('View Hearing details', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
     });
