@@ -8,10 +8,14 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { HearingPartService } from '../../services/hearing-part-service';
-import { PageEvent } from '@angular/material';
+import { MatDialog, PageEvent } from '@angular/material';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 import { JudgeService } from '../../../judges/services/judge.service';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { HearingModificationService } from '../../services/hearing-modification.service';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 
 @Component({
     selector: 'app-hearings-search',
@@ -35,7 +39,9 @@ export class HearingsSearchComponent implements OnInit {
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
-    constructor(private hearingPartService: HearingPartService,
+    constructor(private dialog: MatDialog,
+                private hearingService: HearingModificationService,
+                private hearingPartService: HearingPartService,
                 private referenceDataService: ReferenceDataService,
                 private judgeService: JudgeService,
                 private searchCriteriaService: SearchCriteriaService) {
@@ -47,8 +53,8 @@ export class HearingsSearchComponent implements OnInit {
         this.hearingTypes$ = this.referenceDataService.getHearingTypes();
     }
 
-    onAmend(hearingId: string) {
-        // 'TODO: Implement going to amendment screen!
+    onDelete(hearing: FilteredHearingViewmodel) {
+        this.openDeleteDialog(hearing);
     }
 
     onNextPage(pageEvent: PageEvent) {
@@ -59,6 +65,37 @@ export class HearingsSearchComponent implements OnInit {
     onFilter(filterValues: HearingsFilters) {
         this.latestFilters = filterValues;
         this.fetchHearings(filterValues, this.latestPaging)
+    }
+
+    private openDeleteDialog(hearing: FilteredHearingViewmodel) {
+        this.dialog.open(DialogWithActionsComponent, {
+            data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
+        }).afterClosed().subscribe((confirmed) => {
+            this.afterDeleteClosed(confirmed, hearing)
+        })
+    }
+
+    private afterDeleteClosed(confirmed, hearing) {
+        if (confirmed) {
+            this.hearingService.deleteHearing({
+                hearingId: hearing.id,
+                hearingVersion: hearing.version,
+                userTransactionId: undefined
+            });
+
+            this.openTransactionDialog().afterClosed().subscribe((success) => {
+                if (success) {
+                    this.fetchHearings(this.latestFilters, this.latestPaging);
+                }
+            })
+        }
+    }
+
+    private openTransactionDialog() {
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Deleting hearing' }
+        });
     }
 
     private fetchHearings(filterValues: HearingsFilters, pageEvent: PageEvent) {

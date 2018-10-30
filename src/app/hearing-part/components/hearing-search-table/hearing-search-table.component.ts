@@ -22,7 +22,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
-    @Output() onAmend = new EventEmitter<string>();
+    @Output() onDelete = new EventEmitter<FilteredHearingViewmodel>();
     @Output() onNextPage = new EventEmitter<PageEvent>()
 
     dataSource: MatTableDataSource<FilteredHearingViewmodel>;
@@ -59,7 +59,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         return element.isListed ? 'listed' : 'unlisted';
     }
 
-    amend(hearing: FilteredHearingViewmodel) {
-        this.onAmend.emit(hearing.id);
+    delete(hearing: FilteredHearingViewmodel) {
+        this.onDelete.emit(hearing);
     }
 }

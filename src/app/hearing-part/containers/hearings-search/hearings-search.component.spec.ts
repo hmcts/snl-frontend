@@ -2,6 +2,9 @@ import { HearingsSearchComponent } from './hearings-search.component';
 import { Observable } from 'rxjs/Observable';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 
+const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+const hpms = jasmine.createSpyObj('HearingModificationService', ['open']);
+
 let component: HearingsSearchComponent;
 let searchCriteriaService: any;
 let judgeService: any;
@@ -29,7 +32,8 @@ describe('HearingsSearchComponent', () => {
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
         hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
-        component = new HearingsSearchComponent(hearingPartService, referenceDataService, judgeService, searchCriteriaService);
+        component = new HearingsSearchComponent(matDialogSpy, hpms, hearingPartService,
+            referenceDataService, judgeService, searchCriteriaService);
         hearingFilters = DEFAULT_HEARING_FILTERS;
     });
 
