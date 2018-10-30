@@ -74,6 +74,7 @@ export class ListingCreateComponent implements OnInit {
 
     public chosenListingType = 0;
     public listing: ListingCreate;
+    public listingType = ListingTypeTab;
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
     numberOfSeconds = 60;
