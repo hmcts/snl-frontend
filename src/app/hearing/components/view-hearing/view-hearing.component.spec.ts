@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { HearingActions } from '../../models/hearin-actions';
+import { Location } from '@angular/common';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -71,7 +72,8 @@ describe('ViewHearingComponent', () => {
       providers: [
         { provide: ActivatedRoute, useValue: routeMock },
         { provide: HearingService, useValue: hearingServiceMock },
-        { provide: MatDialog, useValue: matDialogSpy }
+        { provide: MatDialog, useValue: matDialogSpy },
+        { provide: Location, useValue: function() {} }
       ],
       declarations: [
         ViewHearingComponent
@@ -81,7 +83,6 @@ describe('ViewHearingComponent', () => {
     fixture = TestBed.createComponent(ViewHearingComponent);
     hearingService = TestBed.get(HearingService)
     hearingServiceGetByIdSpy = spyOn(hearingService, 'getById')
-    // hearingServiceUnlist = spyOn(hearingService, 'unlist')
     component = fixture.componentInstance;
   }));
 

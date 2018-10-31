@@ -8,6 +8,7 @@ import { DialogWithActionsComponent } from '../../../features/notification/compo
 import { MatDialog } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingActions } from '../../models/hearin-actions';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-view-hearing',
@@ -23,6 +24,7 @@ export class ViewHearingComponent implements OnInit {
     private route: ActivatedRoute,
     private readonly hearingService: HearingService,
     private readonly dialog: MatDialog,
+    private readonly location: Location
   ) {
   }
 
@@ -79,6 +81,10 @@ export class ViewHearingComponent implements OnInit {
 
   isSessionPanelDisabled(session: Session) {
     return session.notes === undefined || session.notes.length === 0;
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   isListed() {

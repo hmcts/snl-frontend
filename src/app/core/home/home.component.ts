@@ -118,7 +118,7 @@ export class HomeComponent implements OnInit {
               href: 'reports/unlisted'
             }
           ]
-        },
+        }
       ];
     }
 

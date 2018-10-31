@@ -20,3 +20,10 @@ html * {
 mat-dialog-container {
     max-height: 90vh;
 }
+
+a {
+    cursor: pointer;
+}
+.snl-informative-legend {
+    font-style: italic;
+}

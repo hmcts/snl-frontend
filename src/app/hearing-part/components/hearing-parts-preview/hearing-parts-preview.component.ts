@@ -26,6 +26,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearings: HearingViewmodel[];
     @Input() sessions: SessionViewModel[];
     @Output() selectHearing = new EventEmitter();
+    @Output() onClearSelection = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -41,6 +42,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
         'communicationFacilitator',
         'priority',
         'reservedJudge',
+        'requiredSessions',
         'notes',
         'scheduleStart',
         'scheduleEnd',
@@ -64,6 +66,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             switch (property) {
                 case 'duration':
                     return moment.duration(item[property]).asMilliseconds();
+                case 'requiredSessions':
+                    return item['numberOfSessionsNeeded'];
 
                 case 'reservedJudge':
                     return this.getPropertyMemberOrNull(item, property, 'name');
@@ -114,10 +118,12 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     openDeleteDialog(hearing: HearingViewmodel) {
-      this.dialog.open(DialogWithActionsComponent, {
+        this.clearSelection();
+
+        this.dialog.open(DialogWithActionsComponent, {
         data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
       }).afterClosed().subscribe((confirmed) => {
-          this.afterDeleteClosed(confirmed, hearing)
+          this.afterDeleteClosed(confirmed, hearing);
       })
     }
 
@@ -138,6 +144,8 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     }
 
     openEditDialog(hearing: HearingViewmodel) {
+        this.clearSelection();
+
         this.dialog.open(ListingCreateDialogComponent, {
             data: {
                 hearing: mapToUpdateHearingRequest(hearing),
@@ -145,7 +153,17 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             } as ListingCreate,
             hasBackdrop: true,
             height: 'auto'
-        })
+        });
+    }
+
+    toggleHearing(hearing) {
+        this.selectedHearing.toggle(hearing);
+        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : undefined);
+    }
+
+    clearSelection() {
+        this.selectedHearing.clear();
+        this.onClearSelection.emit();
     }
 
     private openTransactionDialog() {
@@ -153,11 +171,6 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
             ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
         });
-    }
-
-    toggleHearing(hearing) {
-        this.selectedHearing.toggle(hearing);
-        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : {});
     }
 
     private getPropertyMemberOrNull(item: object, property: string, key: string ) {

@@ -10,5 +10,6 @@ export interface SessionAmmendForm {
     roomType: string,
     personName: string,
     hearingPartCount: number,
-    version: number
+    version: number,
+    belongsToMultiSession: boolean
 }
