@@ -1,11 +1,11 @@
 import { DEFAULT_DIALOG_CONFIG } from './../../../features/transactions/models/default-dialog-confg';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HearingService } from '../../services/hearing.service';
 import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSelect } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingActions } from '../../models/hearin-actions';
 import { Location } from '@angular/common';
@@ -19,6 +19,7 @@ export class ViewHearingComponent implements OnInit {
   hearingId: string
   hearing: Hearing;
   hearingActions = HearingActions
+  @ViewChild(MatSelect) actionSelect: MatSelect
 
   constructor(
     private route: ActivatedRoute,
@@ -77,6 +78,7 @@ export class ViewHearingComponent implements OnInit {
       break;
       default: /* no-op */
     }
+    this.actionSelect.writeValue(HearingActions.Actions)
   }
 
   isSessionPanelDisabled(session: Session) {

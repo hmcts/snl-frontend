@@ -7,8 +7,8 @@
         <strong>{{hearing.caseTitle}}</strong>
       </span>
     </div>
-      <mat-select id="action" value="{{hearingActions.None}}" fxFlex="10" (selectionChange)="onActionChanged($event)">
-        <mat-option [value]="hearingActions.None">{{hearingActions.None}}</mat-option>
+      <mat-select #actionSelect id="action" value="{{hearingActions.Actions}}" fxFlex="10" (selectionChange)="onActionChanged($event)">
+        <mat-option [value]="hearingActions.Actions">{{hearingActions.Actions}}</mat-option>
         <mat-option [value]="hearingActions.Unlist" [disabled]="!isListed()">{{hearingActions.Unlist}}</mat-option>
       </mat-select>
   </div>
