@@ -130,6 +130,7 @@ describe('ViewHearingComponent', () => {
 
   describe('onActionChanged', () => {
     it('when call with Unlist action it should open dialog, once confirmed should call unlist', () => {
+      component.actionSelect = jasmine.createSpyObj('MatSelect', ['writeValue'])
       matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
       component.onActionChanged({ value: HearingActions.Unlist })
       expect(matDialogSpy.open).toHaveBeenCalled()
