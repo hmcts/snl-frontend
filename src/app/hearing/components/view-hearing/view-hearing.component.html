@@ -1,7 +1,7 @@
 <mat-card *ngIf="hearing">
+  <span><a (click)="goBack()"><< back</a></span>
   <div fxLayout="row" fxLayoutAlign="start">
     <div fxFlex="90">
-      <span><a (click)="goBack()"><< back</a></span>
       <span style="font-size:1.5em" id="case-number">
         <span class="case-number">{{hearing.caseNumber}}</span>
         <strong>{{hearing.caseTitle}}</strong>
