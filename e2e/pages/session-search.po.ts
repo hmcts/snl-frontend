@@ -14,14 +14,14 @@ import { ElementHelper } from '../utils/element-helper';
 
 export class SessionSearchPage {
     private filterSessionComponent = new FilterSessionComponent();
+    private elementHelper = new ElementHelper();
     private sessionsTable = new Table(element(by.id('sessions-table')));
     private sessionsTablePaginator = new Paginator(element(by.id('sessions-table-paginator')));
     private listingRequestsTable = new Table(element(by.id('hearings-part-table')));
     private listingRequestsTablePaginator = new Paginator(element(by.id('hearings-part-table-paginator')));
+    public listingHearingStartTime = element(by.id('startTime'));
     private listHearingButton = element(by.id('listHearingButton'));
     public assignButton = element(by.id('assign'));
-    public startTime = element(by.id('startTime'));
-    private elementHelper = new ElementHelper();
 
     async clickAssignButton() {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
@@ -30,7 +30,7 @@ export class SessionSearchPage {
 
     async acceptAssignWithCurrentTime(time) {
         await browser.wait(ExpectedConditions.elementToBeClickable(this.listHearingButton), Wait.normal, 'List hearing button not visible');
-        await this.elementHelper.typeValue(this.startTime, time);
+        await this.elementHelper.typeValue(this.listingHearingStartTime, time);
         await this.listHearingButton.click()
     }
 

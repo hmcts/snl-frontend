@@ -24,13 +24,12 @@ import { HearingsSearchComponent } from './containers/hearings-search/hearings-s
 import { HearingSearchTableComponent } from './components/hearing-search-table/hearing-search-table.component';
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
-import { DateTimeToTime } from '../core/pipes/dateTime-time.pipe';
+import { DateTimeToTimePipe } from '../core/pipes/dateTime-time.pipe';
 import { RouterModule } from '@angular/router';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
     ListingCreateComponent,
-    DraggableHearingPartComponent,
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
     AssignHearingDialogComponent,
@@ -38,8 +37,7 @@ export const COMPONENTS = [
     HearingsSearchComponent,
     HearingSearchTableComponent,
     ListingNoteListComponent,
-    AssignHearingDialogComponent,
-    DateTimeToTime
+    DateTimeToTimePipe
 ];
 
 @NgModule({

@@ -15,8 +15,7 @@ import { Priority } from '../models/priority-model';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HearingPart } from '../models/hearing-part';
 
-const nowMoment = moment();
-const nowISOSting = nowMoment.toISOString();
+const nowISOSting = moment().toISOString();
 
 describe('HearingAction', () => {
     describe('Delete hearing', () => {

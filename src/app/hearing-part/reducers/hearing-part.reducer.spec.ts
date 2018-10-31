@@ -7,8 +7,7 @@ const hearingPartIdA = 'some-id-A';
 const hearingPartA = generateHearingParts(hearingPartIdA);
 const hearingPartIdB = 'some-id-B';
 const hearingPartB = generateHearingParts(hearingPartIdB);
-const nowMoment = moment();
-const nowISOSting = nowMoment.toISOString();
+const nowISOSting = moment().toISOString();
 const hearingParts: HearingPart[] = [
     hearingPartA,
     hearingPartB
