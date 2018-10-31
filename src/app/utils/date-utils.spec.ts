@@ -64,11 +64,11 @@ describe('DateUtils', () => {
         });
     });
 
-    describe('formatStartTime', () => {
-        it('should display time from dateTime', () => {
+    describe('formatDateTimeToHHmm', () => {
+        it('should display time in HH:mm from date-time', () => {
             const momentDate = moment.utc('2018-10-19 16:32:00+00');
 
-            expect(dateUtils.formatDateTimeToTime(momentDate)).toEqual('16:32');
+            expect(dateUtils.formatDateTimeToHHmm(momentDate)).toEqual('16:32');
         });
     });
 });

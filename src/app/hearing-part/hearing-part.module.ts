@@ -24,7 +24,7 @@ import { HearingsSearchComponent } from './containers/hearings-search/hearings-s
 import { HearingSearchTableComponent } from './components/hearing-search-table/hearing-search-table.component';
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
-import { DateTimeToTimePipe } from '../core/pipes/dateTime-time.pipe';
+import { DateTimeToHHmmPipe } from '../core/pipes/datetime-hhmm.pipe';
 import { RouterModule } from '@angular/router';
 
 export const COMPONENTS = [
@@ -37,7 +37,7 @@ export const COMPONENTS = [
     HearingsSearchComponent,
     HearingSearchTableComponent,
     ListingNoteListComponent,
-    DateTimeToTimePipe
+    DateTimeToHHmmPipe
 ];
 
 @NgModule({

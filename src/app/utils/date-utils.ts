@@ -27,6 +27,6 @@ export function formatDuration(duration: moment.Duration): string {
     }
 }
 
-export function formatDateTimeToTime(dateTime: moment.Moment): string {
+export function formatDateTimeToHHmm(dateTime: moment.Moment): string {
     return moment(dateTime).format('HH:mm');
 }
