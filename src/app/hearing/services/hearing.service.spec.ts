@@ -5,9 +5,16 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { AppConfig } from '../../app.config';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 import { Hearing } from '../models/hearing';
+import { Store } from '@ngrx/store';
+import { HttpRequest } from '@angular/common/http';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
+let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
+const HEARING: Hearing = {
+  id: 'some-id',
+  hearingPartsVersions: [{id: 'id1', version: 'ver1'}]
+} as Hearing
 
 describe('HearingService', () => {
   beforeEach(() => {
@@ -31,7 +38,8 @@ describe('HearingService', () => {
               return '';
             }
           }
-        }
+        },
+        { provide: Store, useValue: mockStore }
       ]
     }).compileComponents();
 
@@ -43,21 +51,38 @@ describe('HearingService', () => {
     expect(service).toBeTruthy();
   })
 
-  describe('getByid', () => {
-    it('getById should return data from service populated with notes', () => {
+  describe('getById', () => {
+    it('should return data from service populated with notes', (done) => {
       const id = 'some-id';
-
-      service.getById(id).subscribe((res: any) => {
-        expect(res).toEqual({
-          'id': id,
-          'notes': ['note']
-        });
-      });
+      service.getById(id)
 
       const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
       request.flush({id: id} as Hearing);
 
+      service.hearings
+      .map(hearings => hearings.find(h => h.id === id))
+      .subscribe(hearing => {
+        expect(hearing.id).toEqual(id);
+        done()
+      });
+
       httpMock.verify();
     });
   })
+
+  describe('unlist', () => {
+    it('should call API', () => {
+      service.unlist(HEARING)
+
+      httpMock.expectOne((request: HttpRequest<any>) => {
+        const body = JSON.parse(request.body);
+        return request.method === 'PUT' &&
+          request.url === '/hearing' &&
+          body.hearingId === HEARING.id &&
+          body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
+      }).flush({});
+
+      httpMock.verify()
+    })
+  });
 });

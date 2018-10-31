@@ -99,7 +99,7 @@ export class ViewHearingComponent implements OnInit {
     confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
   }
 
-  public confirmationDialogClosed = (confirmed: boolean) => {
+  private confirmationDialogClosed = (confirmed: boolean) => {
     if (confirmed) {
       this.hearingService.unlist(this.hearing)
       this.openSummaryDialog().afterClosed().subscribe((success) => {
@@ -118,7 +118,6 @@ export class ViewHearingComponent implements OnInit {
   }
 
   private fetchHearing() {
-    const id = this.route.snapshot.paramMap.get('id')
-    this.hearingService.getById(id);
+    this.hearingService.getById(this.hearingId);
   }
 }
