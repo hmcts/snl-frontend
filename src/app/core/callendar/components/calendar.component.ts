@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
-import { formatDuration } from '../../../utils/date-utils';
+import { formatDuration, formatDateTimeToHHmm } from '../../../utils/date-utils';
 
 @Component({
     selector: 'app-calendar',
@@ -114,9 +114,11 @@ export class CalendarComponent implements OnInit {
         let el = event.detail.element;
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
+            el.append(hearing.caseNumber);
             el.append('  -  ' + hearing.caseTitle);
             el.append('  -  ' + hearing.hearingType.description);
-            el.append(`  -   ${formatDuration(moment.duration(hearing.duration))}`);
+            el.append(`  -   ${formatDateTimeToHHmm(hearing.start)}`);
+            el.append(`  -   ${formatDuration(hearing.duration)}`);
         });
         el.append('<span style="display: none;" id="' + event.detail.event.id + '"></span>');
         el = el.get(0);

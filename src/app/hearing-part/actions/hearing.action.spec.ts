@@ -15,6 +15,8 @@ import { Priority } from '../models/priority-model';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HearingPart } from '../models/hearing-part';
 
+const nowISOSting = moment().toISOString();
+
 describe('HearingAction', () => {
     describe('Delete hearing', () => {
         it('should create an action', () => {
@@ -149,7 +151,8 @@ describe('HearingAction', () => {
                 id: '123',
                 sessionId: '213',
                 version: 1,
-                hearingInfo: 'some info'
+                hearingInfo: 'some info',
+                start: nowISOSting
             };
             const action = new Create(payload);
 

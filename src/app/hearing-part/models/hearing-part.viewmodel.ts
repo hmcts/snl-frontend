@@ -24,6 +24,7 @@ export interface HearingPartViewModel {
     reservedJudge: Judge;
     reservedJudgeId: string;
     hearingId: string;
+    start: moment.Moment;
     belongsToMultiSession: boolean;
 }
 

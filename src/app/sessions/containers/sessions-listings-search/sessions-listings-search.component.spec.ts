@@ -80,7 +80,8 @@ const mockedHearingPartResponse: HearingPartResponse = {
   sessionId: null,
   hearingInfo: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
   version: 2,
-}
+  start: nowISOSting
+};
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
@@ -99,6 +100,7 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     communicationFacilitator: 'interpreter',
     notes: [],
     reservedJudge: mockedJudges[0],
+    start: moment(nowISOSting),
     belongsToMultiSession: false
 };
 

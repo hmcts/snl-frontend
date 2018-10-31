@@ -26,3 +26,7 @@ export function formatDuration(duration: moment.Duration): string {
         return moment.utc(durationMs).format('HH:mm');
     }
 }
+
+export function formatDateTimeToHHmm(dateTime: moment.Moment): string {
+    return moment(dateTime).format('HH:mm');
+}

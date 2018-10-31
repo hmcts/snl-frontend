@@ -59,7 +59,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
         let finalHearingParts: HearingPartViewModel[];
         if ((hearingParts === undefined) || (hearings === undefined)) { return []; }
         finalHearingParts = hearingParts.map((hearingPart: HearingPart) => {
-            const {id, sessionId, version, hearingInfo } = hearingPart;
+            const {id, sessionId, version, hearingInfo, start } = hearingPart;
             let hearing = hearings[hearingInfo];
 
             if (hearing === undefined) {
@@ -69,10 +69,10 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
             const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
             const sortedNotes = [...filteredNotes].sort((left, right) => {
                 return moment(right.createdAt).diff(moment(left.createdAt));
-            })
+            });
 
-            const scheduleStartObj = moment(hearing.scheduleStart)
-            const scheduleEndObj = moment(hearing.scheduleEnd)
+            const scheduleStartObj = moment(hearing.scheduleStart);
+            const scheduleEndObj = moment(hearing.scheduleEnd);
             return {
                 id,
                 sessionId,
@@ -90,6 +90,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 reservedJudge: judges[hearing.reservedJudgeId],
                 hearingId: hearing.id,
                 notes: sortedNotes,
+                start: moment(start),
                 belongsToMultiSession: hearing.numberOfSessionsNeeded > 1
             };
         });
