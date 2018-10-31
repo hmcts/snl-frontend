@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { MatDialog, MatSelect } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { HearingActions } from '../../models/hearin-actions';
+import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
 
 @Component({

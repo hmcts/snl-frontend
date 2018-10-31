@@ -9,7 +9,7 @@ import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material';
-import { HearingActions } from '../../models/hearin-actions';
+import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call

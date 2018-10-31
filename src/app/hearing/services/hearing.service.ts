@@ -41,7 +41,7 @@ export class HearingService {
           this.dataStore.hearings[oldHearingIndex] = data
         }
 
-        this._hearings.next(Object.assign({}, this.dataStore).hearings);
+        this._hearings.next({...this.dataStore}.hearings);
       });
   }
 
