@@ -62,4 +62,8 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     amend(hearing: FilteredHearingViewmodel) {
         this.onAmend.emit(hearing.id);
     }
+
+    buildViewHearingUrl(id: string) {
+        return `/home/hearing/${id}`;
+    }
 }

@@ -25,6 +25,7 @@ import { HearingSearchTableComponent } from './components/hearing-search-table/h
 import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
 import { DateTimeToTime } from '../core/pipes/dateTime-time.pipe';
+import { RouterModule } from '@angular/router';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -52,6 +53,7 @@ export const COMPONENTS = [
     FormsModule,
     StoreModule.forFeature('hearingParts', reducers),
     EffectsModule.forFeature([HearingPartEffects, ListingCreateEffects]),
+    RouterModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
