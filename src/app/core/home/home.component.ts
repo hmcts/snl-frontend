@@ -83,9 +83,6 @@ export class HomeComponent implements OnInit {
               text: 'Search Sessions',
               href: 'sessions/search'
             }, {
-              text: 'Find availability',
-              href: 'sessions/search-proposition'
-            }, {
               text: 'New Listing Request',
               href: 'listing'
             }, {
@@ -121,7 +118,7 @@ export class HomeComponent implements OnInit {
               href: 'reports/unlisted'
             }
           ]
-        },
+        }
       ];
     }
 

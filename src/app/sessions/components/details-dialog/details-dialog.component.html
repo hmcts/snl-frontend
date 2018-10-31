@@ -24,6 +24,9 @@
         <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>
     </div>
   </div>
+  <div *ngIf="displayInformativeLegend((sessionDetails.session | async).hearingParts)" fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>
+    <span style="font-style: italic">The "*" signifies a multi-session hearing</span>
+  </div>
   <div fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>
     <button id="close" mat-button (click)="onCloseClick()">Close</button>
   </div>

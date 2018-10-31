@@ -65,6 +65,7 @@ export class PlannerPage {
     async waitUntilPlannerIsLoadedAndVisible() {
         let currentWeekDateRange = moment().day(0).format('DD/MM') + ' - ' + moment().day(6).format('DD/MM/YYYY');
         await browser.wait(ExpectedConditions.visibilityOf(this.plannerTitle), Wait.normal, currentWeekDateRange);
+        await this.waitForCalendarToLoadEvents();
     }
 
     async getResourceIdByName(nameToSearch: string): Promise<string> {

@@ -62,4 +62,8 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     delete(hearing: FilteredHearingViewmodel) {
         this.onDelete.emit(hearing);
     }
+
+    buildViewHearingUrl(id: string) {
+        return `/home/hearing/${id}`;
+    }
 }

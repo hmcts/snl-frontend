@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -8,13 +8,12 @@ import { formatDuration } from '../../../utils/date-utils';
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./session-table.component.scss']
 })
 export class SessionTableComponent implements OnChanges {
 
   @Output()
-  selectSession = new EventEmitter();
+  selectSessions = new EventEmitter();
 
   @Output()
   viewNotes = new EventEmitter();
@@ -23,7 +22,7 @@ export class SessionTableComponent implements OnChanges {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  selectedSesssion;
+  selectedSesssions: SelectionModel<SessionViewModel>;
   displayedColumns = [
       'sessionType',
       'date',
@@ -43,7 +42,7 @@ export class SessionTableComponent implements OnChanges {
   tableVisible;
 
   constructor() {
-    this.selectedSesssion = new SelectionModel<SessionViewModel>(false, []);
+    this.selectedSesssions = new SelectionModel<SessionViewModel>(true, []);
 
     this.tableVisible = false;
 
@@ -69,8 +68,12 @@ export class SessionTableComponent implements OnChanges {
   }
 
   toggleSession(session: SessionViewModel) {
-    this.selectedSesssion.toggle(session);
-    this.selectSession.emit(this.selectedSesssion.isSelected(session) ? session : {})
+    this.selectedSesssions.toggle(session);
+    this.selectSessions.emit(this.selectedSesssions.selected)
+  }
+
+  clearSelection() {
+      this.selectedSesssions.clear();
   }
 
   ngOnChanges() {

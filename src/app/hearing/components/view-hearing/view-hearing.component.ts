@@ -3,6 +3,7 @@ import { HearingService } from '../../services/hearing.service';
 import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-view-hearing',
@@ -14,7 +15,8 @@ export class ViewHearingComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private readonly hearingService: HearingService
+    private readonly hearingService: HearingService,
+    private readonly location: Location
   ) {
   }
 
@@ -60,5 +62,9 @@ export class ViewHearingComponent implements OnInit {
 
   isSessionPanelDisabled(session: Session) {
     return session.notes === undefined || session.notes.length === 0;
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

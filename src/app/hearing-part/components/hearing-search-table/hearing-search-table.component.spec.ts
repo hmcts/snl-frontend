@@ -22,6 +22,7 @@ import { Priority, priorityValue } from '../../models/priority-model';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
@@ -71,7 +72,8 @@ describe('HearingSearchTableComponent', () => {
         StoreModule.forRoot({}),
         StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
         StoreModule.forFeature('judges', judgesReducers.reducers),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        RouterTestingModule
       ],
       declarations: [
         HearingSearchTableComponent,
@@ -125,6 +127,12 @@ describe('HearingSearchTableComponent', () => {
         });
     });
   });
+
+    describe('buildViewHearingUrl', () => {
+        it('should build correct url', () => {
+            expect(component.buildViewHearingUrl('random-id')).toEqual('/home/hearing/random-id');
+        })
+    });
 });
 
 function generateHearing(id: string): FilteredHearingViewmodel {
