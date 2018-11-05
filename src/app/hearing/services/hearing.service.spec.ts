@@ -77,7 +77,7 @@ describe('HearingService', () => {
       httpMock.expectOne((request: HttpRequest<any>) => {
         const body = JSON.parse(request.body);
         return request.method === 'PUT' &&
-          request.url === '/hearing' &&
+          request.url === '/hearing/unlist' &&
           body.hearingId === HEARING.id &&
           body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
       }).flush({});
