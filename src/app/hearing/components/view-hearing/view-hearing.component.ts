@@ -72,12 +72,10 @@ export class ViewHearingComponent implements OnInit {
   }
 
   onActionChanged(event: {value: HearingActions}) {
-    switch (event.value) {
-      case HearingActions.Unlist:
+    if (event.value === HearingActions.Unlist) {
         this.openConfirmationDialog();
-      break;
-      default: /* no-op */
     }
+
     this.actionSelect.writeValue(HearingActions.Actions)
   }
 
