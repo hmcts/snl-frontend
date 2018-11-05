@@ -9,7 +9,3 @@ export interface StatusConfigEntry {
     canBeListed: boolean;
     canBeUnlisted: boolean;
 }
-
-export const EMPTY_STATUS_CONFIG: StatusConfig = {
-    entries: []
-}
