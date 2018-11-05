@@ -56,7 +56,7 @@ export class HearingService {
     this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction))
 
     return this.http
-      .put<Transaction>(`${this.config.getApiUrl()}/hearing`, JSON.stringify(unlistHearingRequest), {
+      .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
         headers: {'Content-Type': 'application/json'}
       }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
   }
