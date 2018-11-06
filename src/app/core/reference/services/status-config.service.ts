@@ -12,9 +12,7 @@ export class StatusConfigService {
 
     private statusConfigSource: BehaviorSubject<StatusConfigEntry[]> = new BehaviorSubject<StatusConfigEntry[]>([]);
 
-    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
-        console.log('Created')
-    }
+    constructor(private readonly http: HttpClient, private readonly config: AppConfig) {}
 
     fetchStatusConfig(): Observable<StatusConfigEntry[]> {
         return this.http
