@@ -16,14 +16,14 @@ describe('StatusConfigResolver', () => {
     beforeEach(() => {
         nextMock = jasmine.createSpy('next');
         stateMock = jasmine.createSpy('state');
-        statusConfigServiceMock = jasmine.createSpyObj('statusConfigService', ['getStatusConfig', 'fetchStatusConfig']);
+        statusConfigServiceMock = jasmine.createSpyObj('statusConfigService', ['getStatusConfigEntries', 'fetchStatusConfig']);
 
         this.resolver = new StatusConfigResolver(statusConfigServiceMock);
     });
 
     describe('When StatusConfig service is populated', () => {
         it('fetch method is not called', () => {
-            statusConfigServiceMock.getStatusConfig.and.returnValue([statusConfigEntry]);
+            statusConfigServiceMock.getStatusConfigEntries.and.returnValue([statusConfigEntry]);
 
             this.resolver.resolve(nextMock, stateMock);
 
@@ -31,7 +31,7 @@ describe('StatusConfigResolver', () => {
         });
 
         it('current StatusConfig value is returned', () => {
-            statusConfigServiceMock.getStatusConfig.and.returnValue([statusConfigEntry]);
+            statusConfigServiceMock.getStatusConfigEntries.and.returnValue([statusConfigEntry]);
 
             let hasObservableEmitted = false;
             this.resolver.resolve(nextMock, stateMock).subscribe(data => {
@@ -45,11 +45,11 @@ describe('StatusConfigResolver', () => {
 
     describe('When StatusConfig service is not populated', () => {
         it('fetch method is called and current StatusConfig value is returned', () => {
-            statusConfigServiceMock.getStatusConfig.and.returnValue([]);
+            statusConfigServiceMock.getStatusConfigEntries.and.returnValue([]);
             statusConfigServiceMock.fetchStatusConfig.and.returnValue(Observable.of([statusConfigEntry]));
 
             this.resolver.resolve(nextMock, stateMock).subscribe(() => {
-                expect(statusConfigServiceMock.getStatusConfig).toHaveBeenCalledTimes(1);
+                expect(statusConfigServiceMock.getStatusConfigEntries).toHaveBeenCalledTimes(1);
             })
         });
     })

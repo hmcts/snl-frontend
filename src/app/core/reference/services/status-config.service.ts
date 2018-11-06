@@ -21,12 +21,12 @@ export class StatusConfigService {
                 tap(statusConfigEntries => {this.statusConfigSource.next(statusConfigEntries)}));
     }
 
-    getStatusConfig(): StatusConfigEntry[] {
+    getStatusConfigEntries(): StatusConfigEntry[] {
         return this.statusConfigSource.getValue();
     }
 
     getStatusConfigEntry(status: Status): StatusConfigEntry {
-        const entry = this.getStatusConfig().find(config => config.status === status);
+        const entry = this.getStatusConfigEntries().find(config => config.status === status);
         if (entry === undefined) {
             throw new Error(`Could not find status config entry for status: '${status}'`)
         } else {

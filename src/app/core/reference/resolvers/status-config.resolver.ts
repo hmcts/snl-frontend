@@ -13,8 +13,8 @@ export class StatusConfigResolver implements Resolve<StatusConfigEntry[]> {
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<StatusConfigEntry[]> {
 
-        if (this.statusConfigService.getStatusConfig().length !== 0) {
-            return Observable.of(this.statusConfigService.getStatusConfig());
+        if (this.statusConfigService.getStatusConfigEntries().length !== 0) {
+            return Observable.of(this.statusConfigService.getStatusConfigEntries());
         } else {
             return this.statusConfigService.fetchStatusConfig();
         }

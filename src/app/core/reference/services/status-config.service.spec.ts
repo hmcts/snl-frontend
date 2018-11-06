@@ -24,11 +24,11 @@ describe('StatusConfigService', () => {
 
     describe('When getting StatusConfig', () => {
         it('the default value should be set', () => {
-            expect(this.service.getStatusConfig()).toEqual([]);
+            expect(this.service.getStatusConfigEntries()).toEqual([]);
         });
 
         it('the http service is not called', () => {
-            this.service.getStatusConfig();
+            this.service.getStatusConfigEntries();
             expect(httpMock.get).not.toHaveBeenCalled();
         });
     })
@@ -41,7 +41,7 @@ describe('StatusConfigService', () => {
                 expect(data).toEqual([statusConfigEntry]);
             });
 
-            expect(this.service.getStatusConfig()).toEqual([statusConfigEntry]);
+            expect(this.service.getStatusConfigEntries()).toEqual([statusConfigEntry]);
         });
     });
 
