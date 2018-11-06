@@ -21,11 +21,11 @@
     </div>
 
     <div class="tile">
-      <strong>Estimated duration <ng-container *ngIf="hearing.isMultiSession; then days; else minutes"></ng-container>
-        <ng-template #days>(days)</ng-template>
-        <ng-template #minutes>(HH:mm)</ng-template>
+      <strong>Estimated duration
       </strong><br>
-      {{formatDuration(hearing.duration)}}
+      {{formatDuration(hearing.duration)}}<ng-container *ngIf="hearing.isMultiSession; then days; else minutes"></ng-container>
+      <ng-template #days>ay(s)</ng-template>
+      <ng-template #minutes> (Hours / Minutes)</ng-template>
     </div>
 
     <div class="tile">
