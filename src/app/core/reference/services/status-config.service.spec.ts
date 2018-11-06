@@ -34,14 +34,15 @@ describe('StatusConfigService', () => {
     })
 
     describe('When fetching status configs', () => {
-        it('the value for StatusConfig should be updated', () => {
+        it('the value for StatusConfig should be updated', (done) => {
             httpMock.get.and.returnValue(Observable.of(statusConfigEntriesResponses));
 
             this.service.fetchStatusConfig().subscribe(data => {
                 expect(data).toEqual([statusConfigEntry]);
+                expect(this.service.getStatusConfigEntries()).toEqual([statusConfigEntry]);
+                done();
             });
 
-            expect(this.service.getStatusConfigEntries()).toEqual([statusConfigEntry]);
         });
     });
 

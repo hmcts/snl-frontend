@@ -30,26 +30,24 @@ describe('StatusConfigResolver', () => {
             expect(statusConfigServiceMock.fetchStatusConfig).not.toHaveBeenCalled();
         });
 
-        it('current StatusConfig value is returned', () => {
+        it('current StatusConfig value is returned', (done) => {
             statusConfigServiceMock.getStatusConfigEntries.and.returnValue([statusConfigEntry]);
 
-            let hasObservableEmitted = false;
             this.resolver.resolve(nextMock, stateMock).subscribe(data => {
                 expect(data).toEqual([statusConfigEntry]);
-                hasObservableEmitted = true;
+                done();
             });
-
-            expect(hasObservableEmitted).toBeTruthy();
         });
     })
 
     describe('When StatusConfig service is not populated', () => {
-        it('fetch method is called and current StatusConfig value is returned', () => {
+        it('fetch method is called and current StatusConfig value is returned', (done) => {
             statusConfigServiceMock.getStatusConfigEntries.and.returnValue([]);
             statusConfigServiceMock.fetchStatusConfig.and.returnValue(Observable.of([statusConfigEntry]));
 
             this.resolver.resolve(nextMock, stateMock).subscribe(() => {
                 expect(statusConfigServiceMock.getStatusConfigEntries).toHaveBeenCalledTimes(1);
+                done();
             })
         });
     })
