@@ -25,7 +25,7 @@ export interface HearingPartViewModel {
     reservedJudgeId: string;
     hearingId: string;
     start: moment.Moment;
-    belongsToMultiSession: boolean;
+    isMultiSession: boolean;
 }
 
 export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {

@@ -101,7 +101,7 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     notes: [],
     reservedJudge: mockedJudges[0],
     start: moment(nowISOSting),
-    belongsToMultiSession: false
+    isMultiSession: false
 };
 
 const mockedUnlistedHearingVM: HearingViewmodel = {

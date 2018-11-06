@@ -13,4 +13,5 @@ export interface Hearing {
     deleted: boolean;
     version: number;
     numberOfSessions: number;
+    isMultiSession: boolean;
 }

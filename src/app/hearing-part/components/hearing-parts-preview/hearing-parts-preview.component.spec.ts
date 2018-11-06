@@ -154,7 +154,8 @@ describe('HearingPartPreviewComponent', () => {
             communicationFacilitator: 'cf',
             notes: [],
             isListed: false,
-            numberOfSessions: 1
+            numberOfSessions: 1,
+            isMultiSession: false
         } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
@@ -211,6 +212,7 @@ function generateHearings(id: string): HearingViewmodel {
         communicationFacilitator: null,
         notes: [],
         isListed: false,
-        numberOfSessions: 1
+        numberOfSessions: 1,
+        isMultiSession: false
     }
 };

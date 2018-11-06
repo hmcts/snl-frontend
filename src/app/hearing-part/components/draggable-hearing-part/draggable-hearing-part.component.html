@@ -4,5 +4,5 @@
   <span fxFlex="25%">{{hearingPart.hearingType.description}}</span>
   <span fxFlex="10%">{{hearingPart.start | appDateTimeToHHmm}}</span>
   <span fxFlex="10%">{{hearingPart.duration | appDurationFormat}}</span>
-  <span fxFlex="5%" *ngIf="hearingPart.belongsToMultiSession">*</span>
+  <span fxFlex="5%" *ngIf="hearingPart.isMultiSession">*</span>
 </div>

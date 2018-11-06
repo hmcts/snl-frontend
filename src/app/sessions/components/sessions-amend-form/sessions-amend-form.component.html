@@ -39,7 +39,7 @@
         <span>Number of listing requests: <strong>{{amendSessionForm.hearingPartCount}}</strong></span>
       </div>
 
-      <div *ngIf="amendSessionForm.belongsToMultiSession">
+      <div *ngIf="amendSessionForm.isMultiSession">
         <span class="snl-informative-legend">This session contains a multi-session hearing</span>
       </div>
     </form>

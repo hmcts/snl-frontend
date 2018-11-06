@@ -217,7 +217,8 @@ export class ListingCreateComponent implements OnInit {
                 reservedJudgeId: undefined,
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
-                numberOfSessions: 1
+                numberOfSessions: 1,
+                isMultiSession: false,
             },
             notes: []
         };
@@ -289,6 +290,7 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.duration = moment.duration(
                     moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
                     , 'minutes');
+                this.listing.hearing.isMultiSession = true;
                 break;
             case ListingTypeTab.Single:
             default:
@@ -296,6 +298,7 @@ export class ListingCreateComponent implements OnInit {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
                 this.listing.hearing.numberOfSessions = 1;
+                this.listing.hearing.isMultiSession = false;
                 break;
         }
     }
