@@ -21,5 +21,5 @@ export interface HearingViewmodel {
     reservedJudge: Judge;
     reservedJudgeId: string;
     isListed: boolean;
-    numberOfSessionsNeeded: number;
+    numberOfSessions: number;
 }

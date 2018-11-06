@@ -43,6 +43,6 @@ export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingR
         reservedJudgeId: hvm.reservedJudgeId,
         communicationFacilitator: hvm.communicationFacilitator,
         userTransactionId: undefined,
-        numberOfSessions: undefined
+        numberOfSessions: hvm.numberOfSessions
     }
 }

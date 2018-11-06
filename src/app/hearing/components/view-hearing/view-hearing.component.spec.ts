@@ -108,8 +108,8 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual('');
   });
 
-  it('formatDuration formats duration with minutes', () => {
+  it('formatDuration formats duration to HHmm', () => {
     const duration = component.formatDuration('PT30M');
-    expect(duration).toEqual('30 minutes');
+    expect(duration).toEqual('00:30');
   });
 });

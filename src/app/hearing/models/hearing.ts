@@ -31,5 +31,6 @@ export interface Hearing {
   facilityRequirements: string,
   reservedToJudge: string,
   notes: Note[],
-  sessions: Session[]
+  sessions: Session[],
+  numberOfSessions: number
 }

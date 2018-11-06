@@ -4,6 +4,7 @@ import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { formatDuration} from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-view-hearing',
@@ -32,9 +33,7 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDuration(duration: string): string {
-    const minutes = moment.duration(duration).asMinutes();
-
-    return Math.ceil(minutes) + ' minutes';
+    return formatDuration(moment.duration(duration))
   }
 
   getListBetween() {

@@ -21,8 +21,16 @@
     </div>
 
     <div class="tile">
-      <strong>Estimated duration</strong><br>
+      <strong>Estimated duration <ng-container *ngIf="hearing.numberOfSessions > 1; then days; else minutes"></ng-container>
+        <ng-template #days>(days)</ng-template>
+        <ng-template #minutes>(HH:mm)</ng-template>
+      </strong><br>
       {{formatDuration(hearing.duration)}}
+    </div>
+
+    <div class="tile">
+      <strong>Required Sessions</strong><br>
+      {{(hearing.numberOfSessions)}}
     </div>
 
     <div class="tile">
