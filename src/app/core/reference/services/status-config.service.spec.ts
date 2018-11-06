@@ -1,17 +1,19 @@
 import { StatusConfigService } from './status-config.service';
-import { StatusConfigEntry } from './status-config.model';
-import { Status } from './status.model';
+import { StatusConfigEntry, StatusConfigEntryResponse } from '../models/status-config.model';
+import { Status } from '../models/status.model';
 import { Observable } from 'rxjs/Observable';
 
 describe('StatusConfigService', () => {
     let httpMock;
     let configMock;
-    let statusConfigResponse: StatusConfigEntry[];
+    let statusConfigEntriesResponses: StatusConfigEntryResponse[];
+    let statusConfigEntryResponse: StatusConfigEntryResponse;
     let statusConfigEntry: StatusConfigEntry;
 
     beforeAll(() => {
-        statusConfigEntry = { status: Status.LISTED, canBeUnlisted: false, canBeListed: true };
-        statusConfigResponse = [statusConfigEntry]
+        statusConfigEntryResponse = { status: 'Listed', canBeUnlisted: false, canBeListed: true };
+        statusConfigEntry = { status: Status.Listed, canBeUnlisted: false, canBeListed: true };
+        statusConfigEntriesResponses = [statusConfigEntryResponse]
     });
 
     beforeEach(() => {
@@ -33,26 +35,28 @@ describe('StatusConfigService', () => {
 
     describe('When fetching status configs', () => {
         it('the value for StatusConfig should be updated', () => {
-            httpMock.get.and.returnValue(Observable.of(statusConfigResponse));
+            httpMock.get.and.returnValue(Observable.of(statusConfigEntriesResponses));
 
-            this.service.fetchStatusConfig().subscribe();
+            this.service.fetchStatusConfig().subscribe(data => {
+                expect(data).toEqual([statusConfigEntry]);
+            });
 
-            expect(this.service.getStatusConfig()).toEqual(statusConfigResponse);
+            expect(this.service.getStatusConfig()).toEqual([statusConfigEntry]);
         });
     });
 
     describe('When getting status configs', () => {
         beforeEach(() => {
-            httpMock.get.and.returnValue(Observable.of(statusConfigResponse));
+            httpMock.get.and.returnValue(Observable.of(statusConfigEntriesResponses));
             this.service.fetchStatusConfig().subscribe();
-        })
+        });
 
         it('for concrete key the value should be returned', () => {;
-            expect(this.service.getStatusConfigEntry(Status.LISTED)).toEqual(statusConfigEntry);
+            expect(this.service.getStatusConfigEntry(Status.Listed)).toEqual(statusConfigEntry);
         });
 
         it('for concrete key that does not exist the error is thrown', () => {;
-            expect( () => { this.service.getStatusConfigEntry(Status.UNLISTED) }).toThrowError();
+            expect( () => { this.service.getStatusConfigEntry(Status.Unlisted) }).toThrowError();
         });
     });
 });

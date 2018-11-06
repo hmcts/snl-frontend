@@ -40,8 +40,6 @@ import { SecurityContext } from './security/services/security-context.service';
 import { HmctsModule } from './hmcts/hmcts.module';
 import { GovukModule } from './govuk/govuk.module';
 import { HearingModule } from './hearing/hearing.module';
-import { StatusConfigResolver } from './status-config.resolver';
-import { StatusConfigService } from './status-config.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -93,7 +91,7 @@ export class XhrInterceptor implements HttpInterceptor {
         GovukModule,
         HearingModule
     ],
-    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext, StatusConfigResolver, StatusConfigService,
+    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
