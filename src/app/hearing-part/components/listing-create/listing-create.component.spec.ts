@@ -77,7 +77,8 @@ const listingCreate = {
         reservedJudgeId: undefined,
         communicationFacilitator: undefined,
         userTransactionId: 'uti',
-        numberOfSessions: 1
+        numberOfSessions: 1,
+        isMultiSession: false
     },
     notes: [],
     userTransactionId: undefined
@@ -213,6 +214,7 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
+            component.listing.hearing.isMultiSession = true;
             component.chosenListingType = ListingTypeTab.Multi;
 
             component.save();
@@ -233,6 +235,7 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.scheduleEnd).toEqual(now);
             expect(createdListing.duration).toEqual(moment.duration(threeDaysDuration.asMilliseconds()));
             expect(createdListing.numberOfSessions).toEqual(5);
+            expect(createdListing.isMultiSession).toEqual(true);
         });
 
         it('should dispatch action with 1 as a numberOfSessions and max minutes for a day, ' +

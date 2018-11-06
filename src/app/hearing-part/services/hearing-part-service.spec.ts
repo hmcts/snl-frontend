@@ -123,7 +123,8 @@ const createHearingPartRequest: CreateHearingRequest = {
     communicationFacilitator: null,
     priority: null,
     userTransactionId: uuid(),
-    numberOfSessions: 1
+    numberOfSessions: 1,
+    isMultiSession: false
 };
 
 const updateHearingPartRequest: UpdateHearingRequest = {

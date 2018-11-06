@@ -61,6 +61,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     filteredSessions: SessionViewModel[];
     errorMessage: string;
     numberOfSessions = 0;
+    isMultiSession = false;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -108,6 +109,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     selectHearing(hearing: HearingViewmodel) {
         this.selectedHearing = hearing;
         this.numberOfSessions = hearing !== undefined ? hearing.numberOfSessions : 0;
+        this.isMultiSession = hearing !== undefined ? hearing.isMultiSession : false;
     }
 
     selectSession(sessions: SessionViewModel[]) {

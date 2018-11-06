@@ -106,7 +106,8 @@ describe('HearingAction', () => {
                     communicationFacilitator: '123',
                     userTransactionId: '123',
                     version: 1,
-                    numberOfSessions: 1
+                    numberOfSessions: 1,
+                    isMultiSession: false
                 },
                 notes: []
             };
@@ -134,7 +135,8 @@ describe('HearingAction', () => {
                 reservedJudgeId: 'judge',
                 communicationFacilitator: 'translator',
                 userTransactionId: '123',
-                numberOfSessions: 1
+                numberOfSessions: 1,
+                isMultiSession: false
             };
             const action = new CreateListingRequest(payload);
 
