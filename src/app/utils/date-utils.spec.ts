@@ -39,22 +39,36 @@ describe('DateUtils', () => {
     });
 
     describe('formatDuration', () => {
-        it('should format properly for duration > 24h', () => {
-            const momentDuration = moment.duration(1523, 'minutes');
+        it('should format properly for duration > 1D', () => {
+            const momentDuration = moment.duration(3, 'days');
 
-            expect(dateUtils.formatDuration(momentDuration)).toEqual('25:23');
+            expect(dateUtils.formatDuration(momentDuration)).toEqual('3 D');
+        });
+
+        it('should format properly for duration > 24h', () => {
+            const momentDuration = moment.duration(1523, 'minutes'); // a day and a bit
+
+            expect(dateUtils.formatDuration(momentDuration)).toEqual('1.5 D');
         });
 
         it('should format properly for duration == 24h', () => {
             const momentDuration = moment.duration(1440, 'minutes');
 
-            expect(dateUtils.formatDuration(momentDuration)).toEqual('24:00');
+            expect(dateUtils.formatDuration(momentDuration)).toEqual('1 D');
         });
 
         it('should format properly for duration < 24h', () => {
             const momentDuration = moment.duration(1439, 'minutes');
 
             expect(dateUtils.formatDuration(momentDuration)).toEqual('23:59');
+        });
+    });
+
+    describe('formatDateTimeToHHmm', () => {
+        it('should display time in HH:mm from date-time', () => {
+            const momentDate = moment.utc('2018-10-19 16:32:00+00');
+
+            expect(dateUtils.formatDateTimeToHHmm(momentDate)).toEqual('16:32');
         });
     });
 });

@@ -12,3 +12,7 @@ export function safe<T>(sel: () => T): T {
         return;
     }
 }
+
+export function getPropertyMemberOrNull(item: object, property: string, key: string) {
+    return (item[property]) ? item[property][key] : null;
+}

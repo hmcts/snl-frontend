@@ -5,7 +5,6 @@ import { catchError, distinctUntilChanged, mergeMap, withLatestFrom } from 'rxjs
 import { of } from 'rxjs/observable/of';
 import { Action, Store } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
-import * as notificationActions from '../../features/notification/actions/notification.action';
 import * as transactionActions from '../../features/transactions/actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
 import * as judgeActions from '../../judges/actions/judge.action';
@@ -15,7 +14,6 @@ import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
-import { CoreNotification } from '../../features/notification/model/core-notification';
 import { State } from '../../app.state';
 import * as fromSessionIndex from '../reducers/index';
 import * as notesActions from '../../notes/actions/notes.action';
@@ -149,23 +147,6 @@ export class SessionEffects {
                 ]),
                 // If request fails, dispatch failed action
                 catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed('Error: ' + err.error)))
-            )
-        )
-    );
-
-    @Effect()
-    searchPropositions$: Observable<Action> = this.actions$.pipe(
-        ofType<sessionActions.SearchPropositions>(sessionActions.SessionActionTypes.SearchPropositions),
-        mergeMap(action =>
-            this.sessionsService.searchSessionPropositions(action.payload).pipe(
-                mergeMap(data => [
-                    new sessionActions.AddPropositions(data),
-                    new notificationActions.Notify({
-                        message: 'Search propositions completed',
-                        duration: 3000
-                    } as CoreNotification)
-                ]),
-                catchError((err: HttpErrorResponse) => of(new sessionActions.SearchFailed(err.error)))
             )
         )
     );

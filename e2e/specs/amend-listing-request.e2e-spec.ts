@@ -1,5 +1,5 @@
-import { LoginFlow } from './../flows/login.flow';
-import { NavigationFlow } from './../flows/navigation.flow';
+import { LoginFlow } from '../flows/login.flow';
+import { NavigationFlow } from '../flows/navigation.flow';
 import { CaseTypes } from '../enums/case-types';
 import { SessionSearchPage } from '../pages/session-search.po';
 import { v4 as uuid } from 'uuid';
@@ -43,12 +43,13 @@ const displayedListingRequestData = {
 };
 
 const listingRequestCreate: CreateListingRequestBody = {
-    id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial'
-}
+    id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial',
+    numberOfSessions: 1
+};
 
 describe('Amend Listing Request', () => {
   beforeAll(async () => {
-    await loginFlow.relogin()
+    await loginFlow.loginIfNeeded()
   });
   describe('Create Listing Request via API', () => {
     it('should create listing request', async () => {
@@ -74,14 +75,17 @@ describe('Amend Listing Request', () => {
         caseTitle: newCaseTitle,
         caseType: otherCaseType,
         hearingType: otherHearingType,
-        duration: otherDuration,
+        durationMinutes: otherDuration,
+        durationDays: null,
+        numberOfSessions: 1,
         fromDate: todayDate,
         endDate: tomorrowDate
-      }
+      };
       await listingCreationPage.setNoteValue(LISTING_NOTES.SPECIAL_REQUIREMENTS, specReqNoteValue);
-      await listingCreationPage.createListingRequest(listingForm)
+      await listingCreationPage.createListingRequest(listingForm);
       await transactionDialogPage.clickAcceptButton();
-      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(...Object.values(listingForm));
+      const isListingRequestDisplayed = await sessionSearchPage.isListingRequestDisplayed(
+          newCaseNumber, newCaseTitle, otherCaseType, otherHearingType, otherDuration.toString(), todayDate, tomorrowDate);
       expect(isListingRequestDisplayed).toBeTruthy()
     });
   });

@@ -153,7 +153,8 @@ describe('HearingPartPreviewComponent', () => {
             reservedJudge: { id: 'id', name: 'judge-name'},
             communicationFacilitator: 'cf',
             notes: [],
-            isListed: false
+            isListed: false,
+            numberOfSessionsNeeded: 0
         } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
@@ -165,6 +166,7 @@ describe('HearingPartPreviewComponent', () => {
             { columnName: 'communicationFacilitator', expected: sampleHearing.communicationFacilitator },
             { columnName: 'priority', expected: priorityValue(sampleHearing.priority) },
             { columnName: 'reservedJudge', expected: sampleHearing.reservedJudge.name },
+            { columnName: 'requiredSessions', expected: sampleHearing.numberOfSessionsNeeded },
             { columnName: 'notes', expected: 'No' },
             { columnName: 'scheduleStart', expected: sampleHearing.scheduleStart.unix() },
             { columnName: 'scheduleEnd', expected: sampleHearing.scheduleEnd.unix() },
@@ -208,6 +210,7 @@ function generateHearings(id: string): HearingViewmodel {
         reservedJudge: null,
         communicationFacilitator: null,
         notes: [],
-        isListed: false
+        isListed: false,
+        numberOfSessionsNeeded: 0
     }
 };

@@ -1,6 +1,5 @@
 <mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort matSortActive="priority"
 matSortDirection="desc">
-  <!-- Position Column -->
   <ng-container matColumnDef="selectHearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
     <mat-cell *matCellDef="let element">
@@ -39,6 +38,11 @@ matSortDirection="desc">
   <ng-container matColumnDef="reservedJudge">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="requiredSessions">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Required sessions </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.numberOfSessionsNeeded}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="hearingType">

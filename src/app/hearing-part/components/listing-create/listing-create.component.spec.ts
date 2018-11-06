@@ -1,5 +1,5 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ListingCreateComponent } from './listing-create.component';
+import { ListingCreateComponent, ListingTypeTab } from './listing-create.component';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -76,7 +76,8 @@ const listingCreate = {
         priority: undefined,
         reservedJudgeId: undefined,
         communicationFacilitator: undefined,
-        userTransactionId: 'uti'
+        userTransactionId: 'uti',
+        numberOfSessions: 1
     },
     notes: [],
     userTransactionId: undefined
@@ -205,6 +206,57 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.hearingTypeCode).toEqual('hearing-type-code');
             expect(createdListing.scheduleStart).toEqual(now);
             expect(createdListing.scheduleEnd).toEqual(now);
+        });
+
+        it('with custom inputs and multi-session option should dispatch proper action', () => {
+            component.listing = listingCreate;
+            const threeDaysDuration = moment.duration(3, 'days');
+            component.listing.hearing.duration = threeDaysDuration;
+            component.listing.hearing.numberOfSessions = 5;
+            component.chosenListingType = ListingTypeTab.Multi;
+
+            component.save();
+
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+
+            const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+            const createdListing = createListingAction.payload;
+
+            expect(createListingAction.type).toEqual(
+                HearingPartActionTypes.CreateListingRequest
+            );
+            expect(createdListing.id).toBeDefined();
+            expect(createdListing.caseNumber).toEqual('number');
+            expect(createdListing.caseTypeCode).toEqual('case-type-code1');
+            expect(createdListing.hearingTypeCode).toEqual('hearing-type-code');
+            expect(createdListing.scheduleStart).toEqual(now);
+            expect(createdListing.scheduleEnd).toEqual(now);
+            expect(createdListing.duration).toEqual(moment.duration(threeDaysDuration.asMilliseconds()));
+            expect(createdListing.numberOfSessions).toEqual(5);
+        });
+
+        it('should dispatch action with 1 as a numberOfSessions and max minutes for a day, ' +
+            'when multi-session numberOfSessions was set higher and option changed to singe-session ', () => {
+            component.listing = listingCreate;
+            const threeDaysDuration = moment.duration(3, 'days');
+            component.listing.hearing.duration = threeDaysDuration;
+            component.listing.hearing.numberOfSessions = 5;
+            component.chosenListingType = ListingTypeTab.Single;
+
+            component.save();
+
+            expect(storeSpy).toHaveBeenCalledTimes(3);
+
+            const createListingAction = storeSpy.calls.argsFor(0)[0] as CreateListingRequest;
+            const createdListing = createListingAction.payload;
+
+            expect(createListingAction.type).toEqual(
+                HearingPartActionTypes.CreateListingRequest
+            );
+            expect(createdListing.duration).toEqual(
+                moment.duration(moment.duration(60 * 24 - 1, 'minutes').asMilliseconds())
+            );
+            expect(createdListing.numberOfSessions).toEqual(1);
         });
 
         it('with default inputs should dispatch proper action', () => {

@@ -5,7 +5,7 @@ import { Logger } from '../utils/logger';
 import { Paginator } from '../components/paginator';
 
 export class ProblemsPage {
-    private containerElement = element(by.css('app-problems-page'))
+    private get containerElement() { return element(by.css('app-problems-page')) }
     public problemsTable = new Table(element(by.css('app-problems-table')));
     private problemsTablePaginator = new Paginator(element(by.id('problems-table-paginator')));
 

@@ -17,6 +17,7 @@ import { Note } from '../../../notes/models/note.model';
 import { NoteViewmodel, getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
 import { NoteType } from '../../../notes/models/note-type';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -78,7 +79,7 @@ export class SessionsAmendFormComponent {
 
     private openTransactionDialog() {
         return this.dialog.open(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: 'Amending session'
         });
     }
