@@ -16,6 +16,7 @@ import { DialogWithActionsComponent } from '../../../features/notification/compo
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-hearings-search',
@@ -95,7 +96,7 @@ export class HearingsSearchComponent implements OnInit {
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+                ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
         });
     }
