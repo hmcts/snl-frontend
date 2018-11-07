@@ -27,7 +27,7 @@ export const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [TransactionBackendService]
+    providers: [TransactionBackendService, DurationAsDaysPipe]
 })
 export class CoreModule {
 }

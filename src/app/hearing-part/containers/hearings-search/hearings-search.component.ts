@@ -42,7 +42,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.judges$ = this.judgeService.get();
+        this.judges$ = this.judgeService.fetch();
         this.caseTypes$ = this.referenceDataService.fetchCaseTypes();
         this.hearingTypes$ = this.referenceDataService.fetchHearingTypes();
     }

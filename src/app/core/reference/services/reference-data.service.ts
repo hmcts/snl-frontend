@@ -21,38 +21,38 @@ export class ReferenceDataService {
 
     fetchCaseTypes(): Observable<CaseType[]> {
         return this.getReferenceDataFor<CaseType[]>('/case-types')
-            .pipe(tap(this.caseTypesSource.next));
+            .pipe(tap((caseTypes) => {this.caseTypesSource.next(caseTypes)}));
     }
 
     fetchHearingTypes(): Observable<HearingType[]> {
         return this.getReferenceDataFor<HearingType[]>('/hearing-types')
-            .pipe(tap(this.hearingTypesSource.next));
+            .pipe(tap((hearingTypes) => {this.hearingTypesSource.next(hearingTypes)}));
     }
 
     fetchRoomTypes(): Observable<RoomType[]> {
         return this.getReferenceDataFor<RoomType[]>('/room-types')
-            .pipe(tap(this.roomTypesSource.next));
+            .pipe(tap((roomTypes) => {this.roomTypesSource.next(roomTypes)}));
     }
 
     fetchSessionTypes(): Observable<SessionType[]> {
         return this.getReferenceDataFor<SessionType[]>('/session-types')
-            .pipe(tap(this.sessionTypesSource.next));
+            .pipe(tap((sessionTypes) => {this.sessionTypesSource.next(sessionTypes)}));
     }
 
-    getCaseTypes(): CaseType[] {
-        return this.caseTypesSource.getValue();
+    getCaseTypes(): Observable<CaseType[]> {
+        return this.caseTypesSource.asObservable();
     }
 
-    getHearingTypes(): HearingType[] {
-        return this.hearingTypesSource.getValue();
+    getHearingTypes(): Observable<HearingType[]> {
+        return this.hearingTypesSource.asObservable();
     }
 
-    getRoomTypes(): RoomType[] {
-        return this.roomTypesSource.getValue();
+    getRoomTypes(): Observable<RoomType[]> {
+        return this.roomTypesSource.asObservable();
     }
 
-    getSessionTypes(): SessionType[] {
-        return this.sessionTypesSource.getValue();
+    getSessionTypes(): Observable<SessionType[]> {
+        return this.sessionTypesSource.asObservable();
     }
 
     private getReferenceDataFor<T>(urlSuffix: string): Observable<T> {
