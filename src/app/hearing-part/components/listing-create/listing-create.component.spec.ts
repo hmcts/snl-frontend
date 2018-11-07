@@ -243,7 +243,9 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
+            component.listing.hearing.multiSession = false;
 
+            component.setDurationToDisplay();
             component.save();
 
             expect(storeSpy).toHaveBeenCalledTimes(3);
@@ -255,7 +257,7 @@ describe('ListingCreateComponent', () => {
                 HearingPartActionTypes.CreateListingRequest
             );
             expect(createdListing.duration).toEqual(
-                moment.duration(moment.duration(60 * 24 - 1, 'minutes').asMilliseconds())
+                moment.duration(moment.duration((60 * 24) - 1, 'minutes').asMilliseconds())
             );
             expect(createdListing.numberOfSessions).toEqual(1);
         });

@@ -175,6 +175,23 @@ export class ListingCreateComponent implements OnInit {
 
     onListingTypeChange(event: MatRadioChange) {
        this.listing.hearing.multiSession = Number.parseInt(event.value) === 1;
+       this.setDurationToDisplay();
+    }
+
+    setDurationToDisplay() {
+        if (this.listing.hearing.duration) {
+            if (this.listing.hearing.multiSession) {
+                return this.asDaysPipe.transform(this.listing.hearing.duration);
+            } else {
+                this.listing.hearing.numberOfSessions = 1;
+                if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
+                    this.listing.hearing.duration = moment.duration((24 * 60) - 1, 'minutes');
+                } else {
+                    return this.listing.hearing.duration.asMinutes();
+                }
+            }
+        }
+        return undefined;
     }
 
     private initiateListing() {
@@ -231,7 +248,7 @@ export class ListingCreateComponent implements OnInit {
             ),
             listingType: new FormGroup({
                 duration: new FormControl({
-                        value: this.getDurationToDisplay(),
+                        value: this.listing.hearing.duration,
                         disabled: this.editMode && this.listing.hearing.multiSession
                     },
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
@@ -250,17 +267,6 @@ export class ListingCreateComponent implements OnInit {
         });
     }
 
-    private getDurationToDisplay() {
-        if (this.listing.hearing.duration) {
-            if (this.listing.hearing.multiSession) {
-                return this.asDaysPipe.transform(this.listing.hearing.duration);
-            } else {
-                return this.listing.hearing.duration.asMinutes();
-            }
-        }
-        return undefined;
-    }
-
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
@@ -276,11 +282,6 @@ export class ListingCreateComponent implements OnInit {
             this.listing.hearing.duration = moment.duration(
                 moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
                 , 'minutes');
-        } else {
-                if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
-                    this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
-                }
-                this.listing.hearing.numberOfSessions = 1;
         }
     }
 }
