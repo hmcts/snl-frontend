@@ -40,6 +40,7 @@ const listingCreationForm: ListingCreationForm = {
     durationMinutes: duration,
     durationDays: null,
     numberOfSessions: 1,
+    isMultiSession: false,
     fromDate: todayDate,
     endDate: tomorrowDate
 };

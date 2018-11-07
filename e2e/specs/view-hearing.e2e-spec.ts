@@ -29,7 +29,8 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
             duration: 'PT30M',
             priority: Priority.High,
             userTransactionId: uuid(),
-            numberOfSessions: 1
+            numberOfSessions: 1,
+            isMultiSession: false
         } as CreateListingRequestBody
     );
 };

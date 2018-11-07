@@ -26,6 +26,7 @@ const formValues: ListingCreationForm = {
   durationMinutes: 60,
   durationDays: null,
   numberOfSessions: 1,
+  isMultiSession: false,
   fromDate: tomorrowString,
   endDate: tomorrowString
 };
@@ -82,7 +83,8 @@ describe('Create Listing Request', () => {
               ...formValues,
               durationMinutes: 0,
               durationDays: 3,
-              numberOfSessions: 5
+              numberOfSessions: 5,
+              isMultiSession: true
           } as ListingCreationForm;
           await listingCreationPage.createListingRequest(multiSessionFormValues)
           expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
