@@ -21,7 +21,8 @@ export enum HearingPartActionTypes {
   UpsertOne = '[HearingPart] Upsert One',
   AssignFailed = '[HearingPart] Assign Failed',
   Delete = '[HearingPart] Delete',
-  DeleteComplete = '[HearingPart] Delete Complete'
+  DeleteComplete = '[HearingPart] Delete Complete',
+  DeleteByHearingId = '[HearingPart] Delete by hearingId Complete'
 }
 
 /**
@@ -113,4 +114,10 @@ export class DeleteComplete implements Action {
   readonly  type = HearingPartActionTypes.DeleteComplete;
 
   constructor(public payload: any) {}
+}
+
+export class DeleteByHearingId implements Action {
+    readonly  type = HearingPartActionTypes.DeleteByHearingId;
+
+    constructor(public payload: any) {}
 }

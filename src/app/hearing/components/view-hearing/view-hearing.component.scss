@@ -58,8 +58,11 @@ mat-panel-title {
   min-height: 70px;
 }
 
-#case-number span {
-  font-weight: normal;
+#case-number {
+  font-size:1.5em;
+  span {
+    font-weight: normal;
+  }
 }
 
 // easiest way to make session panel not expandable is to disable it, but by default it appears in gray

@@ -122,7 +122,7 @@ describe('HearingSearchTableComponent', () => {
 
         it(' tested columns should equal component displayedColumns field', () => {
             const columnsArray: string[] = [...displayedColumnsExpectedValues,
-                { columnName: 'amend', expected: undefined }].map(r => r.columnName);
+                { columnName: 'delete', expected: undefined }].map(r => r.columnName);
             expect(component.displayedColumns).toEqual(columnsArray);
         });
     });
