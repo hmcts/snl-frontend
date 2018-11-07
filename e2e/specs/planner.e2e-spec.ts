@@ -27,7 +27,7 @@ let sessionsToCreate: SessionCreate[];
 describe('Planner, check newly created sessions existence', () => {
 
     beforeAll(async () => {
-        await loginFlow.relogin();
+        await loginFlow.loginIfNeeded();
         await navigationFlow.gotoPlannerPage();
         await plannerPage.clickJudgeViewButton();
         await plannerPage.openDayView();
@@ -47,21 +47,18 @@ describe('Planner, check newly created sessions existence', () => {
     });
 
     describe('Check if newly created sessions are on planner ', () => {
-        it('Create sessions ', async () => {
+        it('Create Sessions via API', async () => {
             numberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
-            expect(numberOfVisibleEvents).not.toEqual(0);
+
             for (let session of sessionsToCreate) {
                 expect(await API.createSession(session)).toEqual(200);
                 Logger.log('Created session: id: ' + session.id + ' start: ' + session.start.toISOString());
             }
         });
 
-        it('Refresh the view ', async () => {
+        it('Refreshed view should show new sessions ', async () => {
             await plannerPage.clickNextButton();
             await plannerPage.clickPrevButton();
-        });
-
-        it('Refreshed view should show new sessions ', async () => {
             let newNumberOfVisibleEvents = await plannerPage.getNumberOfVisibleEvents();
             visibleElementsDiff = Math.abs(newNumberOfVisibleEvents - numberOfVisibleEvents);
             Logger.log('Sessions number, before call: ' +
@@ -95,7 +92,7 @@ describe('Planner, check newly created sessions existence', () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.JUDGE_LINDA);
 
             shouldContain = ['No Room', Judges.JUDGE_LINDA, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(
+            let found = await elementHelper.doesElementContainAllValues(
                 await plannerPage.getSessionEventById(sessionsToCreate[3].id), ...shouldContain);
             expect(found).toBeTruthy();
         });
@@ -113,15 +110,15 @@ describe('Planner, check newly created sessions existence', () => {
 
         it('There should be at least two Session allocated to Second judge - prepare', async () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.AMY_WESSOME);
-
-            const foundedEvents = plannerPage.getAllEventsForTheResource(resourceId).count();
-            expect(foundedEvents).toBeGreaterThanOrEqual(2);
+            const row = await plannerPage.getAllEventsForTheResource(resourceId)
+            const foundEvents = row.length;
+            expect(foundEvents).toBeGreaterThanOrEqual(2);
         });
 
         it('check first session', async () => {
             let event = await plannerPage.getSessionEventById(sessionsToCreate[1].id);
             shouldContain = ['No Room', Judges.AMY_WESSOME, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(event, ...shouldContain);
+            let found = await elementHelper.doesElementContainAllValues(event, ...shouldContain);
             expect(found).toBeTruthy();
 
             const valuesToCheck: string[] = [
@@ -136,7 +133,7 @@ describe('Planner, check newly created sessions existence', () => {
         it('check second session', async () => {
             let event = await plannerPage.getSessionEventById(sessionsToCreate[2].id);
             shouldContain = [Rooms.COURT_4, Judges.AMY_WESSOME, SessionTypes.FTRACK_TRIAL_ONLY];
-            let found = elementHelper.doesElementContainAllValues(event, ...shouldContain);
+            let found = await elementHelper.doesElementContainAllValues(event, ...shouldContain);
             expect(found).toBeTruthy();
 
             const valuesToCheck: string[] = [

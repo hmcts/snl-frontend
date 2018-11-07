@@ -3,4 +3,5 @@ export interface HearingPartResponse {
     sessionId?: string;
     version: number;
     hearingInfo: string;
+    start: string;
 }

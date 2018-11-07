@@ -27,7 +27,8 @@ import { SessionAmendDialogComponent } from '../../components/session-amend-dial
 import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
 import { RoomType } from '../../../core/reference/models/room-type';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
-import { SessionAmendForm } from '../../../../../e2e/models/session-amend-form';
+import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-sessions-search',
@@ -54,7 +55,7 @@ export class SessionsSearchComponent implements OnInit {
             select(fromHearingParts.getFullHearingParts),
             map(asArray),
             map(sessionsFilterService.filterUnlistedHearingParts)
-        ) as Observable<HearingPartViewModel[]>;
+        );
 
         this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
         this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
@@ -68,7 +69,7 @@ export class SessionsSearchComponent implements OnInit {
         this.startDate = moment();
         this.endDate = moment().add(5, 'years');
 
-        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
+        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data });
     }
 
     ngOnInit() {
@@ -79,18 +80,19 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     openAmendDialog(s: SessionViewModel) {
-        let sessionAmendForm: SessionAmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
-        this.dialog.open(SessionAmendDialogComponent, {
+        let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
+        this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
             data: {
                 sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
-            } as SessionAmmendDialogData,
-            hasBackdrop: true,
-            height: 'auto',
-            disableClose: true
+                notes: s.notes
+            },
+            height: 'auto'
         })
     }
 
+    // TODO move to service
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
         if (!filters) {
             return sessions;

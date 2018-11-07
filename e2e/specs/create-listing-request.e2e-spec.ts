@@ -23,10 +23,12 @@ const formValues: ListingCreationForm = {
   caseTitle: 'e2e case title' + moment().toISOString(),
   caseType: CaseTypes.FTRACK,
   hearingType: HearingTypes.TRIAL,
-  duration: 60,
+  durationMinutes: 60,
+  durationDays: null,
+  numberOfSessions: 1,
   fromDate: tomorrowString,
   endDate: tomorrowString
-}
+};
 
 describe('Create Listing Request', () => {
   beforeAll(async () => {
@@ -50,7 +52,7 @@ describe('Create Listing Request', () => {
       expect(isProblemDisplayed).toBeTruthy()
     });
     it('click rollback, new hearing part should not be created', async () => {
-      transactionDialogPage.clickRollbackButton()
+      await transactionDialogPage.clickRollbackButton()
       const isHearingPartCreatedWhenRollback = await waitFor(Wait.normal, async () => {
         const numberOfHearingPartsAfterRollback = (await API.getHearingParts() as any[]).length
         return numberOfHearingParts === numberOfHearingPartsAfterRollback
@@ -71,5 +73,24 @@ describe('Create Listing Request', () => {
       const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length
       expect(numberOfHearingParts + 1).toEqual(numberOfHearingPartsAfterAccept)
     })
+  });
+  describe('check listing type options', () => {
+      const numberOfSessionsToCreate = 5;
+      it('choose multi session and fill in the fields', async () => {
+          numberOfHearingParts = (await API.getHearingParts() as any[]).length;
+          const multiSessionFormValues = {
+              ...formValues,
+              durationMinutes: 0,
+              durationDays: 3,
+              numberOfSessions: 5
+          } as ListingCreationForm;
+          await listingCreationPage.createListingRequest(multiSessionFormValues)
+          expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
+          await transactionDialogPage.clickAcceptButton();
+      });
+      it('newly created hearing part should be returned from API', async () => {
+          const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length
+          expect(numberOfHearingParts + numberOfSessionsToCreate).toEqual(numberOfHearingPartsAfterAccept)
+      })
   });
 });

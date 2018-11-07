@@ -41,6 +41,7 @@ import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
 import { Hearing } from '../../../hearing-part/models/hearing';
 import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
+import { AssignHearingData } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 
 let storeSpy: jasmine.Spy;
 let component: SessionsListingsSearchComponent;
@@ -79,7 +80,8 @@ const mockedHearingPartResponse: HearingPartResponse = {
   sessionId: null,
   hearingInfo: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
   version: 2,
-}
+  start: nowISOSting
+};
 
 const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     id: 'some-id',
@@ -97,7 +99,9 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     reservedJudgeId: judgeId,
     communicationFacilitator: 'interpreter',
     notes: [],
-    reservedJudge: mockedJudges[0]
+    reservedJudge: mockedJudges[0],
+    start: moment(nowISOSting),
+    belongsToMultiSession: false
 };
 
 const mockedUnlistedHearingVM: HearingViewmodel = {
@@ -115,7 +119,8 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     communicationFacilitator: 'interpreter',
     notes: mockedNotes,
     reservedJudge: mockedJudges[0],
-    isListed: false
+    isListed: false,
+    numberOfSessionsNeeded: 1
 }
 
 const mockedHearingResponse: Hearing = {
@@ -131,7 +136,8 @@ const mockedHearingResponse: Hearing = {
     reservedJudgeId: judgeId,
     scheduleEnd: nowISOSting,
     scheduleStart: nowISOSting,
-    version: 2
+    version: 2,
+    numberOfSessionsNeeded: 1
 }
 
 // same as unlisted, but with session set to matching id in Session
@@ -234,11 +240,11 @@ describe('SessionsListingsSearchComponent', () => {
       expect(component.startDate).toBeDefined();
       expect(component.endDate).toBeDefined();
     });
-    it('should set null to selectedHearingPart', () => {
-      expect(component.selectedHearingPart).toBeUndefined();
+    it('should set null to selectedHearing', () => {
+      expect(component.selectedHearing).toBeUndefined();
     });
-    it('should set selectedSession to empty obj', () => {
-      expect(component.selectedSession).toBeUndefined();
+    it('should set selectedSessions to empty obj', () => {
+      expect(component.selectedSessions).toEqual([]);
     });
   });
 
@@ -353,17 +359,22 @@ describe('SessionsListingsSearchComponent', () => {
   });
 
   describe('selectHearing', () => {
-    it('should set selectedHearingPart', () => {
-      component.selectHearingPart(mockedUnlistedHearingVM);
-      expect(component.selectedHearingPart).toEqual(mockedUnlistedHearingVM);
+    it('should set selectedHearing', () => {
+      component.selectHearing(mockedUnlistedHearingVM);
+      expect(component.selectedHearing).toEqual(mockedUnlistedHearingVM);
     });
   });
 
-  describe('assignToSession', () => {
+  describe('assignToSessions', () => {
     it('should dispatch AssignToSession action', () => {
-      component.selectedSession = mockedFullSession[0];
-      component.selectedHearingPart = mockedUnlistedHearingVM;
-      component.assignToSession();
+      const startTime = '10:30';
+      component.selectedSessions = [mockedFullSession[0]];
+      component.selectedHearing = mockedUnlistedHearingVM;
+
+      component.assignToSessions({
+          confirmed: true,
+          startTime: startTime
+      } as AssignHearingData);
 
       const passedObj = storeSpy.calls.first().args[0];
       const sessionAssignmentPayload: HearingToSessionAssignment = passedObj.payload;
@@ -378,42 +389,43 @@ describe('SessionsListingsSearchComponent', () => {
           mockedUnlistedHearingVM.version
       );
       expect(sessionAssignmentPayload.userTransactionId).toBeDefined();
-      expect(sessionAssignmentPayload.sessionId).toEqual(
+      expect(sessionAssignmentPayload.sessionsData[0].sessionId).toEqual(
         mockedFullSession[0].id
       );
-      expect(sessionAssignmentPayload.sessionVersion).toEqual(
+      expect(sessionAssignmentPayload.sessionsData[0].sessionVersion).toEqual(
           mockedFullSession[0].version
       )
-      expect(sessionAssignmentPayload.start).toBeNull();
+
+      expect(sessionAssignmentPayload.start).toEqual(moment(startTime, 'HH:mm').toDate());
     });
   });
 
-  describe('selectSession', () => {
-    it('should set selectSession', () => {
-      const expectedSelectedSession = mockedFullSession[0];
-      expect(component.selectedSession).toBeUndefined();
+  describe('selectSessions', () => {
+    it('should set selectSessions', () => {
+      const expectedSelectedSession = mockedFullSession;
+      expect(component.selectedSessions).toEqual([]);
       component.selectSession(expectedSelectedSession);
-      expect(component.selectedSession).toEqual(expectedSelectedSession);
+      expect(component.selectedSessions).toEqual(expectedSelectedSession);
     });
   });
 
   describe('assignButtonEnabled', () => {
-    describe('when selectedHearingPart is not null and selectedSession is set', () => {
+    describe('when selectedHearing is not null and selectedSessions is set', () => {
       it('should return true ', () => {
-        component.selectedSession = mockedFullSession[0];
-        component.selectedHearingPart = mockedUnlistedHearingVM;
+        component.selectHearing(mockedUnlistedHearingVM);
+        component.selectSession(mockedFullSession);
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
-    describe('when either selectedHearingPart is not null or selectedSession is not set', () => {
+    describe('when either selectedHearing is not null or selectedSessions is not set', () => {
       it('should return false ', () => {
-        component.selectedSession = undefined;
-        component.selectedHearingPart = mockedUnlistedHearingVM;
+        component.selectSession([]);
+        component.selectHearing(mockedUnlistedHearingVM);
         expect(component.assignButtonEnabled()).toEqual(false);
       });
       it('should return false ', () => {
-        component.selectedSession = undefined;
-        component.selectedHearingPart = undefined;
+        component.selectSession([]);
+        component.selectHearing(undefined);
         expect(component.assignButtonEnabled()).toEqual(false);
       });
     });

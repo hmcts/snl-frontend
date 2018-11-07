@@ -4,15 +4,15 @@ import { SessionCreate } from '../../src/app/sessions/models/session-create.mode
 import * as requestPromise from 'request-promise'
 import * as URL from '../e2e-url.js'
 
-const rp = (URL.proxy) ? requestPromise.defaults({ proxy: URL.proxy, strictSSL: false}) : requestPromise;
+const rp = (URL.proxy) ? requestPromise.defaults({proxy: URL.proxy, strictSSL: false}) : requestPromise;
 const apiURL = (process.env.TEST_URL) ? 'http://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
 
 console.log('API URL: ' + apiURL)
 
 export class API {
     private static baseUrl = apiURL;
-    private static applicationJSONHeader = {'Content-Type': 'application/json' }
-    private static headers = { 'Authorization': '', ...API.applicationJSONHeader }
+    private static applicationJSONHeader = {'Content-Type': 'application/json'}
+    private static headers = {'Authorization': '', ...API.applicationJSONHeader}
 
     static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
@@ -71,7 +71,9 @@ export class API {
     }
 
     private static async login() {
-        if (API.headers.Authorization.length > 0) { return }
+        if (API.headers.Authorization.length > 0) {
+            return
+        }
 
         const options = {
             method: 'POST',
@@ -89,7 +91,7 @@ export class API {
         API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
     }
 
-    private static async commitUserTransaction(body: {userTransactionId: string}) {
+    private static async commitUserTransaction(body: { userTransactionId: string }) {
         const commitUserTransactionOptions = {
             method: 'POST',
             uri: `${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,

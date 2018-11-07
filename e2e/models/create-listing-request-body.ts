@@ -7,4 +7,5 @@ export interface CreateListingRequestBody {
     duration: string;
     priority: string;
     userTransactionId: string;
+    numberOfSessions: number;
 }

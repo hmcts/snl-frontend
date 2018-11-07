@@ -6,7 +6,9 @@ export interface ListingCreationForm {
   caseTitle: string;
   caseType: CaseTypes;
   hearingType: HearingTypes;
-  duration: number;
+  durationMinutes: number;
+  durationDays: number;
+  numberOfSessions: number;
   fromDate: string;
   endDate: string;
 }

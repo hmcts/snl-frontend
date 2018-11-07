@@ -1,7 +1,8 @@
 <div>
+    <h2 *ngIf="data.title">{{data.title}}</h2>
     <div>{{data.message}}</div>
-    <div>
-        <button mat-button (click)="onOkClick()">Ok</button>
-        <button *ngIf="showDecline()" mat-button (click)="onDeclineClick()">Decline</button>
+    <div style="margin-top:16px;">
+        <button mat-raised-button (click)="onOkClick()">Ok</button>
+        <button *ngIf="showDecline()" mat-raised-button (click)="onDeclineClick()">Decline</button>
     </div>
 </div>

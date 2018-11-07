@@ -5,9 +5,6 @@ import { v4 as uuid } from 'uuid';
 @Injectable()
 export class NotesPreparerService {
 
-    constructor() {
-    }
-
     public prepare(notes: Note[], parentId: string, entityName: string): Note[] {
         return notes.map(n => this.generateUUIDIfUndefined(n))
             .map(n => this.assignParentIdIfUndefined(n, parentId))

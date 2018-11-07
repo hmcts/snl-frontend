@@ -1,13 +1,16 @@
-import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions, WebElement } from 'protractor';
 import { Wait } from '../enums/wait';
 import moment = require('moment');
 import { Logger } from '../utils/logger';
 import { SessionDetailsDialogPage } from './session-details-dialog.po';
+import { filterSeries } from 'p-iteration';
 
 export class PlannerPage {
     private sessionDetailsDialog = new SessionDetailsDialogPage();
     private timelineEvent = by.className('fc-timeline-event');
     private plannerTitle = element(by.tagName('h2'));
+    private dayButton = element(by.className('fc-timelineDay-button'));
+    private todayButton = element(by.className('fc-today-button'));
 
     async getNumberOfVisibleEvents(): Promise<number> {
         await this.waitForCalendarToLoadEvents();
@@ -25,28 +28,35 @@ export class PlannerPage {
 
     async clickNextButton() {
         await element(by.className('fc-next-button')).click();
+        Logger.log('"Next" button clicked')
     }
 
     async clickPrevButton() {
         await element(by.className('fc-prev-button')).click();
+        Logger.log('"Previous" button clicked')
     }
 
     async clickJudgeViewButton() {
         await element(by.id('planner-judge-view-btn')).click();
+        Logger.log('"Judge view" button clicked')
     }
 
     async clickRoomViewButton() {
         await element(by.id('planner-room-view-btn')).click();
+        Logger.log('"Room view" button clicked')
     }
 
     async clickTodayButton() {
-        await element(by.className('fc-today-button')).click();
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.todayButton))
+        await this.todayButton.click();
+        Logger.log('"Today" button clicked')
     }
 
     async openDayView() {
         // Due some reasons events in calendar aren't displayed until some action will be taken
         // workaround for it is to select already selected view mode (month/week/day/list)
-        await element(by.className('fc-timelineDay-button')).click();
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.dayButton))
+        await this.dayButton.click();
         await this.clickPrevButton();
         await this.clickNextButton();
         await this.waitForCalendarToLoadEvents();
@@ -55,39 +65,40 @@ export class PlannerPage {
     async waitUntilPlannerIsLoadedAndVisible() {
         let currentWeekDateRange = moment().day(0).format('DD/MM') + ' - ' + moment().day(6).format('DD/MM/YYYY');
         await browser.wait(ExpectedConditions.visibilityOf(this.plannerTitle), Wait.normal, currentWeekDateRange);
+        await this.waitForCalendarToLoadEvents();
     }
 
     async getResourceIdByName(nameToSearch: string): Promise<string> {
-        let resourceId = await element.all(by.className('fc-resource-area'))
+        const trs = await element.all(by.className('fc-resource-area'))
             .last()
-            .all(by.tagName('tr'))
-            .filter(tr => {
-                return tr.element(by.className('fc-cell-text')).getText().then(value => {
-                    return value === nameToSearch;
-                });
-            })
-            .first()
-            .getAttribute('data-resource-id');
+            .all(by.tagName('tr')).getWebElements();
 
-        Logger.log('"' + nameToSearch + '" resource id: ' + resourceId);
-        return resourceId;
+        const filteredTrs = await filterSeries(trs, async (tr) => {
+            const value = await tr.findElement(by.className('fc-cell-text')).getText()
+            return value === nameToSearch;
+        });
+
+        const dataResourceId = await filteredTrs[0].getAttribute('data-resource-id')
+        Logger.log('"' + nameToSearch + '" resource id: ' + dataResourceId);
+        return dataResourceId;
     }
 
-    getRowWithEventsByResource(resourceId: string) {
-        return element.all(by.className('fc-time-area'))
+    async getRowWithEventsByResource(resourceId: string): Promise<WebElement> {
+        const trs = await element.all(by.className('fc-time-area'))
             .last()
-            .all(by.tagName('tr'))
-            .filter(el => {
-                return el.getAttribute('data-resource-id').then(value => {
-                    return value === resourceId;
-                });
-            })
-            .first();
+            .all(by.tagName('tr')).getWebElements();
+
+        const filteredTrs = await filterSeries(trs, async (tr) => {
+            const value = await tr.getAttribute('data-resource-id')
+            return value === resourceId;
+        });
+
+        return filteredTrs[0];
     }
 
-    getAllEventsForTheResource(resourceId: string): ElementArrayFinder {
-        return this.getRowWithEventsByResource(resourceId)
-            .all(by.className('fc-title'));
+    async getAllEventsForTheResource(resourceId: string): Promise<WebElement[]> {
+        const row = await this.getRowWithEventsByResource(resourceId)
+        return await row.findElements(by.className('fc-title'))
     }
 
     async clickOnEvent(elementToClick: ElementFinder, values: string[]) {
@@ -95,7 +106,7 @@ export class PlannerPage {
         const dialog = element(by.css('mat-dialog-container'));
         await browser.wait(ExpectedConditions.visibilityOf(dialog),
             Wait.normal,
-            `Event with values [ ${values.join(', ')} ] haven't appear`
+            `Event with values [ ${values.join(', ')} ] didn't appear`
         );
     }
 
@@ -109,8 +120,8 @@ export class PlannerPage {
 
     async clickAndValidateDialogContent(event: ElementFinder, valuesToCheck: string[]) {
         await this.clickOnEvent(event, valuesToCheck);
-        const idDialogDisplayed = await this.sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
-        expect(idDialogDisplayed).toBeTruthy();
+        const isDialogDisplayed = await this.sessionDetailsDialog.isDialogWithTextsDisplayed(...valuesToCheck);
+        await expect(isDialogDisplayed).toBeTruthy();
         await this.sessionDetailsDialog.close();
     }
 }

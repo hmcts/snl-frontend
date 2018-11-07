@@ -1,4 +1,5 @@
 import * as moment from 'moment'
+import { DurationAsDaysPipe } from '../core/pipes/duration-as-days.pipe';
 
 export function isDateRangeValid(start: moment.Moment, end: moment.Moment): boolean {
     return (
@@ -15,5 +16,17 @@ export function getHttpFriendly(date: moment.Moment): string {
 }
 
 export function formatDuration(duration: moment.Duration): string {
-    return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
+    duration = moment.duration(duration);
+    const durationMs = duration.asMilliseconds();
+    const durationOfOneDayInMs = 86400000;
+    if (durationMs >= durationOfOneDayInMs) {
+        const daysNumber = new DurationAsDaysPipe().transform(duration);
+        return daysNumber + ' D';
+    } else {
+        return moment.utc(durationMs).format('HH:mm');
+    }
+}
+
+export function formatDateTimeToHHmm(dateTime: moment.Moment): string {
+    return moment(dateTime).format('HH:mm');
 }

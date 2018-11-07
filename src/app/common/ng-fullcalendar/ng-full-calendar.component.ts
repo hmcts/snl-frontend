@@ -94,7 +94,6 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 }
             });
         }, );
-
     }
 
     updateEventsBeforeResize() {
@@ -103,6 +102,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.eventsModel = events;
         this.eventsModelChange.next(events);
     }
+
     updaterOptions() {
         let elem = document.getElementsByTagName('ng-fullcalendar');
         this.options.eventDrop = (event, duration, revertFunc) => {
@@ -129,7 +129,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         };
         this.options.eventRender = function (event, element, view) {
             let detail: RenderEventModel = { event: event, element: element, view: view };
-          let widgetEvent = new CustomEvent('eventRender', {
+            let widgetEvent = new CustomEvent('eventRender', {
                 bubbles: true,
                 detail: detail
             });
@@ -231,15 +231,14 @@ export class NgFullCalendarComponent implements AfterViewInit {
             }
         };
         this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
-           let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
-           const widgetEvent = new CustomEvent('drop', {
+            let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
+            const widgetEvent = new CustomEvent('drop', {
                 bubbles: true,
                 detail: detail
             });
             // probably need to add an event - not handled!
-           elem[0].dispatchEvent(widgetEvent);
+            elem[0].dispatchEvent(widgetEvent);
         };
-
         this.options.eventMouseover = (event: any, jsEvent: Event, view: any) => {
             let detail = { event: event, jsEvent: jsEvent, view: view };
             const widgetEvent = new CustomEvent('eventMouseOver', {
@@ -289,5 +288,4 @@ export class NgFullCalendarComponent implements AfterViewInit {
             $(this.element.nativeElement).fullCalendar('rerenderEvents');
         }
     }
-
 }

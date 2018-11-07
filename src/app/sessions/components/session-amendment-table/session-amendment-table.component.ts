@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
+import { formatDuration } from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-session-amendment-table',
@@ -43,7 +44,7 @@ export class SessionAmendmentTableComponent implements OnChanges {
   }
 
   humanizeDuration(duration) {
-      return moment.utc(moment.duration(duration).asMilliseconds()).format('HH:mm');
+      return formatDuration(moment.duration(duration));
   }
 
   ngOnChanges() {

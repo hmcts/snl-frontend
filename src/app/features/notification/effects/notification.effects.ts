@@ -7,6 +7,7 @@ import { Notify, NotificationActionTypes, OpenDialog, OpenDialogWithAction } fro
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { DialogWithActionsComponent } from '../components/dialog-with-actions/dialog-with-actions.component';
 import { DialogInfoComponent } from '../components/dialog-info/dialog-info.component';
+import { DEFAULT_DIALOG_CONFIG } from '../../transactions/models/default-dialog-confg';
 
 @Injectable()
 export class NotificationEffects {
@@ -71,10 +72,8 @@ export class NotificationEffects {
 
     openDialogWithActions(message) {
         return this.dialog.open(DialogWithActionsComponent, {
-            width: 'auto',
-            minWidth: 350,
+            ...DEFAULT_DIALOG_CONFIG,
             data: message,
-            hasBackdrop: true
         });
     }
 }

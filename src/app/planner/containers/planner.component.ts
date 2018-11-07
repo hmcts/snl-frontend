@@ -21,6 +21,7 @@ import { Separator } from '../../core/callendar/transformers/data-with-simple-re
 import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 import { ITransactionDialogData } from '../../features/transactions/models/transaction-dialog-data.model';
 import * as SessionActions from '../../sessions/actions/session.action';
+import { DEFAULT_DIALOG_CONFIG } from '../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-planner',
@@ -132,8 +133,8 @@ export class PlannerComponent implements OnInit {
                         hearingPartId: hearingPartId,
                         hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
                         userTransactionId: uuid(),
-                        sessionId: selectedSessionId,
-                        sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version,
+                        sessionData: {sessionId: selectedSessionId,
+                            sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version},
                         start: null
                     } as HearingPartToSessionAssignment);
 
@@ -172,18 +173,16 @@ export class PlannerComponent implements OnInit {
         this.confirmationDialogOpen = true;
 
         return this.dialog.open(DialogWithActionsComponent, {
-            width: 'auto',
-            minWidth: 350,
+            ...DEFAULT_DIALOG_CONFIG,
             data: {
                 message: 'Are you sure you want to modify this session?'
-            },
-            hasBackdrop: true
+            }
         });
     }
 
     private openSummaryDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: {
                 summaryMsg$: this.summaryMessageService.buildSummaryMessage(this.latestEvent)
             }

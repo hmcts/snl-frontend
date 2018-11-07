@@ -1,0 +1,71 @@
+mat-card {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.left {
+  float: left;
+}
+
+.note {
+  .content {
+    width: 600px;
+  }
+
+  .author-info {
+    width: 300px;
+  }
+}
+
+mat-panel-title {
+  display: block;
+}
+
+.listing-header {
+  .tile {
+    width: 120px;
+    float: left;
+    padding: 14px;
+    border-left: 1px solid rgba(0,0,0,.05);
+  }
+
+  .tile.small {
+    width: 80px;
+  }
+}
+.scheduled-listings .listing .expand-button {
+  text-align: right;
+  clear: right;
+  float: right;
+  width: 200px;
+}
+
+.clear {
+  clear: both;
+}
+
+.mat-grid-tile .mat-grid-tile-header {
+  background: none;
+  color: black;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0px;
+}
+
+.grid .tile {
+  width: 280px;
+  float: left;
+  min-height: 70px;
+}
+
+#case-number {
+  font-size:1.5em;
+  span {
+    font-weight: normal;
+  }
+}
+
+// easiest way to make session panel not expandable is to disable it, but by default it appears in gray
+.mat-expansion-panel-header[aria-disabled=true] {
+  color: rgba(0,0,0,.87);
+}

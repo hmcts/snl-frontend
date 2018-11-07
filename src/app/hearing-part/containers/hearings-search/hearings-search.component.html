@@ -1,0 +1,24 @@
+<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
+  <div fxFlex="25%">
+    <app-hearings-filter
+            (onFilter)="onFilter($event)"
+            [judges]="judges$ | async"
+            [caseTypes]="caseTypes$ | async"
+            [hearingTypes]="hearingTypes$ | async">
+    </app-hearings-filter>
+  </div>
+  <div fxFlex>
+    <div class="heading">
+      Listing Requests:
+    </div>
+
+    <div>
+      <app-hearing-search-table id="hearing-search-table"
+                                [hearings]="filteredHearings"
+                                [totalCount]="totalCount"
+                                (onDelete)="onDelete($event)"
+                                (onNextPage)="onNextPage($event)">
+      </app-hearing-search-table>
+    </div>
+  </div>
+</div>

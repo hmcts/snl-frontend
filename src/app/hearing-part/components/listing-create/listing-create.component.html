@@ -6,7 +6,7 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+            <form [formGroup]="listingCreate" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
                 <div class="error" *ngIf="errors">Error: {{errors}}</div>
 
                 <mat-form-field>
@@ -36,10 +36,39 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
-                    <input id="duration" formControlName="duration" [ngModel]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event)" type="number" matInput placeholder="Estimated duration *" min="1" >
-                    <span matSuffix>Minutes</span>
-                </mat-form-field>
+                <div>
+                <div for="session-mode-rg" class="mat-form-field-wrapper">Choose session mode *</div>
+                <div class="mat-form-field-wrapper">
+                    <mat-radio-group id="session-mode-rg"
+                                     formControlName="listingTypeRadio"
+                                     (change)="onListingTypeChange($event)"
+                                     required>
+                        <mat-radio-button id="single-session-radio"  value="0" [disabled]="this.editMode && this.isMultiSession" >Single session</mat-radio-button>
+                        <mat-radio-button id="multi-session-radio"  value="1" [disabled]="this.editMode && this.isMultiSession" >Multi session</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+
+                <div formGroupName="listingType">
+                    <div *ngIf="chosenListingType === listingType.Single">
+                        <mat-form-field>
+                            <input id="duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" max="1439" step="1" >
+                            <span matSuffix>Minutes</span>
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="chosenListingType === listingType.Multi">
+                        <mat-form-field>
+                            <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" step="0.5" >
+                            <span matSuffix>Days</span>
+                        </mat-form-field>
+
+                        <mat-form-field *ngIf="editMode === false" >
+                            <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="1" >
+                            <span matSuffix>Sessions</span>
+                        </mat-form-field>
+                    </div>
+                </div>
+                </div>
 
                 <mat-form-field>
                     <mat-select placeholder="Priority level" [(value)]="listing.hearing.priority" required>
@@ -89,7 +118,7 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button id="save" mat-raised-button color="accent" form="list-form" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
+            <button id="save" mat-raised-button color="accent" (click)="listingCreateForm.ngSubmit.emit()" fxFlexAlign="right" type="submit" [disabled]="!listingCreate.valid">Save</button>
         </mat-card-actions>
     </mat-card>
 </div>
