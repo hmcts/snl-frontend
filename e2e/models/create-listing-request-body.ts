@@ -8,5 +8,5 @@ export interface CreateListingRequestBody {
     priority: string;
     userTransactionId: string;
     numberOfSessions: number;
-    isMultiSession: boolean;
+    multiSession: boolean;
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { ListingCreate, isMultiSessionListing } from '../../models/listing-create';
+import { ListingCreate } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import { getHearingPartsError } from '../../reducers';
@@ -190,10 +190,6 @@ export class ListingCreateComponent implements OnInit {
         this.chosenListingType = Number.parseInt(event.value);
     }
 
-    isMultiSession(): boolean {
-        return isMultiSessionListing(this.listing);
-    }
-
     private initiateListing() {
         this.listing = this.defaultListing();
     }
@@ -219,7 +215,7 @@ export class ListingCreateComponent implements OnInit {
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
                 numberOfSessions: 1,
-                isMultiSession: false,
+                multiSession: false,
             },
             notes: []
         };
@@ -249,7 +245,7 @@ export class ListingCreateComponent implements OnInit {
             listingType: new FormGroup({
                 duration: new FormControl({
                         value: this.getDurationToDisplay(),
-                        disabled: this.editMode && this.isMultiSession()
+                        disabled: this.editMode && (this.listing.hearing.multiSession)
                     },
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
@@ -291,7 +287,7 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.duration = moment.duration(
                     moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
                     , 'minutes');
-                this.listing.hearing.isMultiSession = true;
+                this.listing.hearing.multiSession = true;
                 break;
             case ListingTypeTab.Single:
             default:
@@ -299,7 +295,7 @@ export class ListingCreateComponent implements OnInit {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
                 this.listing.hearing.numberOfSessions = 1;
-                this.listing.hearing.isMultiSession = false;
+                this.listing.hearing.multiSession = false;
                 break;
         }
     }

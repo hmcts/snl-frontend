@@ -43,8 +43,8 @@
                                      formControlName="listingTypeRadio"
                                      (change)="onListingTypeChange($event)"
                                      required>
-                        <mat-radio-button id="single-session-radio"  value="0" [disabled]="this.editMode && this.isMultiSession" >Single session</mat-radio-button>
-                        <mat-radio-button id="multi-session-radio"  value="1" [disabled]="this.editMode && this.isMultiSession" >Multi session</mat-radio-button>
+                        <mat-radio-button id="single-session-radio" value="0" [disabled]="this.editMode && this.listing.hearing.multiSession" >Single session</mat-radio-button>
+                        <mat-radio-button id="multi-session-radio" value="1" [disabled]="this.editMode && this.listing.hearing.multiSession" >Multi session</mat-radio-button>
                     </mat-radio-group>
                 </div>
 

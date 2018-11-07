@@ -155,7 +155,7 @@ describe('HearingPartPreviewComponent', () => {
             notes: [],
             isListed: false,
             numberOfSessions: 1,
-            isMultiSession: false
+            multiSession: false
         } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
@@ -213,6 +213,6 @@ function generateHearings(id: string): HearingViewmodel {
         notes: [],
         isListed: false,
         numberOfSessions: 1,
-        isMultiSession: false
+        multiSession: false
     }
 };

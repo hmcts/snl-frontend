@@ -61,8 +61,8 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
     errorMessage: string;
-    numberOfSessions = 0;
-    isMultiSession = false;
+    numberOfSessions = 1;
+    multiSession = false;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -109,8 +109,8 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     selectHearing(hearing: HearingViewmodel) {
         this.selectedHearing = hearing;
-        this.numberOfSessions = hearing !== undefined ? hearing.numberOfSessions : 0;
-        this.isMultiSession = hearing !== undefined ? hearing.isMultiSession : false;
+        this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
+        this.multiSession = this.selectedHearing !== undefined ? this.selectedHearing.multiSession : false;
     }
 
     selectSession(sessions: SessionViewModel[]) {
@@ -181,7 +181,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     private checkIfOnlyOneJudgeSelected() {
-        if (this.selectedHearing.numberOfSessions === 1) {
+        if (!this.selectedHearing.multiSession) {
             this.errorMessage = '';
             return true;
         } else if (!this.selectedSessions.every((val, i, arr) =>

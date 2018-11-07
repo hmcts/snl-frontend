@@ -25,7 +25,7 @@ export interface HearingPartViewModel {
     reservedJudgeId: string;
     hearingId: string;
     start: moment.Moment;
-    isMultiSession: boolean;
+    multiSession: boolean;
 }
 
 export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {
@@ -44,6 +44,6 @@ export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingR
         communicationFacilitator: hvm.communicationFacilitator,
         userTransactionId: undefined,
         numberOfSessions: hvm.numberOfSessions,
-        isMultiSession: hvm.isMultiSession
+        multiSession: hvm.multiSession
     }
 }

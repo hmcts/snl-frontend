@@ -44,7 +44,7 @@ const displayedListingRequestData = {
 
 const listingRequestCreate: CreateListingRequestBody = {
     id, caseNumber, caseTitle, priority, duration, userTransactionId, caseTypeCode: 'small-claims',  hearingTypeCode: 'trial',
-    numberOfSessions: 1, isMultiSession: false
+    numberOfSessions: 1, multiSession: false
 };
 
 describe('Amend Listing Request', () => {
@@ -78,7 +78,7 @@ describe('Amend Listing Request', () => {
         durationMinutes: otherDuration,
         durationDays: null,
         numberOfSessions: 1,
-        isMultiSession: false,
+        multiSession: false,
         fromDate: todayDate,
         endDate: tomorrowDate
       };

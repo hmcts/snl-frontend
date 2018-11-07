@@ -91,7 +91,7 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingId: hearing.id,
                 notes: sortedNotes,
                 start: moment(start),
-                isMultiSession: hearing.isMultiSession
+                multiSession: hearing.multiSession
             };
         });
         return finalHearingParts;
@@ -128,7 +128,7 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
                 notes: sortedNotes,
                 isListed: !unlisted,
                 numberOfSessions: h.numberOfSessions,
-                isMultiSession: h.isMultiSession
+                multiSession: h.multiSession
             }
         });
 

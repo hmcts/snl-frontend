@@ -33,7 +33,7 @@ export interface Hearing {
   notes: Note[],
   sessions: Session[],
   numberOfSessions: number,
-  isMultiSession: boolean
+  multiSession: boolean
   version: string
   hearingPartsVersions: VersionInfo[]
 }

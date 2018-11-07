@@ -101,7 +101,7 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     notes: [],
     reservedJudge: mockedJudges[0],
     start: moment(nowISOSting),
-    isMultiSession: false
+    multiSession: false
 };
 
 const mockedUnlistedHearingVM: HearingViewmodel = {
@@ -121,7 +121,7 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     reservedJudge: mockedJudges[0],
     isListed: false,
     numberOfSessions: 1,
-    isMultiSession: false
+    multiSession: false
 }
 
 const mockedHearingResponse: Hearing = {
@@ -139,7 +139,7 @@ const mockedHearingResponse: Hearing = {
     scheduleStart: nowISOSting,
     version: 2,
     numberOfSessions: 1,
-    isMultiSession: false
+    multiSession: false
 }
 
 // same as unlisted, but with session set to matching id in Session

@@ -107,7 +107,7 @@ describe('HearingAction', () => {
                     userTransactionId: '123',
                     version: 1,
                     numberOfSessions: 1,
-                    isMultiSession: false
+                    multiSession: false
                 },
                 notes: []
             };
@@ -136,7 +136,7 @@ describe('HearingAction', () => {
                 communicationFacilitator: 'translator',
                 userTransactionId: '123',
                 numberOfSessions: 1,
-                isMultiSession: false
+                multiSession: false
             };
             const action = new CreateListingRequest(payload);
 

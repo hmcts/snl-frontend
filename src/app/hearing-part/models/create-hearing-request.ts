@@ -15,5 +15,5 @@ export interface CreateHearingRequest {
     communicationFacilitator: string;
     userTransactionId: string;
     numberOfSessions: number;
-    isMultiSession: boolean;
+    multiSession: boolean;
 }

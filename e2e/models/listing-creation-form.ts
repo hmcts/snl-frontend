@@ -11,5 +11,5 @@ export interface ListingCreationForm {
   numberOfSessions: number;
   fromDate: string;
   endDate: string;
-  isMultiSession: boolean;
+  multiSession: boolean;
 }

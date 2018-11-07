@@ -22,5 +22,5 @@ export interface HearingViewmodel {
     reservedJudgeId: string;
     isListed: boolean;
     numberOfSessions: number;
-    isMultiSession: boolean;
+    multiSession: boolean;
 }

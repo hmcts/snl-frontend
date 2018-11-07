@@ -25,7 +25,7 @@ export const SessionToAmendSessionForm = (session: SessionViewModel, roomTypes: 
         roomName: roomName,
         roomType: roomType,
         hearingPartCount: hearingPartCount,
-        isMultiSession: session.hearingParts.find(hp => hp.isMultiSession) !== undefined
+        multiSession: session.hearingParts.find(hp => hp.multiSession) !== undefined
     } as SessionAmmendForm
 }
 

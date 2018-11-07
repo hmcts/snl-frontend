@@ -20,7 +20,7 @@ export const listingCreationForm: ListingCreationForm = {
   durationMinutes: duration,
   durationDays: null,
   numberOfSessions: 1,
-  isMultiSession: false,
+  multiSession: false,
   fromDate: todayDate,
   endDate: tomorrowDate
 };
