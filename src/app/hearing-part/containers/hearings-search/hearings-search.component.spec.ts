@@ -22,9 +22,9 @@ describe('HearingsSearchComponent', () => {
         judgeService = jasmine.createSpyObj('judgeService', ['get']);
         judgeService.get.and.returnValue(Observable.of([]));
 
-        referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['getCaseTypes', 'getHearingTypes']);
-        referenceDataService.getCaseTypes.and.returnValue(Observable.of([]));
-        referenceDataService.getHearingTypes.and.returnValue(Observable.of([]));
+        referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['fetchCaseTypes', 'fetchHearingTypes']);
+        referenceDataService.fetchCaseTypes.and.returnValue(Observable.of([]));
+        referenceDataService.fetchHearingTypes.and.returnValue(Observable.of([]));
 
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
         hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));

@@ -4,7 +4,6 @@ import { State } from '../../../app.state';
 import { ListingCreate, isMultiSessionListing } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
-import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
@@ -86,9 +85,6 @@ export class ListingCreateComponent implements OnInit {
                 public dialog: MatDialog,
                 private readonly hearingPartModificationService: HearingModificationService) {
 
-        this.store.select(getHearingPartsError).subscribe((error: any) => {
-            this.errors = safe(() => error.message);
-        });
         this.store.select(fromJudges.getJudges).withLatestFrom(
             this.store.select(fromReferenceData.selectCaseTypes)
             , (judges, caseTypes: CaseType[]) => {

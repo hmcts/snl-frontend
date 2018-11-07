@@ -43,8 +43,8 @@ export class HearingsSearchComponent implements OnInit {
 
     ngOnInit() {
         this.judges$ = this.judgeService.get();
-        this.caseTypes$ = this.referenceDataService.getCaseTypes();
-        this.hearingTypes$ = this.referenceDataService.getHearingTypes();
+        this.caseTypes$ = this.referenceDataService.fetchCaseTypes();
+        this.hearingTypes$ = this.referenceDataService.fetchHearingTypes();
     }
 
     onAmend(hearingId: string) {
