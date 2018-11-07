@@ -54,9 +54,10 @@ export class HearingPartService {
                 params: new HttpParams({ fromObject: request.httpParams })
             }).pipe(map((hearingPage: Page<FilteredHearingViewmodel>) => {
                 hearingPage.content = hearingPage.content.map(hearing => {
-                    hearing.scheduleStart = moment(hearing.scheduleStart);
-                    hearing.scheduleEnd = moment(hearing.scheduleEnd);
+                    hearing.scheduleStart = hearing.scheduleStart !== null ? moment(hearing.scheduleStart) : null;
+                    hearing.scheduleEnd = hearing.scheduleEnd !== null ? moment(hearing.scheduleEnd) : null;
                     hearing.listingDate = moment(hearing.listingDate);
+                    hearing.duration = moment.duration(hearing.duration);
                     return hearing;
                 });
                 return {...hearingPage, content: hearingPage.content}

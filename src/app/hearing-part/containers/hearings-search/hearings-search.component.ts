@@ -8,10 +8,12 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { HearingPartService } from '../../services/hearing-part-service';
-import { PageEvent } from '@angular/material';
+import { MatDialog, PageEvent } from '@angular/material';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 import { JudgeService } from '../../../judges/services/judge.service';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { ListingUpdateDialogComponent } from '../../components/listing-update-dialog/listing-update-dialog';
+import { NotesService } from '../../../notes/services/notes.service';
 
 @Component({
     selector: 'app-hearings-search',
@@ -36,8 +38,10 @@ export class HearingsSearchComponent implements OnInit {
     totalCount: number;
 
     constructor(private hearingPartService: HearingPartService,
+                private dialog: MatDialog,
                 private referenceDataService: ReferenceDataService,
                 private judgeService: JudgeService,
+                private notesService: NotesService,
                 private searchCriteriaService: SearchCriteriaService) {
     }
 
@@ -48,7 +52,14 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        // 'TODO: Implement going to amendment screen!
+        this.notesService.getByEntities([hearingId]).subscribe(notes => {
+            this.dialog.open(ListingUpdateDialogComponent, {
+                data: {
+                    hearing: this.filteredHearings.find(h => h.id === hearingId),
+                    notes: notes
+                }
+            })
+        })
     }
 
     onNextPage(pageEvent: PageEvent) {
