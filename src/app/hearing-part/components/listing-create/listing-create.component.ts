@@ -28,11 +28,6 @@ import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/def
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 
-export enum ListingTypeTab {
-    Single = 0,
-    Multi = 1,
-}
-
 @Component({
     selector: 'app-listing-create',
     templateUrl: './listing-create.component.html',
@@ -73,9 +68,7 @@ export class ListingCreateComponent implements OnInit {
         }
     }
 
-    public chosenListingType = 0;
     public listing: ListingCreate;
-    public listingType = ListingTypeTab;
     caseTitleMaxLength = 200;
     caseNumberMaxLength = 200;
     numberOfSeconds = 60;
@@ -106,12 +99,6 @@ export class ListingCreateComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(new JudgeActions.Get());
-        this.chosenListingType = ListingTypeTab.Single;
-        if (this.editMode) {
-            if (this.listing.hearing.duration.asHours() >= 24) {
-                this.chosenListingType = ListingTypeTab.Multi;
-            }
-        }
     }
 
     save() {
@@ -187,7 +174,7 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onListingTypeChange(event: MatRadioChange) {
-        this.chosenListingType = Number.parseInt(event.value);
+       this.listing.hearing.multiSession = Number.parseInt(event.value) === 1;
     }
 
     private initiateListing() {
@@ -240,17 +227,20 @@ export class ListingCreateComponent implements OnInit {
                 [Validators.required]
             ),
             listingTypeRadio: new FormControl(
-                this.chosenListingType, [Validators.required]
+                this.listing.hearing.multiSession, [Validators.required]
             ),
             listingType: new FormGroup({
                 duration: new FormControl({
                         value: this.getDurationToDisplay(),
-                        disabled: this.editMode && (this.listing.hearing.multiSession)
+                        disabled: this.editMode && this.listing.hearing.multiSession
                     },
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
-                numberOfSessions: new FormControl(
-                    this.listing.hearing.numberOfSessions, [Validators.min(1)]
+                numberOfSessions: new FormControl({
+                        value:  this.listing.hearing.numberOfSessions,
+                        disabled: this.editMode && this.listing.hearing.multiSession
+                    },
+                    [Validators.min(1)]
                 )
             }),
             targetDates: new FormGroup({
@@ -262,7 +252,7 @@ export class ListingCreateComponent implements OnInit {
 
     private getDurationToDisplay() {
         if (this.listing.hearing.duration) {
-            if (this.chosenListingType === ListingTypeTab.Multi) {
+            if (this.listing.hearing.multiSession) {
                 return this.asDaysPipe.transform(this.listing.hearing.duration);
             } else {
                 return this.listing.hearing.duration.asMinutes();
@@ -281,22 +271,16 @@ export class ListingCreateComponent implements OnInit {
     }
 
     private prepareListingTypeData() {
-        switch (this.chosenListingType) {
-            case ListingTypeTab.Multi:
-                // Crazy conversions as otherwise value of 1.5day is send as P1.5D instead of P1DT12H
-                this.listing.hearing.duration = moment.duration(
-                    moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
-                    , 'minutes');
-                this.listing.hearing.multiSession = true;
-                break;
-            case ListingTypeTab.Single:
-            default:
+        if (this.listing.hearing.multiSession) {
+            // Crazy conversions as otherwise value of 1.5day is send as P1.5D instead of P1DT12H
+            this.listing.hearing.duration = moment.duration(
+                moment.duration(this.asDaysPipe.transform(this.listing.hearing.duration), 'days').asMinutes()
+                , 'minutes');
+        } else {
                 if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
                 this.listing.hearing.numberOfSessions = 1;
-                this.listing.hearing.multiSession = false;
-                break;
         }
     }
 }

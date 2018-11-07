@@ -1,5 +1,5 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ListingCreateComponent, ListingTypeTab } from './listing-create.component';
+import { ListingCreateComponent } from './listing-create.component';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -215,7 +215,6 @@ describe('ListingCreateComponent', () => {
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
             component.listing.hearing.multiSession = true;
-            component.chosenListingType = ListingTypeTab.Multi;
 
             component.save();
 
@@ -244,7 +243,6 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
-            component.chosenListingType = ListingTypeTab.Single;
 
             component.save();
 
