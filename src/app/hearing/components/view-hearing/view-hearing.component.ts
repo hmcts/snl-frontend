@@ -9,7 +9,7 @@ import { MatDialog, MatSelect } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
-import { formatDuration} from '../../../utils/date-utils';
+import { formatDuration } from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-view-hearing',
