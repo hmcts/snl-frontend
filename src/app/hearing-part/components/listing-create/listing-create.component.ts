@@ -24,6 +24,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 
@@ -275,8 +276,8 @@ export class ListingCreateComponent implements OnInit {
 
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
-            data: {actionTitle}
+            ...DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle }
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);
         });

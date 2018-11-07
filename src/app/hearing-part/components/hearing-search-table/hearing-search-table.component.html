@@ -58,10 +58,11 @@
     <mat-cell *matCellDef="let element"> {{parseDate(element.listingDate)}}</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="amend">
-    <mat-header-cell *matHeaderCellDef> Amend</mat-header-cell>
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+
     <mat-cell *matCellDef="let element">
-      <span [class.clickable]="true" (click)="amend(element)">Amend</span>
+      <span [class.clickable]="true" (click)="delete(element)">Delete</span>
     </mat-cell>
   </ng-container>
 

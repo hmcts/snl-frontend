@@ -1,9 +1,18 @@
 <mat-card *ngIf="hearing">
   <span><a (click)="goBack()"><< back</a></span>
-  <h2 id="case-number">
-    <span>{{hearing.caseNumber}}</span>
-    {{hearing.caseTitle}}
-  </h2>
+  <div fxLayout="row" fxLayoutAlign="start">
+    <div fxFlex="90">
+      <span id="case-number">
+        <span class="case-number">{{hearing.caseNumber}}</span>
+        <strong>{{hearing.caseTitle}}</strong>
+      </span>
+    </div>
+      <mat-select #actionSelect id="action" value="{{hearingActions.Actions}}" fxFlex="10" (selectionChange)="onActionChanged($event)">
+        <mat-option [value]="hearingActions.Actions">{{hearingActions.Actions}}</mat-option>
+        <mat-option [value]="hearingActions.Unlist" [disabled]="!isListed()">{{hearingActions.Unlist}}</mat-option>
+      </mat-select>
+  </div>
+
   <div class="grid">
     <div class="tile">
       <strong>Case type</strong><br>
