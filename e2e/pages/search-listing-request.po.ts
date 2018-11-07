@@ -27,7 +27,7 @@ export class SearchListingRequestPage {
     }
 
     async clickFilterButton() {
-        this.filterButton.click();
+        await this.filterButton.click();
     }
 
     async clickListingRequest(id: string) {

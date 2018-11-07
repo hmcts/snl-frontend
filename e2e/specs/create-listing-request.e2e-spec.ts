@@ -52,7 +52,7 @@ describe('Create Listing Request', () => {
       expect(isProblemDisplayed).toBeTruthy()
     });
     it('click rollback, new hearing part should not be created', async () => {
-      transactionDialogPage.clickRollbackButton()
+      await transactionDialogPage.clickRollbackButton()
       const isHearingPartCreatedWhenRollback = await waitFor(Wait.normal, async () => {
         const numberOfHearingPartsAfterRollback = (await API.getHearingParts() as any[]).length
         return numberOfHearingParts === numberOfHearingPartsAfterRollback
