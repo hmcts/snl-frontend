@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { State } from '../../../app.state';
 import { isMultiSessionListing, ListingRequestViewmodel } from '../../models/listing-create';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
@@ -9,7 +7,6 @@ import { Judge } from '../../../judges/models/judge.model';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, MatRadioChange, MatSelectChange } from '@angular/material';
-import * as fromNotes from '../../../notes/actions/notes.action';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
@@ -22,6 +19,7 @@ import { CommunicationFacilitators } from '../../models/communication-facilitato
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import { JudgeService } from '../../../judges/services/judge.service';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
+import { NotesService } from '../../../notes/services/notes.service';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -81,9 +79,9 @@ export class ListingRequestEditComponent implements OnInit {
     public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
 
-    constructor(private readonly store: Store<State>,
-                public dialog: MatDialog,
+    constructor(public dialog: MatDialog,
                 private readonly judgeService: JudgeService,
+                private readonly notesService: NotesService,
                 private readonly asDaysPipe: DurationAsDaysPipe,
                 private readonly referenceDataService: ReferenceDataService,
                 private readonly hearingPartModificationService: HearingModificationService) {
@@ -104,7 +102,10 @@ export class ListingRequestEditComponent implements OnInit {
     }
 
     createNotes() {
-        this.store.dispatch(new fromNotes.CreateMany(this.notesComponent.prepareNotes()));
+        const notes = this.notesComponent.prepareNotes();
+        if (notes.length > 0) {
+            this.notesService.upsertManyNotes(notes).subscribe();
+        }
     }
 
     updateDuration(durationValue, unit) {

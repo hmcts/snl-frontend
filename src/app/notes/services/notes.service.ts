@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { AppConfig } from '../../app.config';
 import { Note } from '../models/note.model';
-import { NoteUpsert } from '../models/note-upsert.model';
+import { getNoteUpsertFromNoteViewModel, NoteUpsert } from '../models/note-upsert.model';
 
 @Injectable()
 export class NotesService {
@@ -27,6 +27,12 @@ export class NotesService {
     upsertMany(notes: NoteUpsert[]): Observable<Note[]> {
         return this.http
             .put<Note[]>(this.getUrl(), notes)
+    }
+
+    upsertManyNotes(notes: Note[]): Observable<Note[]> {
+        const noteUpsert = notes.map(getNoteUpsertFromNoteViewModel);
+
+        return this.upsertMany(noteUpsert);
     }
 
     private getUrl() {
