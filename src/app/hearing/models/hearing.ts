@@ -34,4 +34,17 @@ export interface Hearing {
   sessions: Session[],
   numberOfSessions: number,
   isMultiSession: boolean
+  version: string
+  hearingPartsVersions: VersionInfo[]
+}
+
+export interface VersionInfo {
+  id: string,
+  version: string
+}
+
+export interface UnlistHearingRequest {
+  hearingId: string,
+  hearingPartsVersions: VersionInfo[],
+  userTransactionId: string
 }
