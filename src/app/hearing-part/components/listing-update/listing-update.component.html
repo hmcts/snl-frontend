@@ -5,102 +5,110 @@
         </mat-card-header>
 
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
-            <form [formGroup]="listingRequestFormGroup" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
-                <mat-form-field>
-                    <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearing.caseNumber"
-                           (change)="listing.hearing.caseNumber = listing.hearing.caseNumber.trim()"
-                           maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
-                </mat-form-field>
 
-                <mat-form-field>
-                    <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearing.caseTitle"
-                           (change)="listing.hearing.caseTitle = listing.hearing.caseTitle.trim()"
-                           maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title" type="text" >
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select id="selectCaseType" formControlName="caseTypeCode" placeholder="Case type *"
-                                [(ngModel)]="listing.hearing.caseTypeCode"
-                                (selectionChange)="onCaseTypeChanged($event)">
-                        <mat-option *ngFor="let case of caseTypes" selected="case.code === listing.hearingPart.caseTypeCode" [value]="case.code">{{case.description}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select id="selectHearingPart" formControlName="hearingTypeCode"
-                                placeholder="Hearing type *" [(ngModel)]="listing.hearing.hearingTypeCode">
-                        <mat-option *ngFor="let hearing of hearings" selected="hearing.code == listing.hearingPart.hearingTypeCode" [value]="hearing.code">{{hearing.description}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <div>
-                <div for="session-mode-rg" class="mat-form-field-wrapper">Choose session mode *</div>
-                <div class="mat-form-field-wrapper">
-                    <mat-radio-group id="session-mode-rg"
-                                     ([ngModel])="chosenListingType"
-                                     formControlName="listingTypeRadio"
-                                     (change)="onListingTypeChange($event)"
-                                     required>
-                        <mat-radio-button id="single-session-radio" [value]="0" [disabled]="this.isMultiSession" >Single session</mat-radio-button>
-                        <mat-radio-button id="multi-session-radio" [value]="1" [disabled]="this.isMultiSession" >Multi session</mat-radio-button>
-                    </mat-radio-group>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+                <div *ngIf="listing.hearing.isListed">
+                    <div>Listing date: {{listing.hearing.listingDate}}</div>
+                    <div>Judge assigned: {{listing.hearing.personName}}</div>
                 </div>
 
-                <div formGroupName="listingType">
-                    <div *ngIf="chosenListingType === listingType.Single">
-                        <mat-form-field>
-                            <input id="duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" max="1439" step="1" >
-                            <span matSuffix>Minutes</span>
-                        </mat-form-field>
-                    </div>
-
-                    <div *ngIf="chosenListingType === listingType.Multi">
-                        <mat-form-field>
-                            <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" step="0.5" >
-                            <span matSuffix>Days</span>
-                        </mat-form-field>
-                    </div>
-                </div>
-                </div>
-
-                <mat-form-field>
-                    <mat-select placeholder="Priority level" [(value)]="listing.hearing.priority" required>
-                        <mat-option *ngFor="let priority of priorityValues" value="{{priority}}">{{priority}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearing.communicationFacilitator">
-                        <mat-option>None</mat-option>
-                        <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field>
-                    <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearing.reservedJudgeId">
-                        <mat-option>None</mat-option>
-                        <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <div formGroupName="targetDates">
-                    <div style="padding-bottom:3px">Target Schedule <i>(DD/MM/YYYY)</i></div>
-                    <div class="error" *ngIf="listingRequestFormGroup.get('targetDates').hasError('targetFromAfterTargetTo')">
-                        <i>Target from</i> must be before <i>Target to</i>!
-                    </div>
-                    <mat-form-field class="date-picker-element">
-                        <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom" [(ngModel)]="listing.hearing.scheduleStart" placeholder="From:" re>
-                        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerStart></mat-datepicker>
+                <form [formGroup]="listingRequestFormGroup" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form"  fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+                    <mat-form-field>
+                        <input id="caseNumber" formControlName="caseNumber" [(ngModel)]="listing.hearing.caseNumber"
+                               (change)="listing.hearing.caseNumber = listing.hearing.caseNumber.trim()"
+                               maxlength="{{caseNumberMaxLength}}" matInput placeholder="Case number *" type="text">
                     </mat-form-field>
 
-                    <mat-form-field class="date-picker-element">
-                        <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.hearing.scheduleEnd" placeholder="To:">
-                        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    <mat-form-field>
+                        <input id="caseTitle" formControlName="caseTitle" [(ngModel)]="listing.hearing.caseTitle"
+                               (change)="listing.hearing.caseTitle = listing.hearing.caseTitle.trim()"
+                               maxlength="{{caseTitleMaxLength}}" matInput placeholder="Case title" type="text" >
                     </mat-form-field>
-                </div>
-            </form>
+
+                    <mat-form-field>
+                        <mat-select id="selectCaseType" formControlName="caseTypeCode" placeholder="Case type *"
+                                    [(ngModel)]="listing.hearing.caseTypeCode"
+                                    (selectionChange)="onCaseTypeChanged($event)">
+                            <mat-option *ngFor="let case of caseTypes" selected="case.code === listing.hearingPart.caseTypeCode" [value]="case.code">{{case.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select id="selectHearingPart" formControlName="hearingTypeCode"
+                                    placeholder="Hearing type *" [(ngModel)]="listing.hearing.hearingTypeCode">
+                            <mat-option *ngFor="let hearing of hearings" selected="hearing.code == listing.hearingPart.hearingTypeCode" [value]="hearing.code">{{hearing.description}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div>
+                        <div for="session-mode-rg" class="mat-form-field-wrapper">Choose session mode *</div>
+                        <div class="mat-form-field-wrapper">
+                            <mat-radio-group id="session-mode-rg"
+                                             ([ngModel])="chosenListingType"
+                                             formControlName="listingTypeRadio"
+                                             (change)="onListingTypeChange($event)"
+                                             required>
+                                <mat-radio-button id="single-session-radio" [value]="0" [disabled]="this.isMultiSession" >Single session</mat-radio-button>
+                                <mat-radio-button id="multi-session-radio" [value]="1" [disabled]="this.isMultiSession" >Multi session</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
+                        <div formGroupName="listingType">
+                            <div *ngIf="chosenListingType === listingType.Single">
+                                <mat-form-field>
+                                    <input id="duration-minutes" formControlName="duration" [value]="listing.hearing.duration | appDurationAsMinutes" (ngModelChange)="updateDuration($event, 'minute')" type="number" matInput placeholder="Estimated duration *" min="1" max="1439" step="1" >
+                                    <span matSuffix>Minutes</span>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="chosenListingType === listingType.Multi">
+                                <mat-form-field>
+                                    <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" step="0.5" >
+                                    <span matSuffix>Days</span>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Priority level" [(value)]="listing.hearing.priority" required>
+                            <mat-option *ngFor="let priority of priorityValues" value="{{priority}}">{{priority}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select id="communicationFacilitator" placeholder="Communication Facilitator" [(value)]="listing.hearing.communicationFacilitator">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let facilitators of communicationFacilitators" [value]="facilitators">{{facilitators}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-select id="judge"  placeholder="Reserved to Judge" [(value)]="listing.hearing.reservedJudgeId">
+                            <mat-option>None</mat-option>
+                            <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <div formGroupName="targetDates">
+                        <div style="padding-bottom:3px">Target Schedule <i>(DD/MM/YYYY)</i></div>
+                        <div class="error" *ngIf="listingRequestFormGroup.get('targetDates').hasError('targetFromAfterTargetTo')">
+                            <i>Target from</i> must be before <i>Target to</i>!
+                        </div>
+                        <mat-form-field class="date-picker-element">
+                            <input id="fromDate" matInput [matDatepicker]="pickerStart" formControlName="targetFrom" [(ngModel)]="listing.hearing.scheduleStart" placeholder="From:" re>
+                            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStart></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field class="date-picker-element">
+                            <input id="endDate" matInput [matDatepicker]="pickerEnd" formControlName="targetTo" [(ngModel)]="listing.hearing.scheduleEnd" placeholder="To:">
+                            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerEnd></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
 
             <div style="padding-right: 2em">
                 <div fxLayout="column" fxLayoutGap="10%">

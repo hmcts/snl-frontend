@@ -2,9 +2,9 @@
   <div fxFlex="25%">
     <app-hearings-filter
             (onFilter)="onFilter($event)"
-            [judges]="judges$ | async"
-            [caseTypes]="caseTypes$ | async"
-            [hearingTypes]="hearingTypes$ | async">
+            [judges]="judges"
+            [caseTypes]="caseTypes"
+            [hearingTypes]="hearingTypes">
     </app-hearings-filter>
   </div>
   <div fxFlex>

@@ -7,20 +7,23 @@ let searchCriteriaService: any;
 let judgeService: any;
 let referenceDataService: any;
 let hearingPartService: any;
+let hearingPartModificationService: any;
+let notesService: any;
+let dialog: any;
 let hearingFilters: HearingsFilters;
 let searchCriteriaServiceResult = undefined;
 let hearingPartServiceResult = {
     content: [],
     totalElements: 7
-}
+};
 
 describe('HearingsSearchComponent', () => {
     beforeEach(() => {
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
 
-        judgeService = jasmine.createSpyObj('judgeService', ['get']);
-        judgeService.get.and.returnValue(Observable.of([]));
+        judgeService = jasmine.createSpyObj('judgeService', ['fetch', 'get']);
+        judgeService.fetch.and.returnValue(Observable.of([]));
 
         referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['fetchCaseTypes', 'fetchHearingTypes']);
         referenceDataService.fetchCaseTypes.and.returnValue(Observable.of([]));
@@ -29,7 +32,15 @@ describe('HearingsSearchComponent', () => {
         hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
         hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
-        component = new HearingsSearchComponent(hearingPartService, referenceDataService, judgeService, searchCriteriaService);
+        hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService', ['updateListingRequest']);
+        dialog = jasmine.createSpyObj('dialog', ['open']);
+        notesService = jasmine.createSpyObj('notesService', ['getByEntities']);
+
+        component = new HearingsSearchComponent(hearingPartService,
+            hearingPartModificationService,
+            dialog,
+            referenceDataService, judgeService, notesService, searchCriteriaService);
+
         hearingFilters = DEFAULT_HEARING_FILTERS;
     });
 
@@ -37,9 +48,9 @@ describe('HearingsSearchComponent', () => {
         it('in onInit it should get reference data', () => {
             component.ngOnInit();
 
-            expect(component.judges$).toEqual(Observable.of([]));
-            expect(component.caseTypes$).toEqual(Observable.of([]));
-            expect(component.hearingTypes$).toEqual(Observable.of([]));
+            expect(component.judges).toEqual([]);
+            expect(component.caseTypes).toEqual([]);
+            expect(component.hearingTypes).toEqual([]);
         });
     });
 

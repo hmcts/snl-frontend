@@ -8,7 +8,7 @@ import { ListingRequestViewmodel } from '../../models/listing-create';
 })
 export class ListingUpdateDialogComponent {
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: ListingRequestViewmodel,
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any,
                 private readonly dialogRef: MatDialogRef<ListingUpdateDialogComponent>) {
     }
 

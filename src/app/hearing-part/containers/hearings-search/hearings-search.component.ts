@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Judge } from '../../../judges/models/judge.model';
 import { HearingsFilters } from '../../models/hearings-filter.model';
@@ -18,6 +17,7 @@ import { HearingModificationService } from '../../services/hearing-modification.
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'app-hearings-search',
@@ -32,9 +32,9 @@ export class HearingsSearchComponent implements OnInit {
         length: undefined
     };
 
-    judges$: Observable<Judge[]>;
-    caseTypes$: Observable<CaseType[]>;
-    hearingTypes$: Observable<HearingType[]>;
+    judges: Judge[];
+    caseTypes: CaseType[];
+    hearingTypes: HearingType[];
 
     filteredHearings: FilteredHearingViewmodel[] = [];
     latestFilters: HearingsFilters;
@@ -51,25 +51,28 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.judges$ = this.judgeService.fetch();
-        this.caseTypes$ = this.referenceDataService.fetchCaseTypes();
-        this.hearingTypes$ = this.referenceDataService.fetchHearingTypes();
+        this.judgeService.fetch().subscribe(judges => {this.judges = judges});
+        this.referenceDataService.fetchCaseTypes().subscribe(caseTypes => {this.caseTypes = caseTypes});
+        this.referenceDataService.fetchHearingTypes().subscribe(hearingTypes => {this.hearingTypes = hearingTypes});
     }
 
     onAmend(hearingId: string) {
+        let hearing = this.filteredHearings.find(h => h.id === hearingId);
         this.notesService.getByEntities([hearingId]).subscribe(notes => {
             this.dialog.open(ListingUpdateDialogComponent, {
                 data: {
-                    hearing: this.filteredHearings.find(h => h.id === hearingId),
-                    notes: notes
+                    listing: {
+                        hearing: hearing,
+                        notes: notes
+                    },
+                    judges: this.judges,
+                    caseTypes: this.caseTypes
                 }
-            }).afterClosed().subscribe(updatedListing => {
-                if (updatedListing === undefined) {
-                    return;
-                }
-                this.hearingPartModificationService.updateListingRequest(updatedListing);
-                this.openDialog('Editing listing request', updatedListing.notes);
-            })
+            }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
+                .subscribe(updatedListing => {
+                    this.hearingPartModificationService.updateListingRequest(updatedListing);
+                    this.openDialog('Editing listing request', updatedListing.notes);
+                })
         })
     }
 
@@ -108,7 +111,10 @@ export class HearingsSearchComponent implements OnInit {
         }).afterClosed().subscribe((confirmed) => {
             if (confirmed) {
                 if (notes.length > 0) {
-                    this.notesService.upsertManyNotes(notes).subscribe();
+                    this.notesService.upsertManyNotes(notes).subscribe(() => {
+                        this.fetchHearings(this.latestFilters, this.latestPaging);
+                        return;
+                    });
                 }
 
                 this.fetchHearings(this.latestFilters, this.latestPaging)

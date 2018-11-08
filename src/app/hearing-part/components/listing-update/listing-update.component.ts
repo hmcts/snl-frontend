@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { isMultiSessionListing, ListingRequestViewmodel } from '../../models/listing-create';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
@@ -14,8 +14,6 @@ import { ListingNoteListComponent } from '../listing-note-list/listing-note-list
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
-import { JudgeService } from '../../../judges/services/judge.service';
-import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -27,7 +25,7 @@ export enum ListingTypeTab {
     templateUrl: './listing-update.component.html',
     styleUrls: ['./listing-update.component.scss']
 })
-export class ListingRequestEditComponent implements OnInit {
+export class ListingRequestEditComponent {
     @ViewChild('listingCreateForm') listingFormGroup: FormGroupDirective;
     @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
@@ -44,11 +42,11 @@ export class ListingRequestEditComponent implements OnInit {
     }
 
     @Output() onSave = new EventEmitter();
+    @Input() judges: Judge[] = [];
 
     listingRequestFormGroup: FormGroup;
     communicationFacilitators = Object.values(CommunicationFacilitators);
     priorityValues = Object.values(Priority);
-    judges: Judge[] = [];
     hearings: HearingType[] = [];
     noteViewModels: NoteViewmodel[] = [];
 
@@ -57,7 +55,7 @@ export class ListingRequestEditComponent implements OnInit {
         return this._caseTypes;
     }
 
-    set caseTypes(caseTypes: CaseType[]) {
+    @Input() set caseTypes(caseTypes: CaseType[]) {
         this._caseTypes = caseTypes;
         const caseTypeCode = safe(() => this.listing.hearing.caseTypeCode);
 
@@ -75,16 +73,7 @@ export class ListingRequestEditComponent implements OnInit {
     public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
 
-    constructor(private readonly judgeService: JudgeService,
-                private readonly asDaysPipe: DurationAsDaysPipe,
-                private readonly referenceDataService: ReferenceDataService) {
-        this.judgeService.fetch();
-        this.judgeService.get().subscribe((judges) => this.judges = judges);
-    }
-
-    ngOnInit() {
-        this.referenceDataService.getCaseTypes().subscribe((caseTypes) => this.caseTypes = caseTypes);
-    }
+    constructor(private readonly asDaysPipe: DurationAsDaysPipe) {}
 
     save() {
         this.prepareListingTypeData();

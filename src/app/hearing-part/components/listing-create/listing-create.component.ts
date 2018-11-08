@@ -1,17 +1,21 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { State } from '../../../app.state';
-import { ListingCreate, isMultiSessionListing, DEFAULT_LISTING_CREATE } from '../../models/listing-create';
+import { ListingCreate, isMultiSessionListing } from '../../models/listing-create';
 import * as moment from 'moment';
 import { v4 as uuid } from 'uuid';
+import { getHearingPartsError } from '../../reducers';
 import { GetById } from '../../actions/hearing.action';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Judge } from '../../../judges/models/judge.model';
+import * as fromJudges from '../../../judges/reducers';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, MatRadioChange, MatSelectChange } from '@angular/material';
 import * as fromNotes from '../../../notes/actions/notes.action';
+import * as fromReferenceData from '../../../core/reference/reducers';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
@@ -22,8 +26,6 @@ import { ListingNoteListComponent } from '../listing-note-list/listing-note-list
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
-import { JudgeService } from '../../../judges/services/judge.service';
-import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -73,35 +75,42 @@ export class ListingCreateComponent implements OnInit {
     public chosenListingType = 0;
     public listing: ListingCreate;
     public listingType = ListingTypeTab;
-    public caseTitleMaxLength = 200;
-    public caseNumberMaxLength = 200;
-    public numberOfSeconds = 60;
-    public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
-    public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
+    caseTitleMaxLength = 200;
+    caseNumberMaxLength = 200;
+    numberOfSeconds = 60;
+    binIntMaxValue = 86399; // 24h * 60m * 60s -1s
+    limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
+    private asDaysPipe = new DurationAsDaysPipe();
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
-                private readonly judgeService: JudgeService,
-                private readonly asDaysPipe: DurationAsDaysPipe,
-                private readonly referenceDataService: ReferenceDataService,
                 private readonly hearingPartModificationService: HearingModificationService) {
-        this.judgeService.fetch();
-        this.judgeService.get().subscribe((judges) => this.judges = judges);
-        this.referenceDataService.getCaseTypes().subscribe((caseTypes) => this.caseTypes = caseTypes);
+
+        this.store.select(getHearingPartsError).subscribe((error: any) => {
+            this.errors = safe(() => error.message);
+        });
+        this.store.select(fromJudges.getJudges).withLatestFrom(
+            this.store.select(fromReferenceData.selectCaseTypes)
+            , (judges, caseTypes: CaseType[]) => {
+                this.judges = Object.values(judges);
+                this.caseTypes = caseTypes;
+            }
+        ).subscribe(() => {
+            if (!this.editMode) {
+                this.initiateListing();
+            }
+            this.setFormGroup();
+        });
     }
 
     ngOnInit() {
-        if (!this.editMode) {
-            this.listing = DEFAULT_LISTING_CREATE;
-        }
+        this.store.dispatch(new JudgeActions.Get());
         this.chosenListingType = ListingTypeTab.Single;
-
         if (this.editMode) {
             if (this.listing.hearing.duration.asHours() >= 24) {
                 this.chosenListingType = ListingTypeTab.Multi;
             }
         }
-        this.setFormGroup();
     }
 
     save() {
@@ -184,8 +193,34 @@ export class ListingCreateComponent implements OnInit {
         return isMultiSessionListing(this.listing);
     }
 
+    private initiateListing() {
+        this.listing = this.defaultListing();
+    }
+
     private getHearingTypesFromCaseType(selectedCaseTypeCode): HearingType[] {
         return this.caseTypes.find(ct => ct.code === selectedCaseTypeCode).hearingTypes;
+    }
+
+    private defaultListing(): ListingCreate {
+        return {
+            hearing: {
+                id: undefined,
+                caseNumber: undefined,
+                caseTitle: undefined,
+                caseTypeCode: undefined,
+                hearingTypeCode: undefined,
+                duration: undefined,
+                scheduleStart: undefined,
+                scheduleEnd: undefined,
+                priority: Priority.Low,
+                version: 0,
+                reservedJudgeId: undefined,
+                communicationFacilitator: undefined,
+                userTransactionId: undefined,
+                numberOfSessions: 1
+            },
+            notes: []
+        };
     }
 
     private setFormGroup() {
@@ -241,7 +276,7 @@ export class ListingCreateComponent implements OnInit {
     private openDialog(actionTitle: string) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
-            data: {actionTitle}
+            data: { actionTitle }
         }).afterClosed().subscribe((confirmed) => {
             this.afterClosed(confirmed);
         });
