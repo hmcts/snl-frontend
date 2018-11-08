@@ -7,6 +7,8 @@ import * as fromRT from './reducers/room-type.reducer';
 import * as fromST from './reducers/session-type.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ReferenceDataEffects } from './effects/reference-data.effects';
+import { StatusConfigService } from './services/status-config.service';
+import { StatusConfigResolver } from './resolvers/status-config.resolver';
 
 @NgModule({
     imports: [
@@ -16,7 +18,7 @@ import { ReferenceDataEffects } from './effects/reference-data.effects';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [ReferenceDataService]
+    providers: [ReferenceDataService, StatusConfigService, StatusConfigResolver]
 })
 export class ReferenceDataModule {
 }

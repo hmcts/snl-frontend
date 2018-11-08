@@ -45,10 +45,10 @@ export class ListingCreationPage {
     await this.elementHelper.selectValueFromSingleSelectOption(this.selectHearingPartSelectOption, listingCreationForm.hearingType);
     await this.elementHelper.typeDate(this.fromDateInput, listingCreationForm.fromDate);
     await this.elementHelper.typeDate(this.endDateInput, listingCreationForm.endDate);
-    if (listingCreationForm.numberOfSessions === 1) {
+    if (!listingCreationForm.multiSession) {
         await element(by.id('single-session-radio')).click();
         await this.elementHelper.typeValue(this.durationMinutesInput, listingCreationForm.durationMinutes);
-    } else if (listingCreationForm.numberOfSessions > 1) {
+    } else {
         await element(by.id('multi-session-radio')).click();
         await this.elementHelper.typeValue(this.durationDaysInput, listingCreationForm.durationDays);
         await this.elementHelper.typeValue(this.numberOfSessionsInput, listingCreationForm.numberOfSessions);

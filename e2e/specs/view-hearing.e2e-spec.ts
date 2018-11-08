@@ -29,7 +29,8 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
             duration: 'PT30M',
             priority: Priority.High,
             userTransactionId: uuid(),
-            numberOfSessions: 1
+            numberOfSessions: 1,
+            multiSession: false
         } as CreateListingRequestBody
     );
 };
@@ -53,7 +54,7 @@ describe('View Hearing details', () => {
         });
 
         it('And click on it', async () => {
-            searchListingRequestPage.clickListingRequest(id);
+            await searchListingRequestPage.clickListingRequest(id);
         });
 
         it('Then Listing Request opens in new page', async () => {

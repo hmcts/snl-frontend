@@ -11,6 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
+import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -76,7 +77,8 @@ describe('ViewHearingComponent', () => {
         { provide: Location, useValue: function() {} }
       ],
       declarations: [
-        ViewHearingComponent
+        ViewHearingComponent,
+        DurationFormatPipe
       ]
     }).compileComponents();
 
@@ -176,8 +178,8 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual('');
   });
 
-  it('formatDuration formats duration with minutes', () => {
+  it('formatDuration formats duration to HHmm', () => {
     const duration = component.formatDuration('PT30M');
-    expect(duration).toEqual('30 minutes');
+    expect(duration).toEqual('00:30');
   });
 });
