@@ -11,5 +11,5 @@ export interface SessionAmmendForm {
     personName: string,
     hearingPartCount: number,
     version: number,
-    belongsToMultiSession: boolean
+    multiSession: boolean
 }
