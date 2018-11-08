@@ -1,0 +1,6 @@
+<div fxLayout="row" fxLayoutAlign="start start">
+
+    <app-note fxFlex #noteComponent [note]="note"></app-note>
+
+    <button [disabled]="isButtonDisabled()" (click)="submit(noteComponent.note)" fxFlex="10" mat-raised-button color="accent">Submit</button>
+</div>

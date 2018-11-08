@@ -9,6 +9,11 @@ import { MatDialog, MatSelect } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
+import { NoteType } from '../../../notes/models/note-type';
+import { NotesService } from '../../../notes/services/notes.service';
 
 @Component({
   selector: 'app-view-hearing',
@@ -19,11 +24,16 @@ export class ViewHearingComponent implements OnInit {
   hearingId: string
   hearing: Hearing;
   hearingActions = HearingActions
-  @ViewChild(MatSelect) actionSelect: MatSelect
+  @ViewChild(MatSelect) actionSelect: MatSelect;
+
+  note: NoteViewmodel;
 
   constructor(
     private route: ActivatedRoute,
     private readonly hearingService: HearingService,
+    private readonly notesPreparerService: NotesPreparerService,
+    private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
+    private readonly notesService: NotesService,
     private readonly dialog: MatDialog,
     private readonly location: Location
   ) {
@@ -31,6 +41,7 @@ export class ViewHearingComponent implements OnInit {
 
   ngOnInit() {
     this.hearingId = this.route.snapshot.paramMap.get('id');
+    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.OTHER_NOTE)
     this.hearingService.hearings
       .map(hearings => hearings.find(h => h.id === this.hearingId))
       .subscribe(hearing => this.hearing = hearing);
@@ -125,5 +136,13 @@ export class ViewHearingComponent implements OnInit {
 
   private fetchHearing() {
     this.hearingService.getById(this.hearingId);
+  }
+
+  onSubmit(note: NoteViewmodel) {
+    const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
+    this.notesService.upsertMany(preparedNote).subscribe(data => {
+      this.fetchHearing();
+      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.OTHER_NOTE);
+    });
   }
 }

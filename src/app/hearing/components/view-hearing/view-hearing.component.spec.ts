@@ -11,6 +11,10 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
+import { NotesService } from '../../../notes/services/notes.service';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -39,6 +43,24 @@ const hearingServiceMock = {
   hearings: Observable.of([])
 }
 
+const notesPreparerService = {
+    prepare: function (id: string) {
+        return Observable.of();
+    }
+}
+
+const listingCreateNotesConfiguration = {
+    getOrCreateNote: function (id: string) {
+        return Observable.of();
+    }
+}
+
+const notesService = {
+    upsertMany: function (id: string) {
+        return Observable.of();
+    }
+}
+
 const routeMock = {
   snapshot: {
     paramMap: {
@@ -48,6 +70,7 @@ const routeMock = {
     }
   }
 }
+
 const openDialogMockObjConfirmed = {
   afterClosed: (): Observable<boolean> => Observable.of(true)
 };
@@ -70,6 +93,9 @@ describe('ViewHearingComponent', () => {
         BrowserAnimationsModule
       ],
       providers: [
+        { provide: NotesPreparerService, useValue: notesPreparerService},
+        { provide: ListingCreateNotesConfiguration, useValue: listingCreateNotesConfiguration},
+        { provide: NotesService, useValue: notesService},
         { provide: ActivatedRoute, useValue: routeMock },
         { provide: HearingService, useValue: hearingServiceMock },
         { provide: MatDialog, useValue: matDialogSpy },
@@ -77,7 +103,8 @@ describe('ViewHearingComponent', () => {
       ],
       declarations: [
         ViewHearingComponent
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ViewHearingComponent);

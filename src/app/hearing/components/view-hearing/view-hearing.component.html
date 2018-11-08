@@ -81,6 +81,8 @@
           </div>
         </mat-list-item>
       </mat-list>
+
+      <app-create-hearing-note [note]="note" (onSubmit)="onSubmit($event)"></app-create-hearing-note>
     </mat-tab>
 
     <mat-tab label="Scheduled listings">
@@ -124,7 +126,6 @@
               </div>
             </mat-list-item>
           </mat-list>
-
         </mat-expansion-panel>
       </mat-accordion>
     </mat-tab>
