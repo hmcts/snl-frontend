@@ -141,7 +141,7 @@ export class ViewHearingComponent implements OnInit {
     const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
     this.notesService.upsertMany(preparedNote).subscribe(data => {
       this.fetchHearing();
-      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.OTHER_NOTE);
+      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE);
     });
   }
 }
