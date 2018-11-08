@@ -30,16 +30,21 @@
     </div>
 
     <div class="tile">
-      <strong>Estimated duration</strong><br>
-      {{formatDuration(hearing.duration)}}
+      <strong>Estimated duration
+      </strong><br>
+      {{hearing.duration | appDurationFormat}}<ng-container *ngIf="hearing.isMultiSession; then days; else minutes"></ng-container>
+      <ng-template #days>ay(s)</ng-template>
+      <ng-template #minutes> (Hours / Minutes)</ng-template>
+    </div>
+
+    <div class="tile">
+      <strong>Required Sessions</strong><br>
+      {{(hearing.numberOfSessions)}}
     </div>
 
     <div class="tile">
       <strong>List between</strong><br>
       {{getListBetween()}}
-    </div>
-
-    <div class="tile">
     </div>
 
     <div class="tile">
@@ -63,6 +68,9 @@
     <div class="tile">
       <strong>Facility requirements</strong><br>
       {{hearing.facilityRequirements}}
+    </div>
+
+    <div class="tile">
     </div>
 
     <div class="clear"></div>
@@ -101,13 +109,13 @@
                   Start {{formatDate(session.start)}}
                 </div>
                 <div class="tile small">
-                  {{formatDuration(session.duration)}}
+                  {{session.duration | appDurationFormat}}
                 </div>
                 <div class="tile">
                   {{session.roomName}}
                 </div>
                 <div class="tile">
-                  {{session.judgeName}}
+                  {{session.judge}}
                 </div>
               </div>
               <div class="clear"></div>

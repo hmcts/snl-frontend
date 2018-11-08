@@ -7,7 +7,7 @@ import { HearingService } from './services/hearing.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotesModule } from '../notes/notes.module';
 import { CreateHearingNoteComponent } from './components/create-hearing-note/create-hearing-note.component';
-import { GovukModule } from '../govuk/govuk.module';
+import { CoreModule } from '../core/core.module';
 
 const COMPONENTS = [
   ViewHearingComponent,
@@ -20,7 +20,8 @@ const COMPONENTS = [
     AngularMaterialModule,
     FlexLayoutModule,
     FormsModule,
-    NotesModule
+    NotesModule,
+    CoreModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

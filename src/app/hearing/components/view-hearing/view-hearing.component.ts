@@ -14,6 +14,7 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
 import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
+import { formatDuration } from '../../../utils/date-utils';
 
 @Component({
   selector: 'app-view-hearing',
@@ -54,9 +55,7 @@ export class ViewHearingComponent implements OnInit {
   }
 
   formatDuration(duration: string): string {
-    const minutes = moment.duration(duration).asMinutes();
-
-    return Math.ceil(minutes) + ' minutes';
+    return formatDuration(moment.duration(duration))
   }
 
   getListBetween() {

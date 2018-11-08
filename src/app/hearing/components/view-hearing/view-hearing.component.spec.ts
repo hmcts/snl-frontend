@@ -15,6 +15,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
 import { NotesService } from '../../../notes/services/notes.service';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -102,7 +103,8 @@ describe('ViewHearingComponent', () => {
         { provide: Location, useValue: function() {} }
       ],
       declarations: [
-        ViewHearingComponent
+        ViewHearingComponent,
+        DurationFormatPipe
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
@@ -203,8 +205,8 @@ describe('ViewHearingComponent', () => {
     expect(component.getListBetween()).toEqual('');
   });
 
-  it('formatDuration formats duration with minutes', () => {
+  it('formatDuration formats duration to HHmm', () => {
     const duration = component.formatDuration('PT30M');
-    expect(duration).toEqual('30 minutes');
+    expect(duration).toEqual('00:30');
   });
 });
