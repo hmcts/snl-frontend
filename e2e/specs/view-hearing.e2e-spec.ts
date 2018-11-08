@@ -54,7 +54,7 @@ describe('View Hearing details', () => {
         });
 
         it('And click on it', async () => {
-            searchListingRequestPage.clickListingRequest(id);
+            await searchListingRequestPage.clickListingRequest(id);
         });
 
         it('Then Listing Request opens in new page', async () => {
