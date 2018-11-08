@@ -32,7 +32,7 @@
     <div class="tile">
       <strong>Estimated duration
       </strong><br>
-      {{formatDuration(hearing.duration)}}<ng-container *ngIf="hearing.isMultiSession; then days; else minutes"></ng-container>
+      {{hearing.duration | appDurationFormat}}<ng-container *ngIf="hearing.isMultiSession; then days; else minutes"></ng-container>
       <ng-template #days>ay(s)</ng-template>
       <ng-template #minutes> (Hours / Minutes)</ng-template>
     </div>
@@ -107,7 +107,7 @@
                   Start {{formatDate(session.start)}}
                 </div>
                 <div class="tile small">
-                  {{formatDuration(session.duration)}}
+                  {{session.duration | appDurationFormat}}
                 </div>
                 <div class="tile">
                   {{session.roomName}}
