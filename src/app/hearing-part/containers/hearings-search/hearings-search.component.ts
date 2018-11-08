@@ -14,6 +14,10 @@ import { JudgeService } from '../../../judges/services/judge.service';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { ListingUpdateDialogComponent } from '../../components/listing-update-dialog/listing-update-dialog';
 import { NotesService } from '../../../notes/services/notes.service';
+import { HearingModificationService } from '../../services/hearing-modification.service';
+import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 
 @Component({
     selector: 'app-hearings-search',
@@ -38,6 +42,7 @@ export class HearingsSearchComponent implements OnInit {
     totalCount: number;
 
     constructor(private hearingPartService: HearingPartService,
+                private hearingPartModificationService: HearingModificationService,
                 private dialog: MatDialog,
                 private referenceDataService: ReferenceDataService,
                 private judgeService: JudgeService,
@@ -58,6 +63,12 @@ export class HearingsSearchComponent implements OnInit {
                     hearing: this.filteredHearings.find(h => h.id === hearingId),
                     notes: notes
                 }
+            }).afterClosed().subscribe(updatedListing => {
+                if (updatedListing === undefined) {
+                    return;
+                }
+                this.hearingPartModificationService.updateListingRequest(updatedListing);
+                this.openDialog('Editing listing request', updatedListing.notes);
             })
         })
     }
@@ -88,5 +99,20 @@ export class HearingsSearchComponent implements OnInit {
             },
             searchCriteria: this.searchCriteriaService.toSearchCriteria(filters)
         }
+    }
+
+    private openDialog(actionTitle: string, notes: NoteViewmodel[]) {
+        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            data: {actionTitle}
+        }).afterClosed().subscribe((confirmed) => {
+            if (confirmed) {
+                if (notes.length > 0) {
+                    this.notesService.upsertManyNotes(notes).subscribe();
+                }
+
+                this.fetchHearings(this.latestFilters, this.latestPaging)
+            }
+        });
     }
 }

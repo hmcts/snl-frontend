@@ -4,14 +4,11 @@ import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { Judge } from '../../../judges/models/judge.model';
-import { HearingModificationService } from '../../services/hearing-modification.service';
-import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { MatDialog, MatRadioChange, MatSelectChange } from '@angular/material';
+import { MatRadioChange, MatSelectChange } from '@angular/material';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/combineLatest';
-import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { safe } from '../../../utils/js-extensions';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
@@ -19,7 +16,6 @@ import { CommunicationFacilitators } from '../../models/communication-facilitato
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import { JudgeService } from '../../../judges/services/judge.service';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
-import { NotesService } from '../../../notes/services/notes.service';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -79,12 +75,9 @@ export class ListingRequestEditComponent implements OnInit {
     public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
 
-    constructor(public dialog: MatDialog,
-                private readonly judgeService: JudgeService,
-                private readonly notesService: NotesService,
+    constructor(private readonly judgeService: JudgeService,
                 private readonly asDaysPipe: DurationAsDaysPipe,
-                private readonly referenceDataService: ReferenceDataService,
-                private readonly hearingPartModificationService: HearingModificationService) {
+                private readonly referenceDataService: ReferenceDataService) {
         this.judgeService.fetch();
         this.judgeService.get().subscribe((judges) => this.judges = judges);
     }
@@ -95,17 +88,8 @@ export class ListingRequestEditComponent implements OnInit {
 
     save() {
         this.prepareListingTypeData();
-        this.hearingPartModificationService.updateListingRequest(this.listing);
-        this.openDialog('Editing listing request');
 
-        this.onSave.emit();
-    }
-
-    createNotes() {
-        const notes = this.notesComponent.prepareNotes();
-        if (notes.length > 0) {
-            this.notesService.upsertManyNotes(notes).subscribe();
-        }
+        this.onSave.emit({...this.listing, notes: this.notesComponent.prepareNotes()});
     }
 
     updateDuration(durationValue, unit) {
@@ -200,17 +184,6 @@ export class ListingRequestEditComponent implements OnInit {
             }
         }
         return undefined;
-    }
-
-    private openDialog(actionTitle: string) {
-        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
-            data: {actionTitle}
-        }).afterClosed().subscribe((confirmed) => {
-            if (confirmed) {
-                this.createNotes();
-            }
-        });
     }
 
     private prepareListingTypeData() {

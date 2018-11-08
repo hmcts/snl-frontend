@@ -12,7 +12,7 @@ export class ListingUpdateDialogComponent {
                 private readonly dialogRef: MatDialogRef<ListingUpdateDialogComponent>) {
     }
 
-    onSave() {
-        this.dialogRef.close();
+    onSave(updatedListing: ListingRequestViewmodel) {
+        this.dialogRef.close(updatedListing);
     }
 }
