@@ -5,13 +5,13 @@
 
   <mat-card-content class="inputs-container" fxLayout="column" fxLayoutGap="0.5%">
 
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+    <mat-form-field class="date-picker-element">
       <input id="startDate" matInput [matDatepicker]="picker" [(ngModel)]="filters.startDate" placeholder="Choose start date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+    <mat-form-field class="date-picker-element">
       <input id="endDate" matInput [matDatepicker]="pickerEnd" [(ngModel)]="filters.endDate" placeholder="Choose end date">
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
