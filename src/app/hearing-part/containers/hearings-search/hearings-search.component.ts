@@ -6,7 +6,6 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
-import { HearingPartService } from '../../services/hearing-part-service';
 import { MatDialog, PageEvent } from '@angular/material';
 import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
 import { JudgeService } from '../../../judges/services/judge.service';
@@ -18,6 +17,7 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { filter } from 'rxjs/operators';
+import { HearingService } from '../../../hearing/services/hearing.service';
 
 @Component({
     selector: 'app-hearings-search',
@@ -41,8 +41,8 @@ export class HearingsSearchComponent implements OnInit {
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
-    constructor(private hearingPartService: HearingPartService,
-                private hearingPartModificationService: HearingModificationService,
+    constructor(private hearingPartModificationService: HearingModificationService,
+                private hearingService: HearingService,
                 private dialog: MatDialog,
                 private referenceDataService: ReferenceDataService,
                 private judgeService: JudgeService,
@@ -57,23 +57,24 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        let hearing = this.filteredHearings.find(h => h.id === hearingId);
-        this.notesService.getByEntities([hearingId]).subscribe(notes => {
-            this.dialog.open(ListingUpdateDialogComponent, {
-                data: {
-                    listing: {
-                        hearing: hearing,
-                        notes: notes
-                    },
-                    judges: this.judges,
-                    caseTypes: this.caseTypes
-                }
-            }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
-                .subscribe(updatedListing => {
-                    this.hearingPartModificationService.updateListingRequest(updatedListing);
-                    this.openDialog('Editing listing request', updatedListing.notes);
-                })
-        })
+        this.hearingService.getForAmendment(hearingId).subscribe(hearing => {
+            this.notesService.getByEntities([hearingId]).subscribe(notes => {
+                this.dialog.open(ListingUpdateDialogComponent, {
+                    data: {
+                        listing: {
+                            hearing: hearing,
+                            notes: notes
+                        },
+                        judges: this.judges,
+                        caseTypes: this.caseTypes
+                    }
+                }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
+                    .subscribe(updatedListing => {
+                        this.hearingPartModificationService.updateListingRequest(updatedListing);
+                        this.openDialog('Editing listing request', updatedListing.notes);
+                    })
+            })
+        });
     }
 
     onNextPage(pageEvent: PageEvent) {
@@ -87,7 +88,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     private fetchHearings(filterValues: HearingsFilters, pageEvent: PageEvent) {
-        this.hearingPartService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
+        this.hearingService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
             .subscribe(hearings => {
                 this.filteredHearings = hearings.content || [];
                 this.totalCount = hearings.totalElements;
