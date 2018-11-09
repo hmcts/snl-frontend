@@ -10,7 +10,7 @@ import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateHearingNoteComponent {
-    @Input() note: NoteViewmodel
+    @Input() note: NoteViewmodel;
 
     @Output() onSubmit = new EventEmitter();
     @ViewChild(NoteComponent) noteComponent: NoteComponent;

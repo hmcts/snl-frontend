@@ -50,6 +50,28 @@ export class ViewHearingComponent implements OnInit {
     this.fetchHearing();
   }
 
+  private confirmationDialogClosed = (confirmed: boolean) => {
+      if (confirmed) {
+          this.hearingService.unlist(this.hearing)
+          this.openSummaryDialog().afterClosed().subscribe((success) => {
+              if (success) {
+                  this.fetchHearing();
+              }
+          });
+      }
+  };
+
+  private openSummaryDialog() {
+      return this.dialog.open(TransactionDialogComponent, {
+          ...DEFAULT_DIALOG_CONFIG,
+          data: 'Unlist hearing parts from session'
+      });
+  }
+
+  private fetchHearing() {
+      this.hearingService.getById(this.hearingId);
+  }
+
   formatDate(date: string): string {
     return moment(date).format();
   }
@@ -113,28 +135,6 @@ export class ViewHearingComponent implements OnInit {
     });
 
     confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
-  }
-
-  private confirmationDialogClosed = (confirmed: boolean) => {
-    if (confirmed) {
-      this.hearingService.unlist(this.hearing)
-      this.openSummaryDialog().afterClosed().subscribe((success) => {
-          if (success) {
-              this.fetchHearing();
-          }
-      });
-    }
-  };
-
-  private openSummaryDialog() {
-    return this.dialog.open(TransactionDialogComponent, {
-        ...DEFAULT_DIALOG_CONFIG,
-        data: 'Unlist hearing parts from session'
-    });
-  }
-
-  private fetchHearing() {
-    this.hearingService.getById(this.hearingId);
   }
 
   onSubmit(note: NoteViewmodel) {
