@@ -121,6 +121,10 @@ export class ListingRequestEditComponent {
         return isMultiSessionListing(this.listing);
     }
 
+    parseDate(date) {
+        return date ? moment(date).format('DD/MM/YYYY') : null;
+    }
+
     private getHearingTypesFromCaseType(selectedCaseTypeCode): HearingType[] {
         return this.caseTypes.find(ct => ct.code === selectedCaseTypeCode).hearingTypes;
     }

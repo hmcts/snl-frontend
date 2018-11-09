@@ -7,9 +7,9 @@
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
 
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
-                <div *ngIf="listing.hearing.isListed">
-                    <div>Listing date: {{listing.hearing.listingDate}}</div>
-                    <div>Judge assigned: {{listing.hearing.personName}}</div>
+                <div style="padding-bottom: 1em" *ngIf="listing.hearing.isListed">
+                    <div><strong>Listing date:</strong> {{parseDate(listing.hearing.listingDate)}}</div>
+                    <div><strong>Judge assigned:</strong> {{listing.hearing.personName}}</div>
                 </div>
 
                 <form [formGroup]="listingRequestFormGroup" novalidate (ngSubmit)="save();" #listingCreateForm="ngForm" id="list-form"  fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">

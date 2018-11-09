@@ -16,7 +16,7 @@ import { HearingModificationService } from '../../services/hearing-modification.
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
-import { filter } from 'rxjs/operators';
+import { filter, mergeMap, tap } from 'rxjs/operators';
 import { HearingService } from '../../../hearing/services/hearing.service';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 
@@ -61,22 +61,24 @@ export class HearingsSearchComponent implements OnInit {
         let hearing = this.hearingService.getForAmendment(hearingId);
         let hearingNotes = this.notesService.getByEntities([hearingId]);
 
-        forkJoin([hearing, hearingNotes]).subscribe(results => {
-            this.dialog.open(ListingUpdateDialogComponent, {
-                data: {
-                    listing: {
-                        hearing: results[0],
-                        notes: results[1]
-                    },
-                    judges: this.judges,
-                    caseTypes: this.caseTypes
-                }
-            }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
-                .subscribe(updatedListing => {
-                    this.hearingPartModificationService.updateListingRequest(updatedListing);
-                    this.openDialog('Editing listing request', updatedListing.notes);
-                })
-        });
+        forkJoin([hearing, hearingNotes]).pipe(mergeMap(results => {
+                return this.dialog.open(ListingUpdateDialogComponent, {
+                    data: {
+                        listing: {
+                            hearing: results[0],
+                            notes: results[1]
+                        },
+                        judges: this.judges,
+                        caseTypes: this.caseTypes
+                    }
+                }).afterClosed();
+            }),
+            filter(updatedListing => updatedListing !== undefined),
+            tap(updatedListing => {
+                this.hearingPartModificationService.updateListingRequest(updatedListing);
+                this.openDialog('Editing listing request', updatedListing.notes);
+            })
+        ).subscribe()
     }
 
     onNextPage(pageEvent: PageEvent) {
