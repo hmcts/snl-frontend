@@ -119,7 +119,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
             }
         };
         this.options.eventResize = (event, duration, revertFunc) => {
-            duration =  duration ? moment.duration(duration) : moment.duration(moment(event.end).diff(moment(event.start)));
+            duration =  duration ? duration : moment.duration(moment(event.end).diff(moment(event.start)));
             let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
             let widgetEvent = new CustomEvent('eventResize', {
                 bubbles: true,
