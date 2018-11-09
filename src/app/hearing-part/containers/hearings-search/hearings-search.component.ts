@@ -18,6 +18,7 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { filter } from 'rxjs/operators';
 import { HearingService } from '../../../hearing/services/hearing.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
     selector: 'app-hearings-search',
@@ -57,23 +58,24 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        this.hearingService.getForAmendment(hearingId).subscribe(hearing => {
-            this.notesService.getByEntities([hearingId]).subscribe(notes => {
-                this.dialog.open(ListingUpdateDialogComponent, {
-                    data: {
-                        listing: {
-                            hearing: hearing,
-                            notes: notes
-                        },
-                        judges: this.judges,
-                        caseTypes: this.caseTypes
-                    }
-                }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
-                    .subscribe(updatedListing => {
-                        this.hearingPartModificationService.updateListingRequest(updatedListing);
-                        this.openDialog('Editing listing request', updatedListing.notes);
-                    })
-            })
+        let hearing = this.hearingService.getForAmendment(hearingId);
+        let hearingNotes = this.notesService.getByEntities([hearingId]);
+
+        forkJoin([hearing, hearingNotes]).subscribe(results => {
+            this.dialog.open(ListingUpdateDialogComponent, {
+                data: {
+                    listing: {
+                        hearing: results[0],
+                        notes: results[1]
+                    },
+                    judges: this.judges,
+                    caseTypes: this.caseTypes
+                }
+            }).afterClosed().pipe(filter(updatedListing => updatedListing !== undefined))
+                .subscribe(updatedListing => {
+                    this.hearingPartModificationService.updateListingRequest(updatedListing);
+                    this.openDialog('Editing listing request', updatedListing.notes);
+                })
         });
     }
 
