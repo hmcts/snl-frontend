@@ -9,6 +9,7 @@ import { ReferenceDataModule } from './reference/reference-data.module';
 import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 import { DurationAsDaysPipe } from './pipes/duration-as-days.pipe';
 import { HmctsModule } from '../hmcts/hmcts.module';
+import { BaseResolver } from './resolvers/base.resolver';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -27,7 +28,7 @@ export const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [TransactionBackendService, DurationAsDaysPipe]
+    providers: [TransactionBackendService, DurationAsDaysPipe, BaseResolver]
 })
 export class CoreModule {
 }

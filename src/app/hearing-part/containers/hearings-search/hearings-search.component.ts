@@ -7,8 +7,6 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { MatDialog, PageEvent } from '@angular/material';
-import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
-import { JudgeService } from '../../../judges/services/judge.service';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { ListingUpdateDialogComponent } from '../../components/listing-update-dialog/listing-update-dialog';
 import { NotesService } from '../../../notes/services/notes.service';
@@ -21,6 +19,7 @@ import { HearingService } from '../../../hearing/services/hearing.service';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-hearings-search',
@@ -45,18 +44,19 @@ export class HearingsSearchComponent implements OnInit {
     totalCount: number;
 
     constructor(private hearingPartModificationService: HearingModificationService,
+                private route: ActivatedRoute,
                 private hearingService: HearingService,
                 private dialog: MatDialog,
-                private referenceDataService: ReferenceDataService,
-                private judgeService: JudgeService,
                 private notesService: NotesService,
                 private searchCriteriaService: SearchCriteriaService) {
     }
 
     ngOnInit() {
-        this.judgeService.fetch().subscribe(judges => {this.judges = judges});
-        this.referenceDataService.getCaseTypes().subscribe(caseTypes => {this.caseTypes = caseTypes});
-        this.referenceDataService.getHearingTypes().subscribe(hearingTypes => {this.hearingTypes = hearingTypes});
+        this.route.data.subscribe(data => {
+            this.judges = data.judges;
+            this.hearingTypes = data.hearingTypes;
+            this.caseTypes = data.caseTypes;
+        });
     }
 
     onDelete(hearing: FilteredHearingViewmodel) {
