@@ -7,6 +7,8 @@ import { ButtonClickModel } from './models/buttonClickModel';
 import { UpdateEventModel } from './models/updateEventModel';
 import { RenderEventModel } from './models/renderEventModel';
 import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-types';
+import * as moment from 'moment';
+
 @Component({
     // tslint:disable-next-line
     selector: 'ng-fullcalendar',
@@ -117,6 +119,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
             }
         };
         this.options.eventResize = (event, duration, revertFunc) => {
+            duration =  duration ? moment.duration(duration) : moment.duration(moment(event.end).diff(moment(event.start)));
             let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
             let widgetEvent = new CustomEvent('eventResize', {
                 bubbles: true,

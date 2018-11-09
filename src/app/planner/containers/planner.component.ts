@@ -158,7 +158,7 @@ export class PlannerComponent implements OnInit {
         return {
             id: event.detail.event.id,
             start: event.detail.event.start.toDate(),
-            duration: moment.duration(event.detail.event.end.diff(event.detail.event.start)).asSeconds(),
+            duration: moment.duration(event.duration).asSeconds(),
             [resourceType]: resourceId,
         };
     }
