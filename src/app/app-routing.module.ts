@@ -11,6 +11,7 @@ import { PlannerComponent } from './planner/containers/planner.component';
 import { SessionsListingsSearchComponent } from './sessions/containers/sessions-listings-search/sessions-listings-search.component';
 import { HearingsSearchComponent } from './hearing-part/containers/hearings-search/hearings-search.component';
 import { ViewHearingComponent } from './hearing/components/view-hearing/view-hearing.component';
+import { StatusConfigResolver } from './core/reference/resolvers/status-config.resolver';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -30,7 +31,7 @@ const routes: Routes = [
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard], resolve: { statusConfig: StatusConfigResolver }
     },
     {
         path: 'poc', component: PocComponent,

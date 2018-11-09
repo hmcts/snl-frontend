@@ -22,6 +22,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
+    @Output() onDelete = new EventEmitter<FilteredHearingViewmodel>();
     @Output() onAmend = new EventEmitter<string>();
     @Output() onNextPage = new EventEmitter<PageEvent>()
 
@@ -36,6 +37,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         'reservedJudge',
         'requestStatus',
         'listingDate',
+        'delete',
         'amend'
     ];
 
@@ -59,8 +61,12 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         return element.isListed ? 'listed' : 'unlisted';
     }
 
-    amend(hearing: FilteredHearingViewmodel) {
-        this.onAmend.emit(hearing.id);
+    delete(hearing: FilteredHearingViewmodel) {
+        this.onDelete.emit(hearing);
+    }
+
+    amend(hearingId: string) {
+        this.onAmend.emit(hearingId);
     }
 
     buildViewHearingUrl(id: string) {

@@ -120,15 +120,14 @@ const createHearingPartRequest: CreateHearingRequest = {
     communicationFacilitator: null,
     priority: null,
     userTransactionId: uuid(),
-    numberOfSessions: 1
+    numberOfSessions: 1,
+    multiSession: false
 };
 
 const updateHearingPartRequest: UpdateHearingRequest = {
     ...createHearingPartRequest,
     version: 1
 };
-
-
 
 describe('HearingPartService', () => {
     beforeEach(() => {

@@ -28,6 +28,7 @@ import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialo
 import { RoomType } from '../../../core/reference/models/room-type';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
 import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
     selector: 'app-sessions-search',
@@ -81,14 +82,13 @@ export class SessionsSearchComponent implements OnInit {
     openAmendDialog(s: SessionViewModel) {
         let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
         this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
             data: {
                 sessionData: sessionAmendForm,
                 sessionTypes: this.sessionTypes,
                 notes: s.notes
             },
-            hasBackdrop: true,
-            height: 'auto',
-            disableClose: true
+            height: 'auto'
         })
     }
 

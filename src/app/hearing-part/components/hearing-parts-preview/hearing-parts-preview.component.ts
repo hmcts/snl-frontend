@@ -14,6 +14,7 @@ import { DialogWithActionsComponent } from '../../../features/notification/compo
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 
 @Component({
   selector: 'app-hearing-parts-preview',
@@ -66,7 +67,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
                 case 'duration':
                     return moment.duration(item[property]).asMilliseconds();
                 case 'requiredSessions':
-                    return item['numberOfSessionsNeeded'];
+                    return item['numberOfSessions'];
 
                 case 'reservedJudge':
                     return this.getPropertyMemberOrNull(item, property, 'name');
@@ -167,7 +168,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
         });
     }

@@ -16,6 +16,7 @@
       <app-hearing-search-table id="hearing-search-table"
                                 [hearings]="filteredHearings"
                                 [totalCount]="totalCount"
+                                (onDelete)="onDelete($event)"
                                 (onAmend)="onAmend($event)"
                                 (onNextPage)="onNextPage($event)">
       </app-hearing-search-table>

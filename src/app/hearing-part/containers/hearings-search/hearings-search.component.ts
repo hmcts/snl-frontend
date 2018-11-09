@@ -19,6 +19,8 @@ import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import { HearingService } from '../../../hearing/services/hearing.service';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 
 @Component({
     selector: 'app-hearings-search',
@@ -57,6 +59,10 @@ export class HearingsSearchComponent implements OnInit {
         this.referenceDataService.fetchHearingTypes().subscribe(hearingTypes => {this.hearingTypes = hearingTypes});
     }
 
+    onDelete(hearing: FilteredHearingViewmodel) {
+        this.openDeleteDialog(hearing);
+    }
+
     onAmend(hearingId: string) {
         let hearing = this.hearingService.getForAmendment(hearingId);
         let hearingNotes = this.notesService.getByEntities([hearingId]);
@@ -91,6 +97,39 @@ export class HearingsSearchComponent implements OnInit {
         this.fetchHearings(filterValues, this.latestPaging)
     }
 
+    private openDeleteDialog(hearing: FilteredHearingViewmodel) {
+        this.dialog.open(DialogWithActionsComponent, {
+            data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
+        }).afterClosed().subscribe((confirmed) => {
+            this.afterDeleteClosed(confirmed, hearing)
+        })
+    }
+
+    private afterDeleteClosed(confirmed, hearing) {
+        if (confirmed) {
+            this.hearingPartModificationService.deleteHearing({
+                hearingId: hearing.id,
+                hearingVersion: hearing.version,
+                userTransactionId: undefined
+            });
+
+            this.openTransactionDialog().afterClosed().subscribe((success) => {
+                this.fetchHearings(this.latestFilters, this.latestPaging);
+
+                if (success) {
+                    this.hearingPartModificationService.removeFromState(hearing.id);
+                }
+            })
+        }
+    }
+
+    private openTransactionDialog() {
+        return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+                ...DEFAULT_DIALOG_CONFIG,
+            data: { actionTitle: 'Deleting hearing' }
+        });
+    }
+
     private fetchHearings(filterValues: HearingsFilters, pageEvent: PageEvent) {
         this.hearingService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
             .subscribe(hearings => {
@@ -111,7 +150,7 @@ export class HearingsSearchComponent implements OnInit {
 
     private openDialog(actionTitle: string, notes: NoteViewmodel[]) {
         this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
-            ...TransactionDialogComponent.DEFAULT_DIALOG_CONFIG,
+            ...DEFAULT_DIALOG_CONFIG,
             data: {actionTitle}
         }).afterClosed().subscribe((confirmed) => {
             if (confirmed) {

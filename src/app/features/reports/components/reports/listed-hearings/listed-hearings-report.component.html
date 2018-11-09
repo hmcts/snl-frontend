@@ -1,12 +1,12 @@
 <h2>Report (Scheduled Hearings)</h2>
 
-<mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+<mat-form-field class="date-picker-element">
   <input matInput [matDatepicker]="picker" [(ngModel)]="from" placeholder="From">
   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>
 
-<mat-form-field fxFlex="10%" fxFlexAlign="start start" class="date-picker-element">
+<mat-form-field class="date-picker-element">
   <input matInput [matDatepicker]="picker2" [(ngModel)]="to" placeholder="To">
   <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
   <mat-datepicker #picker2></mat-datepicker>

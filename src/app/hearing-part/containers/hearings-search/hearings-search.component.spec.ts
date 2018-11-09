@@ -1,6 +1,19 @@
 import { HearingsSearchComponent } from './hearings-search.component';
 import { Observable } from 'rxjs/Observable';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
+import * as moment from 'moment';
+import { Priority } from '../../models/priority-model';
+import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+
+const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+
+const openDialogMockObjConfirmed = {
+    afterClosed: (): Observable<boolean> => Observable.of(true)
+};
+const now = moment();
+const openDialogMockObjDeclined = {
+    afterClosed: (): Observable<boolean> => Observable.of(false)
+};
 
 let component: HearingsSearchComponent;
 let searchCriteriaService: any;
@@ -9,7 +22,6 @@ let referenceDataService: any;
 let hearingService: any;
 let hearingPartModificationService: any;
 let notesService: any;
-let dialog: any;
 let hearingFilters: HearingsFilters;
 let searchCriteriaServiceResult = undefined;
 let hearingPartServiceResult = {
@@ -17,7 +29,7 @@ let hearingPartServiceResult = {
     totalElements: 7
 };
 
-fdescribe('HearingsSearchComponent', () => {
+describe('HearingsSearchComponent', () => {
     beforeEach(() => {
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
@@ -32,13 +44,12 @@ fdescribe('HearingsSearchComponent', () => {
         hearingService = jasmine.createSpyObj('hearingService', ['seearchFilteredHearingViewmodels']);
         hearingService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
-        hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService', ['updateListingRequest']);
-        dialog = jasmine.createSpyObj('dialog', ['open']);
+        hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService', ['updateListingRequest', 'open', 'deleteHearing', 'removeFromState']);
         notesService = jasmine.createSpyObj('notesService', ['getByEntities']);
 
         component = new HearingsSearchComponent(hearingPartModificationService,
             hearingService,
-            dialog,
+            matDialogSpy,
             referenceDataService, judgeService, notesService, searchCriteriaService);
 
         hearingFilters = DEFAULT_HEARING_FILTERS;
@@ -85,4 +96,44 @@ fdescribe('HearingsSearchComponent', () => {
             })
         });
     });
+
+    describe('When delete hearing', () => {
+        const hearingModel = {
+            id: '123',
+            caseNumber: '123',
+            caseTitle: '213',
+            caseTypeCode: 'caseTypeCode',
+            caseTypeDescription: 'caseTypeDescription',
+            hearingTypeCode: 'hearingTypeCode',
+            hearingTypeDescription: 'hearingTypeDescription',
+            duration: moment.duration(12),
+            scheduleStart: now,
+            scheduleEnd: now,
+            reservedJudgeId: '123',
+            reservedJudgeName: 'judgeName',
+            communicationFacilitator: 'transaltor',
+            priority: Priority.Low,
+            version: 1,
+            listingDate: now,
+            isListed: true
+        } as FilteredHearingViewmodel;
+
+        it('declining on delete dialog should not call service method', () => {
+            matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
+
+            component.onDelete(hearingModel);
+
+            expect(hearingPartModificationService.deleteHearing).not.toHaveBeenCalled();
+            expect(matDialogSpy.open).toHaveBeenCalled();
+        })
+
+        it('accepting on delete dialog should call service method', () => {
+            matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
+
+            component.onDelete(hearingModel);
+
+            expect(hearingPartModificationService.deleteHearing).toHaveBeenCalled();
+            expect(matDialogSpy.open).toHaveBeenCalled();
+        })
+    })
 });
