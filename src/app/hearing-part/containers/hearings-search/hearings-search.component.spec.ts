@@ -6,7 +6,7 @@ let component: HearingsSearchComponent;
 let searchCriteriaService: any;
 let judgeService: any;
 let referenceDataService: any;
-let hearingPartService: any;
+let hearingService: any;
 let hearingPartModificationService: any;
 let notesService: any;
 let dialog: any;
@@ -17,7 +17,7 @@ let hearingPartServiceResult = {
     totalElements: 7
 };
 
-describe('HearingsSearchComponent', () => {
+fdescribe('HearingsSearchComponent', () => {
     beforeEach(() => {
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
@@ -29,15 +29,15 @@ describe('HearingsSearchComponent', () => {
         referenceDataService.fetchCaseTypes.and.returnValue(Observable.of([]));
         referenceDataService.fetchHearingTypes.and.returnValue(Observable.of([]));
 
-        hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
-        hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
+        hearingService = jasmine.createSpyObj('hearingService', ['seearchFilteredHearingViewmodels']);
+        hearingService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
         hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService', ['updateListingRequest']);
         dialog = jasmine.createSpyObj('dialog', ['open']);
         notesService = jasmine.createSpyObj('notesService', ['getByEntities']);
 
-        component = new HearingsSearchComponent(hearingPartService,
-            hearingPartModificationService,
+        component = new HearingsSearchComponent(hearingPartModificationService,
+            hearingService,
             dialog,
             referenceDataService, judgeService, notesService, searchCriteriaService);
 
@@ -58,7 +58,7 @@ describe('HearingsSearchComponent', () => {
         it('it should call for filtered hearings and update totalCount and hearings properties', () => {
             component.onFilter(hearingFilters);
 
-            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
+            expect(hearingService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
                     page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
@@ -76,7 +76,7 @@ describe('HearingsSearchComponent', () => {
             let customPageSize = 100;
             component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
 
-            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
+            expect(hearingService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
                 httpParams: {
                     size: customPageSize,
                     page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,

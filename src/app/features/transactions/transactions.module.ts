@@ -9,7 +9,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { TransactionEffects } from './effects/transaction.effects';
 import { AngularMaterialModule } from '../../../angular-material/angular-material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TransactionService } from './services/transaction.service';
 
 const COMPONENTS = [
     TransactionDialogComponent
@@ -25,7 +24,7 @@ const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [TransactionBackendService, TransactionService],
+  providers: [TransactionBackendService],
   entryComponents: [TransactionDialogComponent]
 })
 export class TransactionsModule { }

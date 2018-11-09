@@ -153,6 +153,7 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         reservedJudgeId: null,
         reservedJudgeName: null,
         isListed: true,
-        listingDate: null
+        listingDate: null,
+        personName: ''
     }
 }
