@@ -1,0 +1,6 @@
+<h2>Rules Engines Reload Statuses {{reloadStatusesError}}</h2>
+<div *ngFor="let reloadStatus of reloadStatuses">
+  <strong>{{reloadStatus.name}}</strong>
+  <p>started at {{formatDate(reloadStatus.reloadStatus.startedAt)}}</p>
+  <p>finished at {{formatDate(reloadStatus.reloadStatus.finishedAt)}}</p>
+</div>
