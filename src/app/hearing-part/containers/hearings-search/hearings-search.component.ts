@@ -55,8 +55,8 @@ export class HearingsSearchComponent implements OnInit {
 
     ngOnInit() {
         this.judgeService.fetch().subscribe(judges => {this.judges = judges});
-        this.referenceDataService.fetchCaseTypes().subscribe(caseTypes => {this.caseTypes = caseTypes});
-        this.referenceDataService.fetchHearingTypes().subscribe(hearingTypes => {this.hearingTypes = hearingTypes});
+        this.referenceDataService.getCaseTypes().subscribe(caseTypes => {this.caseTypes = caseTypes});
+        this.referenceDataService.getHearingTypes().subscribe(hearingTypes => {this.hearingTypes = hearingTypes});
     }
 
     onDelete(hearing: FilteredHearingViewmodel) {
