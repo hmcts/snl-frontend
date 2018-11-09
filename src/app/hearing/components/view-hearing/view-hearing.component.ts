@@ -42,7 +42,7 @@ export class ViewHearingComponent implements OnInit {
 
   ngOnInit() {
     this.hearingId = this.route.snapshot.paramMap.get('id');
-    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.OTHER_NOTE)
+    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE);
     this.hearingService.hearings
       .map(hearings => hearings.find(h => h.id === this.hearingId))
       .subscribe(hearing => this.hearing = hearing);
