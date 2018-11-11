@@ -20,6 +20,7 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ActivatedRoute } from '@angular/router';
+import { Note } from '../../../notes/models/note.model';
 
 @Component({
     selector: 'app-hearings-search',
@@ -52,39 +53,11 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.route.data.subscribe(data => {
-            this.judges = data.judges;
-            this.hearingTypes = data.hearingTypes;
-            this.caseTypes = data.caseTypes;
+        this.route.data.subscribe(({judges, hearingTypes, caseTypes}) => {
+            this.judges = judges;
+            this.hearingTypes = hearingTypes;
+            this.caseTypes = caseTypes;
         });
-    }
-
-    onDelete(hearing: FilteredHearingViewmodel) {
-        this.openDeleteDialog(hearing);
-    }
-
-    onAmend(hearingId: string) {
-        let hearing = this.hearingService.getForAmendment(hearingId);
-        let hearingNotes = this.notesService.getByEntities([hearingId]);
-
-        forkJoin([hearing, hearingNotes]).pipe(mergeMap(results => {
-                return this.dialog.open(ListingUpdateDialogComponent, {
-                    data: {
-                        listing: {
-                            hearing: results[0],
-                            notes: results[1]
-                        },
-                        judges: this.judges,
-                        caseTypes: this.caseTypes
-                    }
-                }).afterClosed();
-            }),
-            filter(updatedListing => updatedListing !== undefined),
-            tap(updatedListing => {
-                this.hearingPartModificationService.updateListingRequest(updatedListing);
-                this.openDialog('Editing listing request', updatedListing.notes);
-            })
-        ).subscribe()
     }
 
     onNextPage(pageEvent: PageEvent) {
@@ -97,11 +70,43 @@ export class HearingsSearchComponent implements OnInit {
         this.fetchHearings(filterValues, this.latestPaging)
     }
 
+    onDelete(hearing: FilteredHearingViewmodel) {
+        this.openDeleteDialog(hearing);
+    }
+
+    onAmend(hearingId: string) {
+        let hearingSource = this.hearingService.getForAmendment(hearingId);
+        let hearingNotesSource = this.notesService.getByEntities([hearingId]);
+
+        forkJoin([hearingSource, hearingNotesSource]).pipe(mergeMap(([hearing, hearingNotes]) => {
+                return this.openAmendDialog(hearing, hearingNotes).afterClosed();
+            }),
+            filter(updatedListing => updatedListing !== undefined),
+            tap(updatedListing => {
+                this.hearingPartModificationService.updateListingRequest(updatedListing);
+                this.openDialog('Editing listing request', updatedListing.notes);
+            })
+        ).subscribe()
+    }
+
     private openDeleteDialog(hearing: FilteredHearingViewmodel) {
         this.dialog.open(DialogWithActionsComponent, {
             data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
         }).afterClosed().subscribe((confirmed) => {
             this.afterDeleteClosed(confirmed, hearing)
+        })
+    }
+
+    private openAmendDialog(hearing: FilteredHearingViewmodel, notes: Note[]) {
+        return this.dialog.open(ListingUpdateDialogComponent, {
+            data: {
+                listing: {
+                    hearing: hearing,
+                    notes: notes
+                },
+                judges: this.judges,
+                caseTypes: this.caseTypes
+            }
         })
     }
 
