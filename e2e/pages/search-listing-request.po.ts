@@ -21,7 +21,7 @@ export class SearchListingRequestPage {
 
     async isListingRequestDisplayed(...values: string[]): Promise<boolean> {
         let row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values);
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`);
 
         return await row.isDisplayed();
     }

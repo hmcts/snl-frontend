@@ -12,7 +12,7 @@ export class LoginFlow {
     private async goHome() {
         if (!this.loginPage.isPresent()) {
             await browser.get('/');
-            await browser.wait(ExpectedConditions.urlContains('/home/'), Wait.short)
+            await browser.wait(ExpectedConditions.urlContains('/home/calendar'), Wait.short)
                 .catch(() => Promise.resolve(false));
             Logger.log('Done waiting for homepage')
         }

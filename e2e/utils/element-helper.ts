@@ -24,7 +24,8 @@ export class ElementHelper {
   }
 
   async typeValue(htmlElement: ElementFinder, value: any): Promise<void> {
-    await this.clear(htmlElement);
+    await browser.wait(ExpectedConditions.elementToBeClickable(htmlElement));
+    await htmlElement.clear();
     await browser.wait(ExpectedConditions.elementToBeClickable(htmlElement));
     await htmlElement.sendKeys(value);
   }
