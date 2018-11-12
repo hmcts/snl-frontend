@@ -110,7 +110,7 @@ describe('Planner, check newly created sessions existence', () => {
 
         it('There should be at least two Session allocated to Second judge - prepare', async () => {
             resourceId = await plannerPage.getResourceIdByName(Judges.AMY_WESSOME);
-            const row = await plannerPage.getAllEventsForTheResource(resourceId)
+            const row = await plannerPage.getAllEventsForTheResource(resourceId);
             const foundEvents = row.length;
             expect(foundEvents).toBeGreaterThanOrEqual(2);
         });

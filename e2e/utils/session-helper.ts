@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 export class SessionHelper {
 
     public static generateSessionCreateJson(start: moment.Moment, sessionTypeCode: string,
-                                     personId: string = null, roomId: string = null) {
+                                            personId: string = null, roomId: string = null) {
         return {
             id: uuid(),
             userTransactionId: uuid(),

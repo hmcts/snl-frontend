@@ -1,4 +1,4 @@
-import { element, by, ExpectedConditions, browser } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 import { ElementHelper } from '../utils/element-helper';
 import { SessionAmendForm } from '../models/session-amend-form';
 import { Logger } from '../utils/logger';
@@ -20,7 +20,7 @@ export class SessionAmendDialog {
         await this.elementHelper.typeValue(this.durationInput, form.durationInMinutes);
         await this.elementHelper.selectValueFromSingleSelectOption(this.selectSessionTypeSelectOption, form.sessionTypeCode);
         await this.elementHelper.typeValue(this.noteInput, form.note);
-        Logger.log(`Clicking 'Amend' button by selector: ${this.createButton.locator()}`)
+        Logger.log(`Clicking 'Amend' button by selector: ${this.createButton.locator()}`);
         await this.createButton.click();
     }
 
@@ -29,15 +29,15 @@ export class SessionAmendDialog {
 
         await forEachSeries(await this.oldNotesTextAreas.getWebElements(), async (textArea) => {
             notes.push(await textArea.getAttribute('value'))
-        })
+        });
 
-        Logger.log('Displayed notes: ' + JSON.stringify(notes))
+        Logger.log('Displayed notes: ' + JSON.stringify(notes));
 
         return notes
     }
 
     async clickCancelButton() {
-        await this.cancelButton.click()
+        await this.cancelButton.click();
         await browser.wait(
             ExpectedConditions.invisibilityOf(this.cancelButton),
             Wait.normal,

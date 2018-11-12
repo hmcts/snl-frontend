@@ -1,12 +1,12 @@
 export enum Judges {
-  AMY_WESSOME = 'Amy Wessome',
-  DJ_COPE =     'DJ Cope',
-  DJ_CRONIN =   'DJ Cronin',
-  DJ_HOWELL =   'DJ Howell',
-  DJ_MICHAELS = 'DJ Michaels',
-  DJ_SMITH =    'DJ Smith',
-  DJ_WATSON =   'DJ Watson',
-  JUDGE_LINDA = 'Judge Linda'
+    AMY_WESSOME = 'Amy Wessome',
+    DJ_COPE = 'DJ Cope',
+    DJ_CRONIN = 'DJ Cronin',
+    DJ_HOWELL = 'DJ Howell',
+    DJ_MICHAELS = 'DJ Michaels',
+    DJ_SMITH = 'DJ Smith',
+    DJ_WATSON = 'DJ Watson',
+    JUDGE_LINDA = 'Judge Linda'
 }
 
 export const JudgesCodes: { [id: string]: string } = {

@@ -13,4 +13,3 @@ export enum CaseTypeCodes {
     K_SMALL_CLAIMS = 'K-Small Claims',
     NONE = ''
 }
-

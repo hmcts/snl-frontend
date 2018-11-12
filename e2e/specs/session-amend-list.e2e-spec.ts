@@ -82,7 +82,7 @@ describe('Go to search session', () => {
         let filterFormPostAmend = {
             ...filterFormValues,
             sessionType: SessionTypes.MTRACK_TRIAL_ONLY,
-        }
+        };
 
         await sessionAmendListPage.filterSession(filterFormPostAmend);
         expect(await sessionAmendListPage.isSessionDisplayed(sessionId)).toBeTruthy()

@@ -1,7 +1,7 @@
 import { TopMenu } from '../pages/top-menu.po';
 import { LoginPage } from '../pages/login.po';
 import { Credentials } from '../enums/credentials';
-import { ExpectedConditions, browser } from 'protractor';
+import { browser, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { Logger } from '../utils/logger';
 
@@ -26,7 +26,7 @@ export class LoginFlow {
     }
 
     async loginIfNeeded(): Promise<void> {
-        await this.goHome()
+        await this.goHome();
         const isLoginPageDisplayed = await this.loginPage.isPresent();
         if (isLoginPageDisplayed) {
             await this.login();
@@ -34,11 +34,11 @@ export class LoginFlow {
     }
 
     async logoutIfNeeded() {
-        await this.goHome()
+        await this.goHome();
         const isLoginPageDisplayed = await this.loginPage.isPresent();
         if (!isLoginPageDisplayed) {
-            await this.topMenu.clickOnLogoutButton()
-            await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL didn\'t appear')
+            await this.topMenu.clickOnLogoutButton();
+            await browser.wait(ExpectedConditions.urlContains('login'), Wait.normal, 'Login URL didn\'t appear');
             await this.loginPage.waitUntilLoaded()
         }
     }

@@ -24,10 +24,10 @@ export class ProblemsPage {
 
     async getNumberOfProblems() {
         Logger.log(`Getting number of problem from paginator element`);
-        const paginatorRangeElement = element(by.className('mat-paginator-range-label'))
-        await browser.wait(ExpectedConditions.visibilityOf(paginatorRangeElement), Wait.normal)
-        const paginationRangeText = await paginatorRangeElement.getText()
-        const totalNumberOfProblems = paginationRangeText.split('of').pop().trim()
+        const paginatorRangeElement = element(by.className('mat-paginator-range-label'));
+        await browser.wait(ExpectedConditions.visibilityOf(paginatorRangeElement), Wait.normal);
+        const paginationRangeText = await paginatorRangeElement.getText();
+        const totalNumberOfProblems = paginationRangeText.split('of').pop().trim();
         Logger.log(`Number of problems in paginator: ${totalNumberOfProblems}`);
         return +totalNumberOfProblems
     }

@@ -1,9 +1,9 @@
 import { browser, by, element, ElementFinder, ExpectedConditions, WebElement } from 'protractor';
 import { Wait } from '../enums/wait';
-import moment = require('moment');
 import { Logger } from '../utils/logger';
 import { SessionDetailsDialogPage } from './session-details-dialog.po';
 import { filterSeries } from 'p-iteration';
+import moment = require('moment');
 
 export class PlannerPage {
     private sessionDetailsDialog = new SessionDetailsDialogPage();
@@ -47,7 +47,7 @@ export class PlannerPage {
     }
 
     async clickTodayButton() {
-        await browser.wait(ExpectedConditions.elementToBeClickable(this.todayButton))
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.todayButton));
         await this.todayButton.click();
         Logger.log('"Today" button clicked')
     }
@@ -55,7 +55,7 @@ export class PlannerPage {
     async openDayView() {
         // Due some reasons events in calendar aren't displayed until some action will be taken
         // workaround for it is to select already selected view mode (month/week/day/list)
-        await browser.wait(ExpectedConditions.elementToBeClickable(this.dayButton))
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.dayButton));
         await this.dayButton.click();
         await this.clickPrevButton();
         await this.clickNextButton();
@@ -74,11 +74,11 @@ export class PlannerPage {
             .all(by.tagName('tr')).getWebElements();
 
         const filteredTrs = await filterSeries(trs, async (tr) => {
-            const value = await tr.findElement(by.className('fc-cell-text')).getText()
+            const value = await tr.findElement(by.className('fc-cell-text')).getText();
             return value === nameToSearch;
         });
 
-        const dataResourceId = await filteredTrs[0].getAttribute('data-resource-id')
+        const dataResourceId = await filteredTrs[0].getAttribute('data-resource-id');
         Logger.log('"' + nameToSearch + '" resource id: ' + dataResourceId);
         return dataResourceId;
     }
@@ -89,7 +89,7 @@ export class PlannerPage {
             .all(by.tagName('tr')).getWebElements();
 
         const filteredTrs = await filterSeries(trs, async (tr) => {
-            const value = await tr.getAttribute('data-resource-id')
+            const value = await tr.getAttribute('data-resource-id');
             return value === resourceId;
         });
 
@@ -97,7 +97,7 @@ export class PlannerPage {
     }
 
     async getAllEventsForTheResource(resourceId: string): Promise<WebElement[]> {
-        const row = await this.getRowWithEventsByResource(resourceId)
+        const row = await this.getRowWithEventsByResource(resourceId);
         return await row.findElements(by.className('fc-title'))
     }
 

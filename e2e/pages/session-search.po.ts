@@ -1,7 +1,7 @@
-import { FilterSessionsComponentForm } from './../models/filter-sessions-component-form';
+import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { Judges } from '../enums/judges';
 import { Rooms } from '../enums/rooms';
-import { element, by, browser, ExpectedConditions, ElementFinder } from 'protractor';
+import { browser, by, element, ElementFinder, ExpectedConditions } from 'protractor';
 import { CaseTypes } from '../enums/case-types';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
@@ -24,7 +24,7 @@ export class SessionSearchPage {
     public assignButton = element(by.id('assign'));
 
     async clickAssignButton() {
-        await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible')
+        await browser.wait(ExpectedConditions.elementToBeClickable(this.assignButton), Wait.normal, 'Assign button not visible');
         await this.assignButton.click()
     }
 
@@ -40,7 +40,7 @@ export class SessionSearchPage {
 
     async selectSession(judge: Judges, date: string, time: string, room: Rooms, sessionType?: SessionTypes) {
         await this.selectCheckBoxInRowWithValues(this.sessionsTable, this.sessionsTablePaginator,
-          judge, date, time, room, sessionType)
+            judge, date, time, room, sessionType)
     }
 
     async changeMaxItemsPerPage(value: string): Promise<any> {
@@ -48,16 +48,16 @@ export class SessionSearchPage {
             await prom;
             const selectOption = el.element(by.css('mat-select'));
             await browser.executeScript('arguments[0].scrollIntoView();', selectOption.getWebElement());
-            await browser.wait(ExpectedConditions.elementToBeClickable(selectOption))
+            await browser.wait(ExpectedConditions.elementToBeClickable(selectOption));
             await selectOption.click();
             await browser.waitForAngular();
-            const selectOpt = element(by.cssContainingText('.mat-option-text', value))
+            const selectOpt = element(by.cssContainingText('.mat-option-text', value));
             await browser.wait(
                 ExpectedConditions.elementToBeClickable(selectOpt),
                 Wait.normal,
                 `Option with text: ${value} is not clickable`
-            )
-            await selectOpt.click()
+            );
+            await selectOpt.click();
             return await browser.wait(
                 ExpectedConditions.invisibilityOf(selectOpt),
                 Wait.normal,
@@ -67,21 +67,21 @@ export class SessionSearchPage {
     }
 
     async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes, hearingType: HearingTypes,
-        targetScheduleFrom: string, targetScheduleTo: string) {
+                               targetScheduleFrom: string, targetScheduleTo: string) {
         await this.selectCheckBoxInRowWithValues(this.listingRequestsTable, this.listingRequestsTablePaginator,
             caseNumber, caseTitle, caseType, hearingType, targetScheduleFrom, targetScheduleTo)
     }
 
     async isListingRequestDisplayed(...values: string[]): Promise<boolean> {
-      let row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values);
-      await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+        let row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values);
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`);
 
-      return await row.isDisplayed()
+        return await row.isDisplayed()
     }
 
     async editListingRequestWithValues(...values: string[]): Promise<void> {
-        const row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values)
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+        const row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values);
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`);
 
         await row.element(by.cssContainingText('.clickable', 'Edit')).click()
     }
@@ -89,16 +89,16 @@ export class SessionSearchPage {
     async checkIfHasNote(expectedNoteId, expectedNoteValue, ...values: string[]): Promise<boolean> {
         Logger.log(`Checking if note exists. May fail when multiple notes of given id (${expectedNoteId}) are found`);
 
-        const row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values)
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`)
+        const row = await this.listingRequestsTable.rowThatContainsAtAnyPage(this.listingRequestsTablePaginator, ...values);
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Listing request with values: ${values} is not visible`);
 
         Logger.log('Clicking the notes indicator (By looking for the: \'Yes\' button)');
-        await row.element(by.cssContainingText('.clickable', 'Yes')).click()
+        await row.element(by.cssContainingText('.clickable', 'Yes')).click();
 
         let foundNotes: ElementFinder[] = await element(by.id('notesDialog'))
             .all(by.css('app-note'))
             .all(by.id(expectedNoteId))
-            .all(by.id('note-textarea'))
+            .all(by.id('note-textarea'));
 
         let foundNotesCount = await foundNotes.length;
         Logger.log(`Count of notes found for given id: ${foundNotesCount}`);
@@ -119,8 +119,8 @@ export class SessionSearchPage {
     }
 
     private async selectCheckBoxInRowWithValues(table: Table, paginator: Paginator, ...values: string[]) {
-        let row = await table.rowThatContainsAtAnyPage(paginator, ...values)
-        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`)
+        let row = await table.rowThatContainsAtAnyPage(paginator, ...values);
+        await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`);
         await row.element(by.css('mat-checkbox')).click()
     }
 

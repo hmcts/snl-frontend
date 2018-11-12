@@ -6,93 +6,95 @@ import { ListingCreationPage } from '../pages/listing-creation.po';
 import * as moment from 'moment';
 import { ListingCreationForm } from '../models/listing-creation-form';
 import { TransactionDialogPage } from '../pages/transaction-dialog.po';
-import { API }from '../utils/api';
+import { API } from '../utils/api';
 import { waitFor } from '../utils/wait-for';
 import { Wait } from '../enums/wait';
 
 const loginFlow: LoginFlow = new LoginFlow();
 const navigationFlow: NavigationFlow = new NavigationFlow();
 const listingCreationPage = new ListingCreationPage();
-const transactionDialogPage = new TransactionDialogPage()
+const transactionDialogPage = new TransactionDialogPage();
 let numberOfHearingParts: number;
 
-const todayDate = moment().format('DD/MM/YYYY')
-const tomorrowString = moment().add(1, 'day').format('DD/MM/YYYY')
+const problemText = 'Listing request target schedule to date is 4 weeks or '  +
+    'nearer from today and it has not been listed yet - Urgent';
+
+const todayDate = moment().format('DD/MM/YYYY');
+const tomorrowString = moment().add(1, 'day').format('DD/MM/YYYY');
 const formValues: ListingCreationForm = {
-  caseNumber: 'e2e case number' + moment().toISOString(),
-  caseTitle: 'e2e case title' + moment().toISOString(),
-  caseType: CaseTypes.FTRACK,
-  hearingType: HearingTypes.TRIAL,
-  durationMinutes: 60,
-  durationDays: null,
-  numberOfSessions: 1,
-  multiSession: false,
-  fromDate: tomorrowString,
-  endDate: tomorrowString
+    caseNumber: 'e2e case number' + moment().toISOString(),
+    caseTitle: 'e2e case title' + moment().toISOString(),
+    caseType: CaseTypes.FTRACK,
+    hearingType: HearingTypes.TRIAL,
+    durationMinutes: 60,
+    durationDays: null,
+    numberOfSessions: 1,
+    multiSession: false,
+    fromDate: tomorrowString,
+    endDate: tomorrowString
 };
 
 describe('Create Listing Request', () => {
-  beforeAll(async () => {
-    await loginFlow.loginIfNeeded()
-  });
-  describe('Get number of hearing parts', () => {
-    it('should save count of listing request', async () => {
-      numberOfHearingParts = (await API.getHearingParts() as any[]).length
+    beforeAll(async () => {
+        await loginFlow.loginIfNeeded()
     });
-  });
-  describe('Go to create hearing page', () => {
-    it('created hearing page should be visible', async () => {
-      await navigationFlow.goToNewListingRequestPage()
+    describe('Get number of hearing parts', () => {
+        it('should save count of listing request', async () => {
+            numberOfHearingParts = (await API.getHearingParts() as any[]).length
+        });
     });
-  });
-  describe('Fill in a form, set start & end dates for tomorrow', () => {
-    it('popup with problems should appear', async () => {
-      await listingCreationPage.createListingRequest(formValues)
-      const problemText = 'Listing request target schedule to date is 4 weeks or nearer from today and it has not been listed yet - Urgent'
-      const isProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(problemText)
-      expect(isProblemDisplayed).toBeTruthy()
+    describe('Go to create hearing page', () => {
+        it('created hearing page should be visible', async () => {
+            await navigationFlow.goToNewListingRequestPage()
+        });
     });
-    it('click rollback, new hearing part should not be created', async () => {
-      await transactionDialogPage.clickRollbackButton()
-      const isHearingPartCreatedWhenRollback = await waitFor(Wait.normal, async () => {
-        const numberOfHearingPartsAfterRollback = (await API.getHearingParts() as any[]).length
-        return numberOfHearingParts === numberOfHearingPartsAfterRollback
-    })
+    describe('Fill in a form, set start & end dates for tomorrow', () => {
+        it('popup with problems should appear', async () => {
+            await listingCreationPage.createListingRequest(formValues);
+            const isProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(problemText);
+            expect(isProblemDisplayed).toBeTruthy()
+        });
+        it('click rollback, new hearing part should not be created', async () => {
+            await transactionDialogPage.clickRollbackButton();
+            const isHearingPartCreatedWhenRollback = await waitFor(Wait.normal, async () => {
+                const numberOfHearingPartsAfterRollback = (await API.getHearingParts() as any[]).length;
+                return numberOfHearingParts === numberOfHearingPartsAfterRollback
+            });
 
-      expect(isHearingPartCreatedWhenRollback).toBeTruthy()
+            expect(isHearingPartCreatedWhenRollback).toBeTruthy()
+        });
     });
-  });
-  describe('change start date for today', () => {
-    it('click save, problem dialog should not appear', async () => {
-      formValues.fromDate = todayDate
-      formValues.endDate = todayDate
-      await listingCreationPage.createListingRequest(formValues)
-      expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
-      await transactionDialogPage.clickAcceptButton();
+    describe('change start date for today', () => {
+        it('click save, problem dialog should not appear', async () => {
+            formValues.fromDate = todayDate;
+            formValues.endDate = todayDate;
+            await listingCreationPage.createListingRequest(formValues);
+            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy();
+            await transactionDialogPage.clickAcceptButton();
+        });
+        it('newly created hearing part should be returned from API', async () => {
+            const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length;
+            expect(numberOfHearingParts + 1).toEqual(numberOfHearingPartsAfterAccept)
+        })
     });
-    it('newly created hearing part should be returned from API', async () => {
-      const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length
-      expect(numberOfHearingParts + 1).toEqual(numberOfHearingPartsAfterAccept)
-    })
-  });
-  describe('check listing type options', () => {
-      const numberOfSessionsToCreate = 5;
-      it('choose multi session and fill in the fields', async () => {
-          numberOfHearingParts = (await API.getHearingParts() as any[]).length;
-          const multiSessionFormValues = {
-              ...formValues,
-              durationMinutes: 0,
-              durationDays: 3,
-              numberOfSessions: 5,
-              multiSession: true
-          } as ListingCreationForm;
-          await listingCreationPage.createListingRequest(multiSessionFormValues)
-          expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
-          await transactionDialogPage.clickAcceptButton();
-      });
-      it('newly created hearing part should be returned from API', async () => {
-          const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length
-          expect(numberOfHearingParts + numberOfSessionsToCreate).toEqual(numberOfHearingPartsAfterAccept)
-      })
-  });
+    describe('check listing type options', () => {
+        const numberOfSessionsToCreate = 5;
+        it('choose multi session and fill in the fields', async () => {
+            numberOfHearingParts = (await API.getHearingParts() as any[]).length;
+            const multiSessionFormValues = {
+                ...formValues,
+                durationMinutes: 0,
+                durationDays: 3,
+                numberOfSessions: 5,
+                multiSession: true
+            } as ListingCreationForm;
+            await listingCreationPage.createListingRequest(multiSessionFormValues);
+            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy();
+            await transactionDialogPage.clickAcceptButton();
+        });
+        it('newly created hearing part should be returned from API', async () => {
+            const numberOfHearingPartsAfterAccept = (await API.getHearingParts() as any[]).length;
+            expect(numberOfHearingParts + numberOfSessionsToCreate).toEqual(numberOfHearingPartsAfterAccept)
+        })
+    });
 });

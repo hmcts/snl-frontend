@@ -1,6 +1,6 @@
 import { ListingCreationPage } from './listing-creation.po';
 import { SessionCreationPage } from './session-creation.po';
-import { element, by, browser, ExpectedConditions } from 'protractor';
+import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { SessionSearchPage } from './session-search.po';
 import { SessionAmendListPage } from './session-amend-list.po';
@@ -14,11 +14,11 @@ export class TopMenu {
     private listingsButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Listings');
     private calendarButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Calendar');
     private problemsButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Problems'));
-    private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'))
+    private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'));
     private plannerButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Planner'));
-    private sessionCreatePage = new SessionCreationPage()
-    private sessionSearchPage = new SessionSearchPage()
-    private listingCreatePage = new ListingCreationPage()
+    private sessionCreatePage = new SessionCreationPage();
+    private sessionSearchPage = new SessionSearchPage();
+    private listingCreatePage = new ListingCreationPage();
     private searchListingRequestPage = new SearchListingRequestPage();
     private sessionAmendListPage = new SessionAmendListPage();
     private problemsPage = new ProblemsPage();

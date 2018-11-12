@@ -7,12 +7,12 @@ import * as URL from '../e2e-url.js'
 const rp = (URL.proxy) ? requestPromise.defaults({proxy: URL.proxy, strictSSL: false}) : requestPromise;
 const apiURL = (process.env.TEST_URL) ? 'http://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
 
-console.log('API URL: ' + apiURL)
+console.log('API URL: ' + apiURL);
 
 export class API {
     private static baseUrl = apiURL;
-    private static applicationJSONHeader = {'Content-Type': 'application/json'}
-    private static headers = {'Authorization': '', ...API.applicationJSONHeader}
+    private static applicationJSONHeader = {'Content-Type': 'application/json'};
+    private static headers = {'Authorization': '', ...API.applicationJSONHeader};
 
     static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
@@ -22,9 +22,9 @@ export class API {
             body: JSON.stringify(body),
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        await API.commitUserTransaction(body)
+        };
+        const response = await rp(options);
+        await API.commitUserTransaction(body);
 
         return response.statusCode;
     }
@@ -37,9 +37,9 @@ export class API {
             body: JSON.stringify(body),
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        await API.commitUserTransaction(body)
+        };
+        const response = await rp(options);
+        await API.commitUserTransaction(body);
 
         return response.statusCode;
     }
@@ -51,9 +51,9 @@ export class API {
             uri: `${API.baseUrl}/problems`,
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        };
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         return responseBody;
     }
 
@@ -64,10 +64,9 @@ export class API {
             uri: `${API.baseUrl}/hearing-part`,
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
-        return responseBody;
+        };
+        const response = await rp(options);
+        return JSON.parse(response.body);
     }
 
     private static async login() {
@@ -82,8 +81,8 @@ export class API {
             resolveWithFullResponse: true,
         };
 
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
     }
 
@@ -94,7 +93,7 @@ export class API {
             body: body,
             headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
             json: true // Automatically stringifies the body to JSON
-        }
+        };
         await rp(commitUserTransactionOptions)
     }
 }

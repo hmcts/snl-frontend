@@ -13,7 +13,7 @@ import { Wait } from '../enums/wait';
 
 const navigationFlow = new NavigationFlow();
 const loginFlow = new LoginFlow();
-const problemsPage = new ProblemsPage()
+const problemsPage = new ProblemsPage();
 
 const in5Minutes = moment().add(5, 'minute');
 
@@ -30,21 +30,13 @@ const sessionCreate: SessionCreate = {
 let numberOfProblems: number;
 let problemsBeforeAction;
 let newProblems;
-const numberOfExpectedProblems = 3 // because, Room & judge not set + is listed less than 50%
+const numberOfExpectedProblems = 3; // because, Room & judge not set + is listed less than 50%
 
 const displayValuesFromProblems = (problems: any[]): string[][] => {
     return problems.map((problem) => {
-        const createdAt = moment(problem.createdAt).format('DD/MM/YYYY HH:mm')
+        const createdAt = moment(problem.createdAt).format('DD/MM/YYYY HH:mm');
         return [problem.severity, createdAt, problem.message]
     })
-}
-
-export function getConsole () {
-    return ;
-};
-
-export function printConsole () {
-    return getConsole
 };
 
 describe('Problem list tests', () => {
@@ -55,37 +47,37 @@ describe('Problem list tests', () => {
         });
 
         it('Remember number of problems', async () => {
-            problemsBeforeAction = (await API.getProblems()) as any[]
-            numberOfProblems = await problemsPage.getNumberOfProblems()
+            problemsBeforeAction = (await API.getProblems()) as any[];
+            numberOfProblems = await problemsPage.getNumberOfProblems();
             expect(numberOfProblems).toEqual(problemsBeforeAction.length)
         });
 
         it('create session via API for now, it should return 200 and create problems', async () => {
-            const statusCode = await API.createSession(sessionCreate)
+            const statusCode = await API.createSession(sessionCreate);
             expect(statusCode).toEqual(200)
         });
 
         it('wait until new problems will be generated', async () => {
             const result = await waitFor(Wait.normal, async () => {
-                const alreadyKnownIds = problemsBeforeAction.map(problem => problem.id)
-                const problems = (await API.getProblems()) as any[]
+                const alreadyKnownIds = problemsBeforeAction.map(problem => problem.id);
+                const problems = (await API.getProblems()) as any[];
                 newProblems = problems.filter(x => !alreadyKnownIds.includes(x.id));
                 return newProblems.length === numberOfExpectedProblems
-            })
+            });
 
             expect(result).toBeTruthy('New problems has not been returned from API yet')
         });
 
         it('Refresh page, new problems should be visible in table', async () => {
             await protractor.browser.refresh();
-            await browser.waitForAngular()
+            await browser.waitForAngular();
             await navigationFlow.goToProblemsPage();
-            const numberOfProblemsAfterSessionCreation = await problemsPage.getNumberOfProblems()
+            const numberOfProblemsAfterSessionCreation = await problemsPage.getNumberOfProblems();
 
             await forEachSeries(displayValuesFromProblems(newProblems), async (problemValues) => {
-                const areProblemsDisplayed = await problemsPage.isProblemDisplayed(problemValues)
+                const areProblemsDisplayed = await problemsPage.isProblemDisplayed(problemValues);
                 expect(areProblemsDisplayed).toBeTruthy()
-            })
+            });
 
             expect(numberOfProblems + numberOfExpectedProblems).toEqual(numberOfProblemsAfterSessionCreation)
         });
