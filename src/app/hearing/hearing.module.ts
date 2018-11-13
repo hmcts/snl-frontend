@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { HearingService } from './services/hearing.service';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CoreModule } from '../core/core.module';
 
 const COMPONENTS = [
   ViewHearingComponent
@@ -15,7 +16,8 @@ const COMPONENTS = [
     CommonModule,
     AngularMaterialModule,
     FlexLayoutModule,
-    FormsModule
+    FormsModule,
+    CoreModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

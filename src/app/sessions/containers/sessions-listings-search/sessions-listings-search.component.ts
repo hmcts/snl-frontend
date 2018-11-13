@@ -61,7 +61,8 @@ export class SessionsListingsSearchComponent implements OnInit {
     sessionTypes$: Observable<SessionType[]>;
     filteredSessions: SessionViewModel[];
     errorMessage: string;
-    numberOfSessionsNeeded = 0;
+    numberOfSessions = 1;
+    multiSession = false;
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
@@ -108,7 +109,8 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     selectHearing(hearing: HearingViewmodel) {
         this.selectedHearing = hearing;
-        this.numberOfSessionsNeeded = hearing !== undefined ? hearing.numberOfSessionsNeeded : 0;
+        this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
+        this.multiSession = this.selectedHearing !== undefined ? this.selectedHearing.multiSession : false;
     }
 
     selectSession(sessions: SessionViewModel[]) {
@@ -141,7 +143,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         if (this.selectedHearing === undefined) {
             this.errorMessage = '';
             return false;
-        } else if (this.numberOfSessionsNeeded === this.selectedSessions.length) {
+        } else if (this.numberOfSessions === this.selectedSessions.length) {
             this.errorMessage = '';
             return this.checkIfOnlyOneJudgeSelected();
         } else {
@@ -179,7 +181,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     private checkIfOnlyOneJudgeSelected() {
-        if (this.selectedHearing.numberOfSessionsNeeded === 1) {
+        if (!this.selectedHearing.multiSession) {
             this.errorMessage = '';
             return true;
         } else if (!this.selectedSessions.every((val, i, arr) =>

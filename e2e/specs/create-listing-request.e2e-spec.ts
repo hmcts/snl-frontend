@@ -26,6 +26,7 @@ const formValues: ListingCreationForm = {
   durationMinutes: 60,
   durationDays: null,
   numberOfSessions: 1,
+  multiSession: false,
   fromDate: tomorrowString,
   endDate: tomorrowString
 };
@@ -52,7 +53,7 @@ describe('Create Listing Request', () => {
       expect(isProblemDisplayed).toBeTruthy()
     });
     it('click rollback, new hearing part should not be created', async () => {
-      transactionDialogPage.clickRollbackButton()
+      await transactionDialogPage.clickRollbackButton()
       const isHearingPartCreatedWhenRollback = await waitFor(Wait.normal, async () => {
         const numberOfHearingPartsAfterRollback = (await API.getHearingParts() as any[]).length
         return numberOfHearingParts === numberOfHearingPartsAfterRollback
@@ -82,7 +83,8 @@ describe('Create Listing Request', () => {
               ...formValues,
               durationMinutes: 0,
               durationDays: 3,
-              numberOfSessions: 5
+              numberOfSessions: 5,
+              multiSession: true
           } as ListingCreationForm;
           await listingCreationPage.createListingRequest(multiSessionFormValues)
           expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
