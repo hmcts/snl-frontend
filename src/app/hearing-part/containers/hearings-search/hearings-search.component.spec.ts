@@ -163,47 +163,44 @@ describe('HearingsSearchComponent', () => {
             notes: []
         };
 
-        it('the hearing and notes should be called', () => {
+        beforeEach(() => {
             hearingService.getForAmendment.and.returnValue(Observable.of(hearingModel));
             notesService.getByEntities.and.returnValue(Observable.of([]));
+        });
+
+        it('the hearing and notes should be fetched', () => {
             matDialogSpy.open.and.returnValue(openDialogMockObjUndefined);
 
             component.onAmend(hearingModel.id);
 
             expect(hearingService.getForAmendment).toHaveBeenCalledWith(hearingModel.id);
             expect(notesService.getByEntities).toHaveBeenCalledWith([hearingModel.id])
-        })
+        });
 
         it('update of listing is not made when dialog returns undefined', () => {
-            hearingService.getForAmendment.and.returnValue(Observable.of(hearingModel));
-            notesService.getByEntities.and.returnValue(Observable.of([]));
             matDialogSpy.open.and.returnValue(openDialogMockObjUndefined);
 
             component.onAmend(hearingModel.id);
 
             expect(hearingPartModificationService.updateListingRequest).not.toHaveBeenCalled();
-        })
+        });
 
         it('update of listing is made when dialog returns a defined object', () => {
             const openDialogMockObj = {
                 afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of(updateHearingModel)
             };
-            hearingService.getForAmendment.and.returnValue(Observable.of(hearingModel));
-            notesService.getByEntities.and.returnValue(Observable.of([]));
             matDialogSpy.open.and.returnValue(openDialogMockObj);
 
             component.onAmend(hearingModel.id);
 
             expect(hearingPartModificationService.updateListingRequest).toHaveBeenCalledWith(updateHearingModel);
-        })
+        });
 
 
         it('when confirmed and notes are non zero-length then note service is called', () => {
             const openDialogMockObj = {
                 afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of({...updateHearingModel, notes: notes})
             };
-            hearingService.getForAmendment.and.returnValue(Observable.of(hearingModel));
-            notesService.getByEntities.and.returnValue(Observable.of([]));
             notesService.upsertManyNotes.and.returnValue(Observable.of([]));
             matDialogSpy.open.and.returnValues(openDialogMockObj, openDialogMockObjConfirmed);
 
