@@ -1,4 +1,4 @@
-import { LoginFlow } from './../e2e/flows/login.flow';
+import { LoginFlow } from '../e2e/flows/login.flow';
 import { browser } from 'protractor';
 import { LoginPage } from '../e2e/pages/login.po';
 

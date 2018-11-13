@@ -120,6 +120,7 @@ export class SessionSearchPage {
 
     private async selectCheckBoxInRowWithValues(table: Table, paginator: Paginator, ...values: string[]) {
         let row = await table.rowThatContainsAtAnyPage(paginator, ...values);
+        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Row with values: ${values} is not present`);
         await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`);
         await row.element(by.css('mat-checkbox')).click()
     }
