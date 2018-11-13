@@ -196,7 +196,6 @@ describe('HearingsSearchComponent', () => {
             expect(hearingPartModificationService.updateListingRequest).toHaveBeenCalledWith(updateHearingModel);
         });
 
-
         it('when confirmed and notes are non zero-length then note service is called', () => {
             const openDialogMockObj = {
                 afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of({...updateHearingModel, notes: notes})
