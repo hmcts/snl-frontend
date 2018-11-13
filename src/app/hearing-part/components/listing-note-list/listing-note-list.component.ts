@@ -27,7 +27,7 @@ export class ListingNoteListComponent {
 
     this.specialNoteViewModels = [
         this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.SPECIAL_REQUIREMENTS),
-        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.FACILITY_REQUIREMENTS)
+        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.FACILITY_REQUIREMENTS),
     ]
   }
 
@@ -51,7 +51,7 @@ export class ListingNoteListComponent {
   }
 
   protected disposeToProperArrays = (n: NoteViewmodel) => {
-      if (n.type === NoteType.OTHER_NOTE) {
+      if (n.type === NoteType.OTHER_NOTE || n.type === NoteType.LISTING_NOTE) {
           this.oldNoteViewModels.push(n);
       } else {
           this.specialNoteViewModels.push(n);

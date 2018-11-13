@@ -9,11 +9,7 @@ export class BaseResolver {
 
     getOrFetchData(dataFetchingFunction: () => Observable<any[]>, dataGettingFunction: () => Observable<any[]>): Observable<any[]> {
         return dataGettingFunction().pipe(mergeMap(data => {
-            if (data.length !== 0) {
-                return Observable.of(data);
-            } else {
-                return dataFetchingFunction();
-            }
+            return data.length !== 0 ? Observable.of(data) : dataFetchingFunction();
         }), take(1))
     }
 }
