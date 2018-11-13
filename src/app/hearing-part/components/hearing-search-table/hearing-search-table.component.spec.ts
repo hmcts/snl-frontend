@@ -1,17 +1,15 @@
 import { HearingSearchTableComponent } from './hearing-search-table.component';
-import { MatDialog, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
-import { HearingModificationService } from '../../services/hearing-modification.service';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { Observable } from 'rxjs/Observable';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
-let hpms: HearingModificationService;
 let component: HearingSearchTableComponent;
 let displayedColumnsExpectedValues;
 let sampleHearingPart;
@@ -52,7 +50,6 @@ describe('HearingSearchTableComponent', () => {
     component.paginator = {
         page: Observable.of({})
     } as MatPaginator;
-    hpms = jasmine.createSpyObj('hearingPartModificationService', ['deleteHearing']);
     component.hearings = [generateHearing('123')];
   });
 
