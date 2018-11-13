@@ -42,7 +42,7 @@ export class ViewHearingComponent implements OnInit {
 
   ngOnInit() {
     this.hearingId = this.route.snapshot.paramMap.get('id');
-    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE);
+    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     this.hearingService.hearings
       .map(hearings => hearings.find(h => h.id === this.hearingId))
       .subscribe(hearing => this.hearing = hearing);
@@ -141,7 +141,7 @@ export class ViewHearingComponent implements OnInit {
     const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
     this.notesService.upsertMany(preparedNote).subscribe(data => {
       this.fetchHearing();
-      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE);
+      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     });
   }
 }

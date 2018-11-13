@@ -2,13 +2,13 @@ import { NoteViewmodel } from '../models/note.viewmodel';
 import { NoteType } from '../models/note-type';
 
 export class NoteConfiguration {
-    public getOrCreateNote(notes: NoteViewmodel[], ofType: NoteType) {
+    public getOrCreateNote(notes: NoteViewmodel[], ofType: NoteType, inputLabel: string = undefined) {
         const note = notes.find(n => n.type === ofType)
-        return note || this.noteViewModelOf(ofType)
+        return note || this.noteViewModelOf(ofType, inputLabel)
     }
 
-    public noteViewModelOf(noteType: NoteType) {
-        return this.noteViewModel(noteType)
+    public noteViewModelOf(noteType: NoteType, inputLabel: string = undefined) {
+        return this.noteViewModel(noteType, inputLabel)
     }
 
     private noteViewModel(type: NoteType, inputLabel: string = undefined): NoteViewmodel {
