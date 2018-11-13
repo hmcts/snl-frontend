@@ -13,18 +13,12 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
 
 # Table of Contents
 
-* [Getting Started](#getting-started)
-    * [Prerequisites](#prerequisites)
-    * [Install dependencies](#install-dependencies)
-    * [Running](#running)
-    * [Testing](#testing)
-    * [Production](#production)
-    * [Documentation](#documentation)
-* [Seed](#seed)
-* [Roadmap](#roadmap)
-* [Environments](#environments)
-
-# Getting Started
+ * [Prerequisites](#prerequisites)
+ * [Install dependencies](#install-dependencies)
+ * [Running](#running)
+ * [Testing](#testing)
+ * [Production](#production)
+ * [Documentation](#documentation)
 
 ## Prerequisites
 
@@ -33,14 +27,6 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
 * [Docker](https://www.docker.com)
 
 You can use NVM (Node Version Manager) to get proper Node version
-
-### Environment variables
-
-The following environment variables are required:
-
-| Name | Description |
-|------|-------------|
-| SNL_API_URL | URL for SNL api. `http://localhost:3451` for local development |
 
 ## Install dependencies
 
