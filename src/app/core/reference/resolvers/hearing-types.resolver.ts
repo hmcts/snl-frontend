@@ -13,6 +13,6 @@ export class HearingTypesResolver extends BaseResolver implements Resolve<Hearin
     }
 
     resolve(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<HearingType[]> {
-        return super.getOrFetchData(() => this.rds.fetchHearingTypes(),() => this.rds.getHearingTypes());
+        return super.getOrFetchData(() => this.rds.fetchHearingTypes(), () => this.rds.getHearingTypes());
     }
 }

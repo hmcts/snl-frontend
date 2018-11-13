@@ -2,7 +2,7 @@ import { BaseResolver } from './base.resolver';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 
-fdescribe('BaseResolver', () => {
+describe('BaseResolver', () => {
     let resolver: BaseResolver;
 
     beforeEach(() => {

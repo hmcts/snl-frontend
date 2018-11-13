@@ -13,6 +13,6 @@ export class JudgesResolver extends BaseResolver implements Resolve<Judge[]> {
     }
 
     resolve(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Judge[]> {
-        return super.getOrFetchData(() => this.js.fetch(),() => this.js.get());
+        return super.getOrFetchData(() => this.js.fetch(), () => this.js.get());
     }
 }
