@@ -1,4 +1,6 @@
-An Angular front-end for Scheduling and listing.
+# Scheduling and listing Front-end
+
+[![Build Status](https://travis-ci.org/hmcts/snl-frontend.svg?branch=master)](https://travis-ci.org/hmcts/snl-frontend)
 
 ### Quick start
 
@@ -67,14 +69,20 @@ docker-compose up
 
 As a result, the SNL frontend app will be started and made available on port `3451`.
 
-## Testing
+## Testing and Preparing for Pull Requests
 
-### 1. Unit Tests
+Before creating a PR, ensure that all of the code styling checks and tests have been done locally (they will be caught on Jenkins if there are any discrepancies)
+
+### 1. Code Style
+
+* run: `yarn lint`
+
+### 2. Unit Tests
 
 * single run: `yarn test`
 * live mode (TDD style): `yarn test-watch`
 
-### 2. E2E Tests
+### 3. E2E Tests
 
 * single run: `yarn test:functional`
 
