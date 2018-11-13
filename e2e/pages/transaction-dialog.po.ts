@@ -14,7 +14,8 @@ export class TransactionDialogPage {
 
     async clickAcceptButton(): Promise<any> {
         const acceptButton = element(by.id('okButton'));
-        return await this.clickDialogButton(acceptButton, 'Accept')
+        await this.clickDialogButton(acceptButton, 'Accept');
+        return await browser.wait(ExpectedConditions.invisibilityOf(this.parentElement))
     }
 
     async clickRollbackButton(): Promise<any> {
