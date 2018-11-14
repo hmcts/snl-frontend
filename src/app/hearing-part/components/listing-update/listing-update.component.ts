@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { isMultiSessionListing, ListingRequestViewmodel } from '../../models/listing-create';
+import { ListingRequestViewmodel } from '../../models/listing-create';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
@@ -32,7 +32,7 @@ export class ListingRequestEditComponent {
     @Input() set data(value: ListingRequestViewmodel) {
         this.listing = value;
 
-        if (this.listing.hearing.duration.asHours() >= 24) {
+        if (this.listing.hearing.multiSession) {
             this.chosenListingType = ListingTypeTab.Multi;
         } else {
             this.chosenListingType = ListingTypeTab.Single
@@ -118,7 +118,7 @@ export class ListingRequestEditComponent {
     }
 
     isMultiSession(): boolean {
-        return isMultiSessionListing(this.listing);
+        return this.listing.hearing.multiSession;
     }
 
     parseDate(date) {
