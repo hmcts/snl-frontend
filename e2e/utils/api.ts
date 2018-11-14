@@ -69,6 +69,16 @@ export class API {
         return JSON.parse(response.body);
     }
 
+    static async healthCheck() {
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/health`,
+            resolveWithFullResponse: true
+        };
+        const response = await rp(options);
+        return response.body;
+    }
+
     private static async login() {
         const options = {
             method: 'POST',
