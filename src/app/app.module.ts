@@ -23,7 +23,6 @@ import { JudgesModule } from './judges/judges.module';
 import { environment } from '../environments/environment';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HearingPartModule } from './hearing-part/hearing-part.module';
-import { PocComponent } from './admin/components/poc/poc.component';
 import { AdminModule } from './admin/admin.module';
 import * as moment from 'moment';
 import { ProblemsModule } from './problems/problems.module';
@@ -56,8 +55,7 @@ export class XhrInterceptor implements HttpInterceptor {
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent,
-        PocComponent
+        HomeComponent
     ],
     imports: [
         BrowserModule.withServerTransition({appId: 'snl-frontend'}),
