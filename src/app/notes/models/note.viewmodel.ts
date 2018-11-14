@@ -6,6 +6,8 @@ export interface NoteViewmodel extends Note {
     inputLabel: string,
 }
 
+export const DEFAULT_NOTE_DATE_FORMAT = 'DD/MM/YYYY hh:mm';
+
 export function getNoteViewModel(note: Note): NoteViewmodel {
     return {
         id: note.id,
@@ -15,7 +17,7 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         entityId: note.entityId,
         entityType: note.entityType,
         inputLabel: note.type,
-        createdAt: moment(note.createdAt).format('DD/MM/YYYY hh:mm'),
+        createdAt: moment(note.createdAt).format(DEFAULT_NOTE_DATE_FORMAT),
         modifiedBy: note.modifiedBy,
     }
 }
