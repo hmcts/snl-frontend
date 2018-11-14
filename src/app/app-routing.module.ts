@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './security/guards/auth.guard';
 import { HomeComponent } from './core/home/home.component';
 import { ListingCreateComponent } from './hearing-part/components/listing-create/listing-create.component';
-import { PocComponent } from './admin/components/poc/poc.component';
 import { CalendarContainerComponent } from './core/callendar/containers/calendar-container.component';
 import { ProblemsPageComponent } from './problems/containers/problems/problems-page.component';
 import { PlannerComponent } from './planner/containers/planner.component';
@@ -12,6 +11,7 @@ import { SessionsListingsSearchComponent } from './sessions/containers/sessions-
 import { HearingsSearchComponent } from './hearing-part/containers/hearings-search/hearings-search.component';
 import { ViewHearingComponent } from './hearing/components/view-hearing/view-hearing.component';
 import { StatusConfigResolver } from './core/reference/resolvers/status-config.resolver';
+import { RulesEngineStatusComponent } from './admin/components/rules-engine-status/rules-engine-status.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -24,7 +24,7 @@ const routes: Routes = [
             {path: 'sessions', loadChildren: 'app/sessions/session.module#SessionModule', canActivate: [AppConfigGuard]},
             {path: 'judge', loadChildren: 'app/judges/judges.module#JudgesModule', canActivate: [AppConfigGuard, AuthGuard]},
             {path: 'listing', component: ListingCreateComponent, canActivate: [AppConfigGuard]},
-            {path: 'poc', component: PocComponent, canActivate: [AppConfigGuard]},
+            {path: 'rules', component: RulesEngineStatusComponent, canActivate: [AppConfigGuard]},
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
             {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard]},
@@ -34,7 +34,7 @@ const routes: Routes = [
         canActivate: [AuthGuard], resolve: { statusConfig: StatusConfigResolver }
     },
     {
-        path: 'poc', component: PocComponent,
+        path: 'rules', component: RulesEngineStatusComponent,
         canActivate: [AuthGuard]
     },
     {path: 'auth', loadChildren: 'app/security/security.module#SecurityModule', canActivate: [AppConfigGuard]},
