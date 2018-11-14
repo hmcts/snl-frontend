@@ -1,6 +1,7 @@
-import { NotesPopulatorService, NoteType } from './notes-populator.service';
+import { NotesPopulatorService } from './notes-populator.service';
 import { NotesService } from './notes.service';
 import { Observable } from 'rxjs/Observable';
+import { NoteType } from '../models/note-type';
 
 let service: NotesPopulatorService;
 
@@ -25,28 +26,28 @@ describe('NotesPopulatorService', () => {
             {
               entityId: PARENT_ENTITY_ID,
               content: PARENT_ENTITY_NOTE,
-              type: NoteType.OtherNote
+              type: NoteType.OTHER_NOTE
             },
             {
               entityId: PARENT_ENTITY_ID,
               content: FACILITY_REQUIREMENTS_NOTE,
-              type: NoteType.FacilityRequirements
+              type: NoteType.FACILITY_REQUIREMENTS
             },
             {
               entityId: PARENT_ENTITY_ID,
               content: SPECIAL_REQUIREMENTS_NOTE,
-              type: NoteType.SpecialRequirements
+              type: NoteType.SPECIAL_REQUIREMENTS
             },
             {
               entityId: CHILD_ENTITY_ID,
               content: CHILD_ENTITY_NOTE,
-              type: NoteType.OtherNote
+              type: NoteType.OTHER_NOTE
             },
             // entity on
             {
               entityId: GRANDCHILD_ENTITY_ID,
               content: GRANDCHILD_ENTITY_NOTE,
-              type: NoteType.OtherNote
+              type: NoteType.OTHER_NOTE
             },
             // this note is not going to be populated as this type is not handled
             {
@@ -84,7 +85,7 @@ describe('NotesPopulatorService', () => {
         {
           entityId: PARENT_ENTITY_ID,
           content: PARENT_ENTITY_NOTE,
-          type: NoteType.OtherNote,
+          type: NoteType.OTHER_NOTE,
         }
       ],
       facilityRequirements: FACILITY_REQUIREMENTS_NOTE,
@@ -96,7 +97,7 @@ describe('NotesPopulatorService', () => {
             {
               entityId: CHILD_ENTITY_ID,
               content: CHILD_ENTITY_NOTE,
-              type: NoteType.OtherNote,
+              type: NoteType.OTHER_NOTE,
             }
           ],
         },
@@ -109,7 +110,7 @@ describe('NotesPopulatorService', () => {
                 {
                   entityId: GRANDCHILD_ENTITY_ID,
                   content: GRANDCHILD_ENTITY_NOTE,
-                  type: NoteType.OtherNote,
+                  type: NoteType.OTHER_NOTE,
                 }
               ],
             }
