@@ -1,21 +1,9 @@
-import { ElementFinder, Key, element, by, ElementArrayFinder, ExpectedConditions, browser } from 'protractor';
+import { ElementFinder, element, by, ElementArrayFinder, ExpectedConditions, browser } from 'protractor';
 import { Wait } from '../enums/wait';
 import { Logger } from './logger';
 import { promise as wdpromise } from 'selenium-webdriver'
 
 export class ElementHelper {
-  async clear(elem: ElementFinder, length?: number) {
-    Logger.log(`Clearing value of ${elem.locator()}`);
-    console.log(`Clearing value of ${elem.locator()}`);
-    const inputText = await elem.getAttribute('value');
-    length = length || inputText.length || 100;
-    let backspaceSeries = '';
-    for (let i = 0; i < length; i++) {
-      backspaceSeries += Key.BACK_SPACE;
-    }
-    await elem.sendKeys(backspaceSeries);
-  }
-
   async selectCheckbox(checkboxElement: ElementFinder, selected: boolean) {
     const isCheckboxSelected = await checkboxElement.isSelected();
     if (selected !== isCheckboxSelected) {
@@ -24,7 +12,7 @@ export class ElementHelper {
   }
 
   async typeValue(htmlElement: ElementFinder, value: any): Promise<void> {
-    await this.clear(htmlElement);
+    await htmlElement.clear();
     await browser.wait(ExpectedConditions.elementToBeClickable(htmlElement));
     await htmlElement.sendKeys(value);
   }
@@ -33,7 +21,7 @@ export class ElementHelper {
     Logger.log(`Inputting date into: ${dateInput.locator()} with value: ${JSON.stringify(date)}`)
     Logger.log(`Clicking date input control`)
     await dateInput.click();
-    await this.clear(dateInput);
+    await dateInput.clear();
     Logger.log(`Sending keys: ${date}`)
     return await dateInput.sendKeys(date);
   }
