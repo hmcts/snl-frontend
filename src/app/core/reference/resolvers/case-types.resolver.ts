@@ -13,6 +13,6 @@ export class CaseTypesResolver extends BaseResolver implements Resolve<CaseType[
     }
 
     resolve(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CaseType[]> {
-        return super.getOrFetchData(() => this.rds.fetchCaseTypes(), () => this.rds.getCaseTypes());
+        return this.getOrFetchData(() => this.rds.fetchCaseTypes(), () => this.rds.getCaseTypes());
     }
 }

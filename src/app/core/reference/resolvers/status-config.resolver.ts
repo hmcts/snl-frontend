@@ -16,7 +16,7 @@ export class StatusConfigResolver extends BaseResolver implements Resolve<Status
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<StatusConfigEntry[]> {
 
-        return super.getOrFetchData(() => this.statusConfigService.fetchStatusConfig(),
+        return this.getOrFetchData(() => this.statusConfigService.fetchStatusConfig(),
             () => Observable.of(this.statusConfigService.getStatusConfigEntries()));
     }
 }
