@@ -62,8 +62,7 @@ describe('ListingUpdateComponent', () => {
 
     it('save', () => {
         component.onSave = jasmine.createSpyObj('onSave', ['emit']);
-        component.notesComponent = jasmine.createSpyObj('notesComponent', ['prepareNotes']);
-        component.notesComponent.prepareNotes.and.returnValue([]);
+        spyOn(component.notesComponent, 'prepareNotes').and.returnValue([])
 
         component.save();
 
