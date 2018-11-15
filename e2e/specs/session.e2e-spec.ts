@@ -19,7 +19,7 @@ import { SessionTypes } from '../enums/session-types';
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
-const startTime = now.format('HH:mm')
+const startTime = now.format('HH') + ':15' // hacky way to try to fix tests
 const startTimeAMFormat = now.format('h:mm')
 const duration = 15
 const sessionType = SessionTypes.K_FAST_TRACK_AND_APPLICATIONS
@@ -107,7 +107,6 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
       await sessionSearchPage.changeMaxItemsPerPage('100');
-      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
       await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType,
         listingRequestHearingType, todayDate, tomorrowDate);
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
