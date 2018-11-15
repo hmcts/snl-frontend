@@ -16,23 +16,23 @@ import { browser } from 'protractor';
 import { SessionTypes } from '../enums/session-types';
 import { ListingCreationForm } from '../models/listing-creation-form';
 
-const duration = 15
-const sessionType = SessionTypes.K_FAST_TRACK_AND_APPLICATIONS
-const room = Rooms.COURT_4
-const judge = Judges.JUDGE_LINDA
-const caseTitle = 'e2e Test'
-const listingRequestCaseType = CaseTypes.K_SMALL_CLAIMS // must be other than sessionCaseType
+const duration = 15;
+const sessionType = SessionTypes.K_FAST_TRACK_AND_APPLICATIONS;
+const room = Rooms.COURT_4;
+const judge = Judges.JUDGE_LINDA;
+const caseTitle = 'e2e Test';
+const listingRequestCaseType = CaseTypes.K_SMALL_CLAIMS; // must be other than sessionCaseType
 const listingRequestHearingType = HearingTypes.K_ASAJ;
-const caseTypesInvalidMsg = 'Session of type ' + sessionType + ' is not suitable for this listing request'
+const caseTypesInvalidMsg = 'Session of type ' + sessionType + ' is not suitable for this listing request';
 
-const loginFlow = new LoginFlow()
-const navigationFlow = new NavigationFlow()
-const sessionCreationPage = new SessionCreationPage()
-const calendarPage = new CalendarPage()
-const transactionDialogPage = new TransactionDialogPage()
-const listingCreationPage = new ListingCreationPage()
-const sessionSearchPage = new SessionSearchPage()
-const sessionDetailsDialogPage = new SessionDetailsDialogPage()
+const loginFlow = new LoginFlow();
+const navigationFlow = new NavigationFlow();
+const sessionCreationPage = new SessionCreationPage();
+const calendarPage = new CalendarPage();
+const transactionDialogPage = new TransactionDialogPage();
+const listingCreationPage = new ListingCreationPage();
+const sessionSearchPage = new SessionSearchPage();
+const sessionDetailsDialogPage = new SessionDetailsDialogPage();
 let numberOfVisibleEvents: number;
 let startTimeAMFormat, caseNumber, listingHearingStartTime, todayDate, tomorrowDate, startTime = '';
 let formValues: FilterSessionsComponentForm;
@@ -40,13 +40,13 @@ let listingCreationForm: ListingCreationForm;
 
 describe('Create Session and Listing Request, assign them despite problem, check details into calendar', () => {
     beforeAll(async () => {
-        const now = moment()
-        todayDate = now.format('DD/MM/YYYY')
-        tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
-        startTime = now.format('HH:mm')
-        startTimeAMFormat = moment(startTime, 'HH:mm').format('h:mm')
-        listingHearingStartTime = now.format('HH:mm')
-        caseNumber = now.format('HH:mm DD.MM')
+        const now = moment();
+        todayDate = now.format('DD/MM/YYYY');
+        tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY');
+        startTime = now.format('HH:mm');
+        startTimeAMFormat = moment(startTime, 'HH:mm').format('h:mm');
+        listingHearingStartTime = now.format('HH:mm');
+        caseNumber = now.format('HH:mm DD.MM');
 
         listingCreationForm = {
             caseNumber,
@@ -83,25 +83,25 @@ describe('Create Session and Listing Request, assign them despite problem, check
     });
     describe('Remember number of visible events in calendar, Go to new session page and create session', () => {
         it('Transaction dialog should be displayed ', async () => {
-            numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents()
-            await navigationFlow.goToNewSessionPage()
-            await sessionCreationPage.createSession(todayDate, startTime, duration, sessionType, room, judge)
-            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
+            numberOfVisibleEvents = await calendarPage.getNumberOfVisibleEvents();
+            await navigationFlow.goToNewSessionPage();
+            await sessionCreationPage.createSession(todayDate, startTime, duration, sessionType, room, judge);
+            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy();
             await transactionDialogPage.clickAcceptButton()
         });
     });
     describe('Go back to calendar page ', () => {
         it('newly created session should be visible', async () => {
             await navigationFlow.goToCalendarPage();
-            const numberOfVisibleEventsAfterSessionCreation = await calendarPage.getNumberOfVisibleEvents()
+            const numberOfVisibleEventsAfterSessionCreation = await calendarPage.getNumberOfVisibleEvents();
             expect(numberOfVisibleEvents + 1).toEqual(numberOfVisibleEventsAfterSessionCreation)
         });
     });
     describe('Go to new listing request page, create listing with different case type', () => {
         it('newly created listing request should be visible', async () => {
-            await navigationFlow.goToNewListingRequestPage()
-            await listingCreationPage.createListingRequest(listingCreationForm)
-            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy()
+            await navigationFlow.goToNewListingRequestPage();
+            await listingCreationPage.createListingRequest(listingCreationForm);
+            expect(await transactionDialogPage.isActionCreationSummaryDisplayed()).toBeTruthy();
             await transactionDialogPage.clickAcceptButton();
         });
     });
@@ -120,20 +120,20 @@ describe('Create Session and Listing Request, assign them despite problem, check
         it('transaction dialog with problem that case types are different should be displayed', async () => {
             await sessionSearchPage.clickAssignButton();
             await sessionSearchPage.acceptAssignWithCurrentTime(listingHearingStartTime);
-            const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypesInvalidMsg)
-            expect(isCaseTypeProblemDisplayed).toBeTruthy()
+            const isCaseTypeProblemDisplayed = await transactionDialogPage.isProblemWithTextDisplayed(caseTypesInvalidMsg);
+            expect(isCaseTypeProblemDisplayed).toBeTruthy();
             await transactionDialogPage.clickAcceptButton();
         });
     });
     describe('Go to calendar, click on created session', () => {
         it('despite problem it should assign listing request to session and display its details', async () => {
-            await navigationFlow.goToCalendarPage()
+            await navigationFlow.goToCalendarPage();
             await browser.waitForAngular();
-            await calendarPage.clickOnEventWith(startTimeAMFormat)
+            await calendarPage.clickOnEventWith(startTimeAMFormat);
             const isDialogDisplayed = await sessionDetailsDialogPage.isDialogWithTextsDisplayed(
                 sessionType, judge, room, todayDate, startTime, caseTitle, listingRequestHearingType, caseNumber, listingHearingStartTime
             );
-            expect(isDialogDisplayed).toBeTruthy()
+            expect(isDialogDisplayed).toBeTruthy();
             await sessionDetailsDialogPage.close()
         });
     });
