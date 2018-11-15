@@ -39,6 +39,7 @@ export class SessionSearchPage {
     }
 
     async selectSession(judge: Judges, date: string, time: string, room: Rooms, sessionType?: SessionTypes) {
+        console.log('Select session step');
         await this.selectCheckBoxInRowWithValues(this.sessionsTable, this.sessionsTablePaginator,
           judge, date, time, room, sessionType)
     }
@@ -68,6 +69,7 @@ export class SessionSearchPage {
 
     async selectListingRequest(caseNumber: string, caseTitle: string, caseType: CaseTypes, hearingType: HearingTypes,
         targetScheduleFrom: string, targetScheduleTo: string) {
+        console.log('Select Listing Request step');
         await this.selectCheckBoxInRowWithValues(this.listingRequestsTable, this.listingRequestsTablePaginator,
             caseNumber, caseTitle, caseType, hearingType, targetScheduleFrom, targetScheduleTo)
     }
@@ -119,7 +121,7 @@ export class SessionSearchPage {
     }
 
     private async selectCheckBoxInRowWithValues(table: Table, paginator: Paginator, ...values: string[]) {
-        console.log(`DEBUG LOG! Looking for row with values: ${values}`)
+        console.log(`Looking for row with values: ${values}`)
         let row = await table.rowThatContainsAtAnyPage(paginator, ...values)
         await browser.wait(ExpectedConditions.visibilityOf(row), Wait.normal, `Row with values: ${values} is not visible`)
         await row.element(by.css('mat-checkbox')).click()

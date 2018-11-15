@@ -20,14 +20,14 @@ const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
 const tomorrowDate = now.add(1, 'day').format('DD/MM/YYYY')
 const startTime = now.format('HH:mm')
-const startTimeAMFormat = now.format('h:mm')
+const startTimeAMFormat = moment(startTime, 'HH:mm').format('h:mm')
 const duration = 15
 const sessionType = SessionTypes.K_FAST_TRACK_AND_APPLICATIONS
 const room = Rooms.COURT_4
 const judge = Judges.JUDGE_LINDA
 const caseNumber = now.format('HH:mm DD.MM')
 const caseTitle = 'e2e Test'
-const listingHearingStartTime = now.add('1', 'hours').format('HH:mm')
+const listingHearingStartTime = now.format('HH:mm')
 const listingRequestCaseType = CaseTypes.K_SMALL_CLAIMS // must be other than sessionCaseType
 const listingRequestHearingType = HearingTypes.K_ASAJ;
 const caseTypesInvalidMsg = 'Session of type ' + sessionType + ' is not suitable for this listing request'
@@ -107,9 +107,7 @@ describe('Create Session and Listing Request, assign them despite problem, check
       await navigationFlow.goToListHearingsPage();
       await sessionSearchPage.filterSession(formValues);
       await sessionSearchPage.changeMaxItemsPerPage('100');
-        console.log('!!!!!!!looking for and selecting session!!!!!!!!!!');
-        await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
-      console.log('!!!!!!!looking for and selecting listing request!!!!!!!!!!');
+      await sessionSearchPage.selectSession(judge, todayDate, startTime, room, sessionType);
       await sessionSearchPage.selectListingRequest(caseNumber, caseTitle, listingRequestCaseType,
         listingRequestHearingType, todayDate, tomorrowDate);
       expect(await sessionSearchPage.assignButton.isEnabled()).toEqual(true);
