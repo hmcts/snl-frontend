@@ -23,6 +23,7 @@ import { HearingModificationService } from '../../services/hearing-modification.
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Status } from '../../../core/reference/models/status.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
@@ -152,7 +153,7 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudgeName: null,
-        isListed: true,
-        listingDate: null
+        listingDate: null,
+        status: Status.Listed
     }
 }

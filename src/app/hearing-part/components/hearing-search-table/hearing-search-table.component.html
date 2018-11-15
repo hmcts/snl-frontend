@@ -50,7 +50,7 @@
 
   <ng-container matColumnDef="requestStatus">
     <mat-header-cell *matHeaderCellDef> Request status</mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{getStatusText(element)}}</mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.status}}</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="listingDate">

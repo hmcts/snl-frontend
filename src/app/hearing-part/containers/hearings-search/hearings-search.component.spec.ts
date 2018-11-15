@@ -4,6 +4,7 @@ import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { Status } from '../../../core/reference/models/status.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const hearingModificationService = jasmine.createSpyObj('HearingModificationService', ['open', 'deleteHearing', 'removeFromState']);
@@ -108,7 +109,7 @@ describe('HearingsSearchComponent', () => {
             priority: Priority.Low,
             version: 1,
             listingDate: now,
-            isListed: true
+            status: Status.Listed
         } as FilteredHearingViewmodel;
 
         it('declining on delete dialog should not call service method', () => {

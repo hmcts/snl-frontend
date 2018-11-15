@@ -34,8 +34,9 @@ export interface Hearing {
   sessions: Session[],
   numberOfSessions: number,
   multiSession: boolean
-  version: string
-  hearingPartsVersions: VersionInfo[]
+  version: string,
+  hearingPartsVersions: VersionInfo[],
+  status: string
 }
 
 export interface VersionInfo {

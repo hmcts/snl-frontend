@@ -55,10 +55,6 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
-    getStatusText(element: FilteredHearingViewmodel) {
-        return element.isListed ? 'listed' : 'unlisted';
-    }
-
     delete(hearing: FilteredHearingViewmodel) {
         this.onDelete.emit(hearing);
     }
