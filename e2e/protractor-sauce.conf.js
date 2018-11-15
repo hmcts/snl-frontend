@@ -25,7 +25,9 @@ exports.config = {
            'tunnel-identifier': 'reformtunnel',
            'extendedDebugging': true,
            'shardTestFiles': true,
-           'maxInstances': 2
+           'maxInstances': 2,
+           'acceptSslCerts': true,
+           'acceptInsecureCerts': true
         }],
     baseUrl: baseUrl,
     framework: 'jasmine',
