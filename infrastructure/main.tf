@@ -9,8 +9,8 @@ locals {
   local_api_url = "http://snl-api-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   api_url = "${var.env == "preview" ? local.aat_api_url : local.local_api_url}"
 
-  aat_notes_url = "http://snl-notes-aat.service.core-compute-aat.internal"
-  local_notes_url = "http://snl-notes-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
+  aat_notes_url = "https://snl-notes-aat.service.core-compute-aat.internal"
+  local_notes_url = "https://snl-notes-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   notes_url = "${var.env == "preview" ? local.aat_notes_url : local.local_notes_url}"
 
   sharedAspName = "${var.raw_product}-${local.envInUse}"
@@ -19,12 +19,13 @@ locals {
   asp_rg = "${(var.env == "preview" || var.env == "spreview") ? "null" : local.sharedAspRg}"
 }
 module "snl-frontend" {
-  source               = "git@github.com:hmcts/moj-module-webapp"
+  source               = "git@github.com:hmcts/cnp-module-webapp"
   product              = "${var.product}-${var.component}"
   location             = "${var.location}"
   env                  = "${var.env}"
   ilbIp                = "${var.ilbIp}"
   is_frontend          = "${var.external_host_name != "" ? "1" : "0"}"
+  https_only           = "true"
   additional_host_name = "${var.external_host_name != "" ? var.external_host_name : "null"}"
   subscription         = "${var.subscription}"
   asp_rg               = "${local.asp_rg}"
