@@ -18,7 +18,7 @@ export class SearchCriteriaService {
             {key: 'hearingType', operation: 'in', value: filters.hearingTypes},
             {key: 'communicationFacilitator', operation: 'in', value: filters.communicationFacilitators},
             {key: 'reservedJudge.id', operation: 'in', value: filters.judges},
-            {key: 'listingStatus', operation: 'equals', value: filters.listingStatus},
+            {key: 'status.status', operation: 'equals', value: filters.listingStatus},
         ].filter(this.isValueAnEmptyString)
          .filter(this.isValueAnEmptyArray);
 
@@ -34,9 +34,9 @@ export class SearchCriteriaService {
     }
 
     private removeListingStatusCriterionIfSetToAll(criteria: SearchCriteria[]): SearchCriteria[] {
-        let listingStatusCriterion = criteria.find(criterion => criterion.key === 'listingStatus')
+        let listingStatusCriterion = criteria.find(criterion => criterion.key === 'status.status')
         if (listingStatusCriterion !== undefined && listingStatusCriterion.value === ListingStatus.All) {
-            let listingStatusCriterionIndex = criteria.map(c => c.key).indexOf('listingStatus');
+            let listingStatusCriterionIndex = criteria.map(c => c.key).indexOf('status.status');
             criteria.splice(listingStatusCriterionIndex, 1);
         }
         return criteria;
