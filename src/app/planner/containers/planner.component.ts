@@ -185,7 +185,7 @@ export class PlannerComponent implements OnInit {
 
         return this.dialog.open(DialogInfoComponent, {
             ...DEFAULT_DIALOG_CONFIG,
-            data: 'You cannot re-assign a multi-session listing request.'
+            data: 'This is a multi-session hearing and you cannot move just part of it.'
         });
     }
 
