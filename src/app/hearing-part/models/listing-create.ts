@@ -5,3 +5,8 @@ export interface ListingCreate {
     hearing: UpdateHearingRequest;
     notes: Note[]
 }
+
+export interface ListingRequestViewmodel {
+    hearing: UpdateHearingRequest;
+    notes: Note[]
+}

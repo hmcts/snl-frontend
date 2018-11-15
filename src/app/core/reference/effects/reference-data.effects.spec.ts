@@ -35,7 +35,7 @@ describe('Reference Data Effects', () => {
 
     describe('When getting casetypes', () => {
         it('with it should call service and call  \'GetAllCaseTypeComplete\' action', () => {
-            spyOn(refDataService, 'getCaseTypes').and.returnValue(Observable.of([]));
+            spyOn(refDataService, 'fetchCaseTypes').and.returnValue(Observable.of([]));
 
             const action = new ReferenceDataActions.GetAllCaseType()
             const expectedAction = new ReferenceDataActions.GetAllCaseTypeComplete([])
@@ -47,7 +47,7 @@ describe('Reference Data Effects', () => {
         });
 
         it('with it should call service and call  \'GetAllHearingTypeComplete\' action', () => {
-            spyOn(refDataService, 'getHearingTypes').and.returnValue(Observable.of([]));
+            spyOn(refDataService, 'fetchHearingTypes').and.returnValue(Observable.of([]));
 
             const action = new ReferenceDataActions.GetAllHearingType()
             const expectedAction = new ReferenceDataActions.GetAllHearingTypeComplete([])
@@ -59,7 +59,7 @@ describe('Reference Data Effects', () => {
         });
 
         it('with it should call service and call  \'GetAllSessionTypeComplete\' action', () => {
-            spyOn(refDataService, 'getSessionTypes').and.returnValue(Observable.of([]));
+            spyOn(refDataService, 'fetchSessionTypes').and.returnValue(Observable.of([]));
 
             const action = new ReferenceDataActions.GetAllSessionType()
             const expectedAction = new ReferenceDataActions.GetAllSessionTypeComplete([])
@@ -71,7 +71,7 @@ describe('Reference Data Effects', () => {
         });
 
         it('with it should call service and call  \'GetAllRoomTypeComplete\' action', () => {
-            spyOn(refDataService, 'getRoomTypes').and.returnValue(Observable.of([]));
+            spyOn(refDataService, 'fetchRoomTypes').and.returnValue(Observable.of([]));
 
             const action = new ReferenceDataActions.GetAllRoomType()
             const expectedAction = new ReferenceDataActions.GetAllRoomTypeComplete([])

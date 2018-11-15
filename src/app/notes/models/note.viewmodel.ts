@@ -1,10 +1,11 @@
 import { Note } from './note.model';
-import * as moment from 'moment';
 
 export interface NoteViewmodel extends Note {
     modified: boolean,
     inputLabel: string,
 }
+
+export const DEFAULT_NOTE_DATE_FORMAT = 'DD/MM/YYYY hh:mm';
 
 export function getNoteViewModel(note: Note): NoteViewmodel {
     return {
@@ -15,7 +16,7 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         entityId: note.entityId,
         entityType: note.entityType,
         inputLabel: note.type,
-        createdAt: moment(note.createdAt).format('DD/MM/YYYY hh:mm'),
+        createdAt: note.createdAt,
         modifiedBy: note.modifiedBy,
     }
 }

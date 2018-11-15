@@ -23,6 +23,7 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
     @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
     @Output() onDelete = new EventEmitter<FilteredHearingViewmodel>();
+    @Output() onAmend = new EventEmitter<string>();
     @Output() onNextPage = new EventEmitter<PageEvent>()
 
     dataSource: MatTableDataSource<FilteredHearingViewmodel>;
@@ -36,7 +37,8 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
         'reservedJudge',
         'requestStatus',
         'listingDate',
-        'delete'
+        'delete',
+        'amend'
     ];
 
     constructor(public dialog: MatDialog) {
@@ -61,6 +63,10 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
 
     delete(hearing: FilteredHearingViewmodel) {
         this.onDelete.emit(hearing);
+    }
+
+    amend(hearingId: string) {
+        this.onAmend.emit(hearingId);
     }
 
     buildViewHearingUrl(id: string) {
