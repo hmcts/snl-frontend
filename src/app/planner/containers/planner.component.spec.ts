@@ -197,7 +197,7 @@ describe('PlannerComponent', () => {
       matDialogSpy.open.and.returnValue({
           afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
       });
-
+      matDialogSpy.open.calls.reset();
       component.drop(event);
       expect(
           hearingPartModificationServiceSpy.assignWithSession
