@@ -178,9 +178,31 @@ describe('PlannerComponent', () => {
 
   describe('drop', () => {
     it('should open confirmation dialog ', () => {
+      component.hearingParts = [{
+          id: hearingPartId,
+          multiSession: false
+      }];
+
       matDialogSpy.open.and.returnValue(openDialogMockObj);
       component.drop(event);
       expect(matDialogSpy.open).toHaveBeenCalled();
+    });
+
+    it('should not assign hearing part', () => {
+      component.hearingParts = [{
+          id: hearingPartId,
+          multiSession: true,
+      }];
+
+      matDialogSpy.open.and.returnValue({
+          afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
+      });
+
+      component.drop(event);
+      expect(
+          hearingPartModificationServiceSpy.assignWithSession
+      ).not.toHaveBeenCalled();
+      expect(matDialogSpy.open).toHaveBeenCalledTimes(1);
     });
 
     it('should assign hearing parts to session when dialog confirmed', () => {

@@ -154,7 +154,6 @@ export class PlannerComponent implements OnInit {
             this.confirmationDialogRef = this.openMultiSessionDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
-                this.revertLatestEvent();
             });
         }
     }
