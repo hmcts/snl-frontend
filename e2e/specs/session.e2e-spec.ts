@@ -15,7 +15,6 @@ import { SessionDetailsDialogPage } from '../pages/session-details-dialog.po';
 import { FilterSessionsComponentForm } from '../models/filter-sessions-component-form';
 import { browser } from 'protractor';
 import { SessionTypes } from '../enums/session-types';
-import { DateTimeHelper } from '../utils/date-time-helper';
 
 const now = moment()
 const todayDate = now.format('DD/MM/YYYY')
