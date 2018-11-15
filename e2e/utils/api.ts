@@ -5,7 +5,7 @@ import * as requestPromise from 'request-promise'
 import * as URL from '../e2e-url.js'
 
 const rp = (URL.proxy) ? requestPromise.defaults({proxy: URL.proxy, strictSSL: false}) : requestPromise;
-const apiURL = (process.env.TEST_URL) ? 'http://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
+const apiURL = (process.env.TEST_URL) ? 'https://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
 
 console.log('API URL: ' + apiURL)
 

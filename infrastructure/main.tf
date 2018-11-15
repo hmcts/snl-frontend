@@ -5,8 +5,8 @@ locals {
   // to i.e. pr-102-snl so then we need just aat used here
   envInUse = "${(var.env == "preview" || var.env == "spreview") ? "aat" : var.env}"
 
-  aat_api_url = "http://snl-api-aat.service.core-compute-aat.internal"
-  local_api_url = "http://snl-api-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
+  aat_api_url = "https://snl-api-aat.service.core-compute-aat.internal"
+  local_api_url = "https://snl-api-${var.env}.service.${data.terraform_remote_state.core_apps_compute.ase_name[0]}.internal"
   api_url = "${var.env == "preview" ? local.aat_api_url : local.local_api_url}"
 
   aat_notes_url = "https://snl-notes-aat.service.core-compute-aat.internal"

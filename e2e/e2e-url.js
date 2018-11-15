@@ -1,13 +1,13 @@
 var attEnv = {
     proxy: 'http://proxyout.reform.hmcts.net:8080',
-    frontendURL: "http://snl-frontend-aat.service.core-compute-aat.internal",
-    apiURL: "http://snl-api-aat.service.core-compute-aat.internal"
+    frontendURL: "https://snl-frontend-aat.service.core-compute-aat.internal",
+    apiURL: "https://snl-api-aat.service.core-compute-aat.internal"
 };
 
 var prEnv = {
     proxy: 'http://proxyout.reform.hmcts.net:8080',
-    frontendURL: "http://pr-174-snl-frontend-preview.service.core-compute-preview.internal",
-    apiURL: "http://pr-82-snl-api-preview.service.core-compute-preview.internal"
+    frontendURL: "https://pr-174-snl-frontend-preview.service.core-compute-preview.internal",
+    apiURL: "https://pr-82-snl-api-preview.service.core-compute-preview.internal"
 };
 
 var localEnv = {
