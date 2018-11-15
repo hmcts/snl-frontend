@@ -5,6 +5,7 @@ import { MatSelectChange } from '@angular/material';
 import moment = require('moment');
 import { ListingRequestEditComponent, ListingTypeTab } from './listing-update.component';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
+import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 
 let component: ListingRequestEditComponent;
 
@@ -62,6 +63,7 @@ describe('ListingUpdateComponent', () => {
 
     it('save', () => {
         component.onSave = jasmine.createSpyObj('onSave', ['emit']);
+        component.notesComponent = {prepareNotes: () => {}} as ListingNoteListComponent;
         spyOn(component.notesComponent, 'prepareNotes').and.returnValue([])
 
         component.save();
