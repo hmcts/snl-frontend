@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const URL = require('./e2e-url.js');
 
 const isHeadlessModeEnabled = !!process.env.TEST_URL;
-const frontendURL = (process.env.TEST_URL || URL.frontendURL).replace('https', 'http');
+const frontendURL = (process.env.TEST_URL || URL.frontendURL);
 
 console.log('Frontend URL: ' + frontendURL);
 

@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 
 const isHeadlessModeEnabled = true;
 
-const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
+const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/');
 
 exports.config = {
     sauceUser: process.env.SAUCE_USERNAME,
