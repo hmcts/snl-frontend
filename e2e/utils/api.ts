@@ -70,11 +70,17 @@ export class API {
         return responseBody;
     }
 
-    private static async login() {
-        if (API.headers.Authorization.length > 0) {
-            return
-        }
+    static async healthCheck() {
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/health`,
+            resolveWithFullResponse: true
+        };
+        const response = await rp(options);
+        return response.body;
+    }
 
+    private static async login() {
         const options = {
             method: 'POST',
             uri: `${API.baseUrl}/security/signin`,
