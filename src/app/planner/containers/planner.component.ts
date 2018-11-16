@@ -121,45 +121,42 @@ export class PlannerComponent implements OnInit {
     }
 
     public drop(event) {
-        const selectedSessionId = this.selectedSessionId;
         this.latestEvent = event;
         let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
-        let isMultiSession = this.hearingParts.find(hp => hp.id === hearingPartId).multiSession;
+        let isNotMultiSession = !this.hearingParts.find(hp => hp.id === hearingPartId).multiSession;
 
-        if (!isMultiSession) {
-            if (!this.confirmationDialogOpen) {
-                this.confirmationDialogRef = this.openConfirmationDialog();
-                this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
-                    this.confirmationDialogOpen = false;
-                    if (confirmed) {
-                        this.hearingModificationService.assignWithSession({
-                            hearingPartId: hearingPartId,
-                            hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
-                            userTransactionId: uuid(),
-                            sessionData: {
-                                sessionId: selectedSessionId,
-                                sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version
-                            },
-                            start: null
-                        } as HearingPartToSessionAssignment);
-
-                        this.openSummaryDialog().afterClosed().subscribe(() => {
-                            this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
-                            this.store.dispatch(new SessionActions.Get(selectedSessionId));
-                        });
-                    }
-                });
-            }
-        } else if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = this.openMultiSessionDialog();
+        if (!this.confirmationDialogOpen) {
+            this.confirmationDialogRef = isNotMultiSession ? this.openConfirmationDialog() : this.openMultiSessionDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
+                if (isNotMultiSession && confirmed) {
+                    this.updateHearingPart(hearingPartId)
+                }
             });
         }
     }
 
     public eventMouseOver(event) {
         this.selectedSessionId = event.detail.event.id;
+    }
+
+    private updateHearingPart(hearingPartId) {
+        const selectedSessionId = this.selectedSessionId;
+        this.hearingModificationService.assignWithSession({
+            hearingPartId: hearingPartId,
+            hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
+            userTransactionId: uuid(),
+            sessionData: {
+                sessionId: selectedSessionId,
+                sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version
+            },
+            start: null
+        } as HearingPartToSessionAssignment);
+
+        this.openSummaryDialog().afterClosed().subscribe(() => {
+            this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
+            this.store.dispatch(new SessionActions.Get(selectedSessionId));
+        });
     }
 
     private buildSessionUpdate(event) {
