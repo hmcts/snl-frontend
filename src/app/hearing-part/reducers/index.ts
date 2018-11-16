@@ -66,9 +66,11 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 return {} as HearingPartViewModel;
             }
 
-            const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id);
+            const filteredNotes = Object.values(notes).filter(note => note.entityId === hearingPart.id).map(
+                note => {return {...note, createdAt: moment(note.createdAt)}}
+            );
             const sortedNotes = [...filteredNotes].sort((left, right) => {
-                return moment(right.createdAt).diff(moment(left.createdAt));
+                return right.createdAt.diff(left.createdAt);
             });
 
             const scheduleStartObj = moment(hearing.scheduleStart);

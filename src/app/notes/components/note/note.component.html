@@ -1,5 +1,5 @@
 <form class="block" id="note-{{note.type.split(' ').join('')}}">
-  <div *ngIf="note.modifiedBy && note.createdAt" style="font-size: 12px">{{note.modifiedBy}} - {{note.createdAt}}</div>
+  <div *ngIf="note.modifiedBy && note.createdAt" style="font-size: 12px">{{note.modifiedBy}} - {{formatDate(note.createdAt)}}</div>
 
   <mat-form-field style="width: 100%">
     <textarea 

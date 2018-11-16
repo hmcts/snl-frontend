@@ -5,6 +5,7 @@ import { Note } from '../../../notes/models/note.model';
 import { NoteViewmodel, getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { NoteType } from '../../../notes/models/note-type';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-listing-note-list',
@@ -27,8 +28,10 @@ export class ListingNoteListComponent {
 
     this.specialNoteViewModels = [
         this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.SPECIAL_REQUIREMENTS),
-        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.FACILITY_REQUIREMENTS)
-    ]
+        this.listingNotesConfig.getOrCreateNote(this.specialNoteViewModels, NoteType.FACILITY_REQUIREMENTS),
+    ];
+
+    this.oldNoteViewModels = this.sort(this.oldNoteViewModels);
   }
 
   constructor(readonly listingNotesConfig: ListingCreateNotesConfiguration,
@@ -51,10 +54,16 @@ export class ListingNoteListComponent {
   }
 
   protected disposeToProperArrays = (n: NoteViewmodel) => {
-      if (n.type === NoteType.OTHER_NOTE) {
+      if (n.type === NoteType.OTHER_NOTE || n.type === NoteType.LISTING_NOTE) {
           this.oldNoteViewModels.push(n);
       } else {
           this.specialNoteViewModels.push(n);
       }
+  }
+
+  protected sort(noteViewModels: NoteViewmodel[]) {
+      return [...noteViewModels].sort((left, right) => {
+          return moment(right.createdAt).diff(moment(left.createdAt));
+      });
   }
 }
