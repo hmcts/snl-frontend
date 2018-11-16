@@ -7,8 +7,11 @@ import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
 import { MatDialog, PageEvent } from '@angular/material';
-import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
-import { ListingUpdateDialogComponent } from '../../components/listing-update-dialog/listing-update-dialog';
+import {
+    FilteredHearingViewmodel,
+    HearingSearchResponseForAmendment,
+    HearingViewmodelForAmendment
+} from '../../models/filtered-hearing-viewmodel';
 import { NotesService } from '../../../notes/services/notes.service';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
@@ -21,6 +24,8 @@ import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/def
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ActivatedRoute } from '@angular/router';
 import { Note } from '../../../notes/models/note.model';
+import { Observable } from 'rxjs/Observable';
+import { HearingAmendDialogComponent } from '../../components/hearing-amend-dialog/hearing-amend-dialog.component';
 
 @Component({
     selector: 'app-hearings-search',
@@ -75,8 +80,8 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        let hearingSource = this.hearingService.getForAmendment(hearingId);
-        let hearingNotesSource = this.notesService.getByEntities([hearingId]);
+        let hearingSource: Observable<HearingSearchResponseForAmendment> = this.hearingService.getForAmendment(hearingId);
+        let hearingNotesSource: Observable<Note[]> = this.notesService.getByEntities([hearingId]);
 
         forkJoin([hearingSource, hearingNotesSource]).pipe(mergeMap(([hearing, hearingNotes]) => {
                 return this.openAmendDialog(hearing, hearingNotes).afterClosed();
@@ -97,13 +102,11 @@ export class HearingsSearchComponent implements OnInit {
         })
     }
 
-    private openAmendDialog(hearing: FilteredHearingViewmodel, notes: Note[]) {
-        return this.dialog.open(ListingUpdateDialogComponent, {
+    private openAmendDialog(hearing: HearingSearchResponseForAmendment, notes: Note[]) {
+        const hearingViewModel: HearingViewmodelForAmendment = { hearing, notes };
+        return this.dialog.open(HearingAmendDialogComponent, {
             data: {
-                listing: {
-                    hearing: hearing,
-                    notes: notes
-                },
+                hearingViewModel: hearingViewModel,
                 judges: this.judges,
                 caseTypes: this.caseTypes
             }

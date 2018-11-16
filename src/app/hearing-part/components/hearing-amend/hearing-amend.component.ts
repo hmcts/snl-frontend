@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ListingRequestViewmodelForAmendment } from '../../models/listing-create';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
@@ -15,6 +14,7 @@ import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import { Status } from '../../../core/reference/models/status.model';
+import { HearingViewmodelForAmendment } from '../../models/filtered-hearing-viewmodel';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -22,15 +22,15 @@ export enum ListingTypeTab {
 }
 
 @Component({
-    selector: 'app-listing-update',
-    templateUrl: './listing-update.component.html',
-    styleUrls: ['./listing-update.component.scss']
+    selector: 'app-hearing-amend',
+    templateUrl: './hearing-amend.component.html',
+    styleUrls: ['./hearing-amend.component.scss']
 })
-export class ListingRequestEditComponent {
+export class HearingAmendComponent {
     @ViewChild('listingCreateForm') listingFormGroup: FormGroupDirective;
     @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
-    @Input() set data(value: ListingRequestViewmodelForAmendment) {
+    @Input() set data(value: HearingViewmodelForAmendment) {
         this.listing = value;
 
         if (this.listing.hearing.multiSession) {
@@ -66,7 +66,7 @@ export class ListingRequestEditComponent {
     }
 
     public chosenListingType = 0;
-    public listing: ListingRequestViewmodelForAmendment;
+    public listing: HearingViewmodelForAmendment;
     public listingType = ListingTypeTab;
     public caseTitleMaxLength = 200;
     public caseNumberMaxLength = 200;

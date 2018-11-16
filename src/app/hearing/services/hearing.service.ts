@@ -12,7 +12,7 @@ import { State } from '../../hearing-part/reducers/hearing.reducer';
 import { RemoveAll } from '../../problems/actions/problem.action';
 import { v4 as uuid } from 'uuid';
 import { BehaviorSubject } from 'rxjs';
-import { FilteredHearingViewmodel } from '../../hearing-part/models/filtered-hearing-viewmodel';
+import { FilteredHearingViewmodel, HearingSearchResponseForAmendment } from '../../hearing-part/models/filtered-hearing-viewmodel';
 import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
@@ -66,11 +66,11 @@ export class HearingService {
       }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
   }
 
-    getForAmendment(id: string): Observable<FilteredHearingViewmodel> {
+    getForAmendment(id: string): Observable<HearingSearchResponseForAmendment> {
         return this.http
-            .get<FilteredHearingViewmodel>(`${this.config.getApiUrl()}/hearing/${id}/for-amendment`).pipe(map(
-                (hearing: FilteredHearingViewmodel) => {
-                    return this.mapHearingResponseToHearingVM(hearing);
+            .get<HearingSearchResponseForAmendment>(`${this.config.getApiUrl()}/hearing/${id}/for-amendment`).pipe(map(
+                (hearing: HearingSearchResponseForAmendment) => {
+                    return this.parseDatesAndDurations(hearing);
                 }
             ));
     }
@@ -81,13 +81,13 @@ export class HearingService {
                 params: new HttpParams({ fromObject: request.httpParams })
             }).pipe(map((hearingPage: Page<FilteredHearingViewmodel>) => {
                 hearingPage.content = hearingPage.content.map(hearing => {
-                    return this.mapHearingResponseToHearingVM(hearing);
+                    return this.parseDatesAndDurations(hearing);
                 });
                 return {...hearingPage, content: hearingPage.content}
             }))
     }
 
-    private mapHearingResponseToHearingVM = (hearing: FilteredHearingViewmodel): FilteredHearingViewmodel => {
+    private parseDatesAndDurations = (hearing) => {
         hearing.scheduleStart = hearing.scheduleStart !== null ? moment(hearing.scheduleStart) : null;
         hearing.scheduleEnd = hearing.scheduleEnd !== null ? moment(hearing.scheduleEnd) : null;
         hearing.listingDate = moment(hearing.listingDate);
