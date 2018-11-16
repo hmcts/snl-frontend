@@ -1,3 +1,4 @@
+import { SearchCriteria } from './../../hearing-part/models/search-criteria';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -11,6 +12,9 @@ import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
+import { SessionSearchResponse } from '../models/session-search-response.model';
+import { Page } from '../../problems/models/problem.model';
+import { PaginatedRequestOption } from '../models/paginated-request-option';
 
 @Injectable()
 export class SessionsService {
@@ -26,6 +30,21 @@ export class SessionsService {
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?date=${query.date}`)
             .pipe(map(data => {return normalize(data, sessions)}));
+    }
+
+    paginatedSearchSessions(searchCriterions: SearchCriteria[], requestOptions: PaginatedRequestOption): Observable<Page<SessionSearchResponse>> {
+        let url = `${this.config.getApiUrl()}/sessions/search`
+
+        if (requestOptions.pageSize !== undefined && requestOptions.pageIndex !== undefined) {
+            url += `?size=${requestOptions.pageSize}&page=${requestOptions.pageIndex}`
+        }
+
+        if (requestOptions.sortByProperty !== undefined && requestOptions.sortDirection.length > 1) {
+            url += url.includes('?') ? '&' : '?'
+            url += `sort=${requestOptions.sortByProperty}:${requestOptions.sortDirection}`
+        }
+
+        return this.http.post<Page<SessionSearchResponse>>(url, searchCriterions)
     }
 
     searchSessionsForDates(query: SessionQueryForDates): Observable<any> {
