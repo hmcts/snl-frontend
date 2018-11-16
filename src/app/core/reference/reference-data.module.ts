@@ -9,6 +9,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { ReferenceDataEffects } from './effects/reference-data.effects';
 import { StatusConfigService } from './services/status-config.service';
 import { StatusConfigResolver } from './resolvers/status-config.resolver';
+import { CaseTypesResolver } from './resolvers/case-types.resolver';
+import { HearingTypesResolver } from './resolvers/hearing-types.resolver';
 
 @NgModule({
     imports: [
@@ -18,7 +20,7 @@ import { StatusConfigResolver } from './resolvers/status-config.resolver';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [ReferenceDataService, StatusConfigService, StatusConfigResolver]
+    providers: [ReferenceDataService, StatusConfigService, StatusConfigResolver, CaseTypesResolver, HearingTypesResolver]
 })
 export class ReferenceDataModule {
 }

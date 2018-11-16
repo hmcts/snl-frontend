@@ -1,4 +1,5 @@
 import { NoteViewmodel } from './note.viewmodel';
+import * as moment from 'moment';
 
 export interface Note {
   id: string;
@@ -6,7 +7,7 @@ export interface Note {
   content: string;
   entityId: string;
   entityType: string;
-  createdAt: string;
+  createdAt: moment.Moment;
   modifiedBy: string;
 }
 

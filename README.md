@@ -1,4 +1,6 @@
-An Angular front-end for Scheduling and listing.
+# Scheduling and listing Front-end
+
+[![Build Status](https://travis-ci.org/hmcts/snl-frontend.svg?branch=master)](https://travis-ci.org/hmcts/snl-frontend)
 
 ### Quick start
 
@@ -13,18 +15,12 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
 
 # Table of Contents
 
-* [Getting Started](#getting-started)
-    * [Prerequisites](#prerequisites)
-    * [Install dependencies](#install-dependencies)
-    * [Running](#running)
-    * [Testing](#testing)
-    * [Production](#production)
-    * [Documentation](#documentation)
-* [Seed](#seed)
-* [Roadmap](#roadmap)
-* [Environments](#environments)
-
-# Getting Started
+ * [Prerequisites](#prerequisites)
+ * [Install dependencies](#install-dependencies)
+ * [Running](#running)
+ * [Testing](#testing)
+ * [Production](#production)
+ * [Documentation](#documentation)
 
 ## Prerequisites
 
@@ -33,14 +29,6 @@ go to [http://localhost:3451](http://localhost:3451) in your browser.
 * [Docker](https://www.docker.com)
 
 You can use NVM (Node Version Manager) to get proper Node version
-
-### Environment variables
-
-The following environment variables are required:
-
-| Name | Description |
-|------|-------------|
-| SNL_API_URL | URL for SNL api. `http://localhost:3451` for local development |
 
 ## Install dependencies
 
@@ -81,14 +69,20 @@ docker-compose up
 
 As a result, the SNL frontend app will be started and made available on port `3451`.
 
-## Testing
+## Testing and Preparing for Pull Requests
 
-### 1. Unit Tests
+Before creating a PR, ensure that all of the code styling checks and tests have been done locally (they will be caught on Jenkins if there are any discrepancies)
+
+### 1. Code Style
+
+* run: `yarn lint`
+
+### 2. Unit Tests
 
 * single run: `yarn test`
 * live mode (TDD style): `yarn test-watch`
 
-### 2. E2E Tests
+### 3. E2E Tests
 
 * single run: `yarn test:functional`
 
@@ -111,4 +105,4 @@ You can generate api docs (using [TypeDoc](http://typedoc.org/)) for your code w
 
 ## LICENSE
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the GPL-3 License - see the [LICENSE](LICENSE.md) file for details.

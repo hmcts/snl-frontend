@@ -12,6 +12,9 @@ import { HearingsSearchComponent } from './hearing-part/containers/hearings-sear
 import { ViewHearingComponent } from './hearing/components/view-hearing/view-hearing.component';
 import { StatusConfigResolver } from './core/reference/resolvers/status-config.resolver';
 import { RulesEngineStatusComponent } from './admin/components/rules-engine-status/rules-engine-status.component';
+import { CaseTypesResolver } from './core/reference/resolvers/case-types.resolver';
+import { JudgesResolver } from './judges/resolvers/judges.resolver';
+import { HearingTypesResolver } from './core/reference/resolvers/hearing-types.resolver';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -27,11 +30,12 @@ const routes: Routes = [
             {path: 'rules', component: RulesEngineStatusComponent, canActivate: [AppConfigGuard]},
             {path: 'problems', component: ProblemsPageComponent, canActivate: [AppConfigGuard]},
             {path: 'reports', loadChildren: 'app/features/reports/report.module#ReportModule', canActivate: [AppConfigGuard]},
-            {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard]},
+            {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard],
+                resolve: { judges: JudgesResolver, caseTypes: CaseTypesResolver, hearingTypes: HearingTypesResolver}},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard]},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
-        canActivate: [AuthGuard], resolve: { statusConfig: StatusConfigResolver }
+        canActivate: [AuthGuard], resolve: { statusConfig: StatusConfigResolver, caseTypes: CaseTypesResolver }
     },
     {
         path: 'rules', component: RulesEngineStatusComponent,
