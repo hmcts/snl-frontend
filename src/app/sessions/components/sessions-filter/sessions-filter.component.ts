@@ -4,6 +4,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import * as moment from 'moment'
 import { CaseType } from '../../../core/reference/models/case-type';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-sessions-filter',
@@ -13,6 +14,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 export class SessionsFilterComponent implements OnInit {
 
   @Output() filter = new EventEmitter();
+  public readonly sessionFilter$ = new Subject<SessionFilters>();
 
   @Input() rooms: Room[];
   @Input() judges: Judge[];
@@ -23,11 +25,6 @@ export class SessionsFilterComponent implements OnInit {
   roomsPlaceholder: string;
   judgesPlaceholder: string;
   filters: SessionFilters;
-
-  constructor() {
-      this.roomsPlaceholder = 'Select the room';
-      this.judgesPlaceholder = 'Select the judge';
-  }
 
   ngOnInit() {
       this.filters = {
@@ -71,5 +68,6 @@ export class SessionsFilterComponent implements OnInit {
 
   sendFilter() {
     this.filter.emit(this.filters);
+    this.sessionFilter$.next(this.filters);
   }
 }
