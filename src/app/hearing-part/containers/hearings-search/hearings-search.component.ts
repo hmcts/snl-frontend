@@ -10,7 +10,6 @@ import { MatDialog, PageEvent } from '@angular/material';
 import {
     FilteredHearingViewmodel,
     HearingSearchResponseForAmendment,
-    HearingViewmodelForAmendment
 } from '../../models/filtered-hearing-viewmodel';
 import { NotesService } from '../../../notes/services/notes.service';
 import { HearingModificationService } from '../../services/hearing-modification.service';
@@ -25,7 +24,7 @@ import { DialogWithActionsComponent } from '../../../features/notification/compo
 import { ActivatedRoute } from '@angular/router';
 import { Note } from '../../../notes/models/note.model';
 import { Observable } from 'rxjs/Observable';
-import { HearingAmendDialogComponent } from '../../components/hearing-amend-dialog/hearing-amend-dialog.component';
+import { HearingAmendDialogComponent, HearingAmendDialogData } from '../../components/hearing-amend-dialog/hearing-amend-dialog.component';
 
 @Component({
     selector: 'app-hearings-search',
@@ -80,16 +79,16 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     onAmend(hearingId: string) {
-        let hearingSource: Observable<HearingSearchResponseForAmendment> = this.hearingService.getForAmendment(hearingId);
-        let hearingNotesSource: Observable<Note[]> = this.notesService.getByEntities([hearingId]);
+        let hearingSource$: Observable<HearingSearchResponseForAmendment> = this.hearingService.getForAmendment(hearingId);
+        let hearingNotesSource$: Observable<Note[]> = this.notesService.getByEntities([hearingId]);
 
-        forkJoin([hearingSource, hearingNotesSource]).pipe(mergeMap(([hearing, hearingNotes]) => {
+        forkJoin([hearingSource$, hearingNotesSource$]).pipe(mergeMap(([hearing, hearingNotes]) => {
                 return this.openAmendDialog(hearing, hearingNotes).afterClosed();
             }),
-            filter(updatedListing => updatedListing !== undefined),
-            tap(updatedListing => {
-                this.hearingPartModificationService.updateListingRequest(updatedListing);
-                this.openDialog('Editing listing request', updatedListing.notes);
+            filter(amendedHearing => amendedHearing !== undefined),
+            tap(amendedHearing => {
+                this.hearingPartModificationService.updateListingRequest(amendedHearing);
+                this.openDialog('Editing listing request', amendedHearing.notes);
             })
         ).subscribe()
     }
@@ -103,13 +102,13 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     private openAmendDialog(hearing: HearingSearchResponseForAmendment, notes: Note[]) {
-        const hearingViewModel: HearingViewmodelForAmendment = { hearing, notes };
+        const hearingAmendDialogData: HearingAmendDialogData = {
+            hearingViewModel: { hearing, notes },
+            judges: this.judges,
+            caseTypes: this.caseTypes
+        };
         return this.dialog.open(HearingAmendDialogComponent, {
-            data: {
-                hearingViewModel: hearingViewModel,
-                judges: this.judges,
-                caseTypes: this.caseTypes
-            }
+            data: hearingAmendDialogData
         })
     }
 
