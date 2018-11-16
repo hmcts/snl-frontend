@@ -1,95 +1,76 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
-
+import { SessionSearchResponse } from '../../models/session-search-response.model';
+import { TableSetting } from '../../models/table-settings.model';
+import { Subject } from 'rxjs';
+import { SessionSearchColumns } from '../../models/session-search-columns';
 @Component({
-  selector: 'app-session-amendment-table',
-  templateUrl: './session-amendment-table.component.html',
-  styleUrls: ['./session-amendment-table.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-session-amendment-table',
+    templateUrl: './session-amendment-table.component.html',
+    styleUrls: ['./session-amendment-table.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionAmendmentTableComponent implements OnChanges {
+export class SessionAmendmentTableComponent implements AfterViewInit {
+    @Output() amend = new EventEmitter();
 
-  @Input() sessions: SessionViewModel[];
-  @Output() amend = new EventEmitter();
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Input() totalCount: number;
 
-  displayedColumns = [
-      'id',
-      'person',
-      'time',
-      'date',
-      'duration',
-      'room',
-      'sessionType',
-      'hearingParts',
-      'allocated',
-      'utilization',
-      'available',
-      'amend'
-  ];
+    displayedColumns = [
+        SessionSearchColumns.SessionId,
+        SessionSearchColumns.PersonName,
+        SessionSearchColumns.StartTime,
+        SessionSearchColumns.StartDate,
+        SessionSearchColumns.Duration,
+        SessionSearchColumns.RoomName,
+        SessionSearchColumns.SessionTypeDescription,
+        SessionSearchColumns.NoOfHearingPartsAssignedToSession,
+        SessionSearchColumns.Allocated,
+        SessionSearchColumns.Utilisation,
+        SessionSearchColumns.Available,
+        SessionSearchColumns.Amend,
+    ];
 
-  dataSource: MatTableDataSource<any>;
-  tableVisible;
+    dataSource: MatTableDataSource<any>;
+    tableVisible = true;
+    initialPageSize = 20
+    sessionSearchColumns = SessionSearchColumns
 
-  constructor() {
-    this.dataSource = new MatTableDataSource(this.sessions);
-  }
+    private _sessions: SessionSearchResponse[];
+    get sessions() { return this._sessions; }
+    @Input() set sessions(sessions: SessionSearchResponse[]) {
+        this._sessions = sessions;
+        this.dataSource = new MatTableDataSource(sessions);
+    };
 
-  parseTime(date: moment.Moment) {
-    return date.format('HH:mm');
-  }
+    public readonly tableSettings$ = new Subject<TableSetting>();
 
-  humanizeDuration(duration) {
-      return formatDuration(moment.duration(duration));
-  }
+    ngAfterViewInit() {
+        this.emitTableSettings()
+    }
 
-  ngOnChanges() {
-      if (this.sessions) {
-          if (this.sessions.length === 0) {
-              this.tableVisible = false;
-              return;
-          }
-          this.tableVisible = true;
+    emitTableSettings() {
+        const sortByProperty = this.sort.active;
+        const sortDirection = this.sort.direction;
+        const pageIndex = this.paginator.pageIndex;
+        const pageSize = this.paginator.pageSize || this.initialPageSize
 
-          this.dataSource = new MatTableDataSource(this.sessions);
+        const newTableSettings = {sortByProperty, sortDirection, pageIndex, pageSize}
+        this.tableSettings$.next(newTableSettings);
+    }
 
-          this.dataSource.sortingDataAccessor = (item, property) => {
-              switch (property) {
-                  case 'person':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'room':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'sessionType':
-                      const description = getPropertyMemberOrNull(item, property, 'description');
-                      if (description === 'N/A') {
-                          return null;
-                      } else {
-                        return description;
-                      }
-                  case 'hearingParts':
-                      return getPropertyMemberOrNull(item, property, 'length');
-                  case 'time':
-                  case 'date':
-                      return item['start'].unix();
-                  case 'duration':
-                  case 'allocated':
-                  case 'available':
-                      return moment.duration(item[property]).asMilliseconds();
-                  default:
-                      return item[property];
-              }
-          };
+    parseTime(date: string) {
+        return moment(date).format('HH:mm');
+    }
 
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-      }
-  }
-}
+    parseDate(date: string) {
+        return moment(date).format();
+    }
 
-function getPropertyMemberOrNull(item: object, property: string, key: string ) {
-    return (item[property]) ? item[property][key] : null;
+    humanizeDuration(duration) {
+        return formatDuration(moment.duration(duration));
+    }
 }
