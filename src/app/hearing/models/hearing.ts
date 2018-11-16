@@ -32,6 +32,8 @@ export interface Hearing {
   reservedToJudge: string,
   notes: Note[],
   sessions: Session[],
+  numberOfSessions: number,
+  multiSession: boolean
   version: string
   hearingPartsVersions: VersionInfo[]
 }

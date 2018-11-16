@@ -18,5 +18,6 @@ export interface FilteredHearingViewmodel {
     priority: Priority,
     version: number,
     listingDate: moment.Moment,
-    isListed: boolean
+    isListed: boolean,
+    personName: string
 }

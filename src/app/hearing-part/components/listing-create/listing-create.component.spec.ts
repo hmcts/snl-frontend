@@ -1,5 +1,5 @@
 import { Store, StoreModule } from '@ngrx/store';
-import { ListingCreateComponent, ListingTypeTab } from './listing-create.component';
+import { ListingCreateComponent } from './listing-create.component';
 import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -77,7 +77,8 @@ const listingCreate = {
         reservedJudgeId: undefined,
         communicationFacilitator: undefined,
         userTransactionId: 'uti',
-        numberOfSessions: 1
+        numberOfSessions: 1,
+        multiSession: false
     },
     notes: [],
     userTransactionId: undefined
@@ -213,7 +214,7 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
-            component.chosenListingType = ListingTypeTab.Multi;
+            component.listing.hearing.multiSession = true;
 
             component.save();
 
@@ -233,6 +234,7 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.scheduleEnd).toEqual(now);
             expect(createdListing.duration).toEqual(moment.duration(threeDaysDuration.asMilliseconds()));
             expect(createdListing.numberOfSessions).toEqual(5);
+            expect(createdListing.multiSession).toEqual(true);
         });
 
         it('should dispatch action with 1 as a numberOfSessions and max minutes for a day, ' +
@@ -241,8 +243,9 @@ describe('ListingCreateComponent', () => {
             const threeDaysDuration = moment.duration(3, 'days');
             component.listing.hearing.duration = threeDaysDuration;
             component.listing.hearing.numberOfSessions = 5;
-            component.chosenListingType = ListingTypeTab.Single;
+            component.listing.hearing.multiSession = false;
 
+            component.setDurationToDisplay();
             component.save();
 
             expect(storeSpy).toHaveBeenCalledTimes(3);
@@ -254,7 +257,7 @@ describe('ListingCreateComponent', () => {
                 HearingPartActionTypes.CreateListingRequest
             );
             expect(createdListing.duration).toEqual(
-                moment.duration(moment.duration(60 * 24 - 1, 'minutes').asMilliseconds())
+                moment.duration(moment.duration((60 * 24) - 1, 'minutes').asMilliseconds())
             );
             expect(createdListing.numberOfSessions).toEqual(1);
         });

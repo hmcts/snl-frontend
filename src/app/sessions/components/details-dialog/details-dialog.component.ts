@@ -18,6 +18,6 @@ export class DetailsDialogComponent extends DraggableDialog {
     }
 
     displayInformativeLegend(hearingParts: HearingPartViewModel[]) {
-        return hearingParts.find(hp => hp.belongsToMultiSession) !== undefined;
+        return hearingParts.find(hp => hp.multiSession);
     }
 }

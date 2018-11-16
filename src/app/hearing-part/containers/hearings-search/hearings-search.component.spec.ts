@@ -4,9 +4,14 @@ import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { ListingRequestViewmodel } from '../../models/listing-create';
+import { Note } from '../../../notes/models/note.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-const hearingModificationService = jasmine.createSpyObj('HearingModificationService', ['open', 'deleteHearing', 'removeFromState']);
+
+const openDialogMockObjUndefined = {
+    afterClosed: (): Observable<boolean> => Observable.of(undefined)
+};
 
 const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
@@ -18,80 +23,40 @@ const openDialogMockObjDeclined = {
 
 let component: HearingsSearchComponent;
 let searchCriteriaService: any;
-let judgeService: any;
-let referenceDataService: any;
-let hearingPartService: any;
+let route: any;
+let hearingService: any;
+let hearingPartModificationService: any;
+let notesService: any;
 let hearingFilters: HearingsFilters;
 let searchCriteriaServiceResult = undefined;
 let hearingPartServiceResult = {
     content: [],
     totalElements: 7
-}
+};
+let hearingModel: FilteredHearingViewmodel;
 
 describe('HearingsSearchComponent', () => {
     beforeEach(() => {
         searchCriteriaService = jasmine.createSpyObj('searchCriteriaService', ['toSearchCriteria']);
         searchCriteriaService.toSearchCriteria.and.returnValue(searchCriteriaServiceResult);
 
-        judgeService = jasmine.createSpyObj('judgeService', ['get']);
-        judgeService.get.and.returnValue(Observable.of([]));
+        route = {
+            data: Observable.of({judges: [], caseTypes: [], hearingTypes: []})
+        };
 
-        referenceDataService = jasmine.createSpyObj('searchCriteriaService', ['getCaseTypes', 'getHearingTypes']);
-        referenceDataService.getCaseTypes.and.returnValue(Observable.of([]));
-        referenceDataService.getHearingTypes.and.returnValue(Observable.of([]));
+        hearingService = jasmine.createSpyObj('hearingService', ['seearchFilteredHearingViewmodels', 'getForAmendment']);
+        hearingService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
-        hearingPartService = jasmine.createSpyObj('hearingPartService', ['seearchFilteredHearingViewmodels']);
-        hearingPartService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
+        hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService',
+            ['updateListingRequest', 'open', 'deleteHearing', 'removeFromState']);
+        notesService = jasmine.createSpyObj('notesService', ['getByEntities', 'upsertManyNotes']);
 
-        component = new HearingsSearchComponent(matDialogSpy, hearingModificationService, hearingPartService,
-            referenceDataService, judgeService, searchCriteriaService);
+        component = new HearingsSearchComponent(hearingPartModificationService, route,
+            hearingService,
+            matDialogSpy, notesService, searchCriteriaService);
+
         hearingFilters = DEFAULT_HEARING_FILTERS;
-    });
-
-    describe('When created', () => {
-        it('in onInit it should get reference data', () => {
-            component.ngOnInit();
-
-            expect(component.judges$).toEqual(Observable.of([]));
-            expect(component.caseTypes$).toEqual(Observable.of([]));
-            expect(component.hearingTypes$).toEqual(Observable.of([]));
-        });
-    });
-
-    describe('When filter', () => {
-        it('it should call for filtered hearings and update totalCount and hearings properties', () => {
-            component.onFilter(hearingFilters);
-
-            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
-                httpParams: {
-                    size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
-                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
-                },
-                searchCriteria: searchCriteriaServiceResult
-            });
-
-            expect(component.totalCount).toEqual(hearingPartServiceResult.totalElements);
-            expect(component.filteredHearings).toEqual(hearingPartServiceResult.content);
-        });
-    });
-
-    describe('When page changed', () => {
-        it('it should call for filtered hearings', () => {
-            let customPageSize = 100;
-            component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
-
-            expect(hearingPartService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
-                httpParams: {
-                    size: customPageSize,
-                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
-                },
-                searchCriteria: searchCriteriaServiceResult
-            })
-        });
-    });
-
-    describe('When delete hearing', () => {
-        const hearingModel = {
+        hearingModel = {
             id: '123',
             caseNumber: '123',
             caseTitle: '213',
@@ -110,13 +75,57 @@ describe('HearingsSearchComponent', () => {
             listingDate: now,
             isListed: true
         } as FilteredHearingViewmodel;
+    });
 
+    describe('When created', () => {
+        it('in onInit it should get reference data', () => {
+            component.ngOnInit();
+
+            expect(component.judges).toEqual([]);
+            expect(component.caseTypes).toEqual([]);
+            expect(component.hearingTypes).toEqual([]);
+        });
+    });
+
+    describe('When filter', () => {
+        it('it should call for filtered hearings and update totalCount and hearings properties', () => {
+            component.onFilter(hearingFilters);
+
+            expect(hearingService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
+                httpParams: {
+                    size: HearingsSearchComponent.DEFAULT_PAGING.pageSize,
+                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
+                },
+                searchCriteria: searchCriteriaServiceResult
+            });
+
+            expect(component.totalCount).toEqual(hearingPartServiceResult.totalElements);
+            expect(component.filteredHearings).toEqual(hearingPartServiceResult.content);
+        });
+    });
+
+    describe('When page changed', () => {
+        it('it should call for filtered hearings', () => {
+            let customPageSize = 100;
+            component.onNextPage({...HearingsSearchComponent.DEFAULT_PAGING, pageSize: customPageSize});
+
+            expect(hearingService.seearchFilteredHearingViewmodels).toHaveBeenCalledWith({
+                httpParams: {
+                    size: customPageSize,
+                    page: HearingsSearchComponent.DEFAULT_PAGING.pageIndex,
+                },
+                searchCriteria: searchCriteriaServiceResult
+            })
+        });
+    });
+
+    describe('When delete hearing', () => {
         it('declining on delete dialog should not call service method', () => {
             matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
             component.onDelete(hearingModel);
 
-            expect(hearingModificationService.deleteHearing).not.toHaveBeenCalled();
+            expect(hearingPartModificationService.deleteHearing).not.toHaveBeenCalled();
             expect(matDialogSpy.open).toHaveBeenCalled();
         })
 
@@ -125,8 +134,79 @@ describe('HearingsSearchComponent', () => {
 
             component.onDelete(hearingModel);
 
-            expect(hearingModificationService.deleteHearing).toHaveBeenCalled();
+            expect(hearingPartModificationService.deleteHearing).toHaveBeenCalled();
             expect(matDialogSpy.open).toHaveBeenCalled();
+        })
+    })
+
+    describe('When amend', () => {
+        const notes = [{} as Note, {} as Note, {} as Note];
+        const updateHearingModel: ListingRequestViewmodel = {
+            hearing: {
+                id: '123',
+                caseNumber: '123',
+                caseTitle: '213',
+                caseTypeCode: 'caseTypeCode',
+                hearingTypeCode: 'hearingTypeCode',
+                duration: moment.duration(12),
+                scheduleStart: now,
+                scheduleEnd: now,
+                reservedJudgeId: '123',
+                communicationFacilitator: 'transaltor',
+                priority: Priority.Low,
+                version: 1,
+                isListed: true,
+                userTransactionId: undefined,
+                numberOfSessions: 1,
+                multiSession: false
+            },
+            notes: []
+        };
+
+        beforeEach(() => {
+            hearingService.getForAmendment.and.returnValue(Observable.of(hearingModel));
+            notesService.getByEntities.and.returnValue(Observable.of([]));
+        });
+
+        it('the hearing and notes should be fetched', () => {
+            matDialogSpy.open.and.returnValue(openDialogMockObjUndefined);
+
+            component.onAmend(hearingModel.id);
+
+            expect(hearingService.getForAmendment).toHaveBeenCalledWith(hearingModel.id);
+            expect(notesService.getByEntities).toHaveBeenCalledWith([hearingModel.id])
+        });
+
+        it('update of listing is not made when dialog returns undefined', () => {
+            matDialogSpy.open.and.returnValue(openDialogMockObjUndefined);
+
+            component.onAmend(hearingModel.id);
+
+            expect(hearingPartModificationService.updateListingRequest).not.toHaveBeenCalled();
+        });
+
+        it('update of listing is made when dialog returns a defined object', () => {
+            const openDialogMockObj = {
+                afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of(updateHearingModel)
+            };
+            matDialogSpy.open.and.returnValue(openDialogMockObj);
+
+            component.onAmend(hearingModel.id);
+
+            expect(hearingPartModificationService.updateListingRequest).toHaveBeenCalledWith(updateHearingModel);
+        });
+
+        it('when confirmed and notes are non zero-length then note service is called', () => {
+            const openDialogMockObj = {
+                afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of({...updateHearingModel, notes: notes})
+            };
+            notesService.upsertManyNotes.and.returnValue(Observable.of([]));
+            matDialogSpy.open.and.returnValues(openDialogMockObj, openDialogMockObjConfirmed);
+
+            component.onAmend(hearingModel.id);
+
+            expect(notesService.upsertManyNotes).toHaveBeenCalledWith(notes);
+            expect(hearingService.seearchFilteredHearingViewmodels).toHaveBeenCalled();
         })
     })
 });
