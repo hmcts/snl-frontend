@@ -17,6 +17,7 @@ import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
+import * as fromHearingParts from '../../hearing-part/actions/hearing-part.action'
 
 @Injectable()
 export class HearingService {
@@ -58,7 +59,8 @@ export class HearingService {
     }
 
     this.store.dispatch(new RemoveAll());
-    this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction))
+    this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction));
+    this.store.dispatch(new fromHearingParts.RemoveAll())
 
     return this.http
       .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {

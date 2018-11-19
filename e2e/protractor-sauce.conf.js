@@ -1,37 +1,39 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-const { SpecReporter } = require('jasmine-spec-reporter');
+const {SpecReporter} = require('jasmine-spec-reporter');
 const puppeteer = require('puppeteer');
+const URL = require('./e2e-url.js');
+const timeout = 10 * 60 * 1000;
 
-const isHeadlessModeEnabled = true;
-
-const baseUrl = (process.env.TEST_URL || 'http://localhost:3451/').replace('https', 'http');
+const frontendURL = (process.env.TEST_URL || URL.frontendURL).replace('https', 'http');
 
 exports.config = {
+    SELENIUM_PROMISE_MANAGER: false,
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     sauceSeleniumAddress: 'ondemand.saucelabs.com:443/wd/hub',
-    allScriptsTimeout: 111000,
+    allScriptsTimeout: timeout,
     suites: {
-      e2e: './**/*.e2e-spec.ts',
-      smoke: '../smoke-test/*.smoke-spec.ts'
+        e2e: './**/*.e2e-spec.ts'
     },
     multiCapabilities: [{
-           'browserName': 'internet explorer',
-           'platform': 'Windows 10',
-           'version': '11.103',
-           'name': 'snl-IE-tests',
-           'tunnel-identifier': 'reformtunnel',
-           'extendedDebugging': true,
-           'shardTestFiles': true,
-           'maxInstances': 2
-        }],
-    baseUrl: baseUrl,
+        'browserName': 'internet explorer',
+        'platform': 'Windows 10',
+        'version': '11.103',
+        'name': 'snl-IE-tests',
+        'tunnel-identifier': 'reformtunnel',
+        'screenResolution': '1280x1024',
+        'timeZone': 'London', //need to check if jenkins has London's timezone
+        'extendedDebugging': true,
+        'maxDuration': 5400,
+        'idleTimeout': 300
+    }],
+    baseUrl: frontendURL,
     framework: 'jasmine',
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 130000,
+        defaultTimeoutInterval: timeout,
         isVerbose: true,
         includeStackTrace: true,
         print: function () {}
@@ -46,13 +48,13 @@ exports.config = {
         verbose: 'info',
         imageToAscii: 'none',
         clearFoldersBeforeTest: true
-      }],
+    }],
     onPrepare() {
-        // Uncomment below line while debugging
-        // jasmine.DEFAULT_TIMEOUT_INTERVAL = 60 * 60 * 1000;
+        // SauceLabs is slow and needs a bigger timeout
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = timeout;
 
         // returning the promise makes protractor wait for the reporter config before executing tests
-        global.browser.getProcessedConfig().then(function(config) {
+        global.browser.getProcessedConfig().then(function (config) {
             //it is ok to be empty
         });
         require('ts-node').register({
@@ -66,11 +68,11 @@ exports.config = {
         return browser.get('/');
     },
     onComplete: function () {
-            var printSessionId = function (jobName) {
-                browser.getSession().then(function (session) {
-                    console.log('SauceOnDemandSessionID=' + session.getId() + ' job-name=' + jobName);
-                });
-            }
+        const printSessionId = function (jobName) {
+            browser.getSession().then(function (session) {
+                console.log('SauceOnDemandSessionID=' + session.getId() + ' job-name=' + jobName);
+            });
+        };
         printSessionId("snl-frontend");
-        }
+    }
 };

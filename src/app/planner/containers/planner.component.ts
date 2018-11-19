@@ -12,6 +12,7 @@ import * as moment from 'moment';
 import { DialogWithActionsComponent } from '../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { SessionsCreationService } from '../../sessions/services/sessions-creation.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { DialogInfoComponent } from '../../features/notification/components/dialog-info/dialog-info.component';
 import { HearingPartToSessionAssignment } from '../../hearing-part/models/hearing-to-session-assignment';
 import { HearingModificationService } from '../../hearing-part/services/hearing-modification.service';
 import { v4 as uuid } from 'uuid';
@@ -120,28 +121,16 @@ export class PlannerComponent implements OnInit {
     }
 
     public drop(event) {
-        const selectedSessionId = this.selectedSessionId;
         this.latestEvent = event;
+        let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
+        let isNotMultiSession = !this.hearingParts.find(hp => hp.id === hearingPartId).multiSession;
 
         if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = this.openConfirmationDialog();
+            this.confirmationDialogRef = isNotMultiSession ? this.openConfirmationDialog() : this.openMultiSessionDialog();
             this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
                 this.confirmationDialogOpen = false;
-                if (confirmed) {
-                    let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
-                    this.hearingModificationService.assignWithSession({
-                        hearingPartId: hearingPartId,
-                        hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
-                        userTransactionId: uuid(),
-                        sessionData: {sessionId: selectedSessionId,
-                            sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version},
-                        start: null
-                    } as HearingPartToSessionAssignment);
-
-                    this.openSummaryDialog().afterClosed().subscribe(() => {
-                        this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
-                        this.store.dispatch(new SessionActions.Get(selectedSessionId));
-                    });
+                if (isNotMultiSession && confirmed) {
+                    this.updateHearingPart(hearingPartId)
                 }
             });
         }
@@ -149,6 +138,25 @@ export class PlannerComponent implements OnInit {
 
     public eventMouseOver(event) {
         this.selectedSessionId = event.detail.event.id;
+    }
+
+    private updateHearingPart(hearingPartId) {
+        const selectedSessionId = this.selectedSessionId;
+        this.hearingModificationService.assignWithSession({
+            hearingPartId: hearingPartId,
+            hearingPartVersion: this.hearingParts.find(hp => hp.id === hearingPartId).version,
+            userTransactionId: uuid(),
+            sessionData: {
+                sessionId: selectedSessionId,
+                sessionVersion: this.sessions.find(s => s.id === selectedSessionId).version
+            },
+            start: null
+        } as HearingPartToSessionAssignment);
+
+        this.openSummaryDialog().afterClosed().subscribe(() => {
+            this.store.dispatch(new fromHearingPartsActions.GetById(hearingPartId));
+            this.store.dispatch(new SessionActions.Get(selectedSessionId));
+        });
     }
 
     private buildSessionUpdate(event) {
@@ -167,6 +175,15 @@ export class PlannerComponent implements OnInit {
         if (this.latestEvent !== undefined) {
             this.latestEvent.detail.revertFunc();
         }
+    }
+
+    private openMultiSessionDialog() {
+        this.confirmationDialogOpen = true;
+
+        return this.dialog.open(DialogInfoComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: 'This is a multi-session hearing and you cannot move just part of it.'
+        });
     }
 
     private openConfirmationDialog() {

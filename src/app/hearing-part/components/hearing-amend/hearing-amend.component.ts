@@ -13,8 +13,8 @@ import { ListingNoteListComponent } from '../listing-note-list/listing-note-list
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
-import { Status } from '../../../core/reference/models/status.model';
 import { HearingViewmodelForAmendment } from '../../models/filtered-hearing-viewmodel';
+import { Status } from '../../../core/reference/models/status.model';
 
 export enum ListingTypeTab {
     Single = 0,

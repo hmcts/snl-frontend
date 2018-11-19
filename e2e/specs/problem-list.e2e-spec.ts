@@ -39,27 +39,12 @@ const displayValuesFromProblems = (problems: any[]): string[][] => {
     })
 }
 
-export function getConsole () {
-    return ;
-};
-
-export function printConsole () {
-    return getConsole
-};
-
 describe('Problem list tests', () => {
     describe('Go to Problems page', () => {
         beforeAll(async () => {
             await loginFlow.loginIfNeeded();
             await navigationFlow.goToProblemsPage();
         });
-
-        //TODO: fix epipe write epipe
-        // afterEach(async () => {
-        //     await browser.manage().logs().get('browser').then(browserLog => {
-        //         browserLog.forEach(log => console.error(log.message));
-        //     });
-        // });
 
         it('Remember number of problems', async () => {
             problemsBeforeAction = (await API.getProblems()) as any[]
