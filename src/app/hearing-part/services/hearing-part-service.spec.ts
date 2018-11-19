@@ -7,9 +7,6 @@ import { HearingPartService } from './hearing-part-service';
 import moment = require('moment');
 import { v4 as uuid } from 'uuid';
 import { HearingPartToSessionAssignment } from '../models/hearing-to-session-assignment';
-import { DEFAULT_SEARCH_HEARING_REQUEST } from '../models/search-hearing-request';
-import { Page } from '../../problems/models/problem.model';
-
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
 
 let hearingPartService: HearingPartService;
@@ -123,45 +120,14 @@ const createHearingPartRequest: CreateHearingRequest = {
     communicationFacilitator: null,
     priority: null,
     userTransactionId: uuid(),
-    numberOfSessions: 1
+    numberOfSessions: 1,
+    multiSession: false
 };
 
 const updateHearingPartRequest: UpdateHearingRequest = {
     ...createHearingPartRequest,
     version: 1
 };
-
-const filteredHearingViewModelResponse = {
-    'id': '6425fe9e-43d9-4abb-b122-26a681cd6c33',
-    'caseNumber': 'edited-number-2018-10-19 12:30:03',
-    'caseTitle': 'edited-title-2018-10-19 12:30:03',
-    'caseTypeCode': 'fast-track',
-    'caseTypeDescription': 'Fast Track',
-    'hearingTypeCode': 'adjourned-hearing',
-    'hearingTypeDescription': 'Adjourned Hearing',
-    'duration': 'PT45M',
-    'scheduleStart': '2018-10-18T22:00:00Z',
-    'scheduleEnd': '2018-10-19T22:00:00Z',
-    'reservedJudgeId': null,
-    'reservedJudgeName': null,
-    'communicationFacilitator': null,
-    'priority': 'Low',
-    'version': 1,
-    'listingDate': '2018-10-18T22:00:00Z',
-    'isListed': false
-};
-
-const filteredHearingViewModelPage: Page<Object> = {
-        'content': [filteredHearingViewModelResponse],
-        'last': false,
-        'totalElements': 121,
-        'totalPages': 7,
-        'size': 20,
-        'number': 0,
-        'sort': null,
-        'first': true,
-        'numberOfElements': 20
-}
 
 describe('HearingPartService', () => {
     beforeEach(() => {
@@ -240,26 +206,6 @@ describe('HearingPartService', () => {
             hearingPartService.updateListing(updateHearingPartRequest).subscribe();
 
             httpMock.expectOne(expectedUrl).flush(hearingPartResponse);
-        });
-    });
-
-    describe('seearchFilteredHearingViewmodels', () => {
-        const expectedUrl = `${mockedAppConfig.getApiUrl()}/hearing`;
-
-        it('should call proper url', () => {
-            hearingPartService.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe();
-
-            httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
-        });
-
-        it('should map to dates', () => {
-            hearingPartService.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe(data => {
-                expect(data.content[0].scheduleStart.isValid).toBeTruthy();
-                expect(data.content[0].scheduleEnd.isValid).toBeTruthy();
-                expect(data.content[0].listingDate.isValid).toBeTruthy();
-            });
-
-            httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
         });
     });
 });

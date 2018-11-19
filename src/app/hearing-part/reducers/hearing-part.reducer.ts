@@ -52,6 +52,20 @@ export function reducer(state: State = initialState, action) {
     case HearingPartActionTypes.DeleteComplete: {
         return {...state, loading: false, ...adapter.removeOne(action.payload, state)}
     }
+    case HearingPartActionTypes.DeleteByHearingId: {
+        let arr = [];
+
+        Object.entries({...state}.entities).forEach(([key, value]) => {
+         if (value.hearingInfo === action.payload) {
+             arr.push(key);
+         }
+        });
+
+        return {...state, loading: false, ...adapter.removeMany(arr, state)};
+    }
+    case HearingPartActionTypes.RemoveAll: {
+        return {...state, loading: false, ...adapter.removeAll(state)};
+    }
     default:
         return state;
   }

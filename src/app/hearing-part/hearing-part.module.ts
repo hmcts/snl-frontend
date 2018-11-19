@@ -26,6 +26,8 @@ import { SearchCriteriaService } from './services/search-criteria.service';
 import { HearingModificationService } from './services/hearing-modification.service';
 import { DateTimeToHHmmPipe } from '../core/pipes/datetime-hhmm.pipe';
 import { RouterModule } from '@angular/router';
+import { HearingAmendDialogComponent } from './components/hearing-amend-dialog/hearing-amend-dialog.component';
+import { HearingAmendComponent } from './components/hearing-amend/hearing-amend.component';
 
 export const COMPONENTS = [
     HearingPartsPreviewComponent,
@@ -33,6 +35,8 @@ export const COMPONENTS = [
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
     AssignHearingDialogComponent,
+    HearingAmendDialogComponent,
+    HearingAmendComponent,
     HearingsFilterComponent,
     HearingsSearchComponent,
     HearingSearchTableComponent,
@@ -60,6 +64,6 @@ export const COMPONENTS = [
       HearingModificationService,
       ListingCreateNotesConfiguration,
       HearingAssignmentNotesConfiguration],
-  entryComponents: [ListingCreateDialogComponent, AssignHearingDialogComponent],
+  entryComponents: [ListingCreateDialogComponent, AssignHearingDialogComponent, HearingAmendDialogComponent],
 })
 export class HearingPartModule { }

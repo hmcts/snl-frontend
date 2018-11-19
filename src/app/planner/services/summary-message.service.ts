@@ -34,7 +34,7 @@ export class SummaryMessageService {
     }
 
     private isTimeChanged(event): boolean {
-        return event.detail.duration.asMilliseconds() > 0
+        return event.detail.duration.asMilliseconds() !== 0;
     }
 
     private isResourceChanged(event, resourceType, resourceId): boolean {

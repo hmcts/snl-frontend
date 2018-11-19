@@ -1,5 +1,6 @@
 import { Note } from '../../notes/models/note.model';
 import { Injectable } from '@angular/core';
+import { NoteType } from '../../notes/models/note-type';
 
 @Injectable()
 export class HearingAssignmentNotesConfiguration {
@@ -13,7 +14,7 @@ export class HearingAssignmentNotesConfiguration {
         const note = {
             id: undefined,
             content: '',
-            type: 'Listing note'
+            type: NoteType.LISTING_NOTE
         } as Note;
 
         return [note];

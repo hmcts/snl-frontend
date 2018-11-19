@@ -56,4 +56,14 @@ describe('NotesService', () => {
         });
     });
 
+    describe('getByEntities', () => {
+        const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes/entities`;
+
+        it('should call proper url', () => {
+            notesService.getByEntities(['id']).subscribe(
+                data => expect(data[0].createdAt.isValid()).toBeTruthy()
+            );
+            httpMock.expectOne(expectedUrl).flush([{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]);
+        });
+    });
 });

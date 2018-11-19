@@ -12,5 +12,6 @@ export interface Hearing {
     communicationFacilitator: string;
     deleted: boolean;
     version: number;
-    numberOfSessionsNeeded: number;
+    numberOfSessions: number;
+    multiSession: boolean;
 }

@@ -26,6 +26,8 @@ module "snl-frontend" {
   ilbIp                = "${var.ilbIp}"
   is_frontend          = "${var.external_host_name != "" ? "1" : "0"}"
   additional_host_name = "${var.external_host_name != "" ? var.external_host_name : "null"}"
+  capacity             = "1"
+  instance_size        = "I1"
   subscription         = "${var.subscription}"
   asp_rg               = "${local.asp_rg}"
   asp_name             = "${local.asp_name}"

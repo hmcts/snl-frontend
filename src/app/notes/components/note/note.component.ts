@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
-import { NoteViewmodel } from '../../models/note.viewmodel';
+import { DEFAULT_NOTE_DATE_FORMAT, NoteViewmodel } from '../../models/note.viewmodel';
 import { FormControl } from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-note',
@@ -42,5 +43,9 @@ export class NoteComponent {
         }
     }
     get disable() { return this._disabled }
+
+    protected formatDate(date: moment.Moment) {
+        return moment(date).format(DEFAULT_NOTE_DATE_FORMAT)
+    }
 
 }
