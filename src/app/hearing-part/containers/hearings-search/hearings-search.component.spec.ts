@@ -3,10 +3,10 @@ import { Observable } from 'rxjs/Observable';
 import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
-import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
-import { ListingRequestViewmodel } from '../../models/listing-create';
+import { FilteredHearingViewmodel, HearingViewmodelForAmendment } from '../../models/filtered-hearing-viewmodel';
 import { Note } from '../../../notes/models/note.model';
 import { Status } from '../../../core/reference/models/status.model';
+import { ListingStatus } from '../../models/listing-status-model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
@@ -142,24 +142,28 @@ describe('HearingsSearchComponent', () => {
 
     describe('When amend', () => {
         const notes = [{} as Note, {} as Note, {} as Note];
-        const updateHearingModel: ListingRequestViewmodel = {
+        const updateHearingModel: HearingViewmodelForAmendment = {
             hearing: {
                 id: '123',
                 caseNumber: '123',
                 caseTitle: '213',
                 caseTypeCode: 'caseTypeCode',
+                caseTypeDescription: 'caseTypeCode',
                 hearingTypeCode: 'hearingTypeCode',
+                hearingTypeDescription: 'hearingTypeCode',
                 duration: moment.duration(12),
                 scheduleStart: now,
                 scheduleEnd: now,
                 reservedJudgeId: '123',
+                reservedJudgeName: '123',
                 communicationFacilitator: 'transaltor',
                 priority: Priority.Low,
                 version: 1,
-                isListed: true,
-                userTransactionId: undefined,
+                personName: 'asd',
+                status: ListingStatus.Listed,
                 numberOfSessions: 1,
-                multiSession: false
+                multiSession: false,
+                listingDate: undefined
             },
             notes: []
         };
@@ -188,7 +192,7 @@ describe('HearingsSearchComponent', () => {
 
         it('update of listing is made when dialog returns a defined object', () => {
             const openDialogMockObj = {
-                afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of(updateHearingModel)
+                afterClosed: (): Observable<HearingViewmodelForAmendment> => Observable.of(updateHearingModel)
             };
             matDialogSpy.open.and.returnValue(openDialogMockObj);
 
@@ -199,7 +203,7 @@ describe('HearingsSearchComponent', () => {
 
         it('when confirmed and notes are non zero-length then note service is called', () => {
             const openDialogMockObj = {
-                afterClosed: (): Observable<ListingRequestViewmodel> => Observable.of({...updateHearingModel, notes: notes})
+                afterClosed: (): Observable<HearingViewmodelForAmendment> => Observable.of({...updateHearingModel, notes: notes})
             };
             notesService.upsertManyNotes.and.returnValue(Observable.of([]));
             matDialogSpy.open.and.returnValues(openDialogMockObj, openDialogMockObjConfirmed);
