@@ -8,7 +8,7 @@ export interface HearingAmendDialogData {
     judges: Judge[],
     caseTypes: CaseType[],
     hearingViewModel: HearingViewmodelForAmendment
-};
+}
 
 @Component({
     selector: 'app-hearing-amend-dialog',
