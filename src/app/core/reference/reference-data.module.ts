@@ -11,6 +11,7 @@ import { StatusConfigService } from './services/status-config.service';
 import { StatusConfigResolver } from './resolvers/status-config.resolver';
 import { CaseTypesResolver } from './resolvers/case-types.resolver';
 import { HearingTypesResolver } from './resolvers/hearing-types.resolver';
+import { SessionTypesResolver } from './resolvers/session-types.resolver';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import { HearingTypesResolver } from './resolvers/hearing-types.resolver';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [ReferenceDataService, StatusConfigService, StatusConfigResolver, CaseTypesResolver, HearingTypesResolver]
+    providers: [ReferenceDataService, StatusConfigService,
+        StatusConfigResolver, CaseTypesResolver, HearingTypesResolver, SessionTypesResolver]
 })
 export class ReferenceDataModule {
 }

@@ -5,13 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers';
 import * as fromSessions from '../../reducers';
-import * as fromJudges from '../../../judges/reducers';
-import * as fromReferenceData from '../../../core/reference/reducers';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
-import * as RoomActions from '../../../rooms/actions/room.action';
-import * as JudgeActions from '../../../judges/actions/judge.action';
 import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
@@ -38,6 +34,7 @@ import * as fromNotes from '../../../notes/actions/notes.action';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { HearingPartsPreviewComponent } from '../../../hearing-part/components/hearing-parts-preview/hearing-parts-preview.component';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -66,6 +63,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionsFilterService: SessionsFilterService,
+                private route: ActivatedRoute,
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
         this.hearings$ = this.store.pipe(
@@ -73,13 +71,15 @@ export class SessionsListingsSearchComponent implements OnInit {
             map(asArray),
           ) as Observable<HearingViewmodel[]>;
 
-        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
-        this.sessionTypes$ = this.store.pipe(select(fromReferenceData.selectSessionTypes));
+        this.route.data.subscribe(({judges, sessionTypes, rooms}) => {
+            this.judges$ = Observable.of(judges);
+            this.sessionTypes$ = Observable.of(sessionTypes);
+            this.rooms$ = Observable.of(rooms);
+        });
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
-        this.endDate = moment().add(5, 'years');
+        this.endDate = moment().add(3, 'months');
 
         combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
     }
@@ -87,8 +87,6 @@ export class SessionsListingsSearchComponent implements OnInit {
     ngOnInit() {
         this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
         this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
-        this.store.dispatch(new RoomActions.Get());
-        this.store.dispatch(new JudgeActions.Get());
     }
 
     filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {

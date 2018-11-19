@@ -13,6 +13,11 @@ export class RoomService {
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) {
     }
 
+    fetch(): Observable<any> {
+        return this.http
+            .get<Room[]>(`${this.config.getApiUrl()}/room`);
+    }
+
     get(): Observable<any> {
         return this.http
             .get<Room[]>(`${this.config.getApiUrl()}/room`) //  TODO: get it back
