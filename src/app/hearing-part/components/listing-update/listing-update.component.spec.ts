@@ -1,4 +1,4 @@
-import { ListingCreate } from '../../models/listing-create';
+import { ListingRequestViewmodelForAmendment } from '../../models/listing-create';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { MatSelectChange } from '@angular/material';
@@ -6,6 +6,7 @@ import moment = require('moment');
 import { ListingRequestEditComponent, ListingTypeTab } from './listing-update.component';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
+import { Status } from '../../../core/reference/models/status.model';
 
 let component: ListingRequestEditComponent;
 
@@ -17,26 +18,25 @@ const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearin
 const listingCreate = {
     hearing: {
         id: undefined,
-        session: undefined,
         caseNumber: 'number',
         caseTitle: 'title',
         caseTypeCode: caseTypeWht1.code,
+        caseTypeDescription: 'aa',
         hearingTypeCode: stubHearingTypes1[0].code,
+        hearingTypeDescription: 'aa',
         duration: moment.duration(30, 'minute'),
         scheduleStart: now,
         scheduleEnd: now,
-        createdAt: now,
         version: 0,
         priority: undefined,
         reservedJudgeId: undefined,
         communicationFacilitator: undefined,
-        userTransactionId: 'uti',
         numberOfSessions: 1,
-        multiSession: false
+        multiSession: false,
+        status: Status.Unlisted
     },
     notes: [],
-    userTransactionId: undefined
-} as ListingCreate;
+} as ListingRequestViewmodelForAmendment;
 
 describe('ListingUpdateComponent', () => {
     beforeEach(() => {

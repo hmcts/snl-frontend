@@ -7,7 +7,7 @@
         <mat-card-content fxLayout="row" fxLayoutGap="5%">
 
             <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
-                <div style="padding-bottom: 1em" *ngIf="listing.hearing.isListed">
+                <div style="padding-bottom: 1em" *ngIf="isListed()">
                     <div>Start of listing: {{parseDate(listing.hearing.listingDate)}}</div>
                     <div>Judge assigned: {{listing.hearing.personName}}</div>
                 </div>

@@ -16,6 +16,7 @@ import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/li
 import { NotesService } from '../../../notes/services/notes.service';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
+import { Status } from '../../../core/reference/models/status.model';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -33,7 +34,8 @@ const HEARING = {
 
 const HEARING_WITH_SESSIONS = {
   id: HEARING_ID,
-  sessions: [SESSION]
+  sessions: [SESSION],
+  status: Status.Listed
 } as Hearing
 
 const hearingServiceMock = {

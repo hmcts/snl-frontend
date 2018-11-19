@@ -6,6 +6,7 @@ import { Priority } from '../../models/priority-model';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { ListingRequestViewmodel } from '../../models/listing-create';
 import { Note } from '../../../notes/models/note.model';
+import { Status } from '../../../core/reference/models/status.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
@@ -73,7 +74,7 @@ describe('HearingsSearchComponent', () => {
             priority: Priority.Low,
             version: 1,
             listingDate: now,
-            isListed: true
+            status: Status.Listed
         } as FilteredHearingViewmodel;
     });
 

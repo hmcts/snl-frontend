@@ -1,5 +1,5 @@
 export enum ListingStatus {
-    Listed = 'listed',
-    Unlisted = 'unlisted',
-    All = 'all'
+    Listed = 'Listed',
+    Unlisted = 'Unlisted',
+    All = 'All'
 }

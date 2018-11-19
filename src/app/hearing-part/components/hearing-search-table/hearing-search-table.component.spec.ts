@@ -7,6 +7,7 @@ import { Priority, priorityValue } from '../../models/priority-model';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { Observable } from 'rxjs/Observable';
+import { Status } from '../../../core/reference/models/status.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
@@ -122,8 +123,10 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudgeName: null,
-        isListed: true,
         listingDate: null,
-        personName: ''
+        status: Status.Listed,
+        personName: '',
+        multiSession: null,
+        numberOfSessions: null
     }
 }

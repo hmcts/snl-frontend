@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ListingRequestViewmodel } from '../../models/listing-create';
+import { ListingRequestViewmodelForAmendment } from '../../models/listing-create';
 import * as moment from 'moment';
 import { Priority } from '../../models/priority-model';
 import { AbstractControl, FormControl, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
@@ -14,6 +14,7 @@ import { ListingNoteListComponent } from '../listing-note-list/listing-note-list
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { CommunicationFacilitators } from '../../models/communication-facilitators.model';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
+import { Status } from '../../../core/reference/models/status.model';
 
 export enum ListingTypeTab {
     Single = 0,
@@ -29,7 +30,7 @@ export class ListingRequestEditComponent {
     @ViewChild('listingCreateForm') listingFormGroup: FormGroupDirective;
     @ViewChild('notesComponent') notesComponent: ListingNoteListComponent;
 
-    @Input() set data(value: ListingRequestViewmodel) {
+    @Input() set data(value: ListingRequestViewmodelForAmendment) {
         this.listing = value;
 
         if (this.listing.hearing.multiSession) {
@@ -65,7 +66,7 @@ export class ListingRequestEditComponent {
     }
 
     public chosenListingType = 0;
-    public listing: ListingRequestViewmodel;
+    public listing: ListingRequestViewmodelForAmendment;
     public listingType = ListingTypeTab;
     public caseTitleMaxLength = 200;
     public caseNumberMaxLength = 200;
@@ -123,6 +124,10 @@ export class ListingRequestEditComponent {
 
     parseDate(date) {
         return date ? moment(date).format('DD/MM/YYYY') : null;
+    }
+
+    isListed() {
+        return this.listing.hearing.status === Status.Listed;
     }
 
     private getHearingTypesFromCaseType(selectedCaseTypeCode): HearingType[] {

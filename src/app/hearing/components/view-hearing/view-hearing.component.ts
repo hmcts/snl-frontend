@@ -15,6 +15,7 @@ import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/li
 import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
+import { Status } from '../../../core/reference/models/status.model';
 
 @Component({
   selector: 'app-view-hearing',
@@ -120,11 +121,11 @@ export class ViewHearingComponent implements OnInit {
   }
 
   isListed() {
-    return this.hearing.sessions.length > 0
+    return this.hearing.status === Status.Listed;
   }
 
   openConfirmationDialog() {
-    const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+      const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
         ...DEFAULT_DIALOG_CONFIG,
         data: {
             title: 'Unlist hearing',
