@@ -69,6 +69,10 @@ export class SessionsFilterComponent implements OnInit {
       this.sendFilter();
   }
 
+  isValid() {
+      return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
+  }
+
   sendFilter() {
     this.filter.emit(this.filters);
   }
