@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
@@ -11,10 +11,22 @@ import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
+import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
+import { SessionViewModel } from '../models/session.viewmodel';
+import { Page } from '../../problems/models/problem.model';
 
 @Injectable()
 export class SessionsService {
     constructor(private readonly http: HttpClient, private readonly config: AppConfig) {}
+
+    getSessionsForListing(request: SearchHearingRequest): Observable<Page<SessionViewModel>> {
+        return this.http
+            .post<Page<SessionViewModel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+                }).pipe(map((sessiongPage: Page<SessionViewModel>) => {
+                    return {...sessiongPage, content: sessiongPage.content}
+                }))
+    }
 
     getSession(sessionId: string): Observable<any> {
         return this.http

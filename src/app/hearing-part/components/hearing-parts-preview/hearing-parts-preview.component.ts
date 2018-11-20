@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
@@ -25,8 +25,10 @@ import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/def
 export class HearingPartsPreviewComponent implements OnInit, OnChanges {
     @Input() hearings: HearingViewmodel[];
     @Input() sessions: SessionViewModel[];
+    @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onClearSelection = new EventEmitter();
+    @Output() onNextPage = new EventEmitter<PageEvent>();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -57,6 +59,7 @@ export class HearingPartsPreviewComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
+        this.paginator.page.subscribe(pageEvent => this.onNextPage.emit(pageEvent))
     }
 
     ngOnChanges() {

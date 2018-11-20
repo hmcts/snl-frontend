@@ -1,24 +1,31 @@
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
+import { DEFAULT_SESSION_FILTERS, SessionFilters } from '../../models/session-filter.model';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-session-table',
   templateUrl: './session-table.component.html',
   styleUrls: ['./session-table.component.scss']
 })
-export class SessionTableComponent implements OnChanges {
+export class SessionTableComponent implements OnChanges, OnInit {
+    public static DEFAULT_PAGING: PageEvent = {
+        pageSize: 10,
+        pageIndex: 0,
+        length: undefined
+    };
 
-  @Output()
-  selectSessions = new EventEmitter();
+  paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(SessionTableComponent.DEFAULT_PAGING);
 
-  @Output()
-  viewNotes = new EventEmitter();
+  @Output() selectSessions = new EventEmitter();
+  @Output() viewNotes = new EventEmitter();
 
   @Input() sessions: SessionViewModel[];
+  @Input() totalCount: number;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -74,6 +81,15 @@ export class SessionTableComponent implements OnChanges {
 
   clearSelection() {
       this.selectedSesssions.clear();
+  }
+
+  ngOnInit() {
+      this.dataSource = new MatTableDataSource(Object.values(this.sessions));
+      this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent))
+  }
+
+  getPaginationSource() {
+      return this.paginationSource$;
   }
 
   ngOnChanges() {

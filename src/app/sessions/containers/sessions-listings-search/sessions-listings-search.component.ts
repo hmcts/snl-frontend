@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { SearchForDates } from '../../actions/session.action';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromSessions from '../../reducers';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
@@ -12,16 +10,12 @@ import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, PageEvent } from '@angular/material';
 import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
 import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
-import { asArray } from '../../../utils/array-utils';
 import { SessionType } from '../../../core/reference/models/session-type';
-import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
@@ -35,6 +29,11 @@ import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/def
 import { HearingPartsPreviewComponent } from '../../../hearing-part/components/hearing-parts-preview/hearing-parts-preview.component';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
 import { ActivatedRoute } from '@angular/router';
+import { Status } from '../../../core/reference/models/status.model';
+import { HearingService } from '../../../hearing/services/hearing.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { SessionsFilterComponent } from '../../components/sessions-filter/sessions-filter.component';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -43,66 +42,63 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SessionsListingsSearchComponent implements OnInit {
 
+    public static DEFAULT_PAGING: PageEvent = {
+        pageSize: 10,
+        pageIndex: 0,
+        length: undefined
+    };
+
     @ViewChild(HearingPartsPreviewComponent) hearingPartsTable;
     @ViewChild(SessionTableComponent) sessionsTable;
+    @ViewChild(SessionsFilterComponent) sessionFilter;
 
-    startDate: moment.Moment;
-    endDate: moment.Moment;
-    hearings$: Observable<HearingViewmodel[]>;
-    sessions$: Observable<SessionViewModel[]>;
-    rooms$: Observable<Room[]>;
-    judges$: Observable<Judge[]>;
+    latestSessionsPaging = SessionsListingsSearchComponent.DEFAULT_PAGING;
+    latestHearingsPaging = SessionsListingsSearchComponent.DEFAULT_PAGING;
+    totalSessionsCount: number;
+    totalHearingsCount: number;
+    latestFilters: SessionFilters;
+
     selectedSessions: SessionViewModel[] = [];
     selectedHearing: HearingViewmodel = undefined;
     filters$ = new Subject<SessionFilters>();
-    sessionTypes$: Observable<SessionType[]>;
-    filteredSessions: SessionViewModel[];
+    filterSource$: Observable<SessionFilters>;
+    sessionPaginationSource$: Observable<any>;
     errorMessage: string;
     numberOfSessions = 1;
     multiSession = false;
 
+    hearingsSource$: BehaviorSubject<HearingViewmodel[]>;
+    sessionsSource$: BehaviorSubject<SessionViewModel[]>;
+    hearings$: Observable<HearingViewmodel[]>;
+    sessions$: Observable<SessionViewModel[]>;
+
+    sessionTypes$: Observable<SessionType[]>;
+    rooms$: Observable<Room[]>;
+    judges$: Observable<Judge[]>;
+
     constructor(private readonly store: Store<fromHearingParts.State>,
-                private readonly sessionsFilterService: SessionsFilterService,
+                private readonly hearingService: HearingService,
                 private route: ActivatedRoute,
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
-        this.hearings$ = this.store.pipe(
-          select(fromHearingParts.getFullUnlistedHearings),
-            map(asArray),
-          ) as Observable<HearingViewmodel[]>;
-
+        this.hearingsSource$ = new BehaviorSubject<HearingViewmodel[]>([]);
+        this.sessionsSource$ = new BehaviorSubject<SessionViewModel[]>([]);
+        this.hearings$ = this.hearingsSource$.asObservable();
+        this.sessions$ = this.sessionsSource$.asObservable();
         this.route.data.subscribe(({judges, sessionTypes, rooms}) => {
             this.judges$ = Observable.of(judges);
             this.sessionTypes$ = Observable.of(sessionTypes);
             this.rooms$ = Observable.of(rooms);
         });
 
-        this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
-        this.startDate = moment();
-        this.endDate = moment().add(3, 'months');
-
-        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
+        this.fetchHearings(this.latestHearingsPaging);
     }
 
     ngOnInit() {
-        this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
-        this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
-    }
+        this.filterSource$ = this.sessionFilter.getFilterSource().asObservable();
+        this.sessionPaginationSource$ = this.sessionsTable.getPaginationSource().asObservable();
 
-    filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
-        if (!filters) {
-            return sessions;
-        }
-        if (filters.startDate !== this.startDate) {
-            this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
-            this.startDate = filters.startDate;
-            this.endDate = filters.endDate;
-        }
-
-        return sessions.filter(s => this.sessionsFilterService.filterByProperty(s.person, filters.judges))
-            .filter(s => this.sessionsFilterService.filterByProperty(s.room, filters.rooms))
-            .filter(s => this.sessionsFilterService.filterBySessionType(s, filters))
-            .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
+        combineLatest(this.sessionPaginationSource$, this.filterSource$, this.fetchSessions).subscribe()
     }
 
     selectHearing(hearing: HearingViewmodel) {
@@ -178,6 +174,16 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingPartsTable.clearSelection();
     }
 
+    onNextHearingsPage(pageEvent: PageEvent) {
+        this.latestHearingsPaging = pageEvent;
+        this.fetchHearings(pageEvent);
+    }
+
+    onNextSessionsPage(pageEvent: PageEvent) {
+        this.latestSessionsPaging = pageEvent;
+        this.fetchSessions(pageEvent, this.latestFilters);
+    }
+
     private checkIfOnlyOneJudgeSelected() {
         if (!this.selectedHearing.multiSession) {
             this.errorMessage = '';
@@ -201,5 +207,39 @@ export class SessionsListingsSearchComponent implements OnInit {
     private resetSelections() {
         this.selectedSessions = [];
         this.selectedHearing = undefined;
+    }
+
+    private fetchHearings(pageEvent: PageEvent) {
+        const request = {
+            httpParams: {
+                size: pageEvent.pageSize,
+                page: pageEvent.pageIndex,
+            },
+            searchCriteria: [{key: 'status.status', operation: 'equals', value: Status.Unlisted}]
+        };
+
+        this.hearingService.getHearingsForListing(request).subscribe(hearings => {
+            this.hearingsSource$.next(hearings.content || []);
+            this.totalHearingsCount = hearings.totalElements;
+        })
+    }
+
+    private fetchSessions(pageEvent: PageEvent, filters: SessionFilters) {
+        // const request = {
+        //     httpParams: {
+        //         size: pageEvent.pageSize,
+        //         page: pageEvent.pageIndex,
+        //     },
+        //     searchCriteria: []
+        // };
+
+        console.log(pageEvent)
+        console.log(filters)
+        this.totalSessionsCount = 0;
+
+        // this.sessionsService.getSessionsForListing(request).subscribe(sessions => {
+        //     this.sessionsSource$.next(sessions.content || []);
+        //     this.totalSessionsCount = sessions.totalElements;
+        // })
     }
 }

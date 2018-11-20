@@ -18,6 +18,7 @@ import { map } from 'rxjs/operators';
 import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
 import * as fromHearingParts from '../../hearing-part/actions/hearing-part.action'
+import { HearingViewmodel } from '../../hearing-part/models/hearing.viewmodel';
 
 @Injectable()
 export class HearingService {
@@ -75,6 +76,18 @@ export class HearingService {
                     return this.parseDatesAndDurations(hearing);
                 }
             ));
+    }
+
+    getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingViewmodel>> {
+        return this.http
+            .post<Page<HearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+                params: new HttpParams({ fromObject: request.httpParams })
+            }).pipe(map((hearingPage: Page<HearingViewmodel>) => {
+                hearingPage.content = hearingPage.content.map(hearing => {
+                    return this.parseDatesAndDurations(hearing);
+                });
+                return {...hearingPage, content: hearingPage.content}
+            }))
     }
 
     seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {

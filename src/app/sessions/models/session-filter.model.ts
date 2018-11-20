@@ -20,3 +20,38 @@ export interface UtilizationFilter {
     from: number,
     to: number
 }
+
+export const DEFAULT_SESSION_FILTERS: SessionFilters = {
+    sessionTypes: [],
+    rooms: [],
+    judges: [],
+    startDate: moment(),
+    endDate: moment().add(3, 'months'),
+    utilization: {
+        unlisted: {
+            active: false,
+            from: 0,
+            to: 0
+        },
+        partListed: {
+            active: false,
+            from: 1,
+            to: 99
+        },
+        fullyListed: {
+            active: false,
+            from: 100,
+            to: 100
+        },
+        overListed: {
+            active: false,
+            from: 101,
+            to: Infinity
+        },
+        custom: {
+            active: false,
+            from: 0,
+            to: 0
+        }
+    }
+}
