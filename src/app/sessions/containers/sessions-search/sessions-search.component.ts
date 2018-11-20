@@ -27,6 +27,8 @@ import { TableSetting } from '../../models/table-settings.model';
 import { SessionAmendmentTableComponent } from '../../components/session-amendment-table/session-amendment-table.component';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
+import { Note } from '../../../notes/models/note.model';
+import { NotesService } from '../../../notes/services/notes.service';
 
 @Component({
     selector: 'app-sessions-search',
@@ -48,6 +50,7 @@ export class SessionsSearchComponent implements OnInit {
     constructor(private readonly store: Store<fromHearingParts.State>,
                 private readonly sessionService: SessionsService,
                 private readonly sessionSearchCriteriaService: SessionSearchCriteriaService,
+                private readonly notesService: NotesService,
                 public dialog: MatDialog) {
         this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
         this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
@@ -70,16 +73,18 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     openAmendDialog(s: SessionSearchResponse) {
-        let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s);
-        this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
-            ...DEFAULT_DIALOG_CONFIG,
-            data: {
-                sessionData: sessionAmendForm,
-                sessionTypes: this.sessionTypes,
-                notes: s.notes
-            },
-            height: 'auto'
-        })
+        this.notesService.getByEntities([s.sessionId]).subscribe((notes: Note[]) => {
+            const sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s);
+            this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
+                ...DEFAULT_DIALOG_CONFIG,
+                data: {
+                    sessionData: sessionAmendForm,
+                    sessionTypes: this.sessionTypes,
+                    notes: notes
+                },
+                height: 'auto'
+            });
+        });
     }
 
     searchSessions(searchCriterion: SearchCriteria[], tableSettings: TableSetting) {

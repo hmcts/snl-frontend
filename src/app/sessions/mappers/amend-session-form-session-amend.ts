@@ -15,7 +15,7 @@ export const SessionToAmendSessionForm = (session: SessionSearchResponse): Sessi
 
     return {
         id: session.sessionId,
-        version: session.version,
+        version: session.sessionVersion,
         durationInMinutes: durationInMinutes,
         startTime: startTime,
         startDate: startDate,
