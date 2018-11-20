@@ -125,7 +125,6 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         reservedJudgeName: null,
         listingDate: null,
         status: Status.Listed,
-        personName: '',
         multiSession: null,
         numberOfSessions: null
     }

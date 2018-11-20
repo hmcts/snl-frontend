@@ -1,21 +1,21 @@
-import { ListingRequestViewmodelForAmendment } from '../../models/listing-create';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { MatSelectChange } from '@angular/material';
 import moment = require('moment');
-import { ListingRequestEditComponent, ListingTypeTab } from './listing-update.component';
 import { DurationAsDaysPipe } from '../../../core/pipes/duration-as-days.pipe';
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
 import { Status } from '../../../core/reference/models/status.model';
+import { HearingAmendComponent, ListingTypeTab } from './hearing-amend.component';
+import { HearingViewmodelForAmendment } from '../../models/filtered-hearing-viewmodel';
 
-let component: ListingRequestEditComponent;
+let component: HearingAmendComponent;
 
 const now = moment();
 const stubHearingTypes1: HearingType[] = [{code: 'hearing-type-code', description: 'hearing-type'}];
 const stubHearingTypes2: HearingType[] = [{code: 'hearing-type-code2', description: 'hearing-type2'}];
 const caseTypeWht1 = {code: 'case-type-code1', description: 'case-type1', hearingTypes: stubHearingTypes1} as CaseType;
 const caseTypeWht2 = {code: 'case-type-code2', description: 'case-type1', hearingTypes: stubHearingTypes2} as CaseType;
-const listingCreate = {
+const hearingViewmodelForAmendment = {
     hearing: {
         id: undefined,
         caseNumber: 'number',
@@ -36,12 +36,12 @@ const listingCreate = {
         status: Status.Unlisted
     },
     notes: [],
-} as ListingRequestViewmodelForAmendment;
+} as HearingViewmodelForAmendment;
 
-describe('ListingUpdateComponent', () => {
+describe('HearingAmendComponent', () => {
     beforeEach(() => {
-        component = new ListingRequestEditComponent(new DurationAsDaysPipe())
-        component.data = listingCreate;
+        component = new HearingAmendComponent(new DurationAsDaysPipe())
+        component.data = hearingViewmodelForAmendment;
     });
 
     it('on creation', () => {
