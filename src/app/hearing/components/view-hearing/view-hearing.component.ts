@@ -132,8 +132,8 @@ export class ViewHearingComponent implements OnInit {
 
             confirmationUnlistDialogRef.afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
+                    this.hearingService.unlist(this.hearing);
                     this.openSummaryDialog().afterClosed().subscribe((success) => {
-                        this.hearingService.unlist(this.hearing);
                         if (success) {
                             this.fetchHearing();
                         }
@@ -153,8 +153,8 @@ export class ViewHearingComponent implements OnInit {
 
             confirmationWithdrawDialogRef.afterClosed().subscribe((confirmed: boolean) => {
                 if (confirmed) {
+                    this.hearingService.withdraw(this.hearing);
                     this.openSummaryDialog().afterClosed().subscribe((success) => {
-                        this.hearingService.withdraw(this.hearing);
                         if (success) {
                             this.fetchHearing();
                         }
