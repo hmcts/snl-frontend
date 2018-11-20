@@ -79,7 +79,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
-        this.endDate = moment().add(5, 'years');
+        this.endDate = moment().add(3, 'month');
 
         combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
     }
