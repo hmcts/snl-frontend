@@ -15,7 +15,8 @@
         <div>
             <app-session-amendment-table
                     [sessions]="filteredSessions"
-                    (amend)="openAmendDialog($event)">
+                    (amend)="openAmendDialog($event)"
+                    [totalCount]="totalCount">
             </app-session-amendment-table>
         </div>
     </div>

@@ -8,6 +8,5 @@ export enum SessionFilterKey {
     PartListed = 'partListed',
     FullyListed = 'fullyListed',
     OverListed = 'overListed',
-    CustomFrom = 'customFrom',
-    CustomTo = 'customTo'
+    Custom = 'custom',
 }

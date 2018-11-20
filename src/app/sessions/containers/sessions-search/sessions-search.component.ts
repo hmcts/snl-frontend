@@ -1,5 +1,4 @@
 import { SessionsFilterComponent } from './../../components/sessions-filter/sessions-filter.component';
-import { SessionViewModel } from './../../models/session.viewmodel';
 import { SearchCriteria } from './../../../hearing-part/models/search-criteria';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -27,7 +26,7 @@ import { SessionsService } from '../../services/sessions-service';
 import { TableSetting } from '../../models/table-settings.model';
 import { SessionAmendmentTableComponent } from '../../components/session-amendment-table/session-amendment-table.component';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
-import { RoomType } from '../../../core/reference/models/room-type';
+import { SessionSearchResponse } from '../../models/session-search-response.model';
 
 @Component({
     selector: 'app-sessions-search',
@@ -39,9 +38,9 @@ export class SessionsSearchComponent implements OnInit {
     endDate: moment.Moment;
     rooms: Room[];
     judges: Judge[];
-    roomTypes: RoomType[];
     sessionTypes: SessionType[];
-    filteredSessions: SessionViewModel[];
+    filteredSessions: SessionSearchResponse[];
+    totalCount: number;
 
     @ViewChild(SessionsFilterComponent) sessionFilterComponent: SessionsFilterComponent;
     @ViewChild(SessionAmendmentTableComponent) sessionAmendmentTableComponent: SessionAmendmentTableComponent;
@@ -53,7 +52,6 @@ export class SessionsSearchComponent implements OnInit {
         this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
         this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
         this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => this.sessionTypes = sessionTypes);
-        this.store.pipe(select(fromReferenceData.selectRoomTypes)).subscribe(roomTypes => { this.roomTypes = roomTypes });
     }
 
     ngOnInit() {
@@ -71,8 +69,8 @@ export class SessionsSearchComponent implements OnInit {
         ).subscribe()
     }
 
-    openAmendDialog(s: SessionViewModel) {
-        let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s, this.roomTypes);
+    openAmendDialog(s: SessionSearchResponse) {
+        let sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s);
         this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
@@ -84,8 +82,11 @@ export class SessionsSearchComponent implements OnInit {
         })
     }
 
-    searchSessions(searchCriterions: SearchCriteria[], tableSettings: TableSetting) {
-        this.sessionService.paginatedSearchSessions(searchCriterions, tableSettings)
-            .subscribe(sessions => this.filteredSessions = (sessions.content as any[]));
+    searchSessions(searchCriterion: SearchCriteria[], tableSettings: TableSetting) {
+        this.sessionService.paginatedSearchSessions(searchCriterion, tableSettings)
+            .subscribe(sessions => {
+                this.filteredSessions = sessions.content || [];
+                this.totalCount = sessions.totalElements
+            });
     }
 }

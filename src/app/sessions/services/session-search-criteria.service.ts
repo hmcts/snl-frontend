@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SessionFilters } from '../models/session-filter.model';
 import { SearchCriteria } from '../../hearing-part/models/search-criteria';
-import { SessionFilterKey } from '../models/session-search-column';
+import { SessionFilterKey } from '../models/session-filter-key';
 
 @Injectable()
 export class SessionSearchCriteriaService {
@@ -20,17 +20,14 @@ export class SessionSearchCriteriaService {
         ]
 
         if (sessionFilter.utilization.custom.active) {
-            if (sessionFilter.utilization.custom.from) {
-                searchCriterions.push(
-                    {key: SessionFilterKey.CustomFrom, operation: 'equals', value: sessionFilter.utilization.custom.from}
-                )
-            }
+            const values = [
+                sessionFilter.utilization.custom.from,
+                sessionFilter.utilization.custom.to
+            ];
 
-            if (sessionFilter.utilization.custom.to) {
-                searchCriterions.push(
-                    {key: SessionFilterKey.CustomTo, operation: 'equals', value: sessionFilter.utilization.custom.to}
-                )
-            }
+            searchCriterions.push(
+                {key: SessionFilterKey.Custom, operation: 'equals', value: values}
+            )
         }
 
         return searchCriterions.filter(sc => sc !== null);
@@ -39,11 +36,7 @@ export class SessionSearchCriteriaService {
     private createSearchCriteriaFromArray(key, values: string[]): SearchCriteria {
         if (values.length === 0) { return null; }
 
-        const searchCriteria = {
-            key,
-            operation: 'in',
-            value: values
-        };
+        const searchCriteria = { key, operation: 'in', value: values };
 
         if (values.includes('')) {
             searchCriteria.operation = 'in or null'
@@ -53,12 +46,8 @@ export class SessionSearchCriteriaService {
     }
 
     private createSearchCriteriaIfNotNull(key, value: any): SearchCriteria {
-        if (value === undefined || value === false) { return null; }
+        if (value === undefined || value === null || value === false) { return null; }
 
-        return {
-            key,
-            operation: 'equals',
-            value
-        }
+        return { key, operation: 'equals', value }
     }
 }

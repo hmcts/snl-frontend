@@ -16,4 +16,6 @@ export interface SessionSearchResponse {
     utilisation: number;
     // Duration
     available: string;
+    hasMultiSessionHearingAssigned: boolean;
+    version: number;
 }

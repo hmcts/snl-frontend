@@ -5,7 +5,7 @@ import { formatDuration } from '../../../utils/date-utils';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { TableSetting } from '../../models/table-settings.model';
 import { Subject } from 'rxjs';
-import { SessionSearchColumns } from '../../models/session-search-columns';
+import { SessionSearchColumn } from '../../models/session-search-column';
 @Component({
     selector: 'app-session-amendment-table',
     templateUrl: './session-amendment-table.component.html',
@@ -20,24 +20,24 @@ export class SessionAmendmentTableComponent implements AfterViewInit {
     @Input() totalCount: number;
 
     displayedColumns = [
-        SessionSearchColumns.SessionId,
-        SessionSearchColumns.PersonName,
-        SessionSearchColumns.StartTime,
-        SessionSearchColumns.StartDate,
-        SessionSearchColumns.Duration,
-        SessionSearchColumns.RoomName,
-        SessionSearchColumns.SessionTypeDescription,
-        SessionSearchColumns.NoOfHearingPartsAssignedToSession,
-        SessionSearchColumns.Allocated,
-        SessionSearchColumns.Utilisation,
-        SessionSearchColumns.Available,
-        SessionSearchColumns.Amend,
+        SessionSearchColumn.SessionId,
+        SessionSearchColumn.PersonName,
+        SessionSearchColumn.StartTime,
+        SessionSearchColumn.StartDate,
+        SessionSearchColumn.Duration,
+        SessionSearchColumn.RoomName,
+        SessionSearchColumn.SessionTypeDescription,
+        SessionSearchColumn.NoOfHearingPartsAssignedToSession,
+        SessionSearchColumn.Allocated,
+        SessionSearchColumn.Utilisation,
+        SessionSearchColumn.Available,
+        SessionSearchColumn.Amend,
     ];
 
     dataSource: MatTableDataSource<any>;
     tableVisible = true;
     initialPageSize = 20
-    sessionSearchColumns = SessionSearchColumns
+    sessionSearchColumns = SessionSearchColumn
 
     private _sessions: SessionSearchResponse[];
     get sessions() { return this._sessions; }
