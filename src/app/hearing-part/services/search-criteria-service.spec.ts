@@ -46,7 +46,7 @@ describe('SearchCriteriaService', () => {
             };
 
             expect(service.toSearchCriteria(customFilters)).toEqual([
-                {key: 'listingStatus', operation: 'equals', value: ListingStatus.Unlisted},
+                {key: 'status.status', operation: 'equals', value: ListingStatus.Unlisted},
             ]);
         });
     });

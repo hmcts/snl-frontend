@@ -1,34 +1,17 @@
-import { StoreModule } from '@ngrx/store';
-import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
-import * as fromHearingParts from '../../reducers';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
-import { NoteComponent } from '../../../notes/components/note/note.component';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { ListingCreateNotesConfiguration } from '../../models/listing-create-notes-configuration.model';
-import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
-import * as judgesReducers from '../../../judges/reducers';
-import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingSearchTableComponent } from './hearing-search-table.component';
-import { MatDialog } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
-import { HearingModificationService } from '../../services/hearing-modification.service';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
-import { RouterTestingModule } from '@angular/router/testing';
+import { Observable } from 'rxjs/Observable';
+import { Status } from '../../../core/reference/models/status.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
-let hpms: HearingModificationService;
 let component: HearingSearchTableComponent;
-let fixture: ComponentFixture<HearingSearchTableComponent>;
 let displayedColumnsExpectedValues;
 let sampleHearingPart;
 
@@ -64,44 +47,10 @@ displayedColumnsExpectedValues = [
 
 describe('HearingSearchTableComponent', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        AngularMaterialModule,
-        ReactiveFormsModule,
-        FormsModule,
-        StoreModule.forRoot({}),
-        StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
-        StoreModule.forFeature('judges', judgesReducers.reducers),
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ],
-      declarations: [
-        HearingSearchTableComponent,
-        NoteComponent,
-        NoteListComponent,
-        DurationFormatPipe,
-        DurationAsMinutesPipe,
-        TransactionDialogComponent
-      ],
-      providers: [
-        NoteListComponent,
-        NotesPreparerService,
-        ListingCreateNotesConfiguration,
-        HearingModificationService,
-        { provide: MatDialog, useValue: matDialogSpy }
-      ]
-    });
-
-    TestBed.overrideModule(BrowserDynamicTestingModule, {
-        set: {
-            entryComponents: [TransactionDialogComponent]
-        }
-    });
-
-    fixture = TestBed.createComponent(HearingSearchTableComponent);
-    component = fixture.componentInstance;
-    hpms = TestBed.get(HearingModificationService);
-    spyOn(hpms, 'deleteHearing');
+    component = new HearingSearchTableComponent(matDialogSpy);
+    component.paginator = {
+        page: Observable.of({})
+    } as MatPaginator;
     component.hearings = [generateHearing('123')];
   });
 
@@ -122,7 +71,8 @@ describe('HearingSearchTableComponent', () => {
 
         it(' tested columns should equal component displayedColumns field', () => {
             const columnsArray: string[] = [...displayedColumnsExpectedValues,
-                { columnName: 'delete', expected: undefined }].map(r => r.columnName);
+                { columnName: 'delete', expected: undefined },
+                { columnName: 'amend', expected: undefined }].map(r => r.columnName);
             expect(component.displayedColumns).toEqual(columnsArray);
         });
     });
@@ -131,6 +81,27 @@ describe('HearingSearchTableComponent', () => {
     describe('buildViewHearingUrl', () => {
         it('should build correct url', () => {
             expect(component.buildViewHearingUrl('random-id')).toEqual('/home/hearing/random-id');
+        })
+    });
+
+    describe('amend', () => {
+        it('should call onAmend callback', () => {
+            let onAmendSpy = spyOn(component.onAmend, 'emit');
+
+            component.amend('id');
+
+            expect(onAmendSpy).toHaveBeenCalledWith('id')
+        })
+    });
+
+    describe('delete', () => {
+        it('should call onDelete callback', () => {
+            let onDeleteSpy = spyOn(component.onDelete, 'emit');
+            let deleteObject = undefined;
+
+            component.delete(deleteObject);
+
+            expect(onDeleteSpy).toHaveBeenCalledWith(deleteObject)
         })
     });
 });
@@ -152,7 +123,9 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudgeName: null,
-        isListed: true,
-        listingDate: null
+        listingDate: null,
+        status: Status.Listed,
+        multiSession: null,
+        numberOfSessions: null
     }
 }

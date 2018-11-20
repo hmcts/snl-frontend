@@ -14,7 +14,7 @@ export class JudgeEffects {
     search$: Observable<Action> = this.actions$.pipe(
         ofType<Get>(JudgeActionTypes.Get),
         mergeMap(action =>
-            this.judgeService.get().pipe(
+            this.judgeService.fetch().pipe(
                 map(data => (new GetComplete(data))),
                 catchError((err: HttpErrorResponse) => of(new GetFailed(err.error)))
             )

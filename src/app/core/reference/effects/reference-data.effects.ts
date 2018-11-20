@@ -26,7 +26,7 @@ export class ReferenceDataEffects {
     getCaseTypes$: Observable<Action> = this.actions$.pipe(
         ofType<GetAllCaseType>(ReferenceDataActionTypes.GetAllCaseType),
         mergeMap(action =>
-            this.referenceDataService.getCaseTypes().pipe(
+            this.referenceDataService.fetchCaseTypes().pipe(
                 mergeMap(data => [new GetAllCaseTypeComplete(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
             )
@@ -37,7 +37,7 @@ export class ReferenceDataEffects {
     getHearingTypes$: Observable<Action> = this.actions$.pipe(
         ofType<GetAllHearingType>(ReferenceDataActionTypes.GetAllHearingType),
         mergeMap(action =>
-            this.referenceDataService.getHearingTypes().pipe(
+            this.referenceDataService.fetchHearingTypes().pipe(
                 mergeMap(data => [new GetAllHearingTypeComplete(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
             )
@@ -48,7 +48,7 @@ export class ReferenceDataEffects {
     getRoomTypes$: Observable<Action> = this.actions$.pipe(
         ofType<GetAllRoomType>(ReferenceDataActionTypes.GetAllRoomType),
         mergeMap(action =>
-            this.referenceDataService.getRoomTypes().pipe(
+            this.referenceDataService.fetchRoomTypes().pipe(
                 mergeMap(data => [new GetAllRoomTypeComplete(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
             )
@@ -59,7 +59,7 @@ export class ReferenceDataEffects {
     getSessionTypes$: Observable<Action> = this.actions$.pipe(
         ofType<GetAllSessionType>(ReferenceDataActionTypes.GetAllSessionType),
         mergeMap(action =>
-            this.referenceDataService.getSessionTypes().pipe(
+            this.referenceDataService.fetchSessionTypes().pipe(
                 mergeMap(data => [new GetAllSessionTypeComplete(data)]),
                 catchError((err) => of(new notificationActions.OpenDialog(REFERENCE_DATA_DIALOGS[err.status])))
             )

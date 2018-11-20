@@ -63,6 +63,9 @@ export function reducer(state: State = initialState, action) {
 
         return {...state, loading: false, ...adapter.removeMany(arr, state)};
     }
+    case HearingPartActionTypes.RemoveAll: {
+        return {...state, loading: false, ...adapter.removeAll(state)};
+    }
     default:
         return state;
   }

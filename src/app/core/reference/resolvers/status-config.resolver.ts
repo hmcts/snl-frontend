@@ -3,20 +3,20 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Resolve } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 import { StatusConfigService } from '../services/status-config.service';
 import { StatusConfigEntry } from '../models/status-config.model';
+import { BaseResolver } from '../../resolvers/base.resolver';
 
 @Injectable()
-export class StatusConfigResolver implements Resolve<StatusConfigEntry[]> {
+export class StatusConfigResolver extends BaseResolver implements Resolve<StatusConfigEntry[]> {
 
-    constructor(private readonly statusConfigService: StatusConfigService) {}
+    constructor(private readonly statusConfigService: StatusConfigService) {
+        super();
+    }
 
     resolve(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot): Observable<StatusConfigEntry[]> {
 
-        if (this.statusConfigService.getStatusConfigEntries().length !== 0) {
-            return Observable.of(this.statusConfigService.getStatusConfigEntries());
-        } else {
-            return this.statusConfigService.fetchStatusConfig();
-        }
+        return this.getOrFetchData(() => this.statusConfigService.fetchStatusConfig(),
+            () => Observable.of(this.statusConfigService.getStatusConfigEntries()));
     }
 }

@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { NotesService } from './notes.service';
 import { Note } from '../models/note.model';
 import * as moment from 'moment';
-
-export enum NoteType {
-  SpecialRequirements = 'Special Requirements',
-  FacilityRequirements = 'Facility Requirements',
-  OtherNote = 'Other note'
-}
+import { NoteType } from '../models/note-type';
 
 @Injectable()
 export class NotesPopulatorService {
@@ -21,10 +16,11 @@ export class NotesPopulatorService {
 
     this.fetchNotes(entityIds).subscribe(
       (notes) => {
-        this.populateWithOtherNotes(entity, notes.filter(item => item.type === NoteType.OtherNote));
+        this.populateWithOtherNotes(entity, notes.filter(item => (item.type === NoteType.OTHER_NOTE
+            || item.type === NoteType.LISTING_NOTE)));
         // those calls are specific for Hearing but if we stick to convention we can use them on other entities
-        this.populateWithSingleNote(entity, notes, NoteType.SpecialRequirements, 'specialRequirements');
-        this.populateWithSingleNote(entity, notes, NoteType.FacilityRequirements, 'facilityRequirements');
+        this.populateWithSingleNote(entity, notes, NoteType.SPECIAL_REQUIREMENTS, 'specialRequirements');
+        this.populateWithSingleNote(entity, notes, NoteType.FACILITY_REQUIREMENTS, 'facilityRequirements');
       }
     )
   }

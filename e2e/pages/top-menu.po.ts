@@ -89,6 +89,6 @@ export class TopMenu {
             `Cant find ${optionName} menu button`
         );
         await subElement.click();
-        Logger.log(optionName + ' button clicked')
+        Logger.log(`'${optionName}' button clicked`)
     }
 }

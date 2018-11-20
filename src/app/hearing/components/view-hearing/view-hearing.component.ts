@@ -9,7 +9,13 @@ import { MatDialog, MatSelect } from '@angular/material';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
+import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
+import { NoteType } from '../../../notes/models/note-type';
+import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
+import { Status } from '../../../core/reference/models/status.model';
 
 @Component({
   selector: 'app-view-hearing',
@@ -20,11 +26,16 @@ export class ViewHearingComponent implements OnInit {
   hearingId: string
   hearing: Hearing;
   hearingActions = HearingActions
-  @ViewChild(MatSelect) actionSelect: MatSelect
+  @ViewChild(MatSelect) actionSelect: MatSelect;
+
+  note: NoteViewmodel;
 
   constructor(
     private route: ActivatedRoute,
     private readonly hearingService: HearingService,
+    private readonly notesPreparerService: NotesPreparerService,
+    private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
+    private readonly notesService: NotesService,
     private readonly dialog: MatDialog,
     private readonly location: Location
   ) {
@@ -32,11 +43,34 @@ export class ViewHearingComponent implements OnInit {
 
   ngOnInit() {
     this.hearingId = this.route.snapshot.paramMap.get('id');
+    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     this.hearingService.hearings
       .map(hearings => hearings.find(h => h.id === this.hearingId))
       .subscribe(hearing => this.hearing = hearing);
 
     this.fetchHearing();
+  }
+
+  private confirmationDialogClosed = (confirmed: boolean) => {
+      if (confirmed) {
+          this.hearingService.unlist(this.hearing)
+          this.openSummaryDialog().afterClosed().subscribe((success) => {
+              if (success) {
+                  this.fetchHearing();
+              }
+          });
+      }
+  };
+
+  private openSummaryDialog() {
+      return this.dialog.open(TransactionDialogComponent, {
+          ...DEFAULT_DIALOG_CONFIG,
+          data: 'Unlist hearing parts from session'
+      });
+  }
+
+  private fetchHearing() {
+      this.hearingService.getById(this.hearingId);
   }
 
   formatDate(date: string): string {
@@ -87,11 +121,11 @@ export class ViewHearingComponent implements OnInit {
   }
 
   isListed() {
-    return this.hearing.sessions.length > 0
+    return this.hearing.status === Status.Listed;
   }
 
   openConfirmationDialog() {
-    const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+      const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
         ...DEFAULT_DIALOG_CONFIG,
         data: {
             title: 'Unlist hearing',
@@ -104,25 +138,11 @@ export class ViewHearingComponent implements OnInit {
     confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
   }
 
-  private confirmationDialogClosed = (confirmed: boolean) => {
-    if (confirmed) {
-      this.hearingService.unlist(this.hearing)
-      this.openSummaryDialog().afterClosed().subscribe((success) => {
-          if (success) {
-              this.fetchHearing();
-          }
-      });
-    }
-  };
-
-  private openSummaryDialog() {
-    return this.dialog.open(TransactionDialogComponent, {
-        ...DEFAULT_DIALOG_CONFIG,
-        data: 'Unlist hearing parts from session'
+  onSubmit(note: NoteViewmodel) {
+    const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
+    this.notesService.upsertMany(preparedNote).subscribe(data => {
+      this.fetchHearing();
+      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     });
-  }
-
-  private fetchHearing() {
-    this.hearingService.getById(this.hearingId);
   }
 }
