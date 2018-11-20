@@ -122,7 +122,7 @@ export class ViewHearingComponent implements OnInit {
               break;
           case  HearingActions.Withdraw:
               this.openConfirmationDialog('Withdraw hearing', 'Are you sure you want to withdraw this hearing? ' +
-                  'Once you do this you will not be able to revert your changes.', this.withdrawDialogClosed);
+                  'Once you do this it cannot be undone.', this.withdrawDialogClosed);
               break;
       }
 
