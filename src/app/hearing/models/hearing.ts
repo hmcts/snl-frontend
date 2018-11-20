@@ -36,7 +36,14 @@ export interface Hearing {
   multiSession: boolean
   version: string,
   hearingPartsVersions: VersionInfo[],
-  status: string
+  status: string,
+  possibleActions: PossibleActions
+}
+
+export interface PossibleActions {
+    unlist: boolean,
+    withdraw: boolean,
+    adjourn: boolean
 }
 
 export interface VersionInfo {

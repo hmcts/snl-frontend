@@ -9,8 +9,8 @@
     </div>
       <mat-select #actionSelect id="action" value="{{hearingActions.Actions}}" fxFlex="10" (selectionChange)="onActionChanged($event)">
         <mat-option [value]="hearingActions.Actions">{{hearingActions.Actions}}</mat-option>
-        <mat-option [value]="hearingActions.Unlist" [disabled]="!isListed()">{{hearingActions.Unlist}}</mat-option>
-        <mat-option [value]="hearingActions.Withdraw" [disabled]="!canWithdraw()">{{hearingActions.Withdraw}}</mat-option>
+        <mat-option [value]="hearingActions.Unlist" [disabled]="cantUnlist()">{{hearingActions.Unlist}}</mat-option>
+        <mat-option [value]="hearingActions.Withdraw" [disabled]="cantWithdraw()">{{hearingActions.Withdraw}}</mat-option>
       </mat-select>
   </div>
 
