@@ -163,12 +163,14 @@ export class ListingCreateComponent implements OnInit {
     afterClosed(confirmed) {
         if (confirmed) {
             this.createNotes();
+            if (!this.editMode) {
+                this.initiateListing();
+                this.setFormGroup();
+            }
         }
+
         if (this.editMode) {
             this.afterEdit();
-        } else {
-            this.initiateListing();
-            this.setFormGroup();
         }
     }
 
