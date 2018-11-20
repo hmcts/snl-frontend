@@ -154,7 +154,8 @@ describe('HearingPartPreviewComponent', () => {
             communicationFacilitator: 'cf',
             notes: [],
             isListed: false,
-            numberOfSessionsNeeded: 0
+            numberOfSessions: 1,
+            multiSession: false
         } as HearingViewmodel;
 
         const displayedColumnsExpectedValues = [
@@ -166,7 +167,7 @@ describe('HearingPartPreviewComponent', () => {
             { columnName: 'communicationFacilitator', expected: sampleHearing.communicationFacilitator },
             { columnName: 'priority', expected: priorityValue(sampleHearing.priority) },
             { columnName: 'reservedJudge', expected: sampleHearing.reservedJudge.name },
-            { columnName: 'requiredSessions', expected: sampleHearing.numberOfSessionsNeeded },
+            { columnName: 'requiredSessions', expected: sampleHearing.numberOfSessions },
             { columnName: 'notes', expected: 'No' },
             { columnName: 'scheduleStart', expected: sampleHearing.scheduleStart.unix() },
             { columnName: 'scheduleEnd', expected: sampleHearing.scheduleEnd.unix() },
@@ -211,6 +212,7 @@ function generateHearings(id: string): HearingViewmodel {
         communicationFacilitator: null,
         notes: [],
         isListed: false,
-        numberOfSessionsNeeded: 0
+        numberOfSessions: 1,
+        multiSession: false
     }
 };

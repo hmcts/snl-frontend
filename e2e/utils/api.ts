@@ -5,7 +5,7 @@ import * as requestPromise from 'request-promise'
 import * as URL from '../e2e-url.js'
 
 const rp = (URL.proxy) ? requestPromise.defaults({proxy: URL.proxy, strictSSL: false}) : requestPromise;
-const apiURL = (process.env.TEST_URL) ? 'http://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
+const apiURL = (process.env.TEST_URL) ? 'https://snl-api-aat.service.core-compute-aat.internal' : URL.apiURL;
 
 console.log('API URL: ' + apiURL)
 
@@ -21,7 +21,9 @@ export class API {
             uri: `${API.baseUrl}/hearing-part/create`,
             body: JSON.stringify(body),
             headers: API.headers,
-            resolveWithFullResponse: true
+            resolveWithFullResponse: true,
+            insecure: true,
+            rejectUnauthorized: false
         }
         const response = await rp(options)
         await API.commitUserTransaction(body)
@@ -36,7 +38,9 @@ export class API {
             uri: `${API.baseUrl}/sessions`,
             body: JSON.stringify(body),
             headers: API.headers,
-            resolveWithFullResponse: true
+            resolveWithFullResponse: true,
+            insecure: true,
+            rejectUnauthorized: false
         }
         const response = await rp(options)
         await API.commitUserTransaction(body)
@@ -50,7 +54,9 @@ export class API {
             method: 'GET',
             uri: `${API.baseUrl}/problems`,
             headers: API.headers,
-            resolveWithFullResponse: true
+            resolveWithFullResponse: true,
+            insecure: true,
+            rejectUnauthorized: false
         }
         const response = await rp(options)
         const responseBody = JSON.parse(response.body)
@@ -63,7 +69,9 @@ export class API {
             method: 'GET',
             uri: `${API.baseUrl}/hearing-part`,
             headers: API.headers,
-            resolveWithFullResponse: true
+            resolveWithFullResponse: true,
+            insecure: true,
+            rejectUnauthorized: false
         }
         const response = await rp(options)
         const responseBody = JSON.parse(response.body)
@@ -84,6 +92,8 @@ export class API {
             }),
             headers: API.applicationJSONHeader,
             resolveWithFullResponse: true,
+            insecure: true,
+            rejectUnauthorized: false
         };
 
         const response = await rp(options)
@@ -97,7 +107,9 @@ export class API {
             uri: `${API.baseUrl}/user-transaction/${body.userTransactionId}/commit`,
             body: body,
             headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
-            json: true // Automatically stringifies the body to JSON
+            json: true, // Automatically stringifies the body to JSON
+            insecure: true,
+            rejectUnauthorized: false
         }
         await rp(commitUserTransactionOptions)
     }

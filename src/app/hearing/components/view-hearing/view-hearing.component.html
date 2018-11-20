@@ -30,16 +30,21 @@
     </div>
 
     <div class="tile">
-      <strong>Estimated duration</strong><br>
-      {{formatDuration(hearing.duration)}}
+      <strong>Estimated duration
+      </strong><br>
+      {{hearing.duration | appDurationFormat}}<ng-container *ngIf="hearing.multiSession; then days; else minutes"></ng-container>
+      <ng-template #days>ay(s)</ng-template>
+      <ng-template #minutes> (Hours / Minutes)</ng-template>
+    </div>
+
+    <div class="tile">
+      <strong>Required Sessions</strong><br>
+      {{(hearing.numberOfSessions)}}
     </div>
 
     <div class="tile">
       <strong>List between</strong><br>
       {{getListBetween()}}
-    </div>
-
-    <div class="tile">
     </div>
 
     <div class="tile">
@@ -65,6 +70,9 @@
       {{hearing.facilityRequirements}}
     </div>
 
+    <div class="tile">
+    </div>
+
     <div class="clear"></div>
   </div>
   <mat-tab-group>
@@ -81,6 +89,8 @@
           </div>
         </mat-list-item>
       </mat-list>
+
+      <app-create-hearing-note [note]="note" (onSubmit)="onSubmit($event)"></app-create-hearing-note>
     </mat-tab>
 
     <mat-tab label="Scheduled listings">
@@ -99,7 +109,7 @@
                   Start {{formatDate(session.start)}}
                 </div>
                 <div class="tile small">
-                  {{formatDuration(session.duration)}}
+                  {{session.duration | appDurationFormat}}
                 </div>
                 <div class="tile">
                   {{session.roomName}}
@@ -124,7 +134,6 @@
               </div>
             </mat-list-item>
           </mat-list>
-
         </mat-expansion-panel>
       </mat-accordion>
     </mat-tab>

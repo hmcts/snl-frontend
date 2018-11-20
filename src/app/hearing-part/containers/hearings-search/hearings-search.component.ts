@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { Judge } from '../../../judges/models/judge.model';
 import { HearingsFilters } from '../../models/hearings-filter.model';
@@ -7,16 +6,21 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
 import { SearchHearingRequest } from '../../models/search-hearing-request';
-import { HearingPartService } from '../../services/hearing-part-service';
 import { MatDialog, PageEvent } from '@angular/material';
-import { ReferenceDataService } from '../../../core/reference/services/reference-data.service';
-import { JudgeService } from '../../../judges/services/judge.service';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
-import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { ListingUpdateDialogComponent } from '../../components/listing-update-dialog/listing-update-dialog';
+import { NotesService } from '../../../notes/services/notes.service';
 import { HearingModificationService } from '../../services/hearing-modification.service';
-import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { filter, mergeMap, tap } from 'rxjs/operators';
+import { HearingService } from '../../../hearing/services/hearing.service';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
+import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
+import { ActivatedRoute } from '@angular/router';
+import { Note } from '../../../notes/models/note.model';
 
 @Component({
     selector: 'app-hearings-search',
@@ -31,31 +35,29 @@ export class HearingsSearchComponent implements OnInit {
         length: undefined
     };
 
-    judges$: Observable<Judge[]>;
-    caseTypes$: Observable<CaseType[]>;
-    hearingTypes$: Observable<HearingType[]>;
+    judges: Judge[];
+    caseTypes: CaseType[];
+    hearingTypes: HearingType[];
 
     filteredHearings: FilteredHearingViewmodel[] = [];
     latestFilters: HearingsFilters;
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
-    constructor(private dialog: MatDialog,
-                private hearingService: HearingModificationService,
-                private hearingPartService: HearingPartService,
-                private referenceDataService: ReferenceDataService,
-                private judgeService: JudgeService,
+    constructor(private hearingPartModificationService: HearingModificationService,
+                private route: ActivatedRoute,
+                private hearingService: HearingService,
+                private dialog: MatDialog,
+                private notesService: NotesService,
                 private searchCriteriaService: SearchCriteriaService) {
     }
 
     ngOnInit() {
-        this.judges$ = this.judgeService.get();
-        this.caseTypes$ = this.referenceDataService.getCaseTypes();
-        this.hearingTypes$ = this.referenceDataService.getHearingTypes();
-    }
-
-    onDelete(hearing: FilteredHearingViewmodel) {
-        this.openDeleteDialog(hearing);
+        this.route.data.subscribe(({judges, hearingTypes, caseTypes}) => {
+            this.judges = judges;
+            this.hearingTypes = hearingTypes;
+            this.caseTypes = caseTypes;
+        });
     }
 
     onNextPage(pageEvent: PageEvent) {
@@ -68,6 +70,25 @@ export class HearingsSearchComponent implements OnInit {
         this.fetchHearings(filterValues, this.latestPaging)
     }
 
+    onDelete(hearing: FilteredHearingViewmodel) {
+        this.openDeleteDialog(hearing);
+    }
+
+    onAmend(hearingId: string) {
+        let hearingSource = this.hearingService.getForAmendment(hearingId);
+        let hearingNotesSource = this.notesService.getByEntities([hearingId]);
+
+        forkJoin([hearingSource, hearingNotesSource]).pipe(mergeMap(([hearing, hearingNotes]) => {
+                return this.openAmendDialog(hearing, hearingNotes).afterClosed();
+            }),
+            filter(updatedListing => updatedListing !== undefined),
+            tap(updatedListing => {
+                this.hearingPartModificationService.updateListingRequest(updatedListing);
+                this.openDialog('Editing listing request', updatedListing.notes);
+            })
+        ).subscribe()
+    }
+
     private openDeleteDialog(hearing: FilteredHearingViewmodel) {
         this.dialog.open(DialogWithActionsComponent, {
             data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
@@ -76,9 +97,22 @@ export class HearingsSearchComponent implements OnInit {
         })
     }
 
+    private openAmendDialog(hearing: FilteredHearingViewmodel, notes: Note[]) {
+        return this.dialog.open(ListingUpdateDialogComponent, {
+            data: {
+                listing: {
+                    hearing: hearing,
+                    notes: notes
+                },
+                judges: this.judges,
+                caseTypes: this.caseTypes
+            }
+        })
+    }
+
     private afterDeleteClosed(confirmed, hearing) {
         if (confirmed) {
-            this.hearingService.deleteHearing({
+            this.hearingPartModificationService.deleteHearing({
                 hearingId: hearing.id,
                 hearingVersion: hearing.version,
                 userTransactionId: undefined
@@ -88,7 +122,7 @@ export class HearingsSearchComponent implements OnInit {
                 this.fetchHearings(this.latestFilters, this.latestPaging);
 
                 if (success) {
-                    this.hearingService.removeFromState(hearing.id);
+                    this.hearingPartModificationService.removeFromState(hearing.id);
                 }
             })
         }
@@ -102,7 +136,7 @@ export class HearingsSearchComponent implements OnInit {
     }
 
     private fetchHearings(filterValues: HearingsFilters, pageEvent: PageEvent) {
-        this.hearingPartService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
+        this.hearingService.seearchFilteredHearingViewmodels(this.toSearchHearingRequest(filterValues, pageEvent))
             .subscribe(hearings => {
                 this.filteredHearings = hearings.content || [];
                 this.totalCount = hearings.totalElements;
@@ -117,5 +151,23 @@ export class HearingsSearchComponent implements OnInit {
             },
             searchCriteria: this.searchCriteriaService.toSearchCriteria(filters)
         }
+    }
+
+    private openDialog(actionTitle: string, notes: NoteViewmodel[]) {
+        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {actionTitle}
+        }).afterClosed().subscribe((confirmed) => {
+            if (confirmed) {
+                if (notes.length > 0) {
+                    this.notesService.upsertManyNotes(notes).subscribe(() => {
+                        this.fetchHearings(this.latestFilters, this.latestPaging);
+                        return;
+                    });
+                }
+
+                this.fetchHearings(this.latestFilters, this.latestPaging)
+            }
+        });
     }
 }
