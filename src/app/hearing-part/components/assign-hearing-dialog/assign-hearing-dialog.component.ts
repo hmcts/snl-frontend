@@ -35,6 +35,8 @@ export class AssignHearingDialogComponent implements OnInit {
               public notesPreparerService: NotesPreparerService) {
     this.selectedHearingId = data.hearingId;
     this.startTimeDisplayed = data.startTimeDisplayed;
+    const startingDate = (data.startTime) ? moment(data.startTime) : moment();
+    this.startTime = startingDate.format('HH:mm');
   }
 
   ngOnInit() {
@@ -57,8 +59,6 @@ export class AssignHearingDialogComponent implements OnInit {
   }
 
   private initiateForm() {
-      this.startTime = moment().format('HH:mm');
-
       this.formGroup = new FormGroup({
           startTime: new FormControl(this.startTime, [Validators.required]),
       });

@@ -50,7 +50,7 @@ describe('AssignHearingDialogComponent', () => {
 
           expect(spyDialogRef.close).toHaveBeenCalledWith({
               confirmed: true,
-              startTime: this.startTime,
+              startTime: component.startTime,
               notes: []
           });
       })
