@@ -1,6 +1,8 @@
 export enum Status {
     Listed = 'Listed',
-    Unlisted = 'Unlisted'
+    Unlisted = 'Unlisted',
+    Withdrawn = 'Withdrawn',
+    Vacated = 'Vacated'
 }
 
 export function fromString(value: string): Status {

@@ -44,7 +44,7 @@ export interface VersionInfo {
   version: string
 }
 
-export interface UnlistHearingRequest {
+export interface UpdateStatusHearingRequest {
   hearingId: string,
   hearingPartsVersions: VersionInfo[],
   userTransactionId: string

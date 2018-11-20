@@ -51,17 +51,6 @@ export class ViewHearingComponent implements OnInit {
     this.fetchHearing();
   }
 
-  private confirmationDialogClosed = (confirmed: boolean) => {
-      if (confirmed) {
-          this.hearingService.unlist(this.hearing)
-          this.openSummaryDialog().afterClosed().subscribe((success) => {
-              if (success) {
-                  this.fetchHearing();
-              }
-          });
-      }
-  };
-
   private openSummaryDialog() {
       return this.dialog.open(TransactionDialogComponent, {
           ...DEFAULT_DIALOG_CONFIG,
@@ -105,8 +94,8 @@ export class ViewHearingComponent implements OnInit {
   }
 
   onActionChanged(event: {value: HearingActions}) {
-    if (event.value === HearingActions.Unlist) {
-        this.openConfirmationDialog();
+    if (event.value === HearingActions.Unlist || HearingActions.Withdraw) {
+        this.confirmationDialog(event.value);
     }
 
     this.actionSelect.writeValue(HearingActions.Actions)
@@ -124,18 +113,56 @@ export class ViewHearingComponent implements OnInit {
     return this.hearing.status === Status.Listed;
   }
 
-  openConfirmationDialog() {
-      const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
-        ...DEFAULT_DIALOG_CONFIG,
-        data: {
-            title: 'Unlist hearing',
-            message: 'Are you sure you want to unlist this hearing?' +
-            'Once you do this you will need to relist the hearing and all subsequent hearing parts.',
-        },
-        width: '350px'
-    });
+  canWithdraw() {
+      return this.isListed();
+  }
 
-    confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
+  confirmationDialog(action: HearingActions) {
+    switch (action) {
+        case HearingActions.Unlist:
+            const confirmationUnlistDialogRef = this.dialog.open(DialogWithActionsComponent, {
+                ...DEFAULT_DIALOG_CONFIG,
+                data: {
+                    title: 'Unlist hearing',
+                    message: 'Are you sure you want to unlist this hearing?' +
+                        'Once you do this you will need to relist the hearing and all subsequent hearing parts.',
+                },
+                width: '350px'
+            });
+
+            confirmationUnlistDialogRef.afterClosed().subscribe((confirmed: boolean) => {
+                if (confirmed) {
+                    this.openSummaryDialog().afterClosed().subscribe((success) => {
+                        this.hearingService.unlist(this.hearing);
+                        if (success) {
+                            this.fetchHearing();
+                        }
+                    });
+                }
+            });
+            break;
+        case HearingActions.Withdraw:
+            const confirmationWithdrawDialogRef = this.dialog.open(DialogWithActionsComponent, {
+                ...DEFAULT_DIALOG_CONFIG,
+                data: {
+                    title: 'Withdraw hearing',
+                    message: 'Are you sure you want to withdraw this hearing? Once you do this you will be unable to revert your changes.'
+                },
+                width: '350px'
+            });
+
+            confirmationWithdrawDialogRef.afterClosed().subscribe((confirmed: boolean) => {
+                if (confirmed) {
+                    this.openSummaryDialog().afterClosed().subscribe((success) => {
+                        this.hearingService.withdraw(this.hearing);
+                        if (success) {
+                            this.fetchHearing();
+                        }
+                    });
+                }
+            });
+            break;
+    }
   }
 
   onSubmit(note: NoteViewmodel) {

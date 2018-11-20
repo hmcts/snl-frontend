@@ -1,4 +1,5 @@
 export enum HearingActions {
     Actions = 'Actions',
-    Unlist = 'Unlist'
+    Unlist = 'Unlist',
+    Withdraw = 'Withdraw'
 }
