@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import * as moment from 'moment';
 import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { HearingAssignmentNotesConfiguration } from '../../models/hearing-assignment-notes-configuration.model';
 import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
@@ -35,8 +34,7 @@ export class AssignHearingDialogComponent implements OnInit {
               public notesPreparerService: NotesPreparerService) {
     this.selectedHearingId = data.hearingId;
     this.startTimeDisplayed = data.startTimeDisplayed;
-    const startingDate = (data.startTime) ? moment(data.startTime) : moment();
-    this.startTime = startingDate.format('HH:mm');
+    this.startTime = (data.startTime && data.startTimeDisplayed) ? data.startTime.format('HH:mm') : undefined
   }
 
   ngOnInit() {
@@ -59,9 +57,11 @@ export class AssignHearingDialogComponent implements OnInit {
   }
 
   private initiateForm() {
-      this.formGroup = new FormGroup({
-          startTime: new FormControl(this.startTime, [Validators.required]),
-      });
+      if (this.startTimeDisplayed) {
+          this.formGroup = new FormGroup({
+              startTime: new FormControl(this.startTime, [Validators.required]),
+          });
+      }
   }
 
   private initiateNotes() {

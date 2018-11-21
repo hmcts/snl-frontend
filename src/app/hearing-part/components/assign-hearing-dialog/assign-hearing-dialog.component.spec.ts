@@ -2,6 +2,7 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { AssignHearingDialogComponent } from './assign-hearing-dialog.component';
 import { HearingAssignmentNotesConfiguration } from '../../models/hearing-assignment-notes-configuration.model';
 import SpyObj = jasmine.SpyObj;
+import * as moment from 'moment';
 
 describe('AssignHearingDialogComponent', () => {
   let component: AssignHearingDialogComponent;
@@ -33,16 +34,42 @@ describe('AssignHearingDialogComponent', () => {
   });
 
   describe('Init state', () => {
-    it('form group should be set properly', () => {
+    it(', without startTimeDisplayed, formGroup and startTime should be undefined', () => {
       component.ngOnInit();
 
-      expect(component.startTime).toBeTruthy();
+      expect(component.startTime).toBeUndefined();
+      expect(component.formGroup).toBeUndefined();
+    });
+
+    it(', with startTimeDisplayed false, formGroup and startTime should be undefined', () => {
+      const dialogData = {
+          hearingId: 'id',
+          startTimeDisplayed: false
+      };
+      component = new AssignHearingDialogComponent(spyDialogRef, dialogData, notesConfiguration, notesPreparerService);
+      component.ngOnInit();
+
+      expect(component.startTime).toBeUndefined();
+      expect(component.formGroup).toBeUndefined();
+    });
+
+    it(', with startTimeDisplayed true, formGroup and startTime should be set properly', () => {
+      const givenStartTime = moment();
+      const dialogData = {
+          hearingId: 'id',
+          startTimeDisplayed: true,
+          startTime: givenStartTime
+      };
+      component = new AssignHearingDialogComponent(spyDialogRef, dialogData, notesConfiguration, notesPreparerService);
+      component.ngOnInit();
+
+      expect(component.startTime).toBe(givenStartTime.format('HH:mm'));
       expect(component.formGroup).toBeTruthy();
     })
   });
 
-  describe('Init state', () => {
-      it('form group should be set properly', () => {
+  describe('onListHearing', () => {
+      it(', should return properly set values', () => {
           noteList.getModifiedNotes.and.returnValue([]);
           notesPreparerService.prepare.and.returnValue([]);
           notesPreparerService.removeEmptyNotes.and.returnValue([]);
