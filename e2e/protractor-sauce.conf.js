@@ -24,7 +24,7 @@ exports.config = {
         'name': 'snl-IE-tests',
         // 'tunnel-identifier': 'reformtunnel',
         'screenResolution': '1280x1024',
-        'timeZone': 'Warsaw', //need to check if jenkins has London's timezone
+        'timeZone': 'London', //need to check if jenkins has London's timezone
         'extendedDebugging': true,
         'maxDuration': 5400,
         'idleTimeout': 300
