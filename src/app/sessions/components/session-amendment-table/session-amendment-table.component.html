@@ -53,7 +53,7 @@
 
   <ng-container matColumnDef="{{sessionSearchColumns.Utilisation}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Utilization </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.allocatedDuration}} %</mat-cell>
+    <mat-cell *matCellDef="let element"> {{element.utilisation}} %</mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="available">
