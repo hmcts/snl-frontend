@@ -42,6 +42,8 @@ export class SessionsSearchComponent implements OnInit {
     sessionTypes: SessionType[];
     filteredSessions: SessionSearchResponse[];
     totalCount: number;
+    savedSearchCriterion: SearchCriteria[];
+    savedTableSettings: TableSetting;
 
     @ViewChild(SessionsFilterComponent) sessionFilterComponent: SessionsFilterComponent;
     @ViewChild(SessionAmendmentTableComponent) sessionAmendmentTableComponent: SessionAmendmentTableComponent;
@@ -66,7 +68,6 @@ export class SessionsSearchComponent implements OnInit {
                     const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
                     this.searchSessions(searchCriterions, tableSetting);
                 }
-
             }
         ).subscribe()
     }
@@ -85,11 +86,16 @@ export class SessionsSearchComponent implements OnInit {
                     notes: notes
                 },
                 height: 'auto'
+            }).afterClosed().subscribe(() => {
+                this.searchSessions(this.savedSearchCriterion, this.savedTableSettings)
             });
         }).subscribe();
     }
 
     searchSessions(searchCriterion: SearchCriteria[], tableSettings: TableSetting) {
+        this.savedSearchCriterion = searchCriterion;
+        this.savedTableSettings = tableSettings;
+
         this.sessionService.paginatedSearchSessions(searchCriterion, tableSettings)
             .subscribe(sessions => {
                 this.filteredSessions = sessions.content || [];
