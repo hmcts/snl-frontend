@@ -34,14 +34,15 @@ describe('AssignHearingDialogComponent', () => {
   });
 
   describe('Init state', () => {
-    it(', without startTimeDisplayed, formGroup and startTime should be undefined', () => {
+    it(', without startTimeDisplayed, formGroup should be set and startTime be undefined', () => {
       component.ngOnInit();
 
       expect(component.startTime).toBeUndefined();
-      expect(component.formGroup).toBeUndefined();
+      expect(component.formGroup).toBeTruthy();
+      expect(component.formGroup.get('startTime').validator).toBeNull();
     });
 
-    it(', with startTimeDisplayed false, formGroup and startTime should be undefined', () => {
+    it(', with startTimeDisplayed false, formGroup should be set and startTime should be undefined', () => {
       const dialogData = {
           hearingId: 'id',
           startTimeDisplayed: false
@@ -50,7 +51,8 @@ describe('AssignHearingDialogComponent', () => {
       component.ngOnInit();
 
       expect(component.startTime).toBeUndefined();
-      expect(component.formGroup).toBeUndefined();
+      expect(component.formGroup).toBeTruthy();
+      expect(component.formGroup.get('startTime').validator).toBeNull();
     });
 
     it(', with startTimeDisplayed true, formGroup and startTime should be set properly', () => {
@@ -65,6 +67,7 @@ describe('AssignHearingDialogComponent', () => {
 
       expect(component.startTime).toBe(givenStartTime.format('HH:mm'));
       expect(component.formGroup).toBeTruthy();
+      expect(component.formGroup.get('startTime').validator).toBeDefined()
     })
   });
 

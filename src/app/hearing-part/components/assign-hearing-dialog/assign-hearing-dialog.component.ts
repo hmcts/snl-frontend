@@ -57,11 +57,13 @@ export class AssignHearingDialogComponent implements OnInit {
   }
 
   private initiateForm() {
+      let startTimeValidators = undefined;
       if (this.startTimeDisplayed) {
-          this.formGroup = new FormGroup({
-              startTime: new FormControl(this.startTime, [Validators.required]),
-          });
+          startTimeValidators = [Validators.required];
       }
+      this.formGroup = new FormGroup({
+          startTime: new FormControl(this.startTime, startTimeValidators),
+      });
   }
 
   private initiateNotes() {
