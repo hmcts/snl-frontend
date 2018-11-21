@@ -22,8 +22,6 @@ exports.config = {
         'platform': 'Windows 10',
         'version': '11.103',
         'name': 'snl-IE-tests',
-        "maxInstances":2,
-        "shardTestFiles":true,
         // 'tunnel-identifier': 'reformtunnel',
         'screenResolution': '1280x1024',
         'timeZone': 'London', //need to check if jenkins has London's timezone
