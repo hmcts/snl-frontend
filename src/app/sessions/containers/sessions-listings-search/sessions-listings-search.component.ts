@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { SessionViewModel } from '../../models/session.viewmodel';
-import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
@@ -20,13 +17,9 @@ import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
-import {
-    AssignHearingData,
-    AssignHearingDialogComponent
-} from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
-import * as fromNotes from '../../../notes/actions/notes.action';
+import { AssignHearingData, AssignHearingDialogComponent }
+    from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
-import { HearingPartsPreviewComponent } from '../../../hearing-part/components/hearing-parts-preview/hearing-parts-preview.component';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
 import { ActivatedRoute } from '@angular/router';
 import { Status } from '../../../core/reference/models/status.model';
@@ -34,6 +27,8 @@ import { HearingService } from '../../../hearing/services/hearing.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SessionsFilterComponent } from '../../components/sessions-filter/sessions-filter.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { NotesService } from '../../../notes/services/notes.service';
+import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -41,31 +36,22 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
     styleUrls: ['./sessions-listings-search.component.scss']
 })
 export class SessionsListingsSearchComponent implements OnInit {
-
-    public static DEFAULT_PAGING: PageEvent = {
-        pageSize: 10,
-        pageIndex: 0,
-        length: undefined
-    };
-
-    @ViewChild(HearingPartsPreviewComponent) hearingPartsTable;
+    @ViewChild(HearingsTableComponent) hearingPartsTable;
     @ViewChild(SessionTableComponent) sessionsTable;
     @ViewChild(SessionsFilterComponent) sessionFilter;
 
-    latestSessionsPaging = SessionsListingsSearchComponent.DEFAULT_PAGING;
-    latestHearingsPaging = SessionsListingsSearchComponent.DEFAULT_PAGING;
     totalSessionsCount: number;
     totalHearingsCount: number;
-    latestFilters: SessionFilters;
 
     selectedSessions: SessionViewModel[] = [];
     selectedHearing: HearingViewmodel = undefined;
+
     filters$ = new Subject<SessionFilters>();
     filterSource$: Observable<SessionFilters>;
-    sessionPaginationSource$: Observable<any>;
+    sessionPaginationSource$: Observable<PageEvent>;
+    hearingPaginationSource$: Observable<PageEvent>;
     errorMessage: string;
     numberOfSessions = 1;
-    multiSession = false;
 
     hearingsSource$: BehaviorSubject<HearingViewmodel[]>;
     sessionsSource$: BehaviorSubject<SessionViewModel[]>;
@@ -76,9 +62,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     rooms$: Observable<Room[]>;
     judges$: Observable<Judge[]>;
 
-    constructor(private readonly store: Store<fromHearingParts.State>,
-                private readonly hearingService: HearingService,
-                private route: ActivatedRoute,
+    constructor(public hearingService: HearingService,
+                public notesService: NotesService,
+                public route: ActivatedRoute,
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
         this.hearingsSource$ = new BehaviorSubject<HearingViewmodel[]>([]);
@@ -90,21 +76,25 @@ export class SessionsListingsSearchComponent implements OnInit {
             this.sessionTypes$ = Observable.of(sessionTypes);
             this.rooms$ = Observable.of(rooms);
         });
-
-        this.fetchHearings(this.latestHearingsPaging);
     }
 
     ngOnInit() {
-        this.filterSource$ = this.sessionFilter.getFilterSource().asObservable();
-        this.sessionPaginationSource$ = this.sessionsTable.getPaginationSource().asObservable();
+        this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
+        this.sessionPaginationSource$ = this.sessionsTable.paginationSource$.asObservable();
+        this.hearingPaginationSource$ = this.hearingPartsTable.paginationSource$.asObservable();
+
+        this.hearingPaginationSource$.subscribe((pageEvent: PageEvent) => {
+            this.fetchHearings(pageEvent);
+        });
 
         combineLatest(this.sessionPaginationSource$, this.filterSource$, this.fetchSessions).subscribe()
+
+        this.fetchHearings(HearingsTableComponent.DEFAULT_PAGING);
     }
 
     selectHearing(hearing: HearingViewmodel) {
         this.selectedHearing = hearing;
         this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
-        this.multiSession = this.selectedHearing !== undefined ? this.selectedHearing.multiSession : false;
     }
 
     selectSession(sessions: SessionViewModel[]) {
@@ -123,10 +113,12 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingModificationService.assignWithSession(assignment);
 
         this.openSummaryDialog().afterClosed().subscribe((accepted) => {
-            this.store.dispatch(new fromHearingPartsActions.Search());
             if (accepted) {
-                this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
+                this.notesService.upsertManyNotes(assignHearingData.notes).subscribe()
             }
+
+            this.fetchHearings(this.hearingPartsTable.paginationSource$.getValue());
+            this.fetchSessions(this.sessionsTable.paginationSource$.getValue(), this.sessionFilter.filterSource$.getValue());
 
             this.onHearingsClearSelection();
             this.onSessionsClearSelection();
@@ -175,13 +167,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     onNextHearingsPage(pageEvent: PageEvent) {
-        this.latestHearingsPaging = pageEvent;
         this.fetchHearings(pageEvent);
-    }
-
-    onNextSessionsPage(pageEvent: PageEvent) {
-        this.latestSessionsPaging = pageEvent;
-        this.fetchSessions(pageEvent, this.latestFilters);
     }
 
     private checkIfOnlyOneJudgeSelected() {
@@ -233,8 +219,6 @@ export class SessionsListingsSearchComponent implements OnInit {
         //     searchCriteria: []
         // };
 
-        console.log(pageEvent)
-        console.log(filters)
         this.totalSessionsCount = 0;
 
         // this.sessionsService.getSessionsForListing(request).subscribe(sessions => {

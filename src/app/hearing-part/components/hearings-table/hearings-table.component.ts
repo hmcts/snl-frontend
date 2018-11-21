@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
 import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
@@ -15,16 +14,24 @@ import { ITransactionDialogData } from '../../../features/transactions/models/tr
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
-  selector: 'app-hearing-parts-preview',
-  templateUrl: './hearing-parts-preview.component.html',
-  styleUrls: ['./hearing-parts-preview.component.scss'],
+  selector: 'app-hearings-table',
+  templateUrl: './hearings-table.component.html',
+  styleUrls: ['./hearings-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HearingPartsPreviewComponent implements OnInit, OnChanges {
+export class HearingsTableComponent implements OnInit, OnChanges {
+    public static DEFAULT_PAGING: PageEvent = {
+        pageSize: 10,
+        pageIndex: 0,
+        length: undefined
+    };
+
+    paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
+
     @Input() hearings: HearingViewmodel[];
-    @Input() sessions: SessionViewModel[];
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onClearSelection = new EventEmitter();

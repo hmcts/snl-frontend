@@ -36,10 +36,6 @@ export class SessionsFilterComponent implements OnInit {
       this.filters = this.filterSource$.getValue();
   }
 
-  getFilterSource(): BehaviorSubject<SessionFilters> {
-      return this.filterSource$;
-  }
-
   sendFilter() {
     this.filter.emit(this.filters);
     this.filterSource$.next(this.filters);

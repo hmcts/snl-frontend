@@ -15,7 +15,7 @@ import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.p
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { HearingPartsPreviewComponent } from './hearing-parts-preview.component';
+import { HearingsTableComponent } from './hearing-parts-preview.component';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { CaseType } from '../../../core/reference/models/case-type';
@@ -33,8 +33,8 @@ const openDialogMockObjDeclined = {
     afterClosed: (): Observable<boolean> => Observable.of(false)
 };
 let hpms: HearingModificationService;
-let component: HearingPartsPreviewComponent;
-let fixture: ComponentFixture<HearingPartsPreviewComponent>;
+let component: HearingsTableComponent;
+let fixture: ComponentFixture<HearingsTableComponent>;
 
 describe('HearingPartPreviewComponent', () => {
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('HearingPartPreviewComponent', () => {
         BrowserAnimationsModule
       ],
       declarations: [
-        HearingPartsPreviewComponent,
+        HearingsTableComponent,
         NoteComponent,
         NoteListComponent,
         DurationFormatPipe,
@@ -72,7 +72,7 @@ describe('HearingPartPreviewComponent', () => {
         }
     });
 
-    fixture = TestBed.createComponent(HearingPartsPreviewComponent);
+    fixture = TestBed.createComponent(HearingsTableComponent);
     component = fixture.componentInstance;
     // store = TestBed.get(Store);
     hpms = TestBed.get(HearingModificationService);

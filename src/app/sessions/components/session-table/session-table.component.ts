@@ -4,7 +4,6 @@ import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionViewModel } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
-import { DEFAULT_SESSION_FILTERS, SessionFilters } from '../../models/session-filter.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
@@ -19,15 +18,16 @@ export class SessionTableComponent implements OnChanges, OnInit {
         length: undefined
     };
 
-  paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(SessionTableComponent.DEFAULT_PAGING);
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @Output() selectSessions = new EventEmitter();
   @Output() viewNotes = new EventEmitter();
 
   @Input() sessions: SessionViewModel[];
   @Input() totalCount: number;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(SessionTableComponent.DEFAULT_PAGING);
 
   selectedSesssions: SelectionModel<SessionViewModel>;
   displayedColumns = [
@@ -86,10 +86,6 @@ export class SessionTableComponent implements OnChanges, OnInit {
   ngOnInit() {
       this.dataSource = new MatTableDataSource(Object.values(this.sessions));
       this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent))
-  }
-
-  getPaginationSource() {
-      return this.paginationSource$;
   }
 
   ngOnChanges() {

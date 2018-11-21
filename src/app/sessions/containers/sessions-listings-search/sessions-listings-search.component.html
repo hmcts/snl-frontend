@@ -13,14 +13,13 @@
     </div>
 
     <div>
-      <app-hearing-parts-preview id="hearing-part-preview"
-                                 [hearings]="hearings$ | async"
-                                 [sessions]="sessions$ | async"
-                                 [totalCount]="totalHearingsCount"
-                                 (onClearSelection)="onHearingsClearSelection()"
-                                 (selectHearing)="selectHearing($event)"
-                                 (onNextPage)="onNextHearingsPage($event)">
-      </app-hearing-parts-preview>
+      <app-hearings-table id="hearing-part-preview"
+                          [hearings]="hearings$ | async"
+                          [totalCount]="totalHearingsCount"
+                          (onClearSelection)="onHearingsClearSelection()"
+                          (selectHearing)="selectHearing($event)"
+                          (onNextPage)="onNextHearingsPage($event)">
+      </app-hearings-table>
     </div>
 
     <div class="heading">
