@@ -15,7 +15,7 @@ exports.config = {
     sauceSeleniumAddress: 'ondemand.saucelabs.com:443/wd/hub',
     allScriptsTimeout: timeout,
     suites: {
-        e2e: './**/*.e2e-spec.ts'
+        e2e: './**/1*.e2e-spec.ts'
     },
     multiCapabilities: [{
         'browserName': 'internet explorer',
