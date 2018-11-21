@@ -15,6 +15,7 @@ import { SessionAmmend } from '../models/ammend/session-ammend.model';
 import { SessionSearchResponse } from '../models/session-search-response.model';
 import { Page } from '../../problems/models/problem.model';
 import { PaginatedRequestOption } from '../models/paginated-request-option';
+import { SessionAmendResponse } from '../models/session-amend.response';
 
 @Injectable()
 export class SessionsService {
@@ -53,7 +54,7 @@ export class SessionsService {
 
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
-            .pipe(map(data => { let normalized = normalize(data, sessionsWithHearings); console.log(normalized); return normalized }));
+            .pipe(map(data => { let normalized = normalize(data, sessionsWithHearings); return normalized }));
     }
 
     searchSessionsForJudge(parameters: DiaryLoadParameters): Observable<any> {
@@ -94,5 +95,9 @@ export class SessionsService {
                 `?judge=${parameters.judgeUsername}` +
                 `&startDate=${getHttpFriendly(parameters.startDate)}` +
                 `&endDate=${getHttpFriendly(parameters.endDate)}`;
+    }
+
+    getSessionAmendById(sessionId: string): Observable<SessionAmendResponse> {
+        return this.http.get<SessionAmendResponse>(`${this.config.getApiUrl()}/sessions/amend/${sessionId}`);
     }
 }

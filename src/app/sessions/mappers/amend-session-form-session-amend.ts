@@ -1,29 +1,28 @@
 import * as moment from 'moment';
 import { SessionAmmendForm } from '../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
-import { SessionSearchResponse } from '../models/session-search-response.model';
+import { SessionAmendResponse } from '../models/session-amend.response';
 
-export const SessionToAmendSessionForm = (session: SessionSearchResponse): SessionAmmendForm => {
+export const SessionToAmendSessionForm = (session: SessionAmendResponse): SessionAmmendForm => {
     const durationInMinutes = moment.duration(session.duration).asMinutes();
-    const startTime = moment(session.startTime).format('HH:mm');
-    const startDate = moment(session.startDate);
+    const startTime = moment(session.start).format('HH:mm');
+    const startDate = moment(session.start);
     const sessionTypeCode = session.sessionTypeCode;
     const personName = session.personName || '(No judge)';
     const roomName = session.roomName || '(No room)';
-    const roomType = session.roomName || '';
-    const hearingPartCount = session.noOfHearingPartsAssignedToSession;
+    const roomType = session.roomDescription || '';
 
     return {
-        id: session.sessionId,
-        version: session.sessionVersion,
+        id: session.id,
+        version: session.version,
         durationInMinutes: durationInMinutes,
         startTime: startTime,
         startDate: startDate,
         sessionTypeCode: sessionTypeCode,
         personName: personName,
         roomName: roomName,
-        roomType: roomType,
-        hearingPartCount: hearingPartCount,
+        roomTypeDescription: roomType,
+        hearingPartCount: session.hearingPartsCount,
         multiSession: session.hasMultiSessionHearingAssigned
     }
 }

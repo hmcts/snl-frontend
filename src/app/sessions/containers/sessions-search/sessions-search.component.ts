@@ -27,7 +27,6 @@ import { TableSetting } from '../../models/table-settings.model';
 import { SessionAmendmentTableComponent } from '../../components/session-amendment-table/session-amendment-table.component';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
-import { Note } from '../../../notes/models/note.model';
 import { NotesService } from '../../../notes/services/notes.service';
 
 @Component({
@@ -73,8 +72,11 @@ export class SessionsSearchComponent implements OnInit {
     }
 
     openAmendDialog(s: SessionSearchResponse) {
-        this.notesService.getByEntities([s.sessionId]).subscribe((notes: Note[]) => {
-            const sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(s);
+        const sessionNotes$ = this.notesService.getByEntities([s.sessionId]);
+        const sessionAmend$ = this.sessionService.getSessionAmendById(s.sessionId);
+
+        sessionNotes$.combineLatest(sessionAmend$, (notes, session) => {
+            const sessionAmendForm: SessionAmmendForm = Mapper.SessionToAmendSessionForm(session);
             this.dialog.open<any, SessionAmmendDialogData>(SessionAmendDialogComponent, {
                 ...DEFAULT_DIALOG_CONFIG,
                 data: {
@@ -84,7 +86,7 @@ export class SessionsSearchComponent implements OnInit {
                 },
                 height: 'auto'
             });
-        });
+        }).subscribe();
     }
 
     searchSessions(searchCriterion: SearchCriteria[], tableSettings: TableSetting) {
