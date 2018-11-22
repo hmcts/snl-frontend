@@ -70,6 +70,10 @@ export class SessionsFilterComponent implements OnInit {
     }
 
     isValid() {
+        if (this.filters.endDate === null) {
+            return true
+        }
+
         return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
     }
 }
