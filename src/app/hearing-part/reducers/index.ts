@@ -130,7 +130,8 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
                 notes: sortedNotes,
                 isListed: !unlisted,
                 numberOfSessions: h.numberOfSessions,
-                multiSession: h.multiSession
+                multiSession: h.multiSession,
+                status: h.status
             }
         });
 
@@ -141,7 +142,7 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
 export const getFullUnlistedHearings = createSelector(
     getFullHearings,
     hearings => {
-        return hearings.filter(h => !h.isListed)
+        return hearings.filter(h => h.status === 'Unlisted')
     }
 );
 

@@ -36,7 +36,21 @@ export class PossibleHearingActionsService {
                 private readonly hearingService: HearingService) {
     }
 
-    openUnlistDialog() {
+    private openAdjournDialog() {
+        const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {
+                title: 'Adjourn hearing',
+                message: 'Are you sure you want to adjourn this hearing? ' +
+                    'Once the hearing has been adjourned it cannot be undone.',
+            },
+            width: '350px'
+        });
+
+        return confirmationDialogRef.afterClosed();
+    }
+
+    private openUnlistDialog() {
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
@@ -72,10 +86,8 @@ export class PossibleHearingActionsService {
     private confirmationDialogClosed = (confirmed: boolean, callService: () => void, hearing: Hearing, summaryDialogText: string) => {
         if (confirmed) {
             callService();
-            this.openSummaryDialog(summaryDialogText).afterClosed().subscribe((success) => {
-                if (success) {
-                    this.fetchHearing(hearing.id);
-                }
+            this.openSummaryDialog(summaryDialogText).afterClosed().subscribe(() => {
+                this.fetchHearing(hearing.id);
             });
         }
     };

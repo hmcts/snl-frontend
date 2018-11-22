@@ -35,7 +35,7 @@ export interface Hearing {
   sessions: Session[],
   numberOfSessions: number,
   multiSession: boolean
-  version: string,
+  hearingVersion: number,
   hearingPartsVersions: VersionInfo[],
   status: string,
   possibleActions: PossibleActions
@@ -56,4 +56,10 @@ export interface UnlistHearingRequest {
   hearingId: string,
   hearingPartsVersions: VersionInfo[],
   userTransactionId: string
+}
+
+export interface AdjournHearingRequest {
+    hearingId: string,
+    hearingVersion: number,
+    userTransactionId: string
 }
