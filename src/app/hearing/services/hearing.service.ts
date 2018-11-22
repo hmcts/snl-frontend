@@ -80,7 +80,7 @@ export class HearingService {
 
     getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingViewmodel>> {
         return this.http
-            .post<Page<HearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
+            .get<Page<HearingViewmodel>>(`${this.config.getApiUrl()}/hearing/for-listing`, {
                 params: new HttpParams({ fromObject: request.httpParams })
             }).pipe(map((hearingPage: Page<HearingViewmodel>) => {
                 hearingPage.content = hearingPage.content.map(hearing => {

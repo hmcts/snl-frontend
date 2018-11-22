@@ -15,3 +15,17 @@ export function priorityValue(item: Priority) {
     }
     return null;
 }
+
+export function fromNumber(priorityNumericValue: number): Priority {
+    switch (priorityNumericValue) {
+        case 0:
+            return Priority.Low;
+        case 1:
+            return Priority.Medium;
+        case 2:
+            return Priority.High;
+        default:
+            throw new Error("No Priority value was found for the given integer: " + prio)
+    }
+    return null;
+}
