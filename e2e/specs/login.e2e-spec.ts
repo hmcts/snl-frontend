@@ -13,7 +13,7 @@ describe('Login', () => {
       await loginFlow.logoutIfNeeded()
       const expectedURL = await browser.wait(browser.getCurrentUrl(), Wait.normal)
       await loginPage.login('invalidUserName', 'invalidPassword')
-      expect(await browser.getCurrentUrl()).toEqual(expectedURL + 'test')
+      expect(await browser.getCurrentUrl()).toEqual(expectedURL)
     });
   });
   describe('When login using valid credentials', () => {
