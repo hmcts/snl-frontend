@@ -6,29 +6,30 @@ import { DEFAULT_DIALOG_CONFIG } from '../../features/transactions/models/defaul
 import { HearingService } from './hearing.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { Hearing } from '../models/hearing';
+import { PossibleActionConfig } from '../models/possible-action-config';
 
 @Injectable()
-export class PossibleActionsService {
+export class PossibleHearingActionsService {
 
     possibleActions = {
         [HearingActions.Unlist]: {
-            canBeDone: false,
-            operation: () => this.openUnlistDialog(),
+            enabled: false,
+            openDialog: () => this.openUnlistDialog(),
             callService: (hearing) => this.hearingService.unlist(hearing),
             summaryText: 'Unlist hearing parts from session'
-        },
+        } as PossibleActionConfig,
         [HearingActions.Adjourn]: {
-            canBeDone: false,
-            operation: () => this.openAdjournDialog(),
+            enabled: false,
+            openDialog: () => this.openAdjournDialog(),
             callService: (hearing) => this.hearingService.adjourn(hearing),
             summaryText: 'Adjourn hearing'
-        },
+        } as PossibleActionConfig,
         [HearingActions.Withdraw]: {
-            canBeDone: false,
-            operation: () => this.openWithdrawDialog(),
+            enabled: false,
+            openDialog: () => this.openWithdrawDialog(),
             callService: (hearing) => this.hearingService.withdraw(hearing),
             summaryText: 'Withdraw hearing '
-        }
+        } as PossibleActionConfig
     };
 
     constructor(private readonly dialog: MatDialog,
@@ -51,10 +52,10 @@ export class PossibleActionsService {
 
     handleAction(value: HearingActions, hearing: Hearing) {
         // this.mapToHearingPossibleActions(hearing);
-        const action = this.possibleActions[value];
+        const action = this.possibleActions[value] as PossibleActionConfig;
 
-        if (action.canBeDone) {
-            action.operation().subscribe((confirmed) => {
+        if (action.enabled) {
+            action.openDialog().subscribe((confirmed) => {
                 this.confirmationDialogClosed(confirmed, () => action.callService(hearing), hearing, action.summaryText)
             });
         }
@@ -62,7 +63,7 @@ export class PossibleActionsService {
 
     public mapToHearingPossibleActions(hearing: Hearing) {
         Object.keys(hearing.possibleActions).forEach(key => {
-            this.possibleActions[key].canBeDone = hearing.possibleActions[key]
+            this.possibleActions[key].enabled = hearing.possibleActions[key]
         })
 
         return this.possibleActions;

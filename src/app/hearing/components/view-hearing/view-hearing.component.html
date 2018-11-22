@@ -9,7 +9,7 @@
     </div>
       <mat-select #actionSelect id="action" value="{{hearingActions.Actions}}" fxFlex="10" (selectionChange)="onActionChanged($event)">
         <mat-option [value]="hearingActions.Actions">{{hearingActions.Actions}}</mat-option>
-        <mat-option *ngFor="let key of objectKeys(possibleActions)" [value]="key" [disabled]="!possibleActions[key].canBeDone">{{key}}</mat-option>
+        <mat-option *ngFor="let action of objectKeys(possibleActions)" [value]="action" [disabled]="!possibleActions[action].enabled">{{action}}</mat-option>
       </mat-select>
   </div>
 

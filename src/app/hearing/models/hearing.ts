@@ -43,7 +43,8 @@ export interface Hearing {
 
 export interface PossibleActions {
     [HearingActions.Unlist]: boolean,
-    [HearingActions.Adjourn]: boolean
+    [HearingActions.Adjourn]: boolean,
+    [HearingActions.Withdraw]: boolean
 }
 
 export interface VersionInfo {

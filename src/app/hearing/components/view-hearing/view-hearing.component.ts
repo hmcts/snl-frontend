@@ -13,13 +13,13 @@ import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
 import { Status } from '../../../core/reference/models/status.model';
-import { PossibleActionsService } from '../../services/possible-actions-service';
+import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 
 @Component({
   selector: 'app-view-hearing',
   templateUrl: './view-hearing.component.html',
   styleUrls: ['./view-hearing.component.scss'],
-  providers: [PossibleActionsService]
+  providers: [PossibleHearingActionsService]
 })
 export class ViewHearingComponent implements OnInit {
   hearingId: string;
@@ -39,7 +39,7 @@ export class ViewHearingComponent implements OnInit {
     private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
     private readonly notesService: NotesService,
     private readonly location: Location,
-    private readonly possibleActionsService: PossibleActionsService
+    private readonly possibleActionsService: PossibleHearingActionsService
   ) {
   }
 
