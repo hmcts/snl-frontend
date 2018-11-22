@@ -12,19 +12,19 @@ export class PossibleActionsService {
 
     possibleActions = {
         [HearingActions.Unlist]: {
-            canBeDone: true,
+            canBeDone: false,
             operation: () => this.openUnlistDialog(),
             callService: (hearing) => this.hearingService.unlist(hearing),
             summaryText: 'Unlist hearing parts from session'
         },
         [HearingActions.Adjourn]: {
-            canBeDone: true,
+            canBeDone: false,
             operation: () => this.openAdjournDialog(),
             callService: (hearing) => this.hearingService.adjourn(hearing),
             summaryText: 'Adjourn hearing'
         },
         [HearingActions.Withdraw]: {
-            canBeDone: true,
+            canBeDone: false,
             operation: () => this.openWithdrawDialog(),
             callService: (hearing) => this.hearingService.withdraw(hearing),
             summaryText: 'Withdraw hearing '
