@@ -10,10 +10,8 @@ export interface SessionSearchResponse {
     duration: string;
     noOfHearingPartsAssignedToSession: number;
     // Duration
-    allocatedDuration: number;
+    allocatedDuration: string;
     utilisation: number;
     // Duration
     available: string;
 }
-
-
