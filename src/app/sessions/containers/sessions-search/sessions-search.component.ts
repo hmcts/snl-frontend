@@ -35,8 +35,8 @@ import { NotesService } from '../../../notes/services/notes.service';
     styleUrls: ['./sessions-search.component.scss']
 })
 export class SessionsSearchComponent implements OnInit {
-    startDate: moment.Moment;
-    endDate: moment.Moment;
+    startDate: moment.Moment = moment()
+    endDate: moment.Moment = moment().add(3, 'month');
     rooms: Room[];
     judges: Judge[];
     sessionTypes: SessionType[];

@@ -79,7 +79,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
         this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
         this.startDate = moment();
-        this.endDate = moment().add(5, 'years');
+        this.endDate = moment().add(3, 'month');
 
         combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
     }
@@ -154,7 +154,11 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     openAssignDialog() {
         this.dialog.open(AssignHearingDialogComponent, {
-            data: {hearingId: this.selectedHearing.id, startTimeDisplayed: !(this.selectedSessions.length > 1)}
+            data: {
+                hearingId: this.selectedHearing.id,
+                startTimeDisplayed: !(this.selectedSessions.length > 1),
+                startTime: (this.selectedSessions.length >= 1) ? this.selectedSessions[0].start : undefined
+            }
         }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
                 this.assignToSessions(data)
