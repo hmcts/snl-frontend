@@ -1,12 +1,9 @@
-import { DEFAULT_DIALOG_CONFIG } from './../../../features/transactions/models/default-dialog-confg';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HearingService } from '../../services/hearing.service';
 import { Hearing, Session } from '../../models/hearing';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
-import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
-import { MatDialog, MatSelect } from '@angular/material';
-import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
+import { MatSelect } from '@angular/material';
 import { HearingActions } from '../../models/hearing-actions';
 import { Location } from '@angular/common';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
@@ -16,17 +13,22 @@ import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
 import { Status } from '../../../core/reference/models/status.model';
+import { PossibleActionsService } from '../../services/possible-actions-service';
 
 @Component({
   selector: 'app-view-hearing',
   templateUrl: './view-hearing.component.html',
-  styleUrls: ['./view-hearing.component.scss']
+  styleUrls: ['./view-hearing.component.scss'],
+  providers: [PossibleActionsService]
 })
 export class ViewHearingComponent implements OnInit {
-  hearingId: string
+  hearingId: string;
   hearing: Hearing;
-  hearingActions = HearingActions
+  hearingActions = HearingActions;
   @ViewChild(MatSelect) actionSelect: MatSelect;
+  objectKeys = Object.keys;
+
+  possibleActions;
 
   note: NoteViewmodel;
 
@@ -36,8 +38,8 @@ export class ViewHearingComponent implements OnInit {
     private readonly notesPreparerService: NotesPreparerService,
     private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
     private readonly notesService: NotesService,
-    private readonly dialog: MatDialog,
-    private readonly location: Location
+    private readonly location: Location,
+    private readonly possibleActionsService: PossibleActionsService
   ) {
   }
 
@@ -46,27 +48,14 @@ export class ViewHearingComponent implements OnInit {
     this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     this.hearingService.hearings
       .map(hearings => hearings.find(h => h.id === this.hearingId))
-      .subscribe(hearing => this.hearing = hearing);
+      .subscribe(hearing => {
+        this.hearing = hearing;
+        if (hearing) {
+            this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
+        }
+      });
 
     this.fetchHearing();
-  }
-
-  private confirmationDialogClosed = (confirmed: boolean) => {
-      if (confirmed) {
-          this.hearingService.unlist(this.hearing)
-          this.openSummaryDialog().afterClosed().subscribe((success) => {
-              if (success) {
-                  this.fetchHearing();
-              }
-          });
-      }
-  };
-
-  private openSummaryDialog() {
-      return this.dialog.open(TransactionDialogComponent, {
-          ...DEFAULT_DIALOG_CONFIG,
-          data: 'Unlist hearing parts from session'
-      });
   }
 
   private fetchHearing() {
@@ -105,10 +94,7 @@ export class ViewHearingComponent implements OnInit {
   }
 
   onActionChanged(event: {value: HearingActions}) {
-    if (event.value === HearingActions.Unlist) {
-        this.openConfirmationDialog();
-    }
-
+    this.possibleActionsService.handleAction(event.value, this.hearing);
     this.actionSelect.writeValue(HearingActions.Actions)
   }
 
@@ -122,20 +108,6 @@ export class ViewHearingComponent implements OnInit {
 
   isListed() {
     return this.hearing.status === Status.Listed;
-  }
-
-  openConfirmationDialog() {
-      const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
-        ...DEFAULT_DIALOG_CONFIG,
-        data: {
-            title: 'Unlist hearing',
-            message: 'Are you sure you want to unlist this hearing?' +
-            'Once you do this you will need to relist the hearing and all subsequent hearing parts.',
-        },
-        width: '350px'
-    });
-
-    confirmationDialogRef.afterClosed().subscribe(this.confirmationDialogClosed);
   }
 
   onSubmit(note: NoteViewmodel) {
