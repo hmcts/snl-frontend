@@ -25,7 +25,7 @@ export function fromNumber(priorityNumericValue: number): Priority {
         case 2:
             return Priority.High;
         default:
-            throw new Error("No Priority value was found for the given integer: " + prio)
+            throw new Error("No Priority value was found for the given integer: " + priorityNumericValue)
     }
     return null;
 }

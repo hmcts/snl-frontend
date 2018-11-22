@@ -1,7 +1,7 @@
 import { Judge } from '../../judges/models/judge.model';
 import { Note } from '../../notes/models/note.model';
 import { HearingType } from '../../core/reference/models/hearing-type';
-import { Priority } from './priority-model';
+import { fromNumber, Priority } from './priority-model';
 import { CaseType } from '../../core/reference/models/case-type';
 import * as moment from 'moment';
 import { fromString, Status } from '../../core/reference/models/status.model';
@@ -59,7 +59,7 @@ export function mapResponseToHearingForListing(hvr: HearingForListingResponse): 
         scheduleStart: moment(hvr.scheduleStart),
         scheduleEnd: moment(hvr.scheduleEnd),
         version: hvr.version,
-        priority: hvr.priority,
+        priority: fromNumber(hvr.priority),
         communicationFacilitator: hvr.communicationFacilitator,
         reservedJudge: reservedJudge,
         reservedJudgeId: hvr.reservedJudgeId,
