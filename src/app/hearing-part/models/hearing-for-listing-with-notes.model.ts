@@ -6,7 +6,7 @@ import { CaseType } from '../../core/reference/models/case-type';
 import * as moment from 'moment';
 import { fromString, Status } from '../../core/reference/models/status.model';
 
-export interface HearingViewmodel {
+export interface HearingForListingWithNotes {
     id: string; //
     caseNumber: string; //
     caseTitle: string; //
@@ -45,6 +45,27 @@ export interface HearingForListing {
     multiSession: boolean;
 }
 
+export interface HearingForListingResponse {
+    id: string; //
+    caseNumber: string; //
+    caseTitle: string; //
+    caseTypeCode: string; // dojoinowac case type
+    caseTypeDescription: string; // dojoinowac case type
+    hearingTypeCode: string; // dojoinowac hearing type
+    hearingTypeDescription: string; // dojoinowac hearing type
+    duration: string; //
+    scheduleStart: string; //
+    scheduleEnd: string; //
+    version: number; //
+    priority: number; //
+    communicationFacilitator: string;
+    reservedJudgeName: string;
+    reservedJudgeId: string;
+    status: string;
+    numberOfSessions: number;
+    isMultisession: boolean;
+}
+
 export function mapResponseToHearingForListing(hvr: HearingForListingResponse): HearingForListing {
     let caseType: CaseType = { code: hvr.caseTypeCode, description: hvr.caseTypeDescription, hearingTypes: []};
     let hearingType: HearingType = { code: hvr.hearingTypeCode, description: hvr.hearingTypeDescription};
@@ -70,25 +91,3 @@ export function mapResponseToHearingForListing(hvr: HearingForListingResponse): 
 
     return hearingForListing;
 }
-
-export interface HearingForListingResponse {
-    id: string; //
-    caseNumber: string; //
-    caseTitle: string; //
-    caseTypeCode: string; // dojoinowac case type
-    caseTypeDescription: string; // dojoinowac case type
-    hearingTypeCode: string; // dojoinowac hearing type
-    hearingTypeDescription: string; // dojoinowac hearing type
-    duration: string; //
-    scheduleStart: string; //
-    scheduleEnd: string; //
-    version: number; //
-    priority: number; //
-    communicationFacilitator: string;
-    reservedJudgeName: string;
-    reservedJudgeId: string;
-    status: string;
-    numberOfSessions: number;
-    isMultisession: boolean;
-}
-

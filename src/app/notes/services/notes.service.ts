@@ -25,6 +25,11 @@ export class NotesService {
             .pipe(map(notes => { return notes.map(n => {return {...n, createdAt: moment(n.createdAt)}})}));
     }
 
+    getByEntitiesAsDictionary(ids: string[]): Observable<any> {
+        return this.http
+            .post<Note[]>(`${this.getUrl()}/entities-dictionary`, ids)
+    }
+
     upsertMany(notes: NoteUpsert[]): Observable<Note[]> {
         return this.http
             .put<Note[]>(this.getUrl(), notes)

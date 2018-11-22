@@ -22,7 +22,7 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
-import { HearingViewmodel } from '../../models/hearing.viewmodel';
+import { HearingForListingWithNotes } from '../../models/hearing.viewmodel';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const openDialogMockObjConfirmed = {
@@ -156,7 +156,7 @@ describe('HearingPartPreviewComponent', () => {
             isListed: false,
             numberOfSessions: 1,
             multiSession: false
-        } as HearingViewmodel;
+        } as HearingForListingWithNotes;
 
         const displayedColumnsExpectedValues = [
             { columnName: 'caseNumber', expected: sampleHearing.caseNumber },
@@ -195,7 +195,7 @@ describe('HearingPartPreviewComponent', () => {
   });
 });
 
-function generateHearings(id: string): HearingViewmodel {
+function generateHearings(id: string): HearingForListingWithNotes {
     return {
         id: id,
         caseNumber: null,

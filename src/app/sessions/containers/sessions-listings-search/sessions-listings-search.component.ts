@@ -16,19 +16,18 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
-import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
 import { AssignHearingData, AssignHearingDialogComponent }
     from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
 import { ActivatedRoute } from '@angular/router';
-import { Status } from '../../../core/reference/models/status.model';
 import { HearingService } from '../../../hearing/services/hearing.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SessionsFilterComponent } from '../../components/sessions-filter/sessions-filter.component';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { NotesService } from '../../../notes/services/notes.service';
 import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
+import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -44,7 +43,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     totalHearingsCount: number;
 
     selectedSessions: SessionViewModel[] = [];
-    selectedHearing: HearingViewmodel = undefined;
+    selectedHearing: HearingForListingWithNotes = undefined;
 
     filters$ = new Subject<SessionFilters>();
     filterSource$: Observable<SessionFilters>;
@@ -53,9 +52,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     errorMessage: string;
     numberOfSessions = 1;
 
-    hearingsSource$: BehaviorSubject<HearingViewmodel[]>;
+    hearingsSource$: BehaviorSubject<HearingForListingWithNotes[]>;
     sessionsSource$: BehaviorSubject<SessionViewModel[]>;
-    hearings$: Observable<HearingViewmodel[]>;
+    hearings$: Observable<HearingForListingWithNotes[]>;
     sessions$: Observable<SessionViewModel[]>;
 
     sessionTypes$: Observable<SessionType[]>;
@@ -67,7 +66,7 @@ export class SessionsListingsSearchComponent implements OnInit {
                 public route: ActivatedRoute,
                 public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
-        this.hearingsSource$ = new BehaviorSubject<HearingViewmodel[]>([]);
+        this.hearingsSource$ = new BehaviorSubject<HearingForListingWithNotes[]>([]);
         this.sessionsSource$ = new BehaviorSubject<SessionViewModel[]>([]);
         this.hearings$ = this.hearingsSource$.asObservable();
         this.sessions$ = this.sessionsSource$.asObservable();
@@ -92,7 +91,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.fetchHearings(HearingsTableComponent.DEFAULT_PAGING);
     }
 
-    selectHearing(hearing: HearingViewmodel) {
+    selectHearing(hearing: HearingForListingWithNotes) {
         this.selectedHearing = hearing;
         this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
     }
@@ -201,7 +200,7 @@ export class SessionsListingsSearchComponent implements OnInit {
                 size: pageEvent.pageSize,
                 page: pageEvent.pageIndex,
             },
-            searchCriteria: [{key: 'status.status', operation: 'equals', value: Status.Unlisted}]
+            searchCriteria: []
         };
 
         this.hearingService.getHearingsForListing(request).subscribe(hearings => {

@@ -4,7 +4,6 @@ import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
 import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { priorityValue } from '../../models/priority-model';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
 import { HearingModificationService } from '../../services/hearing-modification.service';
@@ -12,9 +11,9 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
-import { HearingViewmodel } from '../../models/hearing.viewmodel';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { HearingForListingWithNotes } from '../../models/hearing-for-listing-with-notes.model';
 
 @Component({
   selector: 'app-hearings-table',
@@ -31,7 +30,8 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
 
-    @Input() hearings: HearingViewmodel[];
+    @Input() hearings: HearingForListingWithNotes[];
+
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onClearSelection = new EventEmitter();
@@ -39,9 +39,9 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    selectedHearing;
+    hearingSelectionModel;
 
-    dataSource: MatTableDataSource<HearingViewmodel>;
+    dataSource: MatTableDataSource<HearingForListingWithNotes>;
     displayedColumns = [
         'caseNumber',
         'caseTitle',
@@ -61,7 +61,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     ];
 
     constructor(public dialog: MatDialog, public hearingService: HearingModificationService) {
-        this.selectedHearing = new SelectionModel<HearingViewmodel>(false, []);
+        this.hearingSelectionModel = new SelectionModel<HearingForListingWithNotes>(false, []);
     }
 
     ngOnInit() {
@@ -71,38 +71,6 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     ngOnChanges() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-
-        this.dataSource.sortingDataAccessor = (item, property) => {
-            switch (property) {
-                case 'duration':
-                    return moment.duration(item[property]).asMilliseconds();
-                case 'requiredSessions':
-                    return item['numberOfSessions'];
-
-                case 'reservedJudge':
-                    return this.getPropertyMemberOrNull(item, property, 'name');
-
-                case 'caseType':
-                case 'hearingType':
-                    return this.getPropertyMemberOrNull(item, property, 'description');
-
-                case 'priority':
-                    return priorityValue(item[property]);
-
-                case 'scheduleStart':
-                case 'scheduleEnd':
-                    return (item[property]) ? item[property].unix() : null;
-
-                case 'notes':
-                    return (item[property] && item[property].length > 0) ? 'Yes' : 'No';
-
-                default:
-                    return item[property];
-            }
-        };
-
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
     }
 
     parseDate(date) {
@@ -113,11 +81,11 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         }
     }
 
-    hasNotes(hearing: HearingViewmodel): boolean {
+    hasNotes(hearing: HearingForListingWithNotes): boolean {
         return hearing.notes.length > 0;
     }
 
-    openNotesDialog(hearing: HearingViewmodel) {
+    openNotesDialog(hearing: HearingForListingWithNotes) {
         if (this.hasNotes(hearing)) {
             this.dialog.open(NotesListDialogComponent, {
                 data: hearing.notes.map(getNoteViewModel),
@@ -127,7 +95,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         }
     }
 
-    openDeleteDialog(hearing: HearingViewmodel) {
+    openDeleteDialog(hearing: HearingForListingWithNotes) {
         this.clearSelection();
 
         this.dialog.open(DialogWithActionsComponent, {
@@ -153,7 +121,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         }
     }
 
-    openEditDialog(hearing: HearingViewmodel) {
+    openEditDialog(hearing: HearingForListingWithNotes) {
         this.clearSelection();
 
         this.dialog.open(ListingCreateDialogComponent, {
@@ -166,13 +134,13 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         });
     }
 
-    toggleHearing(hearing) {
-        this.selectedHearing.toggle(hearing);
-        this.selectHearing.emit(this.selectedHearing.isSelected(hearing) ? hearing : undefined);
+    toggleHearing(hearing: HearingForListingWithNotes) {
+        this.hearingSelectionModel.toggle(hearing);
+        this.selectHearing.emit(this.hearingSelectionModel.isSelected(hearing) ? hearing : undefined);
     }
 
     clearSelection() {
-        this.selectedHearing.clear();
+        this.hearingSelectionModel.clear();
         this.onClearSelection.emit();
     }
 

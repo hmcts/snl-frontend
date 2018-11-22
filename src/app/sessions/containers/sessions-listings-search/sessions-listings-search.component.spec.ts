@@ -40,7 +40,7 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { HearingPartResponse } from '../../../hearing-part/models/hearing-part-response';
 import { Hearing } from '../../../hearing-part/models/hearing';
-import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
+import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing.viewmodel';
 import { AssignHearingData } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 
 let storeSpy: jasmine.Spy;
@@ -104,7 +104,7 @@ const mockedUnlistedHearingPartVM: HearingPartViewModel = {
     multiSession: false
 };
 
-const mockedUnlistedHearingVM: HearingViewmodel = {
+const mockedUnlistedHearingVM: HearingForListingWithNotes = {
     id: '1e4f95f1-62b9-48d1-9fa1-24b025111fa0',
     caseNumber: 'abc123',
     caseTitle: 'fast-track',
@@ -242,7 +242,7 @@ describe('SessionsListingsSearchComponent', () => {
       expect(component.startDate).toBeDefined();
       expect(component.endDate).toBeDefined();
     });
-    it('should set null to selectedHearing', () => {
+    it('should set null to hearingSelectionModel', () => {
       expect(component.selectedHearing).toBeUndefined();
     });
     it('should set selectedSessions to empty obj', () => {
@@ -361,7 +361,7 @@ describe('SessionsListingsSearchComponent', () => {
   });
 
   describe('selectHearing', () => {
-    it('should set selectedHearing', () => {
+    it('should set hearingSelectionModel', () => {
       component.selectHearing(mockedUnlistedHearingVM);
       expect(component.selectedHearing).toEqual(mockedUnlistedHearingVM);
     });
@@ -412,14 +412,14 @@ describe('SessionsListingsSearchComponent', () => {
   });
 
   describe('assignButtonEnabled', () => {
-    describe('when selectedHearing is not null and selectedSessions is set', () => {
+    describe('when hearingSelectionModel is not null and selectedSessions is set', () => {
       it('should return true ', () => {
         component.selectHearing(mockedUnlistedHearingVM);
         component.selectSession(mockedFullSession);
         expect(component.assignButtonEnabled()).toEqual(true);
       });
     });
-    describe('when either selectedHearing is not null or selectedSessions is not set', () => {
+    describe('when either hearingSelectionModel is not null or selectedSessions is not set', () => {
       it('should return false ', () => {
         component.selectSession([]);
         component.selectHearing(mockedUnlistedHearingVM);

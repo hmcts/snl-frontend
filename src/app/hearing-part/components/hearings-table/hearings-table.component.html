@@ -5,7 +5,7 @@ matSortDirection="desc">
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
                     (change)="$event ? toggleHearing(element) : null"
-                    [checked]="selectedHearing.isSelected(element)">&nbsp;
+                    [checked]="hearingSelectionModel.isSelected(element)">&nbsp;
       </mat-checkbox>
     </mat-cell>
   </ng-container>

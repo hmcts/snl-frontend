@@ -14,14 +14,17 @@ import { v4 as uuid } from 'uuid';
 import { BehaviorSubject } from 'rxjs';
 import { FilteredHearingViewmodel, HearingSearchResponseForAmendment } from '../../hearing-part/models/filtered-hearing-viewmodel';
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
 import * as fromHearingParts from '../../hearing-part/actions/hearing-part.action'
 import {
-    HearingForListingResponse, HearingViewmodel,
+    HearingForListing,
+    HearingForListingResponse, HearingForListingWithNotes,
     mapResponseToHearingForListing
-} from '../../hearing-part/models/hearing.viewmodel';
+} from '../../hearing-part/models/hearing-for-listing-with-notes.model';
+import { NotesService } from '../../notes/services/notes.service';
+import { Note } from '../../notes/models/note.model';
 
 @Injectable()
 export class HearingService {
@@ -33,6 +36,7 @@ export class HearingService {
     private readonly http: HttpClient,
     private readonly config: AppConfig,
     private readonly notesPopulatorService: NotesPopulatorService,
+    private readonly notesService: NotesService,
     private readonly store: Store<State>
   ) {
     this.hearings = this._hearings.asObservable();
@@ -81,15 +85,25 @@ export class HearingService {
             ));
     }
 
-    getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingViewmodel>> {
+    getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingForListingWithNotes>> {
         return this.http
             .get<Page<HearingForListingResponse>>(`${this.config.getApiUrl()}/hearing/for-listing`, {
                 params: new HttpParams({ fromObject: request.httpParams })
-            }).pipe(map<Page<HearingForListingResponse>, Page<HearingViewmodel>>((hearingPage: Page<HearingForListingResponse>) => {
+            }).pipe(map<Page<HearingForListingResponse>, Page<HearingForListing>>((hearingPage: Page<HearingForListingResponse>) => {
                 let content = hearingPage.content.map(hearingForListingResponse => {
-                    return {...mapResponseToHearingForListing(hearingForListingResponse), notes: []};
+                    return mapResponseToHearingForListing(hearingForListingResponse);
                 });
                 return {...hearingPage, content: content}
+            }), mergeMap<Page<HearingForListing>, Page<HearingForListingWithNotes>>((hearingForListing: Page<HearingForListing>) => {
+                let hearingIds = hearingForListing.content.map(h => h.id);
+                return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: Note[]) => {
+                    const hearings: Page<HearingForListingWithNotes> = {...hearingForListing, content: []};
+                    hearingForListing.content.forEach(h => {
+                        let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []}
+                        hearings.content.push(hearing)
+                    });
+                    return Observable.of(hearings);
+                }))
             }))
     }
 
