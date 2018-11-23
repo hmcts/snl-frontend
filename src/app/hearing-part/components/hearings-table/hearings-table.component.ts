@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
@@ -24,7 +24,7 @@ import { TableSettings } from '../../models/table-settings.model';
   styleUrls: ['./hearings-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HearingsTableComponent implements OnInit, OnChanges {
+export class HearingsTableComponent implements OnChanges {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
@@ -63,10 +63,6 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     constructor(public dialog: MatDialog, public hearingService: HearingService) {
         this.hearingSelectionModel = new SelectionModel<HearingForListingWithNotes>(false, []);
-    }
-
-    ngOnInit() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
     }
 
     ngOnChanges() {
@@ -129,6 +125,17 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         this.onClearSelection.emit();
     }
 
+    nextTableSettingsValue() {
+        const ts: TableSettings = {
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortByProperty: this.sort.active,
+            sortDirection: this.sort.direction
+        };
+
+        this.tableSettingsSource$.next(ts)
+    }
+
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
@@ -142,16 +149,5 @@ export class HearingsTableComponent implements OnInit, OnChanges {
             hearingVersion: hearing.version,
             userTransactionId: uuid()
         });
-    }
-
-    private nextTableSettingsValue() {
-        const ts: TableSettings = {
-            pageIndex: this.paginator.pageIndex,
-            pageSize: this.paginator.pageSize,
-            sortByProperty: this.sort.active,
-            sortDirection: this.sort.direction
-        };
-
-        this.tableSettingsSource$.next(ts)
     }
 }
