@@ -5,7 +5,7 @@
     </mat-card-header>
   </mat-card>
 </div>
-<mat-table id="sessions-table" *ngIf="tableVisible" #table [dataSource]="dataSource" matSort (matSortChange)="emitTableSettings()">
+<mat-table id="sessions-table" *ngIf="tableVisible" #table [dataSource]="dataSource" matSort (matSortChange)="emitTableSettings()" matSortActive="{{sessionSearchColumns.StartTime}}" matSortDirection="desc">
   <ng-container matColumnDef="{{sessionSearchColumns.SessionId}}">
     <mat-header-cell style="display:none" *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
     <mat-cell  id="{{element.sessionId}}" style="display:none" *matCellDef="let element"></mat-cell>
