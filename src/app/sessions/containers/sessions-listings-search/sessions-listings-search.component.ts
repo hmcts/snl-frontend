@@ -64,7 +64,6 @@ export class SessionsListingsSearchComponent implements OnInit {
     constructor(public hearingService: HearingService,
                 public notesService: NotesService,
                 public route: ActivatedRoute,
-                public hearingModificationService: HearingModificationService,
                 public dialog: MatDialog) {
         this.hearingsSource$ = new BehaviorSubject<HearingForListingWithNotes[]>([]);
         this.sessionsSource$ = new BehaviorSubject<SessionViewModel[]>([]);
@@ -104,7 +103,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment;
 
-        this.hearingModificationService.assignWithSession(assignment);
+        this.hearingService.assignToSession(assignment);
 
         this.openSummaryDialog().afterClosed().subscribe((accepted) => {
             if (accepted) {

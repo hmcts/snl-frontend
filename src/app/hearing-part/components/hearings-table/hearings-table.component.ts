@@ -30,8 +30,6 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         length: undefined
     };
 
-    paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
-
     @Input() hearings: HearingForListingWithNotes[];
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
@@ -39,8 +37,8 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    hearingSelectionModel;
-
+    paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
+    hearingSelectionModel: SelectionModel<HearingForListingWithNotes>;
     dataSource: MatTableDataSource<HearingForListingWithNotes>;
     displayedColumns = [
         'caseNumber',

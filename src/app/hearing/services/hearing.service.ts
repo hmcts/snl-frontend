@@ -26,6 +26,8 @@ import {
 import { NotesService } from '../../notes/services/notes.service';
 import { Note } from '../../notes/models/note.model';
 import { HearingDeletion } from '../../hearing-part/models/hearing-deletion';
+import { HearingToSessionAssignment } from '../../hearing-part/models/hearing-to-session-assignment';
+import { HearingPartResponse } from '../../hearing-part/models/hearing-part-response';
 
 @Injectable()
 export class HearingService {
@@ -85,6 +87,14 @@ export class HearingService {
             .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, hearingDeletion, {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
+    assignToSession(assignment: HearingToSessionAssignment): Observable<any> {
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: assignment.userTransactionId } as EntityTransaction));
+
+        return this.http
+            .put<HearingPartResponse>(`${this.config.getApiUrl()}/hearing/${(assignment).hearingId}`, assignment);
     }
 
     getForAmendment(id: string): Observable<HearingSearchResponseForAmendment> {
