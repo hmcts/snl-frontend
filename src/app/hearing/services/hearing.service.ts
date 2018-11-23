@@ -21,7 +21,7 @@ import * as fromHearingParts from '../../hearing-part/actions/hearing-part.actio
 
 @Injectable()
 export class HearingService {
-    hearings: Observable<Hearing[]>
+    hearings: Observable<Hearing[]>;
     private _hearings = <BehaviorSubject<Hearing[]>>new BehaviorSubject([]);
     private dataStore: { hearings: Hearing[] } = { hearings: [] };
 
@@ -58,9 +58,7 @@ export class HearingService {
           userTransactionId: uuid()
         }
 
-        this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction));
-        this.store.dispatch(new fromHearingParts.RemoveAll())
+        this.removeEntitiesFromStateAndInitializeTransaction(unlistHearingRequest.userTransactionId);
 
         return this.http
           .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
@@ -75,9 +73,7 @@ export class HearingService {
             userTransactionId: uuid()
         };
 
-        this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: adjournHearingRequest.userTransactionId } as EntityTransaction));
-        this.store.dispatch(new fromHearingParts.RemoveAll());
+        this.removeEntitiesFromStateAndInitializeTransaction(adjournHearingRequest.userTransactionId);
 
         return this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/adjourn`, JSON.stringify(adjournHearingRequest), {
@@ -112,5 +108,11 @@ export class HearingService {
         hearing.listingDate = moment(hearing.listingDate);
         hearing.duration = moment.duration(hearing.duration);
         return hearing;
+    }
+
+    private removeEntitiesFromStateAndInitializeTransaction(transactionId: string) {
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: transactionId } as EntityTransaction));
+        this.store.dispatch(new fromHearingParts.RemoveAll())
     }
 }

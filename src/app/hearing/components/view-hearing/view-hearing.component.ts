@@ -26,7 +26,7 @@ export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
   hearingActions = HearingActions;
   @ViewChild(MatSelect) actionSelect: MatSelect;
-  objectKeys = Object.keys;
+  possibleActionsKeys;
 
   possibleActions;
 
@@ -52,6 +52,7 @@ export class ViewHearingComponent implements OnInit {
         this.hearing = hearing;
         if (hearing) {
             this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
+            this.possibleActionsKeys = Object.keys(this.possibleActions)
         }
       });
 

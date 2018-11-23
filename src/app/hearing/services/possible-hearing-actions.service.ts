@@ -36,6 +36,24 @@ export class PossibleHearingActionsService {
                 private readonly hearingService: HearingService) {
     }
 
+    public handleAction(value: HearingActions, hearing: Hearing) {
+        const action = this.possibleActions[value] as PossibleActionConfig;
+
+        if (action.enabled) {
+            action.openDialog().subscribe((confirmed) => {
+                this.confirmationDialogClosed(confirmed, () => action.callService(hearing), hearing, action.summaryText)
+            });
+        }
+    }
+
+    public mapToHearingPossibleActions(hearing: Hearing) {
+        Object.keys(hearing.possibleActions).forEach(key => {
+            this.possibleActions[key].enabled = hearing.possibleActions[key]
+        })
+
+        return this.possibleActions;
+    }
+
     private openAdjournDialog() {
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
@@ -62,25 +80,6 @@ export class PossibleHearingActionsService {
         });
 
         return confirmationDialogRef.afterClosed();
-    }
-
-    handleAction(value: HearingActions, hearing: Hearing) {
-        // this.mapToHearingPossibleActions(hearing);
-        const action = this.possibleActions[value] as PossibleActionConfig;
-
-        if (action.enabled) {
-            action.openDialog().subscribe((confirmed) => {
-                this.confirmationDialogClosed(confirmed, () => action.callService(hearing), hearing, action.summaryText)
-            });
-        }
-    }
-
-    public mapToHearingPossibleActions(hearing: Hearing) {
-        Object.keys(hearing.possibleActions).forEach(key => {
-            this.possibleActions[key].enabled = hearing.possibleActions[key]
-        })
-
-        return this.possibleActions;
     }
 
     private confirmationDialogClosed = (confirmed: boolean, callService: () => void, hearing: Hearing, summaryDialogText: string) => {

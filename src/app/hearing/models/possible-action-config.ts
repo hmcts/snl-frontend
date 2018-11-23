@@ -7,3 +7,7 @@ export interface PossibleActionConfig {
     callService: (hearing: Hearing) => {},
     summaryText: string
 }
+
+export interface PossibleActions {
+    PossibleActionConfig
+}

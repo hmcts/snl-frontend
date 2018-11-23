@@ -9,6 +9,7 @@ import { HearingPart } from '../models/hearing-part';
 import { getJudgesEntities } from '../../judges/reducers';
 import * as moment from 'moment';
 import { Priority } from '../models/priority-model';
+import { Status } from '../../core/reference/models/status.model';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
@@ -142,7 +143,7 @@ export const getFullHearings = createSelector(getAllHearingParts, getHearingsEnt
 export const getFullUnlistedHearings = createSelector(
     getFullHearings,
     hearings => {
-        return hearings.filter(h => h.status === 'Unlisted')
+        return hearings.filter(h => h.status === Status.Unlisted)
     }
 );
 
