@@ -165,10 +165,6 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingPartsTable.clearSelection();
     }
 
-    onNextHearingsPage(pageEvent: PageEvent) {
-        this.fetchHearings(pageEvent);
-    }
-
     private checkIfOnlyOneJudgeSelected() {
         if (!this.selectedHearing.multiSession) {
             this.errorMessage = '';

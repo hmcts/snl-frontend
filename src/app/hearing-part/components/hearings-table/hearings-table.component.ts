@@ -6,7 +6,6 @@ import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { ListingCreate } from '../../models/listing-create';
 import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
-import { HearingModificationService } from '../../services/hearing-modification.service';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
@@ -14,6 +13,8 @@ import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HearingForListingWithNotes } from '../../models/hearing-for-listing-with-notes.model';
+import { HearingService } from '../../../hearing/services/hearing.service';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-hearings-table',
@@ -31,11 +32,9 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
 
     @Input() hearings: HearingForListingWithNotes[];
-
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onClearSelection = new EventEmitter();
-    @Output() onNextPage = new EventEmitter<PageEvent>();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -60,13 +59,13 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         'editor'
     ];
 
-    constructor(public dialog: MatDialog, public hearingService: HearingModificationService) {
+    constructor(public dialog: MatDialog, public hearingService: HearingService) {
         this.hearingSelectionModel = new SelectionModel<HearingForListingWithNotes>(false, []);
     }
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-        this.paginator.page.subscribe(pageEvent => this.onNextPage.emit(pageEvent))
+        this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent))
     }
 
     ngOnChanges() {
@@ -110,12 +109,12 @@ export class HearingsTableComponent implements OnInit, OnChanges {
             this.hearingService.deleteHearing({
                 hearingId: hearing.id,
                 hearingVersion: hearing.version,
-                userTransactionId: undefined
+                userTransactionId: uuid()
             });
 
             this.openTransactionDialog().afterClosed().subscribe((success) => {
                 if (success) {
-                    this.hearingService.removeFromState(hearing.id)
+                    this.paginationSource$.next(this.paginationSource$.getValue())
                 }
             })
         }
@@ -149,9 +148,5 @@ export class HearingsTableComponent implements OnInit, OnChanges {
             ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
         });
-    }
-
-    private getPropertyMemberOrNull(item: object, property: string, key: string ) {
-        return (item[property]) ? item[property][key] : null;
     }
 }

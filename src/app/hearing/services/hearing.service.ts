@@ -25,6 +25,7 @@ import {
 } from '../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { NotesService } from '../../notes/services/notes.service';
 import { Note } from '../../notes/models/note.model';
+import { HearingDeletion } from '../../hearing-part/models/hearing-deletion';
 
 @Injectable()
 export class HearingService {
@@ -76,6 +77,16 @@ export class HearingService {
       }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
   }
 
+    deleteHearing(hearingDeletion: HearingDeletion) {
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: hearingDeletion.userTransactionId } as EntityTransaction));
+
+        return this.http
+            .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, hearingDeletion, {
+                headers: {'Content-Type': 'application/json'}
+            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
     getForAmendment(id: string): Observable<HearingSearchResponseForAmendment> {
         return this.http
             .get<HearingSearchResponseForAmendment>(`${this.config.getApiUrl()}/hearing/${id}/for-amendment`).pipe(map(
@@ -99,7 +110,7 @@ export class HearingService {
                 return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: Note[]) => {
                     const hearings: Page<HearingForListingWithNotes> = {...hearingForListingPage, content: []};
                     hearingForListingPage.content.forEach(h => {
-                        let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []}
+                        let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []};
                         hearings.content.push(hearing)
                     });
                     return Observable.of(hearings);

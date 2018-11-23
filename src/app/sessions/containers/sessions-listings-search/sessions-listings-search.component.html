@@ -17,8 +17,7 @@
                           [hearings]="hearings$ | async"
                           [totalCount]="totalHearingsCount"
                           (onClearSelection)="onHearingsClearSelection()"
-                          (selectHearing)="selectHearing($event)"
-                          (onNextPage)="onNextHearingsPage($event)">
+                          (selectHearing)="selectHearing($event)">
       </app-hearings-table>
     </div>
 
