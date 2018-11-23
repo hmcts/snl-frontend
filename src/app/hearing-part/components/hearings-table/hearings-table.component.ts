@@ -67,7 +67,6 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-       // this.tableSettingsSource$.next(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
     }
 
     ngOnChanges() {
