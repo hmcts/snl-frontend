@@ -2048,6 +2048,10 @@ dir-glob@^2.0.0:
     arrify "^1.0.1"
     path-type "^3.0.0"
 
+djb2@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/djb2/-/djb2-0.0.2.tgz#440b3891aa3ab8142b54d469b177baea9e96e4ef"
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"
