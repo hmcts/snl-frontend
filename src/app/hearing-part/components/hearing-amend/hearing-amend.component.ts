@@ -157,8 +157,7 @@ export class HearingAmendComponent {
             ),
             listingType: new FormGroup({
                 duration: new FormControl({
-                        value: this.getDurationToDisplay(),
-                        disabled: this.isMultiSession()
+                        value: this.getDurationToDisplay()
                     },
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
