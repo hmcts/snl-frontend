@@ -21,7 +21,7 @@
       <span fxFlex>Available: {{sessionDetails.availableDuration | async}}</span>
     </div>
     <div fxLayout="column" fxLayoutGap="3%" style="overflow: hidden">
-        <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [hearingPart]="hearingPart"></app-draggable-hearing-part>
+        <app-draggable-hearing-part *ngFor="let hearingPart of (sessionDetails.session | async).hearingParts" [session]="(sessionDetails.session | async)" [hearingPart]="hearingPart"></app-draggable-hearing-part>
     </div>
   </div>
   <div *ngIf="displayInformativeLegend((sessionDetails.session | async).hearingParts)" fxLayout="row" fxLayoutAlign="end" mat-dialog-actions>
