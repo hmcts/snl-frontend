@@ -78,17 +78,12 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.hearingPaginationSource$ = this.hearingPartsTable.paginationSource$.asObservable();
+        this.hearingPaginationSource$.subscribe(this.fetchHearings);
+
         this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
         this.sessionPaginationSource$ = this.sessionsTable.paginationSource$.asObservable();
-        this.hearingPaginationSource$ = this.hearingPartsTable.paginationSource$.asObservable();
-
-        this.hearingPaginationSource$.subscribe((pageEvent: PageEvent) => {
-            this.fetchHearings(pageEvent);
-        });
-
         combineLatest(this.sessionPaginationSource$, this.filterSource$, this.fetchSessions).subscribe()
-
-        this.fetchHearings(HearingsTableComponent.DEFAULT_PAGING);
     }
 
     selectHearing(hearing: HearingForListingWithNotes) {
@@ -190,7 +185,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.selectedHearing = undefined;
     }
 
-    private fetchHearings(pageEvent: PageEvent) {
+    private fetchHearings = (pageEvent: PageEvent) => {
         const request = {
             httpParams: {
                 size: pageEvent.pageSize,

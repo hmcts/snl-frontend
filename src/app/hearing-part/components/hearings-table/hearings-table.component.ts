@@ -15,6 +15,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HearingForListingWithNotes } from '../../models/hearing-for-listing-with-notes.model';
 import { HearingService } from '../../../hearing/services/hearing.service';
 import { v4 as uuid } from 'uuid';
+import { filter, mergeMap, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-hearings-table',
@@ -65,7 +66,8 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-        this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent))
+        this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent));
+        this.paginationSource$.next(HearingsTableComponent.DEFAULT_PAGING);
     }
 
     ngOnChanges() {
@@ -73,11 +75,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     }
 
     parseDate(date) {
-        if (date) {
-            return moment(date).format('DD/MM/YYYY');
-        } else {
-            return null;
-        }
+        return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
     hasNotes(hearing: HearingForListingWithNotes): boolean {
@@ -98,26 +96,15 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         this.clearSelection();
 
         this.dialog.open(DialogWithActionsComponent, {
-        data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
-      }).afterClosed().subscribe((confirmed) => {
-          this.afterDeleteClosed(confirmed, hearing);
-      })
-    }
-
-    afterDeleteClosed(confirmed, hearing) {
-        if (confirmed) {
-            this.hearingService.deleteHearing({
-                hearingId: hearing.id,
-                hearingVersion: hearing.version,
-                userTransactionId: uuid()
-            });
-
-            this.openTransactionDialog().afterClosed().subscribe((success) => {
-                if (success) {
-                    this.paginationSource$.next(this.paginationSource$.getValue())
-                }
-            })
-        }
+            data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
+        }).afterClosed().pipe(
+            filter(confirmed => confirmed === true),
+            tap(() => { this.deleteHearing(hearing) }),
+            mergeMap(() => { return this.openTransactionDialog().afterClosed() }),
+            filter(success => success === true),
+            tap(() => this.paginationSource$.next(this.paginationSource$.getValue())),
+            take(1))
+        .subscribe();
     }
 
     openEditDialog(hearing: HearingForListingWithNotes) {
@@ -147,6 +134,14 @@ export class HearingsTableComponent implements OnInit, OnChanges {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: { actionTitle: 'Deleting hearing' }
+        });
+    }
+
+    private deleteHearing(hearing: HearingForListingWithNotes) {
+        this.hearingService.deleteHearing({
+            hearingId: hearing.id,
+            hearingVersion: hearing.version,
+            userTransactionId: uuid()
         });
     }
 }
