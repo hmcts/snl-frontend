@@ -28,7 +28,7 @@ export class SessionAmendmentTableComponent implements AfterViewInit {
         SessionSearchColumn.RoomName,
         SessionSearchColumn.SessionTypeDescription,
         SessionSearchColumn.NoOfHearingPartsAssignedToSession,
-        SessionSearchColumn.Allocated,
+        SessionSearchColumn.AllocatedDuration,
         SessionSearchColumn.Utilisation,
         SessionSearchColumn.Available,
         SessionSearchColumn.Amend,

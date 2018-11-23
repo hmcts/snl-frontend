@@ -46,9 +46,9 @@
     <mat-cell *matCellDef="let element"> {{element.noOfHearingPartsAssignedToSession}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="{{sessionSearchColumns.Allocated}}">
+  <ng-container matColumnDef="{{sessionSearchColumns.AllocatedDuration}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Allocated </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.allocated)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.allocatedDuration)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="{{sessionSearchColumns.Utilisation}}">

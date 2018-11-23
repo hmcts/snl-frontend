@@ -7,7 +7,6 @@ export enum SessionSearchColumn {
     SessionTypeDescription = 'session_type_description',
     Duration = 'session_duration',
     NoOfHearingPartsAssignedToSession = 'no_of_hearing_parts',
-    Allocated = 'allocated',
     AllocatedDuration = 'allocated_duration',
     Utilisation = 'utilisation',
     Available = 'available',
