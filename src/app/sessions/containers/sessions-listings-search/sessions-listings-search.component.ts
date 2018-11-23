@@ -11,7 +11,6 @@ import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, PageEvent } from '@angular/material';
 import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
-import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
@@ -28,6 +27,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import { NotesService } from '../../../notes/services/notes.service';
 import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
 import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -48,7 +48,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     filters$ = new Subject<SessionFilters>();
     filterSource$: Observable<SessionFilters>;
     sessionPaginationSource$: Observable<PageEvent>;
-    hearingPaginationSource$: Observable<PageEvent>;
+    hearingTableSettingsSource$: Observable<TableSettings>;
     errorMessage: string;
     numberOfSessions = 1;
 
@@ -77,8 +77,8 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.hearingPaginationSource$ = this.hearingPartsTable.paginationSource$.asObservable();
-        this.hearingPaginationSource$.subscribe(this.fetchHearings);
+        this.hearingTableSettingsSource$ = this.hearingPartsTable.tableSettingsSource$.asObservable();
+        this.hearingTableSettingsSource$.subscribe(this.fetchHearings);
 
         this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
         this.sessionPaginationSource$ = this.sessionsTable.paginationSource$.asObservable();
@@ -110,8 +110,8 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.notesService.upsertManyNotes(assignHearingData.notes).subscribe()
             }
 
-            this.fetchHearings(this.hearingPartsTable.paginationSource$.getValue());
-            this.fetchSessions(this.sessionsTable.paginationSource$.getValue(), this.sessionFilter.filterSource$.getValue());
+            this.fetchHearings(this.hearingPartsTable.tableSettingsSource$.getValue());
+            this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
 
             this.onHearingsClearSelection();
             this.onSessionsClearSelection();
@@ -184,11 +184,13 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.selectedHearing = undefined;
     }
 
-    private fetchHearings = (pageEvent: PageEvent) => {
+    private fetchHearings = (tableSettings: TableSettings) => {
         const request = {
             httpParams: {
-                size: pageEvent.pageSize,
-                page: pageEvent.pageIndex,
+                size: tableSettings.pageSize,
+                page: tableSettings.pageIndex,
+                sortByProperty: tableSettings.sortByProperty,
+                sortByDirection: tableSettings.sortDirection,
             },
             searchCriteria: []
         };

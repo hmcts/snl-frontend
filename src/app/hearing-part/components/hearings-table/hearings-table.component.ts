@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
 import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
@@ -16,6 +16,7 @@ import { HearingForListingWithNotes } from '../../models/hearing-for-listing-wit
 import { HearingService } from '../../../hearing/services/hearing.service';
 import { v4 as uuid } from 'uuid';
 import { filter, mergeMap, take, tap } from 'rxjs/operators';
+import { TableSettings } from '../../models/table-settings.model';
 
 @Component({
   selector: 'app-hearings-table',
@@ -24,10 +25,11 @@ import { filter, mergeMap, take, tap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingsTableComponent implements OnInit, OnChanges {
-    public static DEFAULT_PAGING: PageEvent = {
+    public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        length: undefined
+        sortByProperty: 'case_type_description',
+        sortDirection: 'asc'
     };
 
     @Input() hearings: HearingForListingWithNotes[];
@@ -37,23 +39,24 @@ export class HearingsTableComponent implements OnInit, OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(HearingsTableComponent.DEFAULT_PAGING);
+    tableSettingsSource$: BehaviorSubject<TableSettings> =
+        new BehaviorSubject<TableSettings>(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
     hearingSelectionModel: SelectionModel<HearingForListingWithNotes>;
     dataSource: MatTableDataSource<HearingForListingWithNotes>;
     displayedColumns = [
-        'caseNumber',
-        'caseTitle',
-        'caseType',
-        'hearingType',
+        'case_number',
+        'case_title',
+        'case_type_description',
+        'hearing_type_description',
         'duration',
-        'communicationFacilitator',
+        'communication_facilitator',
         'priority',
-        'reservedJudge',
-        'requiredSessions',
+        'reserved_judge_name',
+        'number_of_sessions',
         'notes',
-        'scheduleStart',
-        'scheduleEnd',
-        'selectHearing',
+        'schedule_start',
+        'schedule_end',
+        'select_hearing',
         'delete',
         'editor'
     ];
@@ -64,8 +67,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         this.dataSource = new MatTableDataSource(Object.values(this.hearings));
-        this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent));
-        this.paginationSource$.next(HearingsTableComponent.DEFAULT_PAGING);
+       // this.tableSettingsSource$.next(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
     }
 
     ngOnChanges() {
@@ -100,7 +102,7 @@ export class HearingsTableComponent implements OnInit, OnChanges {
             tap(() => { this.deleteHearing(hearing) }),
             mergeMap(() => { return this.openTransactionDialog().afterClosed() }),
             filter(success => success === true),
-            tap(() => this.paginationSource$.next(this.paginationSource$.getValue())),
+            tap(() => this.tableSettingsSource$.next(this.tableSettingsSource$.getValue())),
             take(1))
         .subscribe();
     }
@@ -141,5 +143,16 @@ export class HearingsTableComponent implements OnInit, OnChanges {
             hearingVersion: hearing.version,
             userTransactionId: uuid()
         });
+    }
+
+    private nextTableSettingsValue() {
+        const ts: TableSettings = {
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortByProperty: this.sort.active,
+            sortDirection: this.sort.direction
+        };
+
+        this.tableSettingsSource$.next(ts)
     }
 }

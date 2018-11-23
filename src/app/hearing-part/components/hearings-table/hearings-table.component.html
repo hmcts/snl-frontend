@@ -1,6 +1,6 @@
-<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort matSortActive="priority"
+<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" (matSortChange)="nextTableSettingsValue()" matSort matSortActive="priority"
 matSortDirection="desc">
-  <ng-container matColumnDef="selectHearing">
+  <ng-container matColumnDef="select_hearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
@@ -10,22 +10,22 @@ matSortDirection="desc">
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseNumber">
+  <ng-container matColumnDef="case_number">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Number </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseTitle">
+  <ng-container matColumnDef="case_title">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Title </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseType">
+  <ng-container matColumnDef="case_type_description">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseType?.description}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="communicationFacilitator">
+  <ng-container matColumnDef="communication_facilitator">
     <mat-header-cell class="communicationFacilitator" *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
     <mat-cell class="communicationFacilitator" *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
   </ng-container>
@@ -35,17 +35,17 @@ matSortDirection="desc">
     <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="reservedJudge">
+  <ng-container matColumnDef="reserved_judge_name">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="requiredSessions">
+  <ng-container matColumnDef="number_of_sessions">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Required sessions </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.numberOfSessions}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="hearingType">
+  <ng-container matColumnDef="hearing_type_description">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>
   </ng-container>
@@ -55,12 +55,12 @@ matSortDirection="desc">
     <mat-cell *matCellDef="let element"> {{element.duration | appDurationFormat}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleStart">
+  <ng-container matColumnDef="schedule_start">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule From </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleEnd">
+  <ng-container matColumnDef="schedule_end">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule To </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
   </ng-container>
@@ -92,4 +92,9 @@ matSortDirection="desc">
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator id="hearings-part-table-paginator" [length]="totalCount" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator id="hearings-part-table-paginator"
+               [length]="totalCount"
+               [pageSize]="10"
+               [pageSizeOptions]="[100, 10, 20]"
+               (page)="nextTableSettingsValue()"
+               showFirstLastButtons></mat-paginator>
