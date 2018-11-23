@@ -44,7 +44,7 @@ const storeSpy = jasmine.createSpyObj('Store', ['dispatch']);
 const notePreparerSpy: jasmine.SpyObj<NotesPreparerService> = jasmine.createSpyObj('NotesPreparerService', ['prepare']);
 notePreparerSpy.prepare.and.returnValue([])
 
-fdescribe('SessionsAmendFormComponent', () => {
+describe('SessionsAmendFormComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [AngularMaterialModule, FormsModule, ReactiveFormsModule],

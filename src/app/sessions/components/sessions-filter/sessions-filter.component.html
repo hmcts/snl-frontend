@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <mat-form-field class="date-picker-element">
-      <input id="endDate" matInput [matDatepicker]="pickerEnd" [min]="filters.startDate" [(ngModel)]="filters.endDate" placeholder="Choose end date">
+      <input id="endDate" matInput [matDatepicker]="pickerEnd" [min]="filters.startDate" [(ngModel)]="filters.endDate" (dateChange)="filters.endDate?.endOf('day')" placeholder="Choose end date">
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
     </mat-form-field>

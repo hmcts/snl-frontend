@@ -70,7 +70,7 @@ export class SessionsFilterComponent implements OnInit {
     }
 
     isValid() {
-        if (this.filters.endDate === null) {
+        if (this.filters.endDate === null || this.filters.startDate === null) {
             return true
         }
 
