@@ -16,6 +16,7 @@ import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
 import { Status } from '../../../core/reference/models/status.model';
+import { filter, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-view-hearing',
@@ -51,27 +52,24 @@ export class ViewHearingComponent implements OnInit {
         this.fetchHearing();
     }
 
-    private unlistDialogClosed = (confirmed: boolean) => {
-        if (confirmed) {
-            this.hearingService.unlist(this.hearing)
-            this.openSummaryDialog('Unlist hearing parts from session').afterClosed().subscribe((success) => {
-                if (success) {
-                    this.fetchHearing();
-                }
-            });
-        }
-    };
+    private unlistDialogClosed = () => {
+        this.hearingService.unlist(this.hearing);
+        this.openSummaryDialog('Unlist hearing parts from session').afterClosed().subscribe((success) => {
+            if (success) {
+                this.fetchHearing();
+            }
+        });
+    }
 
-    private withdrawDialogClosed = (confirmed: boolean) => {
-        if (confirmed) {
-            this.hearingService.withdraw(this.hearing)
-            this.openSummaryDialog('Withdraw hearing parts from session').afterClosed().subscribe((success) => {
-                if (success) {
-                    this.fetchHearing();
-                }
-            });
-        }
-    };
+    private withdrawDialogClosed = () => {
+        this.hearingService.withdraw(this.hearing);
+        this.openSummaryDialog('Withdraw hearing parts from session').afterClosed().subscribe((success) => {
+            if (success) {
+                this.fetchHearing();
+            }
+        });
+
+    }
 
     private openSummaryDialog(message: string) {
         return this.dialog.open(TransactionDialogComponent, {
@@ -142,7 +140,7 @@ export class ViewHearingComponent implements OnInit {
         return this.hearing.status === Status.Listed;
     }
 
-    openConfirmationDialog(title: string, message: string, cb) {
+    openConfirmationDialog(title: string, message: string, postConfirmationAction: () => void) {
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
@@ -152,7 +150,8 @@ export class ViewHearingComponent implements OnInit {
             width: '350px'
         });
 
-        confirmationDialogRef.afterClosed().subscribe(cb);
+        confirmationDialogRef.afterClosed().pipe(filter(confirmed => confirmed === true),
+            take(1)).subscribe(postConfirmationAction);
     }
 
     onSubmit(note: NoteViewmodel) {
