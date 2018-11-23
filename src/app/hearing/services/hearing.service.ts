@@ -2,7 +2,7 @@ import { EntityTransaction } from './../../features/transactions/models/transact
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Hearing, UpdateStatusHearingRequest } from '../models/hearing';
+import { WithdrawHearingRequest, Hearing, UnlistHearingRequest } from '../models/hearing';
 import { Observable } from 'rxjs/Observable';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
@@ -26,41 +26,59 @@ export class HearingService {
     private dataStore: { hearings: Hearing[] } = { hearings: [] };
 
     constructor(
-        private readonly http: HttpClient,
-        private readonly config: AppConfig,
-        private readonly notesPopulatorService: NotesPopulatorService,
-        private readonly store: Store<State>
+    private readonly http: HttpClient,
+    private readonly config: AppConfig,
+    private readonly notesPopulatorService: NotesPopulatorService,
+    private readonly store: Store<State>
     ) {
         this.hearings = this._hearings.asObservable();
     }
 
     getById(id: string) {
         this.http
-            .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
-            .subscribe(data => {
+          .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
+          .subscribe(data => {
             this.notesPopulatorService.populateWithNotes(data);
             const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
 
-        if (oldHearingIndex < 0) {
-          this.dataStore.hearings.push(data);
-        } else {
-          this.dataStore.hearings[oldHearingIndex] = data
-        }
+            if (oldHearingIndex < 0) {
+              this.dataStore.hearings.push(data);
+            } else {
+              this.dataStore.hearings[oldHearingIndex] = data
+            }
 
-        this._hearings.next({...this.dataStore}.hearings);
-        });
+            this._hearings.next({...this.dataStore}.hearings);
+          });
     }
 
     unlist(hearing: Hearing) {
-        const unlistHearingRequest = this.modifyStatus(hearing);
+        const unlistHearingRequest: UnlistHearingRequest = {
+          hearingId: hearing.id,
+          hearingPartsVersions: hearing.hearingPartsVersions,
+          userTransactionId: uuid()
+        }
+
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction));
+        this.store.dispatch(new fromHearingParts.RemoveAll())
+
         return this.http
-            .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
-                headers: {'Content-Type': 'application/json'}
-            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+          .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
+            headers: {'Content-Type': 'application/json'}
+          }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
     }
 
     withdraw(hearing: Hearing) {
-        const withdrawHearingRequest = this.modifyStatus(hearing);
+        const withdrawHearingRequest: WithdrawHearingRequest = {
+            hearingId: hearing.id,
+            hearingVersion: hearing.version,
+            userTransactionId: uuid()
+        };
+
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: withdrawHearingRequest.userTransactionId } as EntityTransaction));
+        this.store.dispatch(new fromHearingParts.RemoveAll());
+
         return this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/withdraw`, JSON.stringify(withdrawHearingRequest), {
                 headers: {'Content-Type': 'application/json'}
@@ -86,20 +104,6 @@ export class HearingService {
                 });
                 return {...hearingPage, content: hearingPage.content}
             }))
-    }
-
-    private modifyStatus(hearing: Hearing) {
-        const modifyHearingRequest: UpdateStatusHearingRequest = {
-            hearingId: hearing.id,
-            hearingPartsVersions: hearing.hearingPartsVersions,
-            userTransactionId: uuid()
-        };
-
-        this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: modifyHearingRequest.userTransactionId } as EntityTransaction));
-        this.store.dispatch(new fromHearingParts.RemoveAll());
-
-        return modifyHearingRequest;
     }
 
     private parseDatesAndDurations = (hearing) => {

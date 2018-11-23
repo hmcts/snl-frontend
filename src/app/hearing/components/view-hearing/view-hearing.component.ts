@@ -17,152 +17,144 @@ import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
 
 @Component({
-  selector: 'app-view-hearing',
-  templateUrl: './view-hearing.component.html',
-  styleUrls: ['./view-hearing.component.scss']
+    selector: 'app-view-hearing',
+    templateUrl: './view-hearing.component.html',
+    styleUrls: ['./view-hearing.component.scss']
 })
 export class ViewHearingComponent implements OnInit {
-  hearingId: string
-  hearing: Hearing;
-  hearingActions = HearingActions
-  @ViewChild(MatSelect) actionSelect: MatSelect;
+    hearingId: string
+    hearing: Hearing;
+    hearingActions = HearingActions
+    @ViewChild(MatSelect) actionSelect: MatSelect;
 
-  note: NoteViewmodel;
+    note: NoteViewmodel;
 
-  constructor(
-    private route: ActivatedRoute,
-    private readonly hearingService: HearingService,
-    private readonly notesPreparerService: NotesPreparerService,
-    private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
-    private readonly notesService: NotesService,
-    private readonly dialog: MatDialog,
-    private readonly location: Location
-  ) {
-  }
+    constructor(
+        private route: ActivatedRoute,
+        private readonly hearingService: HearingService,
+        private readonly notesPreparerService: NotesPreparerService,
+        private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
+        private readonly notesService: NotesService,
+        private readonly dialog: MatDialog,
+        private readonly location: Location
+    ) {
+    }
 
-  ngOnInit() {
-    this.hearingId = this.route.snapshot.paramMap.get('id');
-    this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
-    this.hearingService.hearings
-      .map(hearings => hearings.find(h => h.id === this.hearingId))
-      .subscribe(hearing => this.hearing = hearing);
+    ngOnInit() {
+        this.hearingId = this.route.snapshot.paramMap.get('id');
+        this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
+        this.hearingService.hearings
+            .map(hearings => hearings.find(h => h.id === this.hearingId))
+            .subscribe(hearing => this.hearing = hearing);
 
-    this.fetchHearing();
-  }
+        this.fetchHearing();
+    }
 
-  private unlistDialogClosed = (confirmed: boolean) => {
-    if (confirmed) {
-      this.hearingService.unlist(this.hearing)
-      this.openSummaryDialog('Unlist hearing parts from session').afterClosed().subscribe((success) => {
-          if (success) {
-              this.fetchHearing();
-          }
-      });
-      }
-  };
-
-  private withdrawDialogClosed = (confirmed: boolean) => {
-    if (confirmed) {
-    this.hearingService.withdraw(this.hearing)
-    this.openSummaryDialog('Withdraw hearing parts from session').afterClosed().subscribe((success) => {
-        if (success) {
-            this.fetchHearing();
+    private unlistDialogClosed = (confirmed: boolean) => {
+        if (confirmed) {
+            this.hearingService.unlist(this.hearing)
+            this.openSummaryDialog('Unlist hearing parts from session').afterClosed().subscribe((success) => {
+                if (success) {
+                    this.fetchHearing();
+                }
+            });
         }
-    });
-    }
-  };
+    };
 
-  private openSummaryDialog(message: string) {
-      return this.dialog.open(TransactionDialogComponent, {
-          ...DEFAULT_DIALOG_CONFIG,
-          data: message
-      });
-  }
+    private withdrawDialogClosed = (confirmed: boolean) => {
+        if (confirmed) {
+            this.hearingService.withdraw(this.hearing)
+            this.openSummaryDialog('Withdraw hearing parts from session').afterClosed().subscribe((success) => {
+                if (success) {
+                    this.fetchHearing();
+                }
+            });
+        }
+    };
 
-  private fetchHearing() {
-      this.hearingService.getById(this.hearingId);
-  }
-
-  formatDate(date: string): string {
-    return moment(date).format();
-  }
-
-  formatDuration(duration: string): string {
-    return formatDuration(moment.duration(duration))
-  }
-
-  getListBetween() {
-    const start = this.hearing.scheduleStart;
-    const end = this.hearing.scheduleEnd;
-
-    if (!start && !end) {
-      return '';
+    private openSummaryDialog(message: string) {
+        return this.dialog.open(TransactionDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: message
+        });
     }
 
-    if (start && !end) {
-      return 'after ' + this.formatDate(start);
+    private fetchHearing() {
+        this.hearingService.getById(this.hearingId);
     }
 
-    if (!start && end) {
-      return 'before ' + this.formatDate(end);
+    formatDate(date: string): string {
+        return moment(date).format();
     }
 
-    if (start && end) {
-      return this.formatDate(start)
-        + ' - '
-        + this.formatDate(end);
+    formatDuration(duration: string): string {
+        return formatDuration(moment.duration(duration))
     }
-  }
 
-  onActionChanged(event: {value: HearingActions}) {
-      switch (event.value) {
-          case HearingActions.Unlist:
-              this.openConfirmationDialog('Unlist hearing', 'Are you sure you want to unlist this hearing? ' +
-                  'Once you do this you will need to relist the hearing and all subsequent hearing parts.', this.unlistDialogClosed);
-              break;
-          case  HearingActions.Withdraw:
-              this.openConfirmationDialog('Withdraw hearing', 'Are you sure you want to withdraw this hearing? ' +
-                  'Once you do this it cannot be undone.', this.withdrawDialogClosed);
-              break;
-      }
+    getListBetween() {
+        const start = this.hearing.scheduleStart;
+        const end = this.hearing.scheduleEnd;
 
-    this.actionSelect.writeValue(HearingActions.Actions)
-  }
+        if (!start && !end) {
+            return '';
+        }
 
-  isSessionPanelDisabled(session: Session) {
-    return session.notes === undefined || session.notes.length === 0;
-  }
+        if (start && !end) {
+            return 'after ' + this.formatDate(start);
+        }
 
-  goBack() {
-    this.location.back();
-  }
+        if (!start && end) {
+            return 'before ' + this.formatDate(end);
+        }
 
-  cantUnlist() {
-    return !this.hearing.possibleActions.unlist;
-  }
+        if (start && end) {
+            return this.formatDate(start)
+                + ' - '
+                + this.formatDate(end);
+        }
+    }
 
-  cantWithdraw() {
-      return !this.hearing.possibleActions.withdraw;
-  }
+    onActionChanged(event: {value: HearingActions}) {
+        switch (event.value) {
+            case HearingActions.Unlist:
+                this.openConfirmationDialog('Unlist hearing', 'Are you sure you want to unlist this hearing? ' +
+                    'Once you do this you will need to relist the hearing and all subsequent hearing parts.', this.unlistDialogClosed);
+                break;
+            case  HearingActions.Withdraw:
+                this.openConfirmationDialog('Withdraw hearing', 'Are you sure you want to withdraw this hearing? ' +
+                    'Once you do this it cannot be undone.', this.withdrawDialogClosed);
+                break;
+        }
 
-  openConfirmationDialog(title: string, message: string, cb) {
-    const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
-        ...DEFAULT_DIALOG_CONFIG,
-        data: {
-            title: title,
-            message: message
-        },
-        width: '350px'
-    });
+        this.actionSelect.writeValue(HearingActions.Actions)
+    }
 
-    confirmationDialogRef.afterClosed().subscribe(cb);
-  }
+    isSessionPanelDisabled(session: Session) {
+        return session.notes === undefined || session.notes.length === 0;
+    }
 
-  onSubmit(note: NoteViewmodel) {
-    const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
-    this.notesService.upsertMany(preparedNote).subscribe(data => {
-      this.fetchHearing();
-      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
-    });
-  }
+    goBack() {
+        this.location.back();
+    }
+
+    openConfirmationDialog(title: string, message: string, cb) {
+        const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {
+                title: title,
+                message: message
+            },
+            width: '350px'
+        });
+
+        confirmationDialogRef.afterClosed().subscribe(cb);
+    }
+
+    onSubmit(note: NoteViewmodel) {
+        const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
+        this.notesService.upsertMany(preparedNote).subscribe(data => {
+            this.fetchHearing();
+            this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
+        });
+    }
 }
