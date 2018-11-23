@@ -1,5 +1,5 @@
 import { SearchCriteria } from './../../hearing-part/models/search-criteria';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
@@ -33,19 +33,23 @@ export class SessionsService {
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
-    paginatedSearchSessions(searchCriterions: SearchCriteria[], requestOptions: PaginatedRequestOption): Observable<Page<SessionSearchResponse>> {
+    paginatedSearchSessions(searchCriterions: SearchCriteria[], requestOptions: PaginatedRequestOption)
+        : Observable<Page<SessionSearchResponse>> {
         let url = `${this.config.getApiUrl()}/sessions/search`
+        let httpParams: any = { }
 
         if (requestOptions.pageSize !== undefined && requestOptions.pageIndex !== undefined) {
-            url += `?size=${requestOptions.pageSize}&page=${requestOptions.pageIndex}`
+            httpParams.size = requestOptions.pageSize;
+            httpParams.page = requestOptions.pageIndex;
         }
 
         if (requestOptions.sortByProperty !== undefined && requestOptions.sortDirection.length > 1) {
-            url += url.includes('?') ? '&' : '?'
-            url += `sort=${requestOptions.sortByProperty}:${requestOptions.sortDirection}`
+            httpParams.sort = requestOptions.sortByProperty + ':' + requestOptions.sortDirection
         }
 
-        return this.http.post<Page<SessionSearchResponse>>(url, searchCriterions)
+        return this.http.post<Page<SessionSearchResponse>>(url, searchCriterions, {
+            params: new HttpParams({ fromObject: httpParams })
+        })
     }
 
     searchSessionsForDates(query: SessionQueryForDates): Observable<any> {
