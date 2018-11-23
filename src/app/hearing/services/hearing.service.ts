@@ -94,11 +94,11 @@ export class HearingService {
                     return mapResponseToHearingForListing(hearingForListingResponse);
                 });
                 return {...hearingPage, content: content}
-            }), mergeMap<Page<HearingForListing>, Page<HearingForListingWithNotes>>((hearingForListing: Page<HearingForListing>) => {
-                let hearingIds = hearingForListing.content.map(h => h.id);
+            }), mergeMap<Page<HearingForListing>, Page<HearingForListingWithNotes>>((hearingForListingPage: Page<HearingForListing>) => {
+                let hearingIds = hearingForListingPage.content.map(h => h.id);
                 return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: Note[]) => {
-                    const hearings: Page<HearingForListingWithNotes> = {...hearingForListing, content: []};
-                    hearingForListing.content.forEach(h => {
+                    const hearings: Page<HearingForListingWithNotes> = {...hearingForListingPage, content: []};
+                    hearingForListingPage.content.forEach(h => {
                         let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []}
                         hearings.content.push(hearing)
                     });
