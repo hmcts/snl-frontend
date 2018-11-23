@@ -23,7 +23,7 @@ let expectedEvent = {
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
-    color: 'gray',
+    sessionType: session.sessionType,
     room: room,
     person: person
 };
@@ -38,7 +38,7 @@ let sessionWithoutJudgeAndRoomAndSessiontype = {
 let expectedEventWithoutJudgeAndRoomAndSessiontype = {
     ...expectedEvent,
     title: `No Room - No Judge - No Session type`,
-    color: 'gray',
+    sessionType: undefined,
     room: undefined,
     person: undefined
 }
