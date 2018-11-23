@@ -22,7 +22,7 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
             end: moment(moment(session.start).add(moment.duration(session.duration))),
             id: session.id,
             hearingParts: session.hearingParts,
-            sessionType: sessionType
+            sessionType: session.sessionType
         };
     }
 

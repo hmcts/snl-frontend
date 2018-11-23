@@ -28,14 +28,14 @@ let expectedEvent = {
     person: person
 };
 
-let sessionWithoutJudgeAndRoomAndSessiontype = {
+let sessionWithoutJudgeAndRoomAndSessionType = {
     ...session,
     person: undefined,
     room: undefined,
     sessionType: undefined,
 } as SessionViewModel;
 
-let expectedEventWithoutJudgeAndRoomAndSessiontype = {
+let expectedEventWithoutJudgeAndRoomAndSessionType = {
     ...expectedEvent,
     title: `No Room - No Judge - No Session type`,
     sessionType: undefined,
@@ -57,8 +57,8 @@ let tests = [
         expectedEvent: expectedEvent
     }, {
         name: 'without judge, room and Sessiontype',
-        session: sessionWithoutJudgeAndRoomAndSessiontype,
-        expectedEvent: expectedEventWithoutJudgeAndRoomAndSessiontype
+        session: sessionWithoutJudgeAndRoomAndSessionType,
+        expectedEvent: expectedEventWithoutJudgeAndRoomAndSessionType
     }, {
         name: 'with undefined id',
         session: sessionWithIdUndefined,
