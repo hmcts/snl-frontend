@@ -30,14 +30,16 @@ export const SessionToAmendSessionForm = (session: SessionViewModel, roomTypes: 
 }
 
 export const AmendSessionFormToSessionAmend = (amendSessionForm: SessionAmmendForm): SessionAmmend => {
-    const sessionTypeCode = amendSessionForm.sessionTypeCode
+    const sessionTypeCode = amendSessionForm.sessionTypeCode;
     const durationInSeconds = Math.floor(amendSessionForm.durationInMinutes.valueOf() * 60)
-    const startTime = moment.utc(moment(amendSessionForm.startTime, 'HH:mm')).format('HH:mm');
+    let startTime = moment(amendSessionForm.startTime, 'HH:mm');
+    startTime = moment.utc(amendSessionForm.startDate.hour(startTime.hour()).minutes(startTime.minute()));
+    const formattedStartTime = startTime.format('HH:mm');
 
     return {
         sessionTypeCode: sessionTypeCode,
         durationInSeconds: durationInSeconds,
-        startTime: startTime,
+        startTime: formattedStartTime,
         id: amendSessionForm.id,
         userTransactionId: undefined,
         version: amendSessionForm.version,
