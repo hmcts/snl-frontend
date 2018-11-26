@@ -54,27 +54,22 @@ export class ViewHearingComponent implements OnInit {
 
     private unlistDialogClosed = () => {
         this.hearingService.unlist(this.hearing);
-        this.openSummaryDialog('Unlist hearing parts from session').afterClosed().subscribe((success) => {
-            if (success) {
-                this.fetchHearing();
-            }
-        });
-    }
+        this.openSummaryDialog('Unlist hearing parts from session');
+    };
 
     private withdrawDialogClosed = () => {
         this.hearingService.withdraw(this.hearing);
-        this.openSummaryDialog('Withdraw hearing parts from session').afterClosed().subscribe((success) => {
+        this.openSummaryDialog('Withdraw hearing parts from session');
+    };
+
+    private openSummaryDialog(message: string) {
+        this.dialog.open(TransactionDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: message
+        }).afterClosed().subscribe((success) => {
             if (success) {
                 this.fetchHearing();
             }
-        });
-
-    }
-
-    private openSummaryDialog(message: string) {
-        return this.dialog.open(TransactionDialogComponent, {
-            ...DEFAULT_DIALOG_CONFIG,
-            data: message
         });
     }
 
