@@ -96,6 +96,59 @@ describe('SessionsStatisticsService', () => {
             expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
                 .toEqual(moment.duration(0));
         });
+
+        it('should return session duration when hearing parts belongs to multi session hearing', () => {
+            const hearingPart = createHearingPart(moment.duration('PT20M'));
+            const sessionDurationInMinutes = 10
+            hearingPart.multiSession = true;
+            session = {
+                id: undefined,
+                start: undefined,
+                duration: sessionDurationInMinutes,
+                room: undefined,
+                person: undefined,
+                sessionType: undefined,
+                hearingParts: [hearingPart],
+                jurisdiction: undefined,
+                version: undefined,
+                allocated: undefined,
+                utilization: undefined,
+                available: undefined,
+                notes: []
+            };
+            expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
+                .toEqual(moment.duration(sessionDurationInMinutes));
+        });
+
+        describe('when session has two hearing parts. One multi and one single', () => {
+            it('calculated duration should equal = session duration (as there is 1 multi session hp) + duration of single hp', () => {
+                const sessionDuration = moment.duration('PT10M').asMilliseconds()
+                const multiHearingPart = createHearingPart(moment.duration('PT40M'));
+                multiHearingPart.multiSession = true;
+
+                const hearingPart = createHearingPart(moment.duration('PT20M'));
+
+                const expectedDuration = 'PT30M' // 'PT10M' [sessionDuration] + 'PT20M' [single hearing part duration]
+
+                session = {
+                    id: undefined,
+                    start: undefined,
+                    duration: sessionDuration,
+                    room: undefined,
+                    person: undefined,
+                    sessionType: undefined,
+                    hearingParts: [multiHearingPart, hearingPart],
+                    jurisdiction: undefined,
+                    version: undefined,
+                    allocated: undefined,
+                    utilization: undefined,
+                    available: undefined,
+                    notes: []
+                };
+                expect(sessionsStatisticsService.calculateAllocatedHearingsDuration(session))
+                    .toEqual(moment.duration(expectedDuration));
+            });
+        });
     });
 
     describe('calculateUtilizedDuration', () => {
