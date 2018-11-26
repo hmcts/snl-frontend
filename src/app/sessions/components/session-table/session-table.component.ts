@@ -1,131 +1,109 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
 
 @Component({
-  selector: 'app-session-table',
-  templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.scss']
+    selector: 'app-session-table',
+    templateUrl: './session-table.component.html',
+    styleUrls: ['./session-table.component.scss']
 })
 export class SessionTableComponent implements OnChanges, OnInit {
-    public static DEFAULT_PAGING: PageEvent = {
+    public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        length: undefined
+        sortByProperty: 'session_type_description',
+        sortDirection: 'asc'
     };
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  @Output() selectSessions = new EventEmitter();
-  @Output() viewNotes = new EventEmitter();
+    @Output() selectSessions = new EventEmitter();
+    @Output() viewNotes = new EventEmitter();
 
-  @Input() sessions: SessionViewModel[];
-  @Input() totalCount: number;
+    @Input() sessions: SessionForListingWithNotes[];
+    @Input() totalCount: number;
 
-  paginationSource$: BehaviorSubject<PageEvent> = new BehaviorSubject<PageEvent>(SessionTableComponent.DEFAULT_PAGING);
+    tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
 
-  selectedSesssions: SelectionModel<SessionViewModel>;
-  displayedColumns = [
-      'sessionType',
-      'date',
-      'time',
-      'person',
-      'room',
-      'hearingParts',
-      'utilization',
-      'notes',
-      'available',
-      'duration',
-      'allocated',
-      'select session'
-  ];
+    selectedSesssions: SelectionModel<SessionForListingWithNotes>;
+    displayedColumns = [
+        'session_type_description',
+        'start_date',
+        'start_time',
+        'person_name',
+        'room_name',
+        'no_of_hearing_parts_assigned_to_session',
+        'utilization',
+        'notes',
+        'available',
+        'duration',
+        'allocated',
+        'select_session'
+    ];
 
-  dataSource: MatTableDataSource<any>;
-  tableVisible;
+    dataSource: MatTableDataSource<any>;
+    tableVisible;
 
-  constructor() {
-    this.selectedSesssions = new SelectionModel<SessionViewModel>(true, []);
+    constructor() {
+        this.selectedSesssions = new SelectionModel<SessionForListingWithNotes>(true, []);
 
-    this.tableVisible = false;
+        this.tableVisible = false;
 
-    this.dataSource = new MatTableDataSource(this.sessions);
-  }
+        this.dataSource = new MatTableDataSource(this.sessions);
+    }
 
-  hasNotes(session: SessionViewModel): boolean {
-      return session.notes.length > 0;
-  }
+    hasNotes(session: SessionForListingWithNotes): boolean {
+        return session.notes.length > 0;
+    }
 
-  showNotes(session: SessionViewModel): void {
-      if (this.hasNotes(session)) {
-          this.viewNotes.emit(session);
-      }
-  }
+    showNotes(session: SessionForListingWithNotes): void {
+        if (this.hasNotes(session)) {
+            this.viewNotes.emit(session);
+        }
+    }
 
-  parseTime(date: moment.Moment) {
-    return date.format('HH:mm');
-  }
+    parseTime(date: moment.Moment) {
+        return date.format('HH:mm');
+    }
 
-  humanizeDuration(duration) {
-      return formatDuration(moment.duration(duration));
-  }
+    humanizeDuration(duration) {
+        return formatDuration(moment.duration(duration));
+    }
 
-  toggleSession(session: SessionViewModel) {
-    this.selectedSesssions.toggle(session);
-    this.selectSessions.emit(this.selectedSesssions.selected)
-  }
+    toggleSession(session: SessionForListingWithNotes) {
+        this.selectedSesssions.toggle(session);
+        this.selectSessions.emit(this.selectedSesssions.selected)
+    }
 
-  clearSelection() {
-      this.selectedSesssions.clear();
-  }
+    clearSelection() {
+        this.selectedSesssions.clear();
+    }
 
-  ngOnInit() {
-      this.dataSource = new MatTableDataSource(Object.values(this.sessions));
-      this.paginator.page.subscribe(pageEvent => this.paginationSource$.next(pageEvent))
-  }
+    ngOnInit() {
+        this.dataSource = new MatTableDataSource(Object.values(this.sessions));
+    }
 
-  ngOnChanges() {
-      if (this.sessions) {
-          this.tableVisible = true;
-          this.dataSource = new MatTableDataSource(this.sessions);
+    ngOnChanges() {
+        if (this.sessions) {
+            this.tableVisible = true;
+            this.dataSource = new MatTableDataSource(this.sessions);
+        }
+    }
 
-          this.dataSource.sortingDataAccessor = (item, property) => {
-              switch (property) {
-                  case 'person':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'room':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'sessionType':
-                      const description = getPropertyMemberOrNull(item, property, 'description');
-                      if (description === 'N/A') {
-                          return null;
-                      } else {
-                        return description;
-                      }
-                  case 'hearingParts':
-                      return getPropertyMemberOrNull(item, property, 'length');
-                  case 'time':
-                  case 'date':
-                      return item['start'].unix();
-                  case 'duration':
-                  case 'allocated':
-                  case 'available':
-                      return moment.duration(item[property]).asMilliseconds();
-                  default:
-                      return item[property];
-              }
-          };
+    nextTableSettingsValue() {
+        const ts: TableSettings = {
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortByProperty: this.sort.active,
+            sortDirection: this.sort.direction
+        };
 
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-      }
-  }
-}
-
-function getPropertyMemberOrNull(item: object, property: string, key: string ) {
-    return (item[property]) ? item[property][key] : null;
+        this.tableSettingsSource$.next(ts)
+    }
 }

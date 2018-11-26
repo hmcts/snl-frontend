@@ -31,57 +31,57 @@ import { HearingPartResponse } from '../../hearing-part/models/hearing-part-resp
 
 @Injectable()
 export class HearingService {
-  hearings: Observable<Hearing[]>
-  private _hearings = <BehaviorSubject<Hearing[]>>new BehaviorSubject([]);
-  private dataStore: { hearings: Hearing[] } = { hearings: [] };
+    hearings: Observable<Hearing[]>
+    private _hearings = <BehaviorSubject<Hearing[]>>new BehaviorSubject([]);
+    private dataStore: { hearings: Hearing[] } = {hearings: []};
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly config: AppConfig,
-    private readonly notesPopulatorService: NotesPopulatorService,
-    private readonly notesService: NotesService,
-    private readonly store: Store<State>
-  ) {
-    this.hearings = this._hearings.asObservable();
-  }
-
-  getById(id: string) {
-    this.http
-      .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
-      .subscribe(data => {
-        this.notesPopulatorService.populateWithNotes(data);
-        const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
-
-        if (oldHearingIndex < 0) {
-          this.dataStore.hearings.push(data);
-        } else {
-          this.dataStore.hearings[oldHearingIndex] = data
-        }
-
-        this._hearings.next({...this.dataStore}.hearings);
-      });
-  }
-
-  unlist(hearing: Hearing) {
-    const unlistHearingRequest: UnlistHearingRequest = {
-      hearingId: hearing.id,
-      hearingPartsVersions: hearing.hearingPartsVersions,
-      userTransactionId: uuid()
+    constructor(
+        private readonly http: HttpClient,
+        private readonly config: AppConfig,
+        private readonly notesPopulatorService: NotesPopulatorService,
+        private readonly notesService: NotesService,
+        private readonly store: Store<State>
+    ) {
+        this.hearings = this._hearings.asObservable();
     }
 
-    this.store.dispatch(new RemoveAll());
-    this.store.dispatch(new InitializeTransaction({ id: unlistHearingRequest.userTransactionId } as EntityTransaction));
-    this.store.dispatch(new fromHearingParts.RemoveAll())
+    getById(id: string) {
+        this.http
+            .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
+            .subscribe(data => {
+                this.notesPopulatorService.populateWithNotes(data);
+                const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
 
-    return this.http
-      .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
-        headers: {'Content-Type': 'application/json'}
-      }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
-  }
+                if (oldHearingIndex < 0) {
+                    this.dataStore.hearings.push(data);
+                } else {
+                    this.dataStore.hearings[oldHearingIndex] = data
+                }
+
+                this._hearings.next({...this.dataStore}.hearings);
+            });
+    }
+
+    unlist(hearing: Hearing) {
+        const unlistHearingRequest: UnlistHearingRequest = {
+            hearingId: hearing.id,
+            hearingPartsVersions: hearing.hearingPartsVersions,
+            userTransactionId: uuid()
+        }
+
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({id: unlistHearingRequest.userTransactionId} as EntityTransaction));
+        this.store.dispatch(new fromHearingParts.RemoveAll())
+
+        return this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
+                headers: {'Content-Type': 'application/json'}
+            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
 
     deleteHearing(hearingDeletion: HearingDeletion) {
         this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: hearingDeletion.userTransactionId } as EntityTransaction));
+        this.store.dispatch(new InitializeTransaction({id: hearingDeletion.userTransactionId} as EntityTransaction));
 
         return this.http
             .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, hearingDeletion, {
@@ -91,7 +91,7 @@ export class HearingService {
 
     assignToSession(assignment: HearingToSessionAssignment): Observable<any> {
         this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: assignment.userTransactionId } as EntityTransaction));
+        this.store.dispatch(new InitializeTransaction({id: assignment.userTransactionId} as EntityTransaction));
 
         return this.http
             .put<HearingPartResponse>(`${this.config.getApiUrl()}/hearing/${(assignment).hearingId}`, assignment);
@@ -109,7 +109,7 @@ export class HearingService {
     getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingForListingWithNotes>> {
         return this.http
             .get<Page<HearingForListingResponse>>(`${this.config.getApiUrl()}/hearing/for-listing`, {
-                params: new HttpParams({ fromObject: request.httpParams })
+                params: new HttpParams({fromObject: request.httpParams})
             }).pipe(map<Page<HearingForListingResponse>, Page<HearingForListing>>((hearingPage: Page<HearingForListingResponse>) => {
                 let content = hearingPage.content.map(hearingForListingResponse => {
                     return mapResponseToHearingForListing(hearingForListingResponse);
@@ -131,7 +131,7 @@ export class HearingService {
     seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {
         return this.http
             .post<Page<FilteredHearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
-                params: new HttpParams({ fromObject: request.httpParams })
+                params: new HttpParams({fromObject: request.httpParams})
             }).pipe(map((hearingPage: Page<FilteredHearingViewmodel>) => {
                 hearingPage.content = hearingPage.content.map(hearing => {
                     return this.parseDatesAndDurations(hearing);

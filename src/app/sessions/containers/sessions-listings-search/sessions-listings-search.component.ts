@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
@@ -28,6 +28,7 @@ import { NotesService } from '../../../notes/services/notes.service';
 import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
 import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { TableSettings } from '../../../hearing-part/models/table-settings.model';
+import { SessionsService } from '../../services/sessions-service';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -42,7 +43,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     totalSessionsCount: number;
     totalHearingsCount: number;
 
-    selectedSessions: SessionViewModel[] = [];
+    selectedSessions: SessionForListingWithNotes[] = [];
     selectedHearing: HearingForListingWithNotes = undefined;
 
     filters$ = new Subject<SessionFilters>();
@@ -53,9 +54,9 @@ export class SessionsListingsSearchComponent implements OnInit {
     numberOfSessions = 1;
 
     hearingsSource$: BehaviorSubject<HearingForListingWithNotes[]>;
-    sessionsSource$: BehaviorSubject<SessionViewModel[]>;
+    sessionsSource$: BehaviorSubject<SessionForListingWithNotes[]>;
     hearings$: Observable<HearingForListingWithNotes[]>;
-    sessions$: Observable<SessionViewModel[]>;
+    sessions$: Observable<SessionForListingWithNotes[]>;
 
     sessionTypes$: Observable<SessionType[]>;
     rooms$: Observable<Room[]>;
@@ -63,10 +64,11 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     constructor(public hearingService: HearingService,
                 public notesService: NotesService,
+                public sessionsService: SessionsService,
                 public route: ActivatedRoute,
                 public dialog: MatDialog) {
         this.hearingsSource$ = new BehaviorSubject<HearingForListingWithNotes[]>([]);
-        this.sessionsSource$ = new BehaviorSubject<SessionViewModel[]>([]);
+        this.sessionsSource$ = new BehaviorSubject<SessionForListingWithNotes[]>([]);
         this.hearings$ = this.hearingsSource$.asObservable();
         this.sessions$ = this.sessionsSource$.asObservable();
         this.route.data.subscribe(({judges, sessionTypes, rooms}) => {
@@ -81,7 +83,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingTableSettingsSource$.subscribe(this.fetchHearings);
 
         this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
-        this.sessionPaginationSource$ = this.sessionsTable.paginationSource$.asObservable();
+        this.sessionPaginationSource$ = this.sessionsTable.tableSettingsSource$.asObservable();
         combineLatest(this.sessionPaginationSource$, this.filterSource$, this.fetchSessions).subscribe()
     }
 
@@ -90,7 +92,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
     }
 
-    selectSession(sessions: SessionViewModel[]) {
+    selectSession(sessions: SessionForListingWithNotes[]) {
         this.selectedSessions = sessions;
     }
 
@@ -98,7 +100,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         let assignment = {
             hearingId: this.selectedHearing.id,
             hearingVersion: this.selectedHearing.version,
-            sessionsData: this.selectedSessions.map(session => {return {sessionId: session.id, sessionVersion: session.version}}),
+            sessionsData: this.selectedSessions.map(s => {return {sessionId: s.sessionId, sessionVersion: 0}}), // TODO: send version
             userTransactionId: uuid(),
             start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment;
@@ -136,7 +138,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             data: {
                 hearingId: this.selectedHearing.id,
                 startTimeDisplayed: !(this.selectedSessions.length > 1),
-                startTime: (this.selectedSessions.length >= 1) ? this.selectedSessions[0].start : undefined
+                startTime: (this.selectedSessions.length >= 1) ? this.selectedSessions[0].startTime : undefined
             }
         }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
@@ -145,7 +147,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         })
     }
 
-    openNotesDialog(session: SessionViewModel) {
+    openNotesDialog(session: SessionForListingWithNotes) {
         this.dialog.open(NotesListDialogComponent, {
             data: session.notes.map(getNoteViewModel),
             hasBackdrop: false,
@@ -168,7 +170,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             this.errorMessage = '';
             return true;
         } else if (!this.selectedSessions.every((val, i, arr) =>
-            safe(() => val.person.id) === safe(() => arr[0].person.id) && val.person !== undefined)) {
+            safe(() => val.personId) === safe(() => arr[0].personId) && val.personId !== undefined)) {
             this.errorMessage = 'All selected sessions should have the same judge assigned';
             return false;
         } else {
@@ -203,22 +205,24 @@ export class SessionsListingsSearchComponent implements OnInit {
             this.hearingsSource$.next(hearings.content || []);
             this.totalHearingsCount = hearings.totalElements;
         })
-    }
+    };
 
-    private fetchSessions(pageEvent: PageEvent, filters: SessionFilters) {
-        // const request = {
-        //     httpParams: {
-        //         size: pageEvent.pageSize,
-        //         page: pageEvent.pageIndex,
-        //     },
-        //     searchCriteria: []
-        // };
+    private fetchSessions = (tableSettings: TableSettings, filters: SessionFilters) => {
+        const request = {
+            httpParams: {
+                size: tableSettings.pageSize,
+                page: tableSettings.pageIndex,
+                sortByProperty: tableSettings.sortByProperty,
+                sortDirection: tableSettings.sortDirection,
+            },
+            searchCriteria: []
+        };
 
         this.totalSessionsCount = 0;
 
-        // this.sessionsService.getSessionsForListing(request).subscribe(sessions => {
-        //     this.sessionsSource$.next(sessions.content || []);
-        //     this.totalSessionsCount = sessions.totalElements;
-        // })
+        this.sessionsService.getSessionsForListing(request).subscribe(sessions => {
+            this.sessionsSource$.next(sessions.content || []);
+            this.totalSessionsCount = sessions.totalElements;
+        })
     }
 }
