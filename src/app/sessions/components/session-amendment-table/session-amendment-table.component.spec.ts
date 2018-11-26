@@ -23,13 +23,13 @@ let fixture: ComponentFixture<SessionAmendmentTableComponent>;
 
 const mockSort = { active: false, direction: ''} as any;
 const mockPaginator = { pageIndex: 0, pageSize: 10} as any;
-const date = '2018-11-13T15:34:03.439+01:00';
-const expectedTime = '15:34';
-const expectedParsedDate = '13/11/2018';
+const date = now.toISOString();
+const expectedTime = now.format('HH:mm');
+const expectedParsedDate = now.format();
 const duration = 'PT30M'
 const expectedDuration = '00:30'
 
-describe('SessionAmendmentTableComponent', () => {
+fdescribe('SessionAmendmentTableComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
