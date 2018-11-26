@@ -7,37 +7,41 @@ import { SessionType } from '../../../core/reference/models/session-type';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
-  selector: 'app-sessions-filter',
-  templateUrl: './sessions-filter.component.html',
-  styleUrls: ['./sessions-filter.component.scss']
+    selector: 'app-sessions-filter',
+    templateUrl: './sessions-filter.component.html',
+    styleUrls: ['./sessions-filter.component.scss']
 })
 export class SessionsFilterComponent implements OnInit {
-  filterSource$: BehaviorSubject<SessionFilters> = new BehaviorSubject<SessionFilters>(DEFAULT_SESSION_FILTERS);
+    filterSource$: BehaviorSubject<SessionFilters> = new BehaviorSubject<SessionFilters>(DEFAULT_SESSION_FILTERS);
 
-  @Output() filter = new EventEmitter();
+    @Output() filter = new EventEmitter();
 
-  @Input() rooms: Room[];
-  @Input() judges: Judge[];
-  @Input() sessionTypes: SessionType[];
+    @Input() rooms: Room[];
+    @Input() judges: Judge[];
+    @Input() sessionTypes: SessionType[];
+    @Input() startDate: moment.Moment;
+    @Input() endDate: moment.Moment;
 
-  roomsPlaceholder: string;
-  judgesPlaceholder: string;
+    roomsPlaceholder: string;
+    judgesPlaceholder: string;
 
-  @Input() startDate: moment.Moment;
-  @Input() endDate: moment.Moment;
-  filters: SessionFilters;
+    filters: SessionFilters;
 
-  constructor() {
-      this.roomsPlaceholder = 'Select the room';
-      this.judgesPlaceholder = 'Select the judge';
-  }
+    constructor() {
+        this.roomsPlaceholder = 'Select the room';
+        this.judgesPlaceholder = 'Select the judge';
+    }
 
-  ngOnInit() {
-      this.filters = this.filterSource$.getValue();
-  }
+    ngOnInit() {
+        this.filters = this.filterSource$.getValue();
+    }
 
-  sendFilter() {
-    this.filter.emit(this.filters);
-    this.filterSource$.next(this.filters);
-  }
+    sendFilter() {
+        this.filter.emit(this.filters);
+        this.filterSource$.next(this.filters);
+    }
+
+    isValid() {
+        return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
+    }
 }

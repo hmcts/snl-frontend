@@ -19,10 +19,10 @@ import { filter, mergeMap, take, tap } from 'rxjs/operators';
 import { TableSettings } from '../../models/table-settings.model';
 
 @Component({
-  selector: 'app-hearings-table',
-  templateUrl: './hearings-table.component.html',
-  styleUrls: ['./hearings-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-hearings-table',
+    templateUrl: './hearings-table.component.html',
+    styleUrls: ['./hearings-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HearingsTableComponent implements OnChanges {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
@@ -91,15 +91,19 @@ export class HearingsTableComponent implements OnChanges {
         this.clearSelection();
 
         this.dialog.open(DialogWithActionsComponent, {
-            data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
+            data: {message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
         }).afterClosed().pipe(
             filter(confirmed => confirmed === true),
-            tap(() => { this.deleteHearing(hearing) }),
-            mergeMap(() => { return this.openTransactionDialog().afterClosed() }),
+            tap(() => {
+                this.deleteHearing(hearing)
+            }),
+            mergeMap(() => {
+                return this.openTransactionDialog().afterClosed()
+            }),
             filter(success => success === true),
             tap(() => this.tableSettingsSource$.next(this.tableSettingsSource$.getValue())),
             take(1))
-        .subscribe();
+            .subscribe();
     }
 
     openEditDialog(hearing: HearingForListingWithNotes) {
@@ -139,7 +143,7 @@ export class HearingsTableComponent implements OnChanges {
     private openTransactionDialog() {
         return this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
-            data: { actionTitle: 'Deleting hearing' }
+            data: {actionTitle: 'Deleting hearing'}
         });
     }
 

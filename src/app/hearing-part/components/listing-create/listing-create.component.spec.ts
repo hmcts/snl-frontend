@@ -341,6 +341,21 @@ describe('ListingCreateComponent', () => {
             expect(createdListing.id).toBeDefined();
         });
 
+        it('should reset creation form', () => {
+            component.save();
+            component.afterClosed(true);
+
+            expect(component.listing.hearing.id).toBeUndefined();
+            expect(component.notesComponent.specialNoteViewModels.length).toEqual(2);
+        });
+
+        it('should not reset creation form', () => {
+            component.save();
+            component.afterClosed(false);
+
+            expect(component.listing.hearing.id).toBeDefined();
+        });
+
         describe('save with edit mode', () => {
 
             beforeEach(() => {

@@ -22,6 +22,10 @@ export class ListingNoteListComponent {
 
   @Input() public entityId: string;
   @Input() set notes(notes: Note[]) {
+    this.specialNoteViewModels = [];
+    this.oldNoteViewModels = [];
+    this.newNoteViewModels  = [this.listingNotesConfig.noteViewModelOf(NoteType.OTHER_NOTE)];
+
     notes
         .map(getNoteViewModel)
         .forEach(this.disposeToProperArrays);

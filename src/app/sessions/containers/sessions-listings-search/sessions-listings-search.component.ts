@@ -133,7 +133,11 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     openAssignDialog() {
         this.dialog.open(AssignHearingDialogComponent, {
-            data: {hearingId: this.selectedHearing.id, startTimeDisplayed: !(this.selectedSessions.length > 1)}
+            data: {
+                hearingId: this.selectedHearing.id,
+                startTimeDisplayed: !(this.selectedSessions.length > 1),
+                startTime: (this.selectedSessions.length >= 1) ? this.selectedSessions[0].start : undefined
+            }
         }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
                 this.assignToSessions(data)
