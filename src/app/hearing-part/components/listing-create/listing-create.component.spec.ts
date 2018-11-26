@@ -45,6 +45,7 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import moment = require('moment');
 import { ListingNoteListComponent } from '../listing-note-list/listing-note-list.component';
+import { HearingService } from '../../../hearing/services/hearing.service';
 
 let storeSpy: jasmine.Spy;
 let component: ListingCreateComponent;
@@ -124,6 +125,7 @@ describe('ListingCreateComponent', () => {
                 DurationAsMinutesPipe,
                 JudgeService,
                 HearingPartService,
+                HearingService,
                 HearingModificationService
             ]
         }).compileComponents();

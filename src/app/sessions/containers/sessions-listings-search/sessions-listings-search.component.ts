@@ -35,7 +35,7 @@ import { TableSettings } from '../../../hearing-part/models/table-settings.model
     styleUrls: ['./sessions-listings-search.component.scss']
 })
 export class SessionsListingsSearchComponent implements OnInit {
-    @ViewChild(HearingsTableComponent) hearingPartsTable;
+    @ViewChild(HearingsTableComponent) hearingsTable;
     @ViewChild(SessionTableComponent) sessionsTable;
     @ViewChild(SessionsFilterComponent) sessionFilter;
 
@@ -77,7 +77,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.hearingTableSettingsSource$ = this.hearingPartsTable.tableSettingsSource$.asObservable();
+        this.hearingTableSettingsSource$ = this.hearingsTable.tableSettingsSource$.asObservable();
         this.hearingTableSettingsSource$.subscribe(this.fetchHearings);
 
         this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
@@ -110,8 +110,8 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.notesService.upsertManyNotes(assignHearingData.notes).subscribe()
             }
 
-            this.fetchHearings(this.hearingPartsTable.tableSettingsSource$.getValue());
-            this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
+            this.fetchHearings(this.hearingsTable.tableSettingsSource$.getValue());
+            this.fetchSessions(this.sessionsTable.paginationSource$.getValue(), this.sessionFilter.filterSource$.getValue());
 
             this.onHearingsClearSelection();
             this.onSessionsClearSelection();
@@ -160,7 +160,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     onSessionsClearSelection() {
         this.resetSelections();
-        this.hearingPartsTable.clearSelection();
+        this.hearingsTable.clearSelection();
     }
 
     private checkIfOnlyOneJudgeSelected() {

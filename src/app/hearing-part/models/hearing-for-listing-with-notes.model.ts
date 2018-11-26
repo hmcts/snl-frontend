@@ -26,6 +26,26 @@ export interface HearingForListingWithNotes {
     multiSession: boolean;
 }
 
+export const DEFAULT_HEARING_FOR_LISTING_WITH_NOTES: HearingForListingWithNotes = {
+    id: null,
+    caseNumber: null,
+    caseTitle: null,
+    caseType: {code: '', description: ''} as CaseType,
+    hearingType: {code: '', description: ''} as HearingType,
+    duration: null,
+    scheduleStart: null,
+    scheduleEnd: null,
+    version: null,
+    priority: null,
+    reservedJudgeId: null,
+    reservedJudge: null,
+    communicationFacilitator: null,
+    notes: [],
+    isListed: false,
+    numberOfSessions: 1,
+    multiSession: false
+};
+
 export interface HearingForListing {
     id: string; //
     caseNumber: string; //

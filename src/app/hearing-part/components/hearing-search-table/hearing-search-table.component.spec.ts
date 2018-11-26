@@ -4,10 +4,10 @@ import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
-import { HearingForListingWithNotes } from '../../models/hearing.viewmodel';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
 import { Observable } from 'rxjs/Observable';
 import { Status } from '../../../core/reference/models/status.model';
+import { HearingForListingWithNotes } from '../../models/hearing-for-listing-with-notes.model';
 
 const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 const now = moment();
