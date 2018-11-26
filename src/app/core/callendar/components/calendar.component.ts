@@ -4,11 +4,12 @@ import * as moment from 'moment';
 import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 import { formatDuration, formatDateTimeToHHmm } from '../../../utils/date-utils';
+import { textToColor } from '../../../utils/color-text';
 
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.component.html',
-    styleUrls: ['./calendar.component.scss']
+    styleUrls: [ './calendar.component.scss' ]
 })
 export class CalendarComponent implements OnInit {
 
@@ -43,6 +44,7 @@ export class CalendarComponent implements OnInit {
         }
         this.ucCalendar.fullCalendar('refetchResources');
     }
+
     @Input() editable = true;
     @Input() resourceColumns: any[] = undefined;
     @Input() dataTransformer: IcalendarTransformer<any>;
@@ -112,6 +114,7 @@ export class CalendarComponent implements OnInit {
     public eventRender(event) {
         // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element;
+        el.css('background-color', textToColor(event.detail.event.sessionType.code));
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
             el.append(hearing.caseNumber);
@@ -150,7 +153,7 @@ export class CalendarComponent implements OnInit {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
     }
 
-    private parseDates(): {startDate: moment.Moment, endDate: moment.Moment} {
+    private parseDates(): { startDate: moment.Moment, endDate: moment.Moment } {
         if (this.ucCalendar === undefined) {
             return undefined;
         }
@@ -159,7 +162,7 @@ export class CalendarComponent implements OnInit {
         const endDate = view.intervalEnd;
         const startDate = view.intervalStart;
 
-        return {startDate, endDate};
+        return { startDate, endDate };
     }
 
     private emitWithUpdatedTime(eventCallback: any, event) {
