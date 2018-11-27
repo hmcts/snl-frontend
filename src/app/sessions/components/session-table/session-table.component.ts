@@ -31,7 +31,8 @@ export class SessionTableComponent implements OnChanges, OnInit {
     @Input() totalCount: number;
 
     tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
-    selectedSesssions: SelectionModel<SessionForListingWithNotes>;
+    selectedSessionIds: SelectionModel<string>;
+    selectedSessions: SelectionModel<SessionForListingWithNotes>;
 
     sessionSearchColumns = SessionSearchColumn
     displayedColumns = [
@@ -53,8 +54,8 @@ export class SessionTableComponent implements OnChanges, OnInit {
     tableVisible;
 
     constructor() {
-        this.selectedSesssions = new SelectionModel<SessionForListingWithNotes>(true, []);
-
+        this.selectedSessionIds = new SelectionModel<string>(true, []);
+        this.selectedSessions = new SelectionModel<SessionForListingWithNotes>(true, []);
         this.tableVisible = false;
 
         this.dataSource = new MatTableDataSource(this.sessions);
@@ -78,13 +79,19 @@ export class SessionTableComponent implements OnChanges, OnInit {
         return formatDuration(moment.duration(duration));
     }
 
-    toggleSession(session: SessionForListingWithNotes) {
-        this.selectedSesssions.toggle(session);
-        this.selectSessions.emit(this.selectedSesssions.selected)
+    toggleSession(id: string) {
+        this.selectedSessionIds.toggle(id);
+        this.selectedSessions.toggle(this.sessions.find(s => s.sessionId === id));
+        this.selectSessions.emit(this.selectedSessions.selected);
+    }
+
+    isChecked(id: string) {
+        return this.selectedSessionIds.isSelected(id);
     }
 
     clearSelection() {
-        this.selectedSesssions.clear();
+        this.selectedSessionIds.clear();
+        this.selectedSessions.clear();
     }
 
     ngOnInit() {
@@ -95,6 +102,11 @@ export class SessionTableComponent implements OnChanges, OnInit {
         if (this.sessions) {
             this.tableVisible = true;
             this.dataSource = new MatTableDataSource(this.sessions);
+            // this.sessions.map(s => s.sessionId)
+            //     .filter(id => this.memorizedSesssions.isSelected(id))
+            //     .forEach(id => this.selectedSessionIds.toggle(id))
+            // this.selectedSessionIds.select(...this.selectedSessionIds.selected);
+            // this.selectedSessions.select(...this.selectedSessions.selected);
         }
     }
 

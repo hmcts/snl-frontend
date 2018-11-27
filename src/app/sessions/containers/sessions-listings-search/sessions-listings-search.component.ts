@@ -113,7 +113,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             }
 
             this.fetchHearings(this.hearingsTable.tableSettingsSource$.getValue());
-            this.fetchSessions(this.sessionsTable.paginationSource$.getValue(), this.sessionFilter.filterSource$.getValue());
+            this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
 
             this.onHearingsClearSelection();
             this.onSessionsClearSelection();
