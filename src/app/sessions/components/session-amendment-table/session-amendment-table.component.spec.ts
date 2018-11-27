@@ -29,7 +29,7 @@ const expectedParsedDate = now.format();
 const duration = 'PT30M'
 const expectedDuration = '00:30'
 
-fdescribe('SessionAmendmentTableComponent', () => {
+describe('SessionAmendmentTableComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [

@@ -1,13 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { SessionsSearchComponent } from './sessions-search.component';
-import { StoreModule, Store } from '@ngrx/store';
-import * as sessionReducers from '../../reducers/index';
-import * as judgesReducers from '../../../judges/reducers/index';
-import * as sessionTypeReducer from '../../../core/reference/reducers/session-type.reducer';
 import { MatDialog } from '@angular/material';
-import * as roomActions from '../../../rooms/actions/room.action';
-import * as judgeActions from '../../../judges/actions/judge.action';
-import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { SessionsService } from '../../services/sessions-service';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
@@ -18,17 +11,17 @@ import { SessionFilters } from '../../models/session-filter.model';
 import { SearchCriteria } from '../../../hearing-part/models/search-criteria';
 import { SessionAmendResponse } from '../../models/session-amend.response';
 import { Page } from '../../../problems/models/problem.model';
+import { ActivatedRoute } from '@angular/router';
 
 let component: SessionsSearchComponent
 const mockMatDialog: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open'])
+const mockActivatedRoute = { data: Observable.of({judges: [], rooms: [], sessionTypes: []})}
 const mockSessionService: jasmine.SpyObj<SessionsService> =
     jasmine.createSpyObj('SessionsService', ['paginatedSearchSessions', 'getSessionAmendById'])
 const mockSessionSearchCriteriaService: jasmine.SpyObj<SessionSearchCriteriaService> =
     jasmine.createSpyObj('SessionSearchCriteriaService', ['convertToSearchCriterions'])
 const mockNotesService: jasmine.SpyObj<NotesService> =
     jasmine.createSpyObj('NotesService', ['getByEntities'])
-let storeSpy;
-let store: Store<any>;
 const tableSettings: TableSetting = {
     sortByProperty: 'test',
     sortDirection: 'asc',
@@ -46,26 +39,15 @@ const sessionSearchResponse: any = { sessionId: expectedSessionId } as SessionSe
 describe('SessionsSearchComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                StoreModule.forRoot({}),
-                // session store module includes rooms
-                StoreModule.forFeature('sessions', sessionReducers.reducers),
-                StoreModule.forFeature('judges', judgesReducers.reducers),
-                StoreModule.forFeature('sessionTypes', sessionTypeReducer.reducer),
-            ],
             providers: [
                 SessionsSearchComponent,
-                Store,
+                { provide: ActivatedRoute, useValue: mockActivatedRoute },
                 { provide: SessionsService, useValue: mockSessionService },
                 { provide: SessionSearchCriteriaService, useValue: mockSessionSearchCriteriaService },
                 { provide: NotesService, useValue: mockNotesService },
                 { provide: MatDialog, useValue: mockMatDialog },
             ]
         });
-        store = TestBed.get(Store);
-        store.dispatch(new roomActions.GetComplete([]))
-        store.dispatch(new judgeActions.GetComplete([]))
-        store.dispatch(new referenceDataActions.GetAllSessionTypeComplete([]))
         component = TestBed.get(SessionsSearchComponent);
     })
 
@@ -78,43 +60,30 @@ describe('SessionsSearchComponent', () => {
             expect(component.startDate).toBeDefined()
             expect(component.endDate).toBeDefined()
         });
+    });
+
+    describe('ngOnInit', () => {
+        beforeEach(() => {
+            const sessionFilters: SessionFilters = defaultSessionFilter();
+            sessionFilters.rooms = ['room-id'];
+
+            mockSessionSearchCriteriaService.convertToSearchCriterions.and.returnValue(searchCriterions)
+            mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
+
+            component.sessionAmendmentTableComponent = {tableSettings$: Observable.of(tableSettings) } as any;
+            component.sessionFilterComponent = { sessionFilter$: Observable.of(sessionFilters) } as any;
+        })
 
         it('should set rooms, judges and sessionTypes', () => {
+            component.ngOnInit()
+
             expect(component.rooms).toBeDefined()
             expect(component.judges).toBeDefined()
             expect(component.sessionTypes).toBeDefined()
         });
-    });
-
-    describe('ngOnInit', () => {
-        [
-            { actionName: 'RoomActions.Get', instance: roomActions.Get },
-            { actionName: 'JudgeActions.Get', instance: judgeActions.Get }
-        ]
-        .forEach(pair => {
-            it(`should dispatch ${pair.actionName}`, () => {
-                component.sessionAmendmentTableComponent = {tableSettings$: Observable.of() } as any;
-                component.sessionFilterComponent = { sessionFilter$: Observable.of() } as any;
-
-                storeSpy = spyOn(store, 'dispatch').and.callThrough();
-                component.ngOnInit()
-                const actions = storeSpy.calls.allArgs()
-                    .filter(arg => arg[0] instanceof pair.instance);
-                expect(actions.length).toEqual(1);
-            });
-        });
 
         describe('when TableSettings and PaginationSettings are available ', () => {
             it('should make request for session', () => {
-                const sessionFilters: SessionFilters = defaultSessionFilter();
-                sessionFilters.rooms = ['room-id'];
-
-                mockSessionSearchCriteriaService.convertToSearchCriterions.and.returnValue(searchCriterions)
-                mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
-
-                component.sessionAmendmentTableComponent = {tableSettings$: Observable.of(tableSettings) } as any;
-                component.sessionFilterComponent = { sessionFilter$: Observable.of(sessionFilters) } as any;
-
                 component.ngOnInit()
 
                 expect(mockSessionService.paginatedSearchSessions).toHaveBeenCalled()

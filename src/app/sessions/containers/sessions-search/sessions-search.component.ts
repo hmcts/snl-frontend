@@ -1,21 +1,12 @@
 import { SessionsFilterComponent } from './../../components/sessions-filter/sessions-filter.component';
 import { SearchCriteria } from './../../../hearing-part/models/search-criteria';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromSessions from '../../reducers';
-import * as fromJudges from '../../../judges/reducers';
-import * as fromReferenceData from '../../../core/reference/reducers';
 import * as moment from 'moment';
-import * as RoomActions from '../../../rooms/actions/room.action';
-import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { asArray } from '../../../utils/array-utils';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionAmendDialogComponent } from '../../components/session-amend-dialog/session-amend-dialog';
 import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
@@ -28,6 +19,7 @@ import { SessionAmendmentTableComponent } from '../../components/session-amendme
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { NotesService } from '../../../notes/services/notes.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-sessions-search',
@@ -48,19 +40,19 @@ export class SessionsSearchComponent implements OnInit {
     @ViewChild(SessionsFilterComponent) sessionFilterComponent: SessionsFilterComponent;
     @ViewChild(SessionAmendmentTableComponent) sessionAmendmentTableComponent: SessionAmendmentTableComponent;
 
-    constructor(private readonly store: Store<fromHearingParts.State>,
+    constructor(private route: ActivatedRoute,
                 private readonly sessionService: SessionsService,
                 private readonly sessionSearchCriteriaService: SessionSearchCriteriaService,
                 private readonly notesService: NotesService,
                 public dialog: MatDialog) {
-        this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
-        this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
-        this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => this.sessionTypes = sessionTypes);
     }
 
     ngOnInit() {
-        this.store.dispatch(new RoomActions.Get());
-        this.store.dispatch(new JudgeActions.Get());
+        this.route.data.subscribe(({judges, rooms, sessionTypes}) => {
+            this.judges = judges;
+            this.rooms = rooms;
+            this.sessionTypes = sessionTypes;
+        });
 
         this.sessionFilterComponent.sessionFilter$.combineLatest(
             this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
