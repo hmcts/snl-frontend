@@ -67,10 +67,22 @@ describe('SessionsFilterComponent', () => {
             component.sendFilter();
             expect(filterEmit).toHaveBeenCalledWith(mockedFilters);
         });
+
+        it('should emit filters via sessionFilters$', (done) => {
+            const mockedFilters = createFiltersStub();
+
+            component.sessionFilter$.subscribe(filters => {
+                expect(filters).toEqual(mockedFilters);
+                done()
+            });
+
+            component.filters = mockedFilters;
+            component.sendFilter();
+        });
     });
 
-    describe(', isValid', () => {
-        it(', should return false for end-date Days before start-date', () => {
+    describe('isValid', () => {
+        it('should return false for end-date Days before start-date', () => {
             const nowDateTime = moment();
             const filterStub = createFiltersStub();
             filterStub.startDate = nowDateTime.clone().add(1, 'day');
@@ -80,7 +92,7 @@ describe('SessionsFilterComponent', () => {
             expect(component.isValid()).toBeFalsy();
         });
 
-        it(', should return true for end-date Days equal start-date', () => {
+        it('should return true for end-date Days equal start-date', () => {
             const nowDateTime = moment();
             const filterStub = createFiltersStub();
             filterStub.startDate = nowDateTime.clone();
@@ -90,11 +102,29 @@ describe('SessionsFilterComponent', () => {
             expect(component.isValid()).toBeTruthy();
         });
 
-        it(', should return true for end-date Days bigger than start-date', () => {
+        it('should return true for end-date Days bigger than start-date', () => {
             const nowDateTime = moment();
             const filterStub = createFiltersStub();
             filterStub.startDate = nowDateTime;
             filterStub.endDate = nowDateTime.clone().add(1, 'day');
+
+            component.filters = filterStub;
+            expect(component.isValid()).toBeTruthy();
+        });
+
+        it('should return true when startDate is null', () => {
+            const filterStub = createFiltersStub();
+            filterStub.startDate = null;
+            filterStub.endDate = moment().clone().add(1, 'day');
+
+            component.filters = filterStub;
+            expect(component.isValid()).toBeTruthy();
+        });
+
+        it('should return true when endDate is null and startDate is null', () => {
+            const filterStub = createFiltersStub();
+            filterStub.startDate = null;
+            filterStub.endDate = null;
 
             component.filters = filterStub;
             expect(component.isValid()).toBeTruthy();

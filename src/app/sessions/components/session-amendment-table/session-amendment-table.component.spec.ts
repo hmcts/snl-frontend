@@ -15,14 +15,21 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import * as moment from 'moment';
 import { SessionAmendmentTableComponent } from './session-amendment-table.component';
-import { SessionViewModel } from '../../models/session.viewmodel';
-import { SessionType } from '../../../core/reference/models/session-type';
+import { SessionSearchResponse } from '../../models/session-search-response.model';
 
 const now = moment();
 let component: SessionAmendmentTableComponent;
 let fixture: ComponentFixture<SessionAmendmentTableComponent>;
 
-describe('SessionAmendmentTableComponent', () => {
+const mockSort = { active: false, direction: ''} as any;
+const mockPaginator = { pageIndex: 0, pageSize: 10} as any;
+const date = now.toISOString();
+const expectedTime = now.format('HH:mm');
+const expectedParsedDate = now.format();
+const duration = 'PT30M'
+const expectedDuration = '00:30'
+
+fdescribe('SessionAmendmentTableComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -59,69 +66,75 @@ describe('SessionAmendmentTableComponent', () => {
         component = fixture.componentInstance;
     });
 
-    describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
-        const sampleSessionViewModel = {
-            id: '-1',
-            start: now,
-            duration: 1000,
-            room: {name: 'room-name'},
-            person: {name: 'judge-name'},
-            sessionType: {code: 'st-code', description: 'st-description'} as SessionType,
-            hearingParts: [],
-            jurisdiction: '',
-            version: 0,
-            allocated: moment.duration('PT10M'),
-            utilization: 0,
-            available: moment.duration('PT10H'),
-        } as SessionViewModel;
+    describe('Set Sessions', () => {
+        const sessionSearchResponses: SessionSearchResponse[] = [{
+            sessionId: 'session-id',
+            personName: 'Grzes',
+            roomName: 'Tryton',
+            sessionTypeDescription: 'Office',
+            startDate: now.format(),
+            startTime: now.format(),
+            duration: 'PT1S',
+            noOfHearingPartsAssignedToSession: 0,
+            allocatedDuration: 'PT1S',
+            utilisation: 0,
+            available: 'PT1S'
+        }]
 
-        const displayedColumnsExpectedValues = [
-            {columnName: 'id', expected: sampleSessionViewModel.id},
-            {columnName: 'person', expected: sampleSessionViewModel.person.name},
-            {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'date', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
-            {columnName: 'room', expected: sampleSessionViewModel.room.name},
-            {columnName: 'sessionType', expected: sampleSessionViewModel.sessionType.description},
-            {columnName: 'hearingParts', expected: 0},
-            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
-            {columnName: 'utilization', expected: 0},
-            {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
-            {columnName: 'amend', expected: undefined},
-        ];
+        it('should set sessions', () => {
+            component.sessions = sessionSearchResponses;
+            expect(component.sessions).toBe(sessionSearchResponses);
+        })
 
-        beforeEach(() => {
-            component.sessions = [sampleSessionViewModel];
-        });
+        it('should set mat data source', () => {
+            component.sessions = sessionSearchResponses;
+            expect(component.dataSource.data).toBe(sessionSearchResponses);
+        })
+    });
 
-        it(' tested columns should equal component displayedColumns field', () => {
-            const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
-            expect(component.displayedColumns).toEqual(columnsArray);
-        });
+    describe('emitTableSettings', () => {
+        it('should emit table settings', (done) => {
+            component.sort = mockSort;
+            component.paginator = mockPaginator;
 
-        for (let testCase of displayedColumnsExpectedValues) {
-            it(`${testCase.columnName} should return proper value`, () => {
-                const expected = testCase.expected;
+            component.tableSettings$.subscribe(data => {
+                expect(data).toBeDefined()
+                done()
+            })
 
-                component.ngOnChanges();
-                const result = component.dataSource.sortingDataAccessor(sampleSessionViewModel, testCase.columnName);
+            component.emitTableSettings()
+        })
+    });
 
-                expect(result).toBe(expected);
-            });
-        }
+    describe('ngAfterViewInit', () => {
+        it('should emit table settings', (done) => {
+            component.sort = mockSort;
+            component.paginator = mockPaginator;
 
-        it (' should return null when sessionType is with N/A description', () => {
-            const testSamle = {
-                ...sampleSessionViewModel,
-                sessionType: {code: 'N/A', description: 'N/A'} as SessionType,
-            };
+            component.tableSettings$.subscribe(data => {
+                expect(data).toBeDefined()
+                done()
+            })
 
-            const expected = null;
+            component.ngAfterViewInit()
+        })
+    });
 
-            component.ngOnChanges();
-            const result = component.dataSource.sortingDataAccessor(testSamle, 'sessionType');
+    describe('parseTime', () => {
+        it('should parse date to hours and minutes', () => {
+            expect(component.parseTime(date)).toEqual(expectedTime)
+        })
+    });
 
-            expect(result).toBe(expected);
+    describe('parseDate', () => {
+        it('should parse date to hours and minutes', () => {
+            expect(component.parseDate(date)).toEqual(expectedParsedDate)
+        })
+    });
+
+    describe('humanizeDuration', () => {
+        it('should parse date to hours and minutes', () => {
+            expect(component.humanizeDuration(duration)).toEqual(expectedDuration)
         })
     });
 });

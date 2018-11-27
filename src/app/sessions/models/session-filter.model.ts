@@ -25,8 +25,8 @@ export const DEFAULT_SESSION_FILTERS: SessionFilters = {
     sessionTypes: [],
     rooms: [],
     judges: [],
-    startDate: moment(),
-    endDate: moment().add(3, 'months'),
+    startDate: moment().startOf('day'),
+    endDate: moment().add(3, 'months').endOf('day'),
     utilization: {
         unlisted: {
             active: false,

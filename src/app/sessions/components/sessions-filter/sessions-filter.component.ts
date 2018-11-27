@@ -1,8 +1,7 @@
-import { Component, EventEmitter, OnInit, Output, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Judge } from '../../../judges/models/judge.model';
 import { Room } from '../../../rooms/models/room.model';
 import { DEFAULT_SESSION_FILTERS, SessionFilters } from '../../models/session-filter.model';
-import * as moment from 'moment'
 import { SessionType } from '../../../core/reference/models/session-type';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -14,13 +13,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class SessionsFilterComponent implements OnInit {
     filterSource$: BehaviorSubject<SessionFilters> = new BehaviorSubject<SessionFilters>(DEFAULT_SESSION_FILTERS);
 
-    @Output() filter = new EventEmitter();
-
     @Input() rooms: Room[];
     @Input() judges: Judge[];
     @Input() sessionTypes: SessionType[];
-    @Input() startDate: moment.Moment;
-    @Input() endDate: moment.Moment;
 
     roomsPlaceholder: string;
     judgesPlaceholder: string;
@@ -37,11 +32,14 @@ export class SessionsFilterComponent implements OnInit {
     }
 
     sendFilter() {
-        this.filter.emit(this.filters);
         this.filterSource$.next(this.filters);
     }
 
     isValid() {
+        if (this.filters.endDate === null || this.filters.startDate === null) {
+            return true
+        }
+
         return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
     }
 }

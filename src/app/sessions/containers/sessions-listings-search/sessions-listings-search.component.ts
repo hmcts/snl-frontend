@@ -7,7 +7,6 @@ import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog, PageEvent } from '@angular/material';
 import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
@@ -29,6 +28,7 @@ import { HearingsTableComponent } from '../../../hearing-part/components/hearing
 import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { TableSettings } from '../../../hearing-part/models/table-settings.model';
 import { SessionsService } from '../../services/sessions-service';
+import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -46,7 +46,6 @@ export class SessionsListingsSearchComponent implements OnInit {
     selectedSessions: SessionForListingWithNotes[] = [];
     selectedHearing: HearingForListingWithNotes = undefined;
 
-    filters$ = new Subject<SessionFilters>();
     filterSource$: Observable<SessionFilters>;
     sessionPaginationSource$: Observable<PageEvent>;
     hearingTableSettingsSource$: Observable<TableSettings>;
@@ -65,6 +64,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     constructor(public hearingService: HearingService,
                 public notesService: NotesService,
                 public sessionsService: SessionsService,
+                public sessionSearchCriteriaService: SessionSearchCriteriaService,
                 public route: ActivatedRoute,
                 public dialog: MatDialog) {
         this.hearingsSource$ = new BehaviorSubject<HearingForListingWithNotes[]>([]);
@@ -215,7 +215,7 @@ export class SessionsListingsSearchComponent implements OnInit {
                 sortByProperty: tableSettings.sortByProperty,
                 sortDirection: tableSettings.sortDirection,
             },
-            searchCriteria: []
+            searchCriteria: this.sessionSearchCriteriaService.convertToSearchCriterions(filters)
         };
 
         this.totalSessionsCount = 0;

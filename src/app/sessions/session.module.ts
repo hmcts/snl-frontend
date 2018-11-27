@@ -33,6 +33,7 @@ import { SessionAmendDialogComponent } from './components/session-amend-dialog/s
 import { NotesModule } from '../notes/notes.module';
 import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
 import { RoomResolver } from '../rooms/resolvers/room.resolver';
+import { SessionSearchCriteriaService } from './services/session-search-criteria.service';
 
 export const COMPONENTS = [
   SessionsPageComponent,
@@ -81,7 +82,8 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService,
-    SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration, RoomResolver]
+    SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration,
+    SessionSearchCriteriaService, RoomResolver]
 })
 export class SessionModule {
 }
