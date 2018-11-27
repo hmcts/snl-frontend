@@ -1,8 +1,9 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, Input } from '@angular/core';
-
+import * as moment from 'moment'
 import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/draggable.js';
 import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
+import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
 @Component({
   selector: 'app-draggable-hearing-part',
   templateUrl: './draggable-hearing-part.component.html',
@@ -10,6 +11,7 @@ import { HearingPartViewModel } from '../../models/hearing-part.viewmodel';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DraggableHearingPartComponent implements AfterViewChecked {
+    @Input() session: SessionViewModel;
     @Input() hearingPart: HearingPartViewModel;
 
     constructor() {
@@ -24,5 +26,9 @@ export class DraggableHearingPartComponent implements AfterViewChecked {
                 .show()
             }
         });
+    }
+
+    getDuration() {
+        return this.hearingPart.multiSession ? moment.duration(this.session.duration) : this.hearingPart.duration
     }
 }

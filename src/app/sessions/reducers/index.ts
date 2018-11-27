@@ -79,7 +79,7 @@ export const getFullSessions = createSelector(
         finalSessions = Object.keys(sessions).map(sessionKey => {
             const sessionData: Session = sessions[sessionKey];
             const hearingParts = Object.values(inputHearingParts).filter(hearingPart => hearingPart.sessionId === sessionData.id);
-            const allocated = calculateAllocated(hearingParts);
+            const allocated = calculateAllocated(hearingParts, sessionData.duration);
             const sessionType = (sessionTypes[sessionData.sessionTypeCode] === undefined) ?
                 {code: 'N/A', description: 'N/A'} as SessionType :
                 sessionTypes[sessionData.sessionTypeCode];
@@ -111,9 +111,9 @@ export const getFullSessions = createSelector(
 
 let sessionsStatsService = new SessionsStatisticsService();
 
-function calculateAllocated(hearingParts) {
+function calculateAllocated(hearingParts, sessionDuration: moment.Duration| number) {
   return sessionsStatsService.calculateAllocatedHearingsDuration({
-    hearingParts: hearingParts
+    hearingParts: hearingParts, duration:  moment.duration(sessionDuration)
   });
 }
 

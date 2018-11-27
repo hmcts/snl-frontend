@@ -29,7 +29,7 @@ export class SessionDialogDetails {
         return moment(start).add(moment.duration(duration)).format('HH:mm');
     }
 
-    private getAllocatedHearingsDuration(session) {
+    private getAllocatedHearingsDuration(session: SessionViewModel) {
         return this.sessionsStatsService.calculateAllocatedHearingsDuration(session);
     }
 
