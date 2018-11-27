@@ -30,11 +30,12 @@ app.use(helmet.referrerPolicy({
 // CSP settings
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: [`'none'`], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        defaultSrc: ['*.hmcts.net'],
+        // [`'self'`], // , '*.hmcts.net', '*.core-compute-preview.internal:*', '*.core-compute-aat.internal:*'],
         fontSrc: [`'self' data:`], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         scriptSrc: [`'self'`],
         // '*.hmcts.net', 'www.google-analytics.com', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        connectSrc: [`'self'`], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        connectSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         mediaSrc: [`'self'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         frameSrc: [`'self'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         imgSrc: [`'self'`], // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
@@ -42,8 +43,7 @@ app.use(helmet.contentSecurityPolicy({
         // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal']
     },
     browserSniff: true,
-    setAllHeaders: true,
-    reportOnly: true
+    setAllHeaders: true
 }));
 app.use(helmet.hidePoweredBy({ setTo: 'shhh..Its a secret' }));
 app.use(helmet.permittedCrossDomainPolicies());
