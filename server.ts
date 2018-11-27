@@ -30,20 +30,17 @@ app.use(helmet.referrerPolicy({
 // CSP settings
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: ['\'self\''],
-        fontSrc: ['\'self\' data:'],
-        scriptSrc: [
-            '\'self\'',
-            'www.google-analytics.com'
-        ],
-        connectSrc: ['\'self\''],
-        mediaSrc: ['\'self\''],
-        frameSrc: ['\'none\''],
-        imgSrc: ['\'self\'', 'www.google-analytics.com'],
-        frameAncestors: ['\'self\'']
+        defaultSrc: ['\'self\'', '*.hmcts.net'],
+        fontSrc: ['\'self\' data:', '*.hmcts.net'],
+        scriptSrc: ['\'self\'', '*.hmcts.net', 'www.google-analytics.com'],
+        connectSrc: ['\'self\'', '*.hmcts.net'],
+        mediaSrc: ['\'self\'', '*.hmcts.net'],
+        frameSrc: ['\'none\'', '*.hmcts.net'],
+        imgSrc: ['\'self\'', 'www.google-analytics.com', '*.hmcts.net'],
+        frameAncestors: ['\'self\'', '*.hmcts.net']
     },
     browserSniff: true,
-    setAllHeaders: true
+    setAllHeaders: true,
 }));
 app.use(helmet.hidePoweredBy({ setTo: 'shhh..Its a secret' }));
 app.use(helmet.permittedCrossDomainPolicies());
