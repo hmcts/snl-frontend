@@ -139,7 +139,8 @@ const mockedHearingResponse: Hearing = {
     scheduleStart: nowISOSting,
     version: 2,
     numberOfSessions: 1,
-    multiSession: false
+    multiSession: false,
+    status: 'Listed'
 }
 
 // same as unlisted, but with session set to matching id in Session

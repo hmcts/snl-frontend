@@ -60,7 +60,7 @@ export class HearingService {
 
         this.removeEntitiesFromStateAndInitializeTransaction(unlistHearingRequest.userTransactionId);
 
-        return this.http
+        this.http
           .put<Transaction>(`${this.config.getApiUrl()}/hearing/unlist`, JSON.stringify(unlistHearingRequest), {
             headers: {'Content-Type': 'application/json'}
           }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
@@ -75,10 +75,14 @@ export class HearingService {
 
         this.removeEntitiesFromStateAndInitializeTransaction(adjournHearingRequest.userTransactionId);
 
-        return this.http
+        this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/adjourn`, JSON.stringify(adjournHearingRequest), {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
+    withdraw(hearing: Hearing): void {
+        throw new Error('Method not implemented.');
     }
 
     getForAmendment(id: string): Observable<HearingSearchResponseForAmendment> {

@@ -4,10 +4,6 @@ import { Observable } from 'rxjs';
 export interface PossibleActionConfig {
     enabled: boolean,
     openDialog: () => Observable<any>,
-    callService: (hearing: Hearing) => {},
+    callService: (hearing: Hearing) => void,
     summaryText: string
-}
-
-export interface PossibleActions {
-    PossibleActionConfig
 }

@@ -15,7 +15,8 @@ let httpMock: HttpTestingController;
 let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
 const HEARING: Hearing = {
   id: 'some-id',
-  hearingPartsVersions: [{id: 'id1', version: 'ver1'}]
+  hearingPartsVersions: [{id: 'id1', version: 'ver1'}],
+  hearingVersion: 4
 } as Hearing
 
 const filteredHearingViewModelResponse = {
@@ -114,6 +115,22 @@ describe('HearingService', () => {
           request.url === '/hearing/unlist' &&
           body.hearingId === HEARING.id &&
           body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
+      }).flush({});
+
+      httpMock.verify()
+    })
+  });
+
+  describe('adjourn', () => {
+    it('should call API', () => {
+      service.adjourn(HEARING)
+
+      httpMock.expectOne((request: HttpRequest<any>) => {
+        const body = JSON.parse(request.body);
+        return request.method === 'PUT' &&
+          request.url === '/hearing/adjourn' &&
+          body.hearingId === HEARING.id &&
+          body.hearingVersion === HEARING.hearingVersion
       }).flush({});
 
       httpMock.verify()

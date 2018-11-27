@@ -14,6 +14,7 @@ import { NotesService } from '../../../notes/services/notes.service';
 import { formatDuration } from '../../../utils/date-utils';
 import { Status } from '../../../core/reference/models/status.model';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
+import { IPossibleActionConfigs } from '../../models/ipossible-actions';
 
 @Component({
   selector: 'app-view-hearing',
@@ -26,14 +27,12 @@ export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
   hearingActions = HearingActions;
   @ViewChild(MatSelect) actionSelect: MatSelect;
-  possibleActionsKeys;
-
-  possibleActions;
-
+  possibleActionsKeys: string[];
+  possibleActions: IPossibleActionConfigs;
   note: NoteViewmodel;
 
   constructor(
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly hearingService: HearingService,
     private readonly notesPreparerService: NotesPreparerService,
     private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
@@ -57,10 +56,6 @@ export class ViewHearingComponent implements OnInit {
       });
 
     this.fetchHearing();
-  }
-
-  private fetchHearing() {
-      this.hearingService.getById(this.hearingId);
   }
 
   formatDate(date: string): string {
@@ -113,9 +108,13 @@ export class ViewHearingComponent implements OnInit {
 
   onSubmit(note: NoteViewmodel) {
     const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
-    this.notesService.upsertMany(preparedNote).subscribe(data => {
+    this.notesService.upsertMany(preparedNote).subscribe(() => {
       this.fetchHearing();
       this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
     });
+  }
+
+  private fetchHearing() {
+    this.hearingService.getById(this.hearingId);
   }
 }

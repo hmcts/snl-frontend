@@ -7,29 +7,31 @@ import { HearingService } from './hearing.service';
 import { TransactionDialogComponent } from '../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { Hearing } from '../models/hearing';
 import { PossibleActionConfig } from '../models/possible-action-config';
+import { IPossibleActionConfigs } from '../models/ipossible-actions';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class PossibleHearingActionsService {
 
-    possibleActions = {
+    private readonly possibleActions: IPossibleActionConfigs = {
         [HearingActions.Unlist]: {
             enabled: false,
             openDialog: () => this.openUnlistDialog(),
             callService: (hearing) => this.hearingService.unlist(hearing),
             summaryText: 'Unlist hearing parts from session'
-        } as PossibleActionConfig,
+        },
         [HearingActions.Adjourn]: {
             enabled: false,
             openDialog: () => this.openAdjournDialog(),
             callService: (hearing) => this.hearingService.adjourn(hearing),
             summaryText: 'Adjourn hearing'
-        } as PossibleActionConfig,
+        },
         [HearingActions.Withdraw]: {
             enabled: false,
             openDialog: () => this.openWithdrawDialog(),
             callService: (hearing) => this.hearingService.withdraw(hearing),
             summaryText: 'Withdraw hearing '
-        } as PossibleActionConfig
+        }
     };
 
     constructor(private readonly dialog: MatDialog,
@@ -46,7 +48,7 @@ export class PossibleHearingActionsService {
         }
     }
 
-    public mapToHearingPossibleActions(hearing: Hearing) {
+    public mapToHearingPossibleActions(hearing: Hearing): IPossibleActionConfigs {
         Object.keys(hearing.possibleActions).forEach(key => {
             this.possibleActions[key].enabled = hearing.possibleActions[key]
         })
@@ -80,6 +82,11 @@ export class PossibleHearingActionsService {
         });
 
         return confirmationDialogRef.afterClosed();
+    }
+
+    private openWithdrawDialog(): Observable<any> {
+       // TODO add withdrawn
+       return Observable.of(null)
     }
 
     private confirmationDialogClosed = (confirmed: boolean, callService: () => void, hearing: Hearing, summaryDialogText: string) => {
