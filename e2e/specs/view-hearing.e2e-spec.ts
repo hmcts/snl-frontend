@@ -23,7 +23,6 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
         {
             id: givenId,
             caseNumber: givenCaseNumber,
-            caseTitle: '',
             caseTypeCode: CaseTypeCodes.FTRACK,
             hearingTypeCode: HearingTypeCodes.ADJOURNED,
             duration: 'PT30M',
