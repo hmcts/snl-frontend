@@ -8,7 +8,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import { MatDialog, PageEvent } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { safe } from '../../../utils/js-extensions';
@@ -47,7 +47,7 @@ export class SessionsListingsSearchComponent implements OnInit {
     selectedHearing: HearingForListingWithNotes = undefined;
 
     filterSource$: Observable<SessionFilters>;
-    sessionPaginationSource$: Observable<PageEvent>;
+    sessionTableSettingsSource$: Observable<TableSettings>;
     hearingTableSettingsSource$: Observable<TableSettings>;
     errorMessage: string;
     numberOfSessions = 1;
@@ -83,8 +83,8 @@ export class SessionsListingsSearchComponent implements OnInit {
         this.hearingTableSettingsSource$.subscribe(this.fetchHearings);
 
         this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
-        this.sessionPaginationSource$ = this.sessionsTable.tableSettingsSource$.asObservable();
-        combineLatest(this.sessionPaginationSource$, this.filterSource$, this.fetchSessions).subscribe()
+        this.sessionTableSettingsSource$ = this.sessionsTable.tableSettingsSource$.asObservable();
+        combineLatest(this.sessionTableSettingsSource$, this.filterSource$, this.fetchSessions).subscribe()
     }
 
     selectHearing(hearing: HearingForListingWithNotes) {

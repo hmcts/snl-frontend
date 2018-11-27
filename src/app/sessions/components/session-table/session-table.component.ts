@@ -32,7 +32,7 @@ export class SessionTableComponent implements OnChanges, OnInit {
 
     tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
     selectedSessionIds: SelectionModel<string>;
-    selectedSessions: SelectionModel<SessionForListingWithNotes>;
+    selectedSessions: SessionForListingWithNotes[] = [];
 
     sessionSearchColumns = SessionSearchColumn
     displayedColumns = [
@@ -55,7 +55,6 @@ export class SessionTableComponent implements OnChanges, OnInit {
 
     constructor() {
         this.selectedSessionIds = new SelectionModel<string>(true, []);
-        this.selectedSessions = new SelectionModel<SessionForListingWithNotes>(true, []);
         this.tableVisible = false;
 
         this.dataSource = new MatTableDataSource(this.sessions);
@@ -81,17 +80,32 @@ export class SessionTableComponent implements OnChanges, OnInit {
 
     toggleSession(id: string) {
         this.selectedSessionIds.toggle(id);
-        this.selectedSessions.toggle(this.sessions.find(s => s.sessionId === id));
-        this.selectSessions.emit(this.selectedSessions.selected);
+        let tempSelectedSessions = this.toggleSelectedSessions(id, this.selectedSessionIds.isSelected(id));
+        this.selectSessions.emit(tempSelectedSessions);
     }
 
     isChecked(id: string) {
         return this.selectedSessionIds.isSelected(id);
     }
 
+    toggleSelectedSessions(id: string, selected: boolean): SessionForListingWithNotes[] {
+        let sess = this.selectedSessions.find(s => s.sessionId === id)
+        if (sess !== undefined) {
+            if (!selected) {
+                let index = this.selectedSessions.findIndex(s => s.sessionId === id);
+                this.selectedSessions.splice(index, 1);
+            }
+        } else {
+            if (selected) {
+                this.selectedSessions.push(this.sessions.find(s => s.sessionId === id));
+            }
+        }
+
+        return this.selectedSessions;
+    }
+
     clearSelection() {
         this.selectedSessionIds.clear();
-        this.selectedSessions.clear();
     }
 
     ngOnInit() {
@@ -102,11 +116,6 @@ export class SessionTableComponent implements OnChanges, OnInit {
         if (this.sessions) {
             this.tableVisible = true;
             this.dataSource = new MatTableDataSource(this.sessions);
-            // this.sessions.map(s => s.sessionId)
-            //     .filter(id => this.memorizedSesssions.isSelected(id))
-            //     .forEach(id => this.selectedSessionIds.toggle(id))
-            // this.selectedSessionIds.select(...this.selectedSessionIds.selected);
-            // this.selectedSessions.select(...this.selectedSessions.selected);
         }
     }
 
