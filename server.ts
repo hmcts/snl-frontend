@@ -30,16 +30,16 @@ app.use(helmet.referrerPolicy({
 // CSP settings
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: ['*.hmcts.net'],
+        defaultSrc: [`'self'`, '*.hmcts.net'],
         // [`'self'`], // , '*.hmcts.net', '*.core-compute-preview.internal:*', '*.core-compute-aat.internal:*'],
         fontSrc: [`'self' data:`], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         scriptSrc: [`'self'`],
         // '*.hmcts.net', 'www.google-analytics.com', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        connectSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         mediaSrc: [`'self'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        frameSrc: [`'self'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        frameSrc: [`'none'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         imgSrc: [`'self'`], // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        frameAncestors: [`'self'`],
+        frameAncestors: [`'none'`],
         // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal']
     },
     browserSniff: true,
