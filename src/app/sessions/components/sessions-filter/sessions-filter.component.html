@@ -12,7 +12,7 @@
     </mat-form-field>
 
     <mat-form-field class="date-picker-element">
-      <input id="endDate" matInput [matDatepicker]="pickerEnd" [min]="filters.startDate" [(ngModel)]="filters.endDate" placeholder="Choose end date">
+      <input id="endDate" matInput [matDatepicker]="pickerEnd" [min]="filters.startDate" [(ngModel)]="filters.endDate" (dateChange)="filters.endDate?.endOf('day')" placeholder="Choose end date">
       <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
       <mat-datepicker #pickerEnd></mat-datepicker>
     </mat-form-field>
@@ -25,14 +25,14 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select id="selectRoom"  placeholder="{{roomsPlaceholder}}" multiple [(value)] = "filters.rooms">
+      <mat-select id="selectRoom"  placeholder="Select the room" multiple [(value)] = "filters.rooms">
         <mat-option value="">(No room)</mat-option>
         <mat-option *ngFor="let room of rooms" value="{{room.id}}">{{room.name}}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select id="selectJudge"  placeholder="{{judgesPlaceholder}}" multiple [(value)] = "filters.judges">
+      <mat-select id="selectJudge"  placeholder="Select the judge" multiple [(value)] = "filters.judges">
         <mat-option value="">(No judge)</mat-option>
         <mat-option *ngFor="let judge of judges" value="{{judge.id}}">{{judge.name}}</mat-option>
       </mat-select>

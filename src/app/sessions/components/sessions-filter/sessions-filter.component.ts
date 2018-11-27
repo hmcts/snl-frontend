@@ -4,6 +4,7 @@ import { Room } from '../../../rooms/models/room.model';
 import { SessionFilters } from '../../models/session-filter.model';
 import * as moment from 'moment';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-sessions-filter',
@@ -11,9 +12,8 @@ import { CaseType } from '../../../core/reference/models/case-type';
     styleUrls: ['./sessions-filter.component.scss']
 })
 export class SessionsFilterComponent implements OnInit {
-
     @Output() filter = new EventEmitter();
-
+    public readonly sessionFilter$ = new Subject<SessionFilters>();
     @Input() rooms: Room[];
     @Input() judges: Judge[];
     @Input() sessionTypes: CaseType[];
@@ -23,11 +23,6 @@ export class SessionsFilterComponent implements OnInit {
     roomsPlaceholder: string;
     judgesPlaceholder: string;
     filters: SessionFilters;
-
-    constructor() {
-        this.roomsPlaceholder = 'Select the room';
-        this.judgesPlaceholder = 'Select the judge';
-    }
 
     ngOnInit() {
         this.filters = {
@@ -69,11 +64,16 @@ export class SessionsFilterComponent implements OnInit {
         this.sendFilter();
     }
 
-    isValid() {
-        return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
-    }
-
     sendFilter() {
         this.filter.emit(this.filters);
+        this.sessionFilter$.next(this.filters);
+    }
+
+    isValid() {
+        if (this.filters.endDate === null || this.filters.startDate === null) {
+            return true
+        }
+
+        return this.filters.endDate.diff(this.filters.startDate, 'day') >= 0;
     }
 }

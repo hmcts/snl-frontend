@@ -8,12 +8,11 @@ import { SessionsCreationService } from '../../services/sessions-creation.servic
 import * as moment from 'moment';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
-import { SessionViewModel } from '../../models/session.viewmodel';
-import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionToAmendSessionForm } from '../../mappers/amend-session-form-session-amend';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
 import { Store } from '@ngrx/store';
+import { SessionAmendResponse } from '../../models/session-amend.response';
 
 let fixture: ComponentFixture<SessionsAmendFormComponent>;
 let component: SessionsAmendFormComponent;
@@ -24,18 +23,21 @@ const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
 };
 
-let sessionViewmodel = {
+let sessionSearchResponse: SessionAmendResponse = {
     id: 'id',
-    start: moment(),
-    duration: 60,
-    room: { name: 'room', roomTypeCode: 'code' },
-    person: { name: 'person' },
-    sessionType: { code: 'session-type-code', description: 'session-type-description' } as SessionType,
-    hearingParts: [],
-    jurisdiction: ''
-} as SessionViewModel;
+    start: moment().format(),
+    duration: 'PT60M',
+    sessionTypeCode: 'sessionTypeCode',
+    personName: 'personName',
+    roomName: 'roomName',
+    roomDescription: 'roomDescription',
+    roomTypeCode: 'roomTypeCode',
+    hearingPartsCount: 0,
+    hasMultiSessionHearingAssigned: false,
+    version: 0,
+};
 
-let session = SessionToAmendSessionForm(sessionViewmodel, [{code: 'code', description: 'descr'}]);
+let session = SessionToAmendSessionForm(sessionSearchResponse);
 
 const sessionCreationServiceSpy = jasmine.createSpyObj('SessionsCreationService', ['amend', 'fetchUpdatedEntities']);
 const storeSpy = jasmine.createSpyObj('Store', ['dispatch']);

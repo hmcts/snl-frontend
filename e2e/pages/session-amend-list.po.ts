@@ -2,11 +2,12 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 import { FilterSessionComponent } from '../components/filter-session';
 import { Table } from '../components/table';
+import { Paginator } from '../components/paginator';
 
 export class SessionAmendListPage {
     private filterSessionComponent = new FilterSessionComponent();
     public sessionsTable = new Table(element(by.id('sessions-table')));
-
+    private sessionsTableTablePaginator = new Paginator(element(by.id('session-search-table-paginator')));
     public noSessionsTitle = element(by.cssContainingText('.heading', 'Sessions:'));
 
     async filterSession(values) {
@@ -18,14 +19,11 @@ export class SessionAmendListPage {
     }
 
     async isSessionDisplayed(id: string): Promise<boolean> {
-        const row = await this.sessionsTable.rowById(id);
-        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, `Session with id: ${id} is not present`);
-        return await row.isPresent();
+        return await this.sessionsTable.isRowWithIdPresentAtAnyPage(this.sessionsTableTablePaginator, id);
     }
 
     async amendSession(id: string) {
-        const row = await this.sessionsTable.rowById(id);
-        await browser.wait(ExpectedConditions.presenceOf(row), Wait.normal, 'Session is not present');
+        await this.isSessionDisplayed(id);
         await element(by.id(`amend-button-${id}`)).click();
     }
 }
