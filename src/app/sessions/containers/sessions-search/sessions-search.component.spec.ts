@@ -70,7 +70,7 @@ describe('SessionsSearchComponent', () => {
             mockSessionSearchCriteriaService.convertToSearchCriterions.and.returnValue(searchCriterions)
             mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
 
-            component.sessionAmendmentTableComponent = {tableSettings$: Observable.of(tableSettings) } as any;
+            component.sessionAmendmentTableComponent = {tableSettings$: Observable.of(tableSettings), resetToFirstPage: () => {} } as any;
             component.sessionFilterComponent = { sessionFilter$: Observable.of(sessionFilters) } as any;
         })
 
