@@ -19,7 +19,6 @@ import {
     SessionForListingResponse,
     SessionForListingWithNotes
 } from '../models/session.viewmodel';
-import { Page } from '../../problems/models/problem.model';
 import { Note } from '../../notes/models/note.model';
 import { NotesService } from '../../notes/services/notes.service';
 import { SessionSearchResponse } from '../models/session-search-response.model';
@@ -39,7 +38,7 @@ export class SessionsService {
             sort: request.httpParams.sortByProperty + ':' + request.httpParams.sortDirection
         };
         return this.http
-            .post<Page<SessionForListingResponse>>(`${this.config.getApiUrl()}/sessions/search`, [], {
+            .post<Page<SessionForListingResponse>>(`${this.config.getApiUrl()}/sessions/search`, request.searchCriteria, {
                 params: new HttpParams({fromObject: params})
             }).pipe(map<Page<SessionForListingResponse>, Page<SessionForListing>>((sessionPage: Page<SessionForListingResponse>) => {
                 let content = sessionPage.content.map(sessionForListingResponse => {

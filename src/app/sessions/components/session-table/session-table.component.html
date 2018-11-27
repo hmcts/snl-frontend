@@ -18,32 +18,32 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="person_name">
+  <ng-container matColumnDef="{{sessionSearchColumns.PersonName}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.personName}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="room_name">
+  <ng-container matColumnDef="{{sessionSearchColumns.RoomName}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Room </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.roomName}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="session_type_description">
+  <ng-container matColumnDef="{{sessionSearchColumns.SessionTypeDescription}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Session type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.sessionTypeDescription}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="start_date">
+  <ng-container matColumnDef="{{sessionSearchColumns.StartDate}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Date </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.startDate.format()}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="start_time">
+  <ng-container matColumnDef="{{sessionSearchColumns.StartTime}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Time </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseTime(element.startTime)}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="duration">
+  <ng-container matColumnDef="{{sessionSearchColumns.Duration}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Duration </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.duration)}} </mat-cell>
   </ng-container>
@@ -57,23 +57,23 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="no_of_hearing_parts_assigned_to_session">
+  <ng-container matColumnDef="{{sessionSearchColumns.NoOfHearingPartsAssignedToSession}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearings </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.noOfHearingPartsAssignedToSession}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="allocated">
+  <ng-container matColumnDef="{{sessionSearchColumns.AllocatedDuration}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Allocated </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.allocated)}} </mat-cell>
   </ng-container>
 
   <!-- move calculating utilisation to data, so we can sort -->
-  <ng-container matColumnDef="utilization">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Utilization </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{element.utilization}} %</mat-cell>
+  <ng-container matColumnDef="{{sessionSearchColumns.Utilisation}}">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> Utilisation </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.utilisation}} %</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="available">
+  <ng-container matColumnDef="{{sessionSearchColumns.Available}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Available </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{humanizeDuration(element.available)}}</mat-cell>
   </ng-container>

@@ -6,6 +6,7 @@ import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TableSettings } from '../../../hearing-part/models/table-settings.model';
+import { SessionSearchColumn } from '../../models/session-search-column';
 
 @Component({
     selector: 'app-session-table',
@@ -16,7 +17,7 @@ export class SessionTableComponent implements OnChanges, OnInit {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        sortByProperty: 'session_type_description',
+        sortByProperty: 'start_time',
         sortDirection: 'asc'
     };
 
@@ -30,20 +31,21 @@ export class SessionTableComponent implements OnChanges, OnInit {
     @Input() totalCount: number;
 
     tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
-
     selectedSesssions: SelectionModel<SessionForListingWithNotes>;
+
+    sessionSearchColumns = SessionSearchColumn
     displayedColumns = [
-        'session_type_description',
-        'start_date',
-        'start_time',
-        'person_name',
-        'room_name',
-        'no_of_hearing_parts_assigned_to_session',
-        'utilization',
+        SessionSearchColumn.SessionTypeDescription,
+        SessionSearchColumn.StartDate,
+        SessionSearchColumn.StartTime,
+        SessionSearchColumn.PersonName,
+        SessionSearchColumn.RoomName,
+        SessionSearchColumn.NoOfHearingPartsAssignedToSession,
+        SessionSearchColumn.Utilisation,
         'notes',
-        'available',
-        'duration',
-        'allocated',
+        SessionSearchColumn.Available,
+        SessionSearchColumn.Duration,
+        SessionSearchColumn.AllocatedDuration,
         'select_session'
     ];
 
