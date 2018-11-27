@@ -88,12 +88,12 @@ export class SessionTableComponent implements OnChanges, OnInit {
         return this.selectedSessionIds.isSelected(id);
     }
 
+    // Adds to the array selected sessions and removes the unselected ones.
     toggleSelectedSessions(id: string, selected: boolean): SessionForListingWithNotes[] {
-        let sess = this.selectedSessions.find(s => s.sessionId === id)
-        if (sess !== undefined) {
+        let sessionToToggle = this.selectedSessions.find(s => s.sessionId === id)
+        if (sessionToToggle !== undefined) {
             if (!selected) {
-                let index = this.selectedSessions.findIndex(s => s.sessionId === id);
-                this.selectedSessions.splice(index, 1);
+                this.selectedSessions.splice(this.selectedSessions.findIndex(s => s.sessionId === id), 1);
             }
         } else {
             if (selected) {

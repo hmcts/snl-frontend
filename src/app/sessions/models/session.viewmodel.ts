@@ -36,6 +36,7 @@ export interface SessionForListingResponse {
     allocatedDuration: string;
     utilisation: number;
     available: string;
+    sessionVersion: number;
 }
 
 export interface SessionForListing {
@@ -53,6 +54,7 @@ export interface SessionForListing {
     allocatedDuration: moment.Duration;
     utilisation: number;
     available: moment.Duration;
+    sessionVersion: number;
 }
 
 export interface SessionForListingWithNotes {
@@ -71,6 +73,7 @@ export interface SessionForListingWithNotes {
     utilisation: number;
     available: moment.Duration;
     notes: Note[]
+    sessionVersion: number;
 }
 
 export function mapResponseToSessionForListing(s: SessionForListingResponse) {
@@ -89,6 +92,7 @@ export function mapResponseToSessionForListing(s: SessionForListingResponse) {
         allocatedDuration: moment.duration(s.allocatedDuration),
         utilisation: s.utilisation,
         available: moment.duration(s.available),
+        sessionVersion: s.sessionVersion,
     }
 
     return sessionForListing;
