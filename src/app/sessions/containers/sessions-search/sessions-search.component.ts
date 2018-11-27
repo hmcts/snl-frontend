@@ -36,6 +36,7 @@ export class SessionsSearchComponent implements OnInit {
     totalCount: number;
     savedSearchCriterion: SearchCriteria[];
     savedTableSettings: TableSetting;
+    savedSessionFilters: SessionFilters;
 
     @ViewChild(SessionsFilterComponent) sessionFilterComponent: SessionsFilterComponent;
     @ViewChild(SessionAmendmentTableComponent) sessionAmendmentTableComponent: SessionAmendmentTableComponent;
@@ -57,8 +58,14 @@ export class SessionsSearchComponent implements OnInit {
         this.sessionFilterComponent.sessionFilter$.combineLatest(
             this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
                 if (filters && tableSetting) {
+                    if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
+                        this.sessionAmendmentTableComponent.resetToFirstPage();
+                    }
+
                     const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
                     this.searchSessions(searchCriterions, tableSetting);
+                    // create a deep copy
+                    this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
                 }
             }
         ).subscribe()

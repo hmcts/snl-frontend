@@ -52,6 +52,10 @@ export class SessionAmendmentTableComponent implements AfterViewInit {
         this.emitTableSettings()
     }
 
+    public resetToFirstPage() {
+        this.paginator.firstPage()
+    }
+
     emitTableSettings() {
         const sortByProperty = this.sort.active;
         const sortDirection = this.sort.direction;
