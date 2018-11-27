@@ -50,7 +50,9 @@ export class PossibleHearingActionsService {
 
     public mapToHearingPossibleActions(hearing: Hearing): IPossibleActionConfigs {
         Object.keys(hearing.possibleActions).forEach(key => {
-            this.possibleActions[key].enabled = hearing.possibleActions[key]
+            if (this.possibleActions[key] !== undefined) {
+                this.possibleActions[key].enabled = hearing.possibleActions[key]
+            }
         })
 
         return this.possibleActions;
