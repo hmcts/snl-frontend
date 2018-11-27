@@ -30,14 +30,14 @@ app.use(helmet.referrerPolicy({
 // CSP settings
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: ['self', '*.hmcts.net'],
-        fontSrc: ['\'self\' data:', '*.hmcts.net'],
-        scriptSrc: ['\'self\'', '*.hmcts.net', 'www.google-analytics.com'],
-        connectSrc: ['self', '*.hmcts.net'],
-        mediaSrc: ['\'self\'', '*.hmcts.net'],
-        frameSrc: ['*.hmcts.net'],
-        imgSrc: ['\'self\'', 'www.google-analytics.com', '*.hmcts.net'],
-        frameAncestors: ['\'self\'', '*.hmcts.net']
+        defaultSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal'],
+        fontSrc: [`'self' data:`, '*.hmcts.net', '*.core-compute-preview.internal'],
+        scriptSrc: [`'self'`, '*.hmcts.net', 'www.google-analytics.com', '*.core-compute-preview.internal'],
+        connectSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal'],
+        mediaSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal'],
+        frameSrc: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal'],
+        imgSrc: [`'self'`, 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal'],
+        frameAncestors: [`'self'`, '*.hmcts.net', '*.core-compute-preview.internal']
     },
     browserSniff: true,
     setAllHeaders: true
