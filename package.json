@@ -83,7 +83,8 @@
     "ts-loader": "^3.1.1",
     "url": "^0.11.0",
     "uuid": "^3.3.2",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "helmet": "^3.14.0"
   },
   "devDependencies": {
     "@angular/cli": "1.6.5",
