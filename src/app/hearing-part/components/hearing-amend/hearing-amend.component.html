@@ -66,6 +66,11 @@
                                     <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" step="0.5" >
                                     <span matSuffix>Days</span>
                                 </mat-form-field>
+
+                                <mat-form-field>
+                                    <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="2" >
+                                    <span matSuffix>Sessions</span>
+                                </mat-form-field>
                             </div>
                         </div>
                     </div>

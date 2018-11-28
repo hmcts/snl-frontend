@@ -162,7 +162,7 @@ export class HearingAmendComponent {
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
                 numberOfSessions: new FormControl(
-                    this.listing.hearing.numberOfSessions, [Validators.min(1)]
+                    this.listing.hearing.numberOfSessions, [Validators.min(2)]
                 )
             }),
             targetDates: new FormGroup({

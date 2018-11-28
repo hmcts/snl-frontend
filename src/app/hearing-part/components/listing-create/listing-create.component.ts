@@ -256,11 +256,8 @@ export class ListingCreateComponent implements OnInit {
                     this.getDurationToDisplay(),
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
-                numberOfSessions: new FormControl({
-                        value:  this.listing.hearing.numberOfSessions,
-                        disabled: this.editMode && this.listing.hearing.multiSession
-                    },
-                    [Validators.min(2)]
+                numberOfSessions: new FormControl(
+                    this.listing.hearing.numberOfSessions, [Validators.min(2)]
                 )
             }),
             targetDates: new FormGroup({
