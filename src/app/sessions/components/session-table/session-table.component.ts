@@ -60,6 +60,10 @@ export class SessionTableComponent implements OnChanges, OnInit {
         this.dataSource = new MatTableDataSource(this.sessions);
     }
 
+    goToFirstPage() {
+        this.paginator.firstPage()
+    }
+
     hasNotes(session: SessionForListingWithNotes): boolean {
         return session.notes.length > 0;
     }

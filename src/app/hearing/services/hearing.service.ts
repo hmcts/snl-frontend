@@ -2,7 +2,7 @@ import { EntityTransaction } from './../../features/transactions/models/transact
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { WithdrawHearingRequest, Hearing, UnlistHearingRequest } from '../models/hearing';
+import { Hearing, UnlistHearingRequest, WithdrawHearingRequest } from '../models/hearing';
 import { Observable } from 'rxjs/Observable';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';

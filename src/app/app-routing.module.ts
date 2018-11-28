@@ -35,7 +35,7 @@ const routes: Routes = [
             {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard],
                 resolve: { judges: JudgesResolver, caseTypes: CaseTypesResolver, hearingTypes: HearingTypesResolver}},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard],
-                resolve: { judges: JudgesResolver, rooms: RoomsResolver, sessionTypes: SessionTypesResolver}},
+                resolve: { judges: JudgesResolver, rooms: RoomsResolver, sessionTypes: SessionTypesResolver, caseTypes: CaseTypesResolver}},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard], resolve: { sessionTypes: StatusConfigResolver, judges: JudgesResolver }

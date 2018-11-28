@@ -16,6 +16,7 @@
                           [hearings]="hearings$ | async"
                           [totalCount]="totalHearingsCount"
                           (onClearSelection)="onHearingsClearSelection()"
+                          (onEdit)="openEditDialog($event)"
                           (selectHearing)="selectHearing($event)">
       </app-hearings-table>
     </div>

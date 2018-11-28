@@ -55,27 +55,16 @@ describe('HearingsTableComponent', () => {
         });
 
         it('confirming on edit dialog should call service method', () => {
-            matDialogSpy.open.and.returnValue(openDialogMockObjConfirmed);
+            let emitSpy = spyOn(component.onEdit, 'emit');
+            component.openEditDialog('asd');
 
-            component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
-
-            expect(matDialogSpy.open).toHaveBeenCalled();
-
+            expect(emitSpy).toHaveBeenCalled();
         });
 
         it('declining on delete dialog should not call service method', () => {
             matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
 
-            component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
-
-            expect(matDialogSpy.open).toHaveBeenCalled();
-            expect(hearingService.deleteHearing).not.toHaveBeenCalled();
-        });
-
-        it('declining on edit dialog should not call service method', () => {
-            matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
-
-            component.openEditDialog({...generateHearings('asd'), caseNumber: '123'});
+            component.openDeleteDialog({...generateHearings('asd'), caseNumber: '123'});
 
             expect(matDialogSpy.open).toHaveBeenCalled();
             expect(hearingService.deleteHearing).not.toHaveBeenCalled();

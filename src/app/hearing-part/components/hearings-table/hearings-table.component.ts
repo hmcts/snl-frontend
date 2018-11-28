@@ -2,10 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Out
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
-import { mapToUpdateHearingRequest } from '../../models/hearing-part.viewmodel';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { ListingCreate } from '../../models/listing-create';
-import { ListingCreateDialogComponent } from '../listing-create-dialog/listing-create-dialog';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { DialogWithActionsComponent } from '../../../features/notification/components/dialog-with-actions/dialog-with-actions.component';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
@@ -35,6 +32,7 @@ export class HearingsTableComponent implements OnChanges {
     @Input() hearings: HearingForListingWithNotes[];
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
+    @Output() onEdit = new EventEmitter();
     @Output() onClearSelection = new EventEmitter();
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -77,6 +75,14 @@ export class HearingsTableComponent implements OnChanges {
         return hearing.notes.length > 0;
     }
 
+    goToFirstPage() {
+        this.paginator.firstPage()
+    }
+
+    openEditDialog(id: string) {
+        this.onEdit.emit(id);
+    }
+
     openNotesDialog(hearing: HearingForListingWithNotes) {
         if (this.hasNotes(hearing)) {
             this.dialog.open(NotesListDialogComponent, {
@@ -104,19 +110,6 @@ export class HearingsTableComponent implements OnChanges {
             tap(() => this.tableSettingsSource$.next(this.tableSettingsSource$.getValue())),
             take(1))
             .subscribe();
-    }
-
-    openEditDialog(hearing: HearingForListingWithNotes) {
-        this.clearSelection();
-
-        this.dialog.open(ListingCreateDialogComponent, {
-            data: {
-                hearing: mapToUpdateHearingRequest(hearing),
-                notes: hearing.notes
-            } as ListingCreate,
-            hasBackdrop: true,
-            height: 'auto'
-        });
     }
 
     toggleHearing(hearing: HearingForListingWithNotes) {
