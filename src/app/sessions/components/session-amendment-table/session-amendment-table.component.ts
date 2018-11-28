@@ -1,18 +1,27 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { formatDuration } from '../../../utils/date-utils';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { TableSetting } from '../../models/table-settings.model';
-import { Subject } from 'rxjs';
 import { SessionSearchColumn } from '../../models/session-search-column';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
+
 @Component({
     selector: 'app-session-amendment-table',
     templateUrl: './session-amendment-table.component.html',
     styleUrls: ['./session-amendment-table.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionAmendmentTableComponent implements AfterViewInit {
+export class SessionAmendmentTableComponent {
+    public static DEFAULT_TABLE_SETTINGS: TableSettings = {
+        pageSize: 10,
+        pageIndex: 0,
+        sortByProperty: SessionSearchColumn.StartDate,
+        sortDirection: 'asc'
+    };
+
     @Output() amend = new EventEmitter();
 
     @ViewChild(MatSort) sort: MatSort;
@@ -40,17 +49,16 @@ export class SessionAmendmentTableComponent implements AfterViewInit {
     sessionSearchColumns = SessionSearchColumn
 
     private _sessions: SessionSearchResponse[];
-    get sessions() { return this._sessions; }
+    get sessions() {
+        return this._sessions;
+    }
+
     @Input() set sessions(sessions: SessionSearchResponse[]) {
         this._sessions = sessions;
         this.dataSource = new MatTableDataSource(sessions);
     };
 
-    public readonly tableSettings$ = new Subject<TableSetting>();
-
-    ngAfterViewInit() {
-        this.emitTableSettings()
-    }
+    public readonly tableSettings$ = new BehaviorSubject<TableSetting>(SessionAmendmentTableComponent.DEFAULT_TABLE_SETTINGS);
 
     public resetToFirstPage() {
         this.paginator.firstPage()

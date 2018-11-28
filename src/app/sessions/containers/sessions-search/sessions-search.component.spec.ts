@@ -12,10 +12,12 @@ import { SearchCriteria } from '../../../hearing-part/models/search-criteria';
 import { SessionAmendResponse } from '../../models/session-amend.response';
 import { Page } from '../../../problems/models/problem.model';
 import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 let component: SessionsSearchComponent
 const mockMatDialog: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open'])
-const mockActivatedRoute = { data: Observable.of({judges: [], rooms: [], sessionTypes: []})}
+const mockActivatedRoute = {data: Observable.of({judges: [], rooms: [], sessionTypes: []})}
 const mockSessionService: jasmine.SpyObj<SessionsService> =
     jasmine.createSpyObj('SessionsService', ['paginatedSearchSessions', 'getSessionAmendById'])
 const mockSessionSearchCriteriaService: jasmine.SpyObj<SessionSearchCriteriaService> =
@@ -34,18 +36,18 @@ const searchCriterions: SearchCriteria[] = [{
     value: ['room-id']
 }]
 const expectedSessionId = 'Session-id'
-const sessionSearchResponse: any = { sessionId: expectedSessionId } as SessionSearchResponse;
+const sessionSearchResponse: any = {sessionId: expectedSessionId} as SessionSearchResponse;
 
 describe('SessionsSearchComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
                 SessionsSearchComponent,
-                { provide: ActivatedRoute, useValue: mockActivatedRoute },
-                { provide: SessionsService, useValue: mockSessionService },
-                { provide: SessionSearchCriteriaService, useValue: mockSessionSearchCriteriaService },
-                { provide: NotesService, useValue: mockNotesService },
-                { provide: MatDialog, useValue: mockMatDialog },
+                {provide: ActivatedRoute, useValue: mockActivatedRoute},
+                {provide: SessionsService, useValue: mockSessionService},
+                {provide: SessionSearchCriteriaService, useValue: mockSessionSearchCriteriaService},
+                {provide: NotesService, useValue: mockNotesService},
+                {provide: MatDialog, useValue: mockMatDialog},
             ]
         });
         component = TestBed.get(SessionsSearchComponent);
@@ -54,11 +56,6 @@ describe('SessionsSearchComponent', () => {
     describe('constructor', () => {
         it('should be defined', () => {
             expect(component).toBeDefined();
-        });
-
-        it('should set start and end date', () => {
-            expect(component.startDate).toBeDefined()
-            expect(component.endDate).toBeDefined()
         });
     });
 
@@ -70,12 +67,20 @@ describe('SessionsSearchComponent', () => {
             mockSessionSearchCriteriaService.convertToSearchCriterions.and.returnValue(searchCriterions)
             mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
 
-            component.sessionAmendmentTableComponent = {tableSettings$: Observable.of(tableSettings), resetToFirstPage: () => {} } as any;
-            component.sessionFilterComponent = { sessionFilter$: Observable.of(sessionFilters) } as any;
-        })
+            component.sessionAmendmentTableComponent = {
+                tableSettings$: Observable.of(tableSettings), resetToFirstPage: () => {
+                }
+            } as any;
+            component.sessionFilterComponent = {tableSettings$: Observable.of(sessionFilters)} as any;
+        });
 
         it('should set rooms, judges and sessionTypes', () => {
-            component.ngOnInit()
+            component.sessionFilterComponent.filterSource$ = new BehaviorSubject<SessionFilters>({} as any);
+            component.sessionAmendmentTableComponent = {
+                tableSettings$: new Subject<SessionFilters>(),
+            } as any;
+
+            component.ngOnInit();
 
             expect(component.rooms).toBeDefined()
             expect(component.judges).toBeDefined()
@@ -84,7 +89,13 @@ describe('SessionsSearchComponent', () => {
 
         describe('when TableSettings and PaginationSettings are available ', () => {
             it('should make request for session', () => {
-                component.ngOnInit()
+                component.sessionFilterComponent.filterSource$ = new BehaviorSubject<SessionFilters>({} as any);
+                component.sessionAmendmentTableComponent = {
+                    tableSettings$: new BehaviorSubject<SessionFilters>({} as any),
+                    resetToFirstPage: () => {}
+                } as any;
+
+                component.ngOnInit();
 
                 expect(mockSessionService.paginatedSearchSessions).toHaveBeenCalled()
             });
@@ -93,7 +104,11 @@ describe('SessionsSearchComponent', () => {
 
     describe('openAmendDialog', () => {
         it('should fetch session and its notes', () => {
-            mockNotesService.getByEntities.and.returnValue({ combineLatest: () => { return Observable.of() } })
+            mockNotesService.getByEntities.and.returnValue({
+                combineLatest: () => {
+                    return Observable.of()
+                }
+            })
             mockSessionService.getSessionAmendById.and.returnValue(Observable.of())
 
             component.openAmendDialog(sessionSearchResponse)
@@ -104,12 +119,19 @@ describe('SessionsSearchComponent', () => {
 
         describe('when it fetch notes and session', () => {
             it('should open dialog', () => {
-                const sessionAmendResponse = { id: expectedSessionId } as SessionAmendResponse;
+                const sessionAmendResponse = {id: expectedSessionId} as SessionAmendResponse;
                 const mockNotes = {};
 
                 mockNotesService.getByEntities.and.returnValue(Observable.of(mockNotes))
                 mockSessionService.getSessionAmendById.and.returnValue(Observable.of(sessionAmendResponse))
-                mockMatDialog.open.and.returnValue({afterClosed: () => { return { subscribe: () => {} }}})
+                mockMatDialog.open.and.returnValue({
+                    afterClosed: () => {
+                        return {
+                            subscribe: () => {
+                            }
+                        }
+                    }
+                })
 
                 component.openAmendDialog(sessionSearchResponse)
 
@@ -133,7 +155,7 @@ describe('SessionsSearchComponent', () => {
         it('should fetch and set sessions', () => {
             const totalCount = 1;
             const pagedSessionSearchResponse: Page<SessionSearchResponse> = {
-                content: [ sessionSearchResponse ],
+                content: [sessionSearchResponse],
                 last: true,
                 totalElements: 1,
                 totalPages: 1,

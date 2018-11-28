@@ -57,6 +57,24 @@ export interface SessionForListing {
     sessionVersion: number;
 }
 
+export const DEFAULT_SESSION_FOR_LISTING: SessionForListing = {
+    sessionId: undefined,
+    personId: undefined,
+    personName: undefined,
+    roomId: undefined,
+    roomName: undefined,
+    sessionTypeCode: undefined,
+    sessionTypeDescription: undefined,
+    startTime: undefined,
+    startDate: undefined,
+    duration: undefined,
+    noOfHearingPartsAssignedToSession: undefined,
+    allocatedDuration: undefined,
+    utilisation: undefined,
+    available: undefined,
+    sessionVersion: undefined,
+};
+
 export interface SessionForListingWithNotes {
     sessionId: string;
     personId: string;

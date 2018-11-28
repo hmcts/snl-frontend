@@ -16,7 +16,7 @@ import { CaseTypesResolver } from './core/reference/resolvers/case-types.resolve
 import { JudgesResolver } from './judges/resolvers/judges.resolver';
 import { HearingTypesResolver } from './core/reference/resolvers/hearing-types.resolver';
 import { SessionTypesResolver } from './core/reference/resolvers/session-types.resolver';
-import { RoomResolver } from './rooms/resolvers/room.resolver';
+import { RoomsResolver } from './rooms/resolvers/rooms.resolver';
 
 const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -35,7 +35,7 @@ const routes: Routes = [
             {path: 'listinghearings/search', component: HearingsSearchComponent, canActivate: [AppConfigGuard],
                 resolve: { judges: JudgesResolver, caseTypes: CaseTypesResolver, hearingTypes: HearingTypesResolver}},
             {path: 'listinghearings/assign', component: SessionsListingsSearchComponent, canActivate: [AppConfigGuard],
-                resolve: { judges: JudgesResolver, rooms: RoomResolver, sessionTypes: SessionTypesResolver}},
+                resolve: { judges: JudgesResolver, rooms: RoomsResolver, sessionTypes: SessionTypesResolver}},
             {path: 'hearing/:id', component: ViewHearingComponent, canActivate: [AppConfigGuard]}
         ],
         canActivate: [AuthGuard], resolve: { sessionTypes: StatusConfigResolver, judges: JudgesResolver }

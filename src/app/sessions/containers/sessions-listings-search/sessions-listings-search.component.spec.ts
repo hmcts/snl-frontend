@@ -6,7 +6,7 @@ import { SessionsListingsSearchComponent } from './sessions-listings-search.comp
 import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
 
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { DEFAULT_SESSION_FOR_LISTING, SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { AssignHearingData } from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 
 import { DEFAULT_HEARING_FOR_LISTING_WITH_NOTES } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
@@ -19,6 +19,8 @@ let sessionsTableMock: any;
 let matDialogSpy: any;
 let hearingService: any;
 let notesService: any;
+let sessionsService: any;
+let sessionsSearchCriteriaService: any;
 
 const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
@@ -28,13 +30,14 @@ const openDialogMockObjConfirmed = {
 // };
 
 let component: SessionsListingsSearchComponent;
-let mockedFullSession: SessionViewModel[];
+let mockedFullSession: SessionForListingWithNotes[];
 const nowMoment = moment();
 
 let roomsArray = [];
 let sessionTypesArray = [];
 let judgesArray = [];
 let hearingsArray = [];
+let sessionsArray = [];
 
 let hearing = {...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES, id: 'id', version: 1};
 
@@ -48,7 +51,7 @@ describe('SessionsListingsSearchComponent', () => {
         hearingsTableMock.tableSettingsSource$ = new BehaviorSubject(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
 
         sessionsTableMock = jasmine.createSpyObj('sessionsTableMock', ['clearSelection']);
-        sessionsTableMock.paginationSource$ = new BehaviorSubject(SessionTableComponent.DEFAULT_PAGING);
+        sessionsTableMock.tableSettingsSource$ = new BehaviorSubject(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
 
         sessionsFilterMock = jasmine.createSpyObj('sessionsFilterMock', ['filterSource$']);
         sessionsFilterMock.filterSource$ = new BehaviorSubject(DEFAULT_SESSION_FILTERS);
@@ -59,11 +62,19 @@ describe('SessionsListingsSearchComponent', () => {
         notesService = jasmine.createSpyObj('notesService', ['upsertManyNotes']);
         notesService.upsertManyNotes.and.returnValue(Observable.of(true));
 
+        sessionsService = jasmine.createSpyObj('sessionsService', ['assignToSession', 'getSessionsForListing']);
+        sessionsService.getSessionsForListing.and.returnValue(Observable.of({content: sessionsArray, totalElements: 0}));
+
+        sessionsSearchCriteriaService = jasmine.createSpyObj('sessionsSearchCriteriaService', ['convertToSearchCriterions']);
+        sessionsSearchCriteriaService.convertToSearchCriterions.and.returnValue([]);
+
         matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
         mockedFullSession = [defaultFullMockedSession()];
 
-        component = new SessionsListingsSearchComponent(hearingService, notesService, route, matDialogSpy);
+        component = new SessionsListingsSearchComponent(hearingService, notesService, sessionsService,
+            sessionsSearchCriteriaService, route, matDialogSpy);
+
         component.hearingsTable = hearingsTableMock;
         component.sessionsTable = sessionsTableMock;
         component.sessionFilter = sessionsFilterMock;
@@ -123,8 +134,8 @@ describe('SessionsListingsSearchComponent', () => {
                 hearingVersion: hearing.version,
                 sessionsData: [
                     {
-                        sessionId: mockedFullSession[0].id,
-                        sessionVersion: mockedFullSession[0].version
+                        sessionId: mockedFullSession[0].sessionId,
+                        sessionVersion: mockedFullSession[0].sessionVersion
                     }
                 ],
                 userTransactionId: jasmine.any(String),
@@ -165,19 +176,18 @@ describe('SessionsListingsSearchComponent', () => {
     });
 });
 
-function defaultFullMockedSession(): SessionViewModel {
+function defaultFullMockedSession(): SessionForListingWithNotes {
     return {
-        id: 'some-session-id',
-        start: nowMoment,
-        duration: 600,
-        room: undefined,
-        person: undefined,
-        sessionType: undefined,
-        hearingParts: [],
-        jurisdiction: 'some jurisdiction',
-        version: 1,
-        allocated: moment.duration('PT30M'),
-        utilization: 100,
+        ...DEFAULT_SESSION_FOR_LISTING,
+        sessionId: 'some-session-id',
+        startDate: nowMoment,
+        duration: moment.duration(600, 'minutes'),
+        roomId: undefined,
+        personId: undefined,
+        sessionTypeDescription: undefined,
+        sessionVersion: 1,
+        allocatedDuration: moment.duration('PT30M'),
+        utilisation: 20,
         available: moment.duration('PT0M'),
         notes: []
     };

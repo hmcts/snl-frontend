@@ -19,6 +19,7 @@ import { SessionSearchResponse } from '../../models/session-search-response.mode
 import { NotesService } from '../../../notes/services/notes.service';
 import { ActivatedRoute } from '@angular/router';
 import { SessionsService } from '../../services/sessions-service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-sessions-search',
@@ -26,6 +27,7 @@ import { SessionsService } from '../../services/sessions-service';
     styleUrls: ['./sessions-search.component.scss']
 })
 export class SessionsSearchComponent implements OnInit {
+
     rooms: Room[];
     judges: Judge[];
     sessionTypes: SessionType[];
@@ -52,8 +54,8 @@ export class SessionsSearchComponent implements OnInit {
             this.sessionTypes = sessionTypes;
         });
 
-        this.sessionFilterComponent.filterSource$.combineLatest(
-            this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
+        combineLatest(this.sessionFilterComponent.filterSource$.asObservable(),
+            this.sessionAmendmentTableComponent.tableSettings$.asObservable(), (filters: SessionFilters, tableSetting: TableSetting) => {
                 if (filters && tableSetting) {
                     if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
                         this.sessionAmendmentTableComponent.resetToFirstPage();
@@ -66,6 +68,21 @@ export class SessionsSearchComponent implements OnInit {
                 }
             }
         ).subscribe()
+        //
+        // this.sessionFilterComponent.filterSource$.asObservable().combineLatest(
+        //     this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
+        //         if (filters && tableSetting) {
+        //             if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
+        //                 this.sessionAmendmentTableComponent.resetToFirstPage();
+        //             }
+        //
+        //             const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
+        //             this.searchSessions(searchCriterions, tableSetting);
+        //             // create a deep copy
+        //             this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
+        //         }
+        //     }
+        // ).subscribe()
     }
 
     openAmendDialog(s: SessionSearchResponse) {
