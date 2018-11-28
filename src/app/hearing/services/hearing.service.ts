@@ -2,7 +2,7 @@ import { EntityTransaction } from './../../features/transactions/models/transact
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { AdjournHearingRequest, Hearing, UnlistHearingRequest, WithdrawHearingRequest } from '../models/hearing';
+import { AdjournHearingRequest, Hearing, UnlistHearingRequest, WithdrawHearingRequest, VacateHearingRequest } from '../models/hearing';
 import { Observable } from 'rxjs/Observable';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
@@ -92,6 +92,21 @@ export class HearingService {
 
         this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/withdraw`, JSON.stringify(withdrawHearingRequest), {
+                headers: {'Content-Type': 'application/json'}
+            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
+    vacate(hearing: Hearing) {
+        const vacateHearingRequest: VacateHearingRequest = {
+            hearingId: hearing.id,
+            hearingVersion: hearing.version,
+            userTransactionId: uuid()
+        };
+
+        this.removeEntitiesFromStateAndInitializeTransaction(vacateHearingRequest.userTransactionId);
+
+        this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing/vacate`, JSON.stringify(vacateHearingRequest), {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
     }
