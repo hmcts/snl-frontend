@@ -40,6 +40,7 @@ app.use(helmet.contentSecurityPolicy({
         frameSrc: [`'none'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         imgSrc: [`'self'`, '*.hmcts.net'],
         // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
         frameAncestors: [`'none'`],
         // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal']
     },
