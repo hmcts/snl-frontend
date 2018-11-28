@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { SearchCriteria } from './../../hearing-part/models/search-criteria';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
@@ -11,6 +12,10 @@ import { normalize } from 'normalizr';
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { getHttpFriendly } from '../../utils/date-utils';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
+import { SessionSearchResponse } from '../models/session-search-response.model';
+import { Page } from '../../problems/models/problem.model';
+import { PaginatedRequestOption } from '../models/paginated-request-option';
+import { SessionAmendResponse } from '../models/session-amend.response';
 
 @Injectable()
 export class SessionsService {
@@ -28,13 +33,32 @@ export class SessionsService {
             .pipe(map(data => {return normalize(data, sessions)}));
     }
 
+    paginatedSearchSessions(searchCriterions: SearchCriteria[], requestOptions: PaginatedRequestOption)
+        : Observable<Page<SessionSearchResponse>> {
+        let url = `${this.config.getApiUrl()}/sessions/search`
+        let httpParams: any = { }
+
+        if (requestOptions.pageSize !== undefined && requestOptions.pageIndex !== undefined) {
+            httpParams.size = requestOptions.pageSize;
+            httpParams.page = requestOptions.pageIndex;
+        }
+
+        if (requestOptions.sortByProperty !== undefined && requestOptions.sortDirection.length > 1) {
+            httpParams.sort = requestOptions.sortByProperty + ':' + requestOptions.sortDirection
+        }
+
+        return this.http.post<Page<SessionSearchResponse>>(url, searchCriterions, {
+            params: new HttpParams({ fromObject: httpParams })
+        })
+    }
+
     searchSessionsForDates(query: SessionQueryForDates): Observable<any> {
         const fromDate = getHttpFriendly(query.startDate);
         const toDate = getHttpFriendly(query.endDate);
 
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?startDate=${fromDate}&endDate=${toDate}`)
-            .pipe(map(data => { let normalized = normalize(data, sessionsWithHearings); console.log(normalized); return normalized }));
+            .pipe(map(data => { let normalized = normalize(data, sessionsWithHearings); return normalized }));
     }
 
     searchSessionsForJudge(parameters: DiaryLoadParameters): Observable<any> {
@@ -75,5 +99,9 @@ export class SessionsService {
                 `?judge=${parameters.judgeUsername}` +
                 `&startDate=${getHttpFriendly(parameters.startDate)}` +
                 `&endDate=${getHttpFriendly(parameters.endDate)}`;
+    }
+
+    getSessionAmendById(sessionId: string): Observable<SessionAmendResponse> {
+        return this.http.get<SessionAmendResponse>(`${this.config.getApiUrl()}/sessions/amend/${sessionId}`);
     }
 }

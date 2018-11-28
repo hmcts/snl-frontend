@@ -1,7 +1,6 @@
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
     <div fxFlex="25%">
         <app-sessions-filter
-                (filter)="filters$.next($event)"
                 [rooms]="rooms"
                 [judges]="judges"
                 [sessionTypes]="sessionTypes"
@@ -13,11 +12,11 @@
         <div class="heading">
             Sessions:
         </div>
-
         <div>
             <app-session-amendment-table
                     [sessions]="filteredSessions"
-                    (amend)="openAmendDialog($event)">
+                    (amend)="openAmendDialog($event)"
+                    [totalCount]="totalCount">
             </app-session-amendment-table>
         </div>
     </div>

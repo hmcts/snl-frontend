@@ -1,16 +1,22 @@
+import { HearingPartViewModel } from './../../hearing-part/models/hearing-part.viewmodel';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
 @Injectable()
 export class SessionsStatisticsService {
 
-    calculateAllocatedHearingsDuration(session): moment.Duration {
+    calculateAllocatedHearingsDuration(session: {hearingParts: HearingPartViewModel[], duration: moment.Duration|number}): moment.Duration {
         let allocated = moment.duration(); // NOSONAR not const
         if (session.hearingParts !== undefined) {
             session.hearingParts.forEach(hearingPart => {
-                allocated.add(moment.duration(hearingPart.duration));
+                if (hearingPart.multiSession) {
+                    allocated.add(moment.duration(session.duration));
+                } else {
+                    allocated.add(moment.duration(hearingPart.duration));
+                }
             });
         }
+
         return allocated;
     }
 

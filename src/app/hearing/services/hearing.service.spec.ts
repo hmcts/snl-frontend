@@ -16,7 +16,7 @@ let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
 const HEARING: Hearing = {
   id: 'some-id',
   hearingPartsVersions: [{id: 'id1', version: 'ver1'}],
-  hearingVersion: 4
+  version: 4
 } as Hearing
 
 const filteredHearingViewModelResponse = {
@@ -130,7 +130,7 @@ describe('HearingService', () => {
         return request.method === 'PUT' &&
           request.url === '/hearing/adjourn' &&
           body.hearingId === HEARING.id &&
-          body.hearingVersion === HEARING.hearingVersion
+          body.hearingVersion === HEARING.version
       }).flush({});
 
       httpMock.verify()

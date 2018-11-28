@@ -87,8 +87,17 @@ export class PossibleHearingActionsService {
     }
 
     private openWithdrawDialog(): Observable<any> {
-       // TODO add withdrawn
-       return Observable.of(null)
+        const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {
+                title: 'Withdraw hearing',
+                message: 'Are you sure you want to withdraw this hearing? ' +
+                    'Once the hearing has been withdrawn it cannot be undone.',
+            },
+            width: '350px'
+        });
+
+        return confirmationDialogRef.afterClosed();
     }
 
     private confirmationDialogClosed = (confirmed: boolean, callService: () => void, hearing: Hearing, summaryDialogText: string) => {

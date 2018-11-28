@@ -163,7 +163,12 @@ export class ListingCreateComponent implements OnInit {
     afterClosed(confirmed) {
         if (confirmed) {
             this.createNotes();
+            if (!this.editMode) {
+                this.initiateListing();
+                this.setFormGroup();
+            }
         }
+
         if (this.editMode) {
             this.afterEdit();
         }
@@ -247,10 +252,8 @@ export class ListingCreateComponent implements OnInit {
                 this.listing.hearing.multiSession, [Validators.required]
             ),
             listingType: new FormGroup({
-                duration: new FormControl({
-                        value: this.listing.hearing.duration,
-                        disabled: this.editMode && this.listing.hearing.multiSession
-                    },
+                duration: new FormControl(
+                    this.getDurationToDisplay(),
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
                 numberOfSessions: new FormControl({
@@ -265,6 +268,17 @@ export class ListingCreateComponent implements OnInit {
                 targetTo: new FormControl(this.listing.hearing.scheduleEnd),
             }, this.validateTargetDates)
         });
+    }
+
+    private getDurationToDisplay() {
+        if (this.listing.hearing.duration) {
+            if (this.listing.hearing.multiSession) {
+                return this.asDaysPipe.transform(this.listing.hearing.duration);
+            } else {
+                return this.listing.hearing.duration.asMinutes();
+            }
+        }
+        return undefined;
     }
 
     private openDialog(actionTitle: string) {

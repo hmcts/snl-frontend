@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HearingService } from '../../services/hearing.service';
 import { Observable } from 'rxjs/Observable';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Hearing, Session } from '../../models/hearing';
+import { Hearing } from '../../models/hearing';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { HearingActions } from '../../models/hearing-actions';
@@ -15,7 +15,6 @@ import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/li
 import { NotesService } from '../../../notes/services/notes.service';
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
-import { Status } from '../../../core/reference/models/status.model';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
 
@@ -27,16 +26,9 @@ const START_DATE = '01/01/2010';
 const ISO_START_DATE = '2010-01-01T00:00:00+00:00';
 const END_DATE = '12/12/2012';
 const ISO_END_DATE = '2012-12-12T00:00:00+00:00';
-const SESSION = { } as Session
 const HEARING = {
   id: HEARING_ID,
   sessions: []
-} as Hearing
-
-const HEARING_WITH_SESSIONS = {
-  id: HEARING_ID,
-  sessions: [SESSION],
-  status: Status.Listed
 } as Hearing
 
 const hearingServiceMock = {
@@ -154,18 +146,6 @@ describe('ViewHearingComponent', () => {
     })
   });
 
-  describe('isListed', () => {
-    it('should return true if hearing have hearing parts that are assigned to session', () => {
-      component.hearing = HEARING_WITH_SESSIONS
-      expect(component.isListed()).toBeTruthy()
-    })
-
-    it('should return false if hearing have not hearing parts that are assigned to session', () => {
-      component.hearing = HEARING
-      expect(component.isListed()).toBeFalsy()
-    })
-  });
-
   describe('onActionChanged', () => {
     it('should call PossibleHearingActionsService.handleAction', () => {
       component.actionSelect = jasmine.createSpyObj('MatSelect', ['writeValue'])
@@ -214,10 +194,5 @@ describe('ViewHearingComponent', () => {
     } as Hearing;
 
     expect(component.getListBetween()).toEqual('');
-  });
-
-  it('formatDuration formats duration to HHmm', () => {
-    const duration = component.formatDuration('PT30M');
-    expect(duration).toEqual('00:30');
   });
 });

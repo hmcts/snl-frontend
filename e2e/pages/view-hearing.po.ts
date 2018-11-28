@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
 
 export class ViewHearingPage {
-    private header = element(by.id('case-number'));
+    private header = element(by.id('case-number')).$('.case-number');
 
     async waitUntilVisible() {
         await browser.wait(

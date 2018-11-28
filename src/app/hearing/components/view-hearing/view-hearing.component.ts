@@ -11,8 +11,6 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
 import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
-import { formatDuration } from '../../../utils/date-utils';
-import { Status } from '../../../core/reference/models/status.model';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
 
@@ -62,59 +60,51 @@ export class ViewHearingComponent implements OnInit {
     return moment(date).format();
   }
 
-  formatDuration(duration: string): string {
-    return formatDuration(moment.duration(duration))
-  }
-
   getListBetween() {
-    const start = this.hearing.scheduleStart;
-    const end = this.hearing.scheduleEnd;
+        const start = this.hearing.scheduleStart;
+        const end = this.hearing.scheduleEnd;
 
-    if (!start && !end) {
-      return '';
+        if (!start && !end) {
+            return '';
+        }
+
+        if (start && !end) {
+            return 'after ' + this.formatDate(start);
+        }
+
+        if (!start && end) {
+            return 'before ' + this.formatDate(end);
+        }
+
+        if (start && end) {
+            return this.formatDate(start)
+                + ' - '
+                + this.formatDate(end);
+        }
     }
 
-    if (start && !end) {
-      return 'after ' + this.formatDate(start);
+    isSessionPanelDisabled(session: Session) {
+        return session.notes === undefined || session.notes.length === 0;
     }
 
-    if (!start && end) {
-      return 'before ' + this.formatDate(end);
+    onActionChanged(event: {value: HearingActions}) {
+        this.possibleActionsService.handleAction(event.value, this.hearing);
+        this.actionSelect.writeValue(HearingActions.Actions)
     }
 
-    if (start && end) {
-      return this.formatDate(start)
-        + ' - '
-        + this.formatDate(end);
+    onSubmit(note: NoteViewmodel) {
+        const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
+        this.notesService.upsertMany(preparedNote).subscribe(() => {
+          this.fetchHearing();
+          this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
+        });
     }
-  }
 
-  onActionChanged(event: {value: HearingActions}) {
-    this.possibleActionsService.handleAction(event.value, this.hearing);
-    this.actionSelect.writeValue(HearingActions.Actions)
-  }
+    goBack() {
+        this.location.back();
+    }
 
-  isSessionPanelDisabled(session: Session) {
-    return session.notes === undefined || session.notes.length === 0;
-  }
-
-  goBack() {
-    this.location.back();
-  }
-
-  isListed() {
-    return this.hearing.status === Status.Listed;
-  }
-
-  onSubmit(note: NoteViewmodel) {
-    const preparedNote = this.notesPreparerService.prepare([note], this.hearingId, this.listingCreateNotesConfiguration.entityName);
-    this.notesService.upsertMany(preparedNote).subscribe(() => {
-      this.fetchHearing();
-      this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
-    });
-  }
-
-  private fetchHearing() {
-    this.hearingService.getById(this.hearingId);
-  }
+    private fetchHearing() {
+        this.hearingService.getById(this.hearingId);
+    }
 }
