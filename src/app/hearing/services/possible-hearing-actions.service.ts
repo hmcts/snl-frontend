@@ -31,6 +31,12 @@ export class PossibleHearingActionsService {
             openDialog: () => this.openWithdrawDialog(),
             callService: (hearing) => this.hearingService.withdraw(hearing),
             summaryText: 'Withdraw hearing '
+        },
+        [HearingActions.Vacate]: {
+            enabled: false,
+            openDialog: () => this.openVacateDialog(),
+            callService: (hearing) => this.hearingService.vacate(hearing),
+            summaryText: 'Vacate hearing'
         }
     };
 
@@ -39,7 +45,7 @@ export class PossibleHearingActionsService {
     }
 
     public handleAction(value: HearingActions, hearing: Hearing) {
-        const action = this.possibleActions[value] as PossibleActionConfig;
+        const action: PossibleActionConfig = this.possibleActions[value];
 
         if (action.enabled) {
             action.openDialog().subscribe((confirmed) => {
@@ -93,6 +99,20 @@ export class PossibleHearingActionsService {
                 title: 'Withdraw hearing',
                 message: 'Are you sure you want to withdraw this hearing? ' +
                     'Once the hearing has been withdrawn it cannot be undone.',
+            },
+            width: '350px'
+        });
+
+        return confirmationDialogRef.afterClosed();
+    }
+
+    private openVacateDialog(): Observable<any> {
+        const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {
+                title: 'Vacate hearing',
+                message: 'Are you sure you want to vacate this hearing? ' +
+                    'Once the hearing has been vacated it cannot be undone.',
             },
             width: '350px'
         });
