@@ -223,7 +223,7 @@ export class ListingCreateComponent implements OnInit {
                 reservedJudgeId: undefined,
                 communicationFacilitator: undefined,
                 userTransactionId: undefined,
-                numberOfSessions: 1,
+                numberOfSessions: 2,
                 multiSession: false,
             },
             notes: []
@@ -260,7 +260,7 @@ export class ListingCreateComponent implements OnInit {
                         value:  this.listing.hearing.numberOfSessions,
                         disabled: this.editMode && this.listing.hearing.multiSession
                     },
-                    [Validators.min(1)]
+                    [Validators.min(2)]
                 )
             }),
             targetDates: new FormGroup({
