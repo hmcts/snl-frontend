@@ -88,11 +88,9 @@ export class HearingService {
             userTransactionId: uuid()
         };
 
-        this.store.dispatch(new RemoveAll());
-        this.store.dispatch(new InitializeTransaction({ id: withdrawHearingRequest.userTransactionId } as EntityTransaction));
-        this.store.dispatch(new fromHearingParts.RemoveAll());
+        this.removeEntitiesFromStateAndInitializeTransaction(withdrawHearingRequest.userTransactionId);
 
-        return this.http
+        this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/withdraw`, JSON.stringify(withdrawHearingRequest), {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
