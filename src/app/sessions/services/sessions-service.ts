@@ -69,9 +69,7 @@ export class SessionsService {
     searchSessions(query: SessionQuery): Observable<any> {
         return this.http
             .get<Session[]>(`${this.config.getApiUrl()}/sessions?date=${query.date}`)
-            .pipe(map(data => {
-                return normalize(data, sessions)
-            }));
+            .pipe(map(data => {return normalize(data, sessions)}));
     }
 
     paginatedSearchSessions(searchCriterions: SearchCriteria[], requestOptions: PaginatedRequestOption)

@@ -154,7 +154,8 @@ describe('ViewHearingComponent', () => {
   describe('openConfirmationDialog', () => {
     it('Should open dialog', () => {
       matDialogSpy.open.and.returnValue(openDialogMockObjDeclined);
-      component.openConfirmationDialog()
+      component.openConfirmationDialog('Unlist hearing', 'Are you sure you want to unlist this hearing? ' +
+          'Once you do this you will need to relist the hearing and all subsequent hearing parts.', null);
       expect(matDialogSpy.open).toHaveBeenCalled()
     })
   });

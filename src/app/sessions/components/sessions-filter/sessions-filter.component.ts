@@ -17,15 +17,7 @@ export class SessionsFilterComponent implements OnInit {
     @Input() judges: Judge[];
     @Input() sessionTypes: SessionType[];
 
-    roomsPlaceholder: string;
-    judgesPlaceholder: string;
-
     filters: SessionFilters;
-
-    constructor() {
-        this.roomsPlaceholder = 'Select the room';
-        this.judgesPlaceholder = 'Select the judge';
-    }
 
     ngOnInit() {
         this.filters = this.filterSource$.getValue();

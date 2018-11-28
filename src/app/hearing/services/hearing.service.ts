@@ -2,7 +2,7 @@ import { EntityTransaction } from './../../features/transactions/models/transact
 import { Injectable } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Hearing, UnlistHearingRequest } from '../models/hearing';
+import { WithdrawHearingRequest, Hearing, UnlistHearingRequest } from '../models/hearing';
 import { Observable } from 'rxjs/Observable';
 import { NotesPopulatorService } from '../../notes/services/notes-populator.service';
 import { Transaction } from '../../features/transactions/services/transaction-backend.service';
@@ -84,6 +84,23 @@ export class HearingService {
 
         return this.http
             .post<Transaction>(`${this.config.getApiUrl()}/hearing-part/delete`, hearingDeletion, {
+                headers: {'Content-Type': 'application/json'}
+            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
+    withdraw(hearing: Hearing) {
+        const withdrawHearingRequest: WithdrawHearingRequest = {
+            hearingId: hearing.id,
+            hearingVersion: hearing.version,
+            userTransactionId: uuid()
+        };
+
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: withdrawHearingRequest.userTransactionId } as EntityTransaction));
+        this.store.dispatch(new fromHearingParts.RemoveAll());
+
+        return this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing/withdraw`, JSON.stringify(withdrawHearingRequest), {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
     }

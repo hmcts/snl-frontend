@@ -1,32 +1,24 @@
 import { SessionsFilterComponent } from './../../components/sessions-filter/sessions-filter.component';
 import { SearchCriteria } from './../../../hearing-part/models/search-criteria';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromSessions from '../../reducers';
-import * as fromJudges from '../../../judges/reducers';
-import * as fromReferenceData from '../../../core/reference/reducers';
-import * as RoomActions from '../../../rooms/actions/room.action';
-import * as JudgeActions from '../../../judges/actions/judge.action';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
-import { asArray } from '../../../utils/array-utils';
 import { SessionType } from '../../../core/reference/models/session-type';
 import { SessionAmendDialogComponent } from '../../components/session-amend-dialog/session-amend-dialog';
 import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialog-data.model';
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
 import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
-import { SessionsService } from '../../services/sessions-service';
 import { TableSetting } from '../../models/table-settings.model';
 import { SessionAmendmentTableComponent } from '../../components/session-amendment-table/session-amendment-table.component';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { NotesService } from '../../../notes/services/notes.service';
+import { ActivatedRoute } from '@angular/router';
+import { SessionsService } from '../../services/sessions-service';
 
 @Component({
     selector: 'app-sessions-search',
@@ -41,29 +33,36 @@ export class SessionsSearchComponent implements OnInit {
     totalCount: number;
     savedSearchCriterion: SearchCriteria[];
     savedTableSettings: TableSetting;
+    savedSessionFilters: SessionFilters;
 
     @ViewChild(SessionsFilterComponent) sessionFilterComponent: SessionsFilterComponent;
     @ViewChild(SessionAmendmentTableComponent) sessionAmendmentTableComponent: SessionAmendmentTableComponent;
 
-    constructor(private readonly store: Store<fromHearingParts.State>,
+    constructor(private route: ActivatedRoute,
                 private readonly sessionService: SessionsService,
                 private readonly sessionSearchCriteriaService: SessionSearchCriteriaService,
                 private readonly notesService: NotesService,
                 public dialog: MatDialog) {
-        this.store.pipe(select(fromSessions.getRooms), map(asArray)).subscribe(rooms => { this.rooms = rooms as Room[]});
-        this.store.pipe(select(fromJudges.getJudges), map(asArray)).subscribe(judges => { this.judges = judges as Judge[]});
-        this.store.pipe(select(fromReferenceData.selectSessionTypes)).subscribe(sessionTypes => this.sessionTypes = sessionTypes);
     }
 
     ngOnInit() {
-        this.store.dispatch(new RoomActions.Get());
-        this.store.dispatch(new JudgeActions.Get());
+        this.route.data.subscribe(({judges, rooms, sessionTypes}) => {
+            this.judges = judges;
+            this.rooms = rooms;
+            this.sessionTypes = sessionTypes;
+        });
 
         this.sessionFilterComponent.filterSource$.combineLatest(
             this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
                 if (filters && tableSetting) {
+                    if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
+                        this.sessionAmendmentTableComponent.resetToFirstPage();
+                    }
+
                     const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
                     this.searchSessions(searchCriterions, tableSetting);
+                    // create a deep copy
+                    this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
                 }
             }
         ).subscribe()
