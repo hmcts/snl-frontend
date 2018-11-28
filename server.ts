@@ -30,15 +30,16 @@ app.use(helmet.referrerPolicy({
 // CSP settings
 app.use(helmet.contentSecurityPolicy({
     directives: {
-        defaultSrc: [`'self'`, '*.hmcts.net'],
+        defaultSrc: [`'self'`],
         // [`'self'`], // , '*.hmcts.net', '*.core-compute-preview.internal:*', '*.core-compute-aat.internal:*'],
-        fontSrc: [`'self' data:`], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        scriptSrc: [`'self'`, `'unsafe-inline'`],
+        fontSrc: [`'self' data:`, '*.hmcts.net'], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        scriptSrc: [`'self'`, '*.hmcts.net'],
         // '*.hmcts.net', 'www.google-analytics.com', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        mediaSrc: [`'self'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal', '*.hmcts.net'],
+        mediaSrc: [`'self'`, '*.hmcts.net'], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         frameSrc: [`'none'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        imgSrc: [`'self'`], // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        imgSrc: [`'self'`, '*.hmcts.net'],
+        // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         frameAncestors: [`'none'`],
         // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal']
     },
