@@ -12,7 +12,11 @@ import { State } from '../../hearing-part/reducers/hearing.reducer';
 import { RemoveAll } from '../../problems/actions/problem.action';
 import { v4 as uuid } from 'uuid';
 import { BehaviorSubject } from 'rxjs';
-import { FilteredHearingViewmodel, HearingSearchResponseForAmendment } from '../../hearing-part/models/filtered-hearing-viewmodel';
+import {
+    FilteredHearingViewmodel,
+    HearingSearchResponseForAmendment,
+    HearingViewmodelForAmendment, mapToUpdateHearingRequest
+} from '../../hearing-part/models/filtered-hearing-viewmodel';
 import * as moment from 'moment';
 import { map, mergeMap, tap } from 'rxjs/operators';
 import { SearchHearingRequest } from '../../hearing-part/models/search-hearing-request';
@@ -27,6 +31,7 @@ import { NotesService } from '../../notes/services/notes.service';
 import { Note } from '../../notes/models/note.model';
 import { HearingDeletion } from '../../hearing-part/models/hearing-deletion';
 import { HearingToSessionAssignment } from '../../hearing-part/models/hearing-to-session-assignment';
+import { UpdateHearingRequest } from '../../hearing-part/models/update-hearing-request';
 
 @Injectable()
 export class HearingService {
@@ -121,6 +126,18 @@ export class HearingService {
                     return this.parseDatesAndDurations(hearing);
                 }
             ));
+    }
+
+    updateListing(hearingForAmendment: HearingViewmodelForAmendment) {
+        let update: UpdateHearingRequest = mapToUpdateHearingRequest(hearingForAmendment,  uuid());
+
+        this.store.dispatch(new RemoveAll());
+        this.store.dispatch(new InitializeTransaction({ id: update.userTransactionId } as EntityTransaction));
+
+        this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/update`, JSON.stringify(update), {
+                headers: {'Content-Type': 'application/json'}
+            }).pipe(tap((data => this.store.dispatch(new UpdateTransaction(data))))).subscribe();
     }
 
     getHearingsForListing(request: SearchHearingRequest): Observable<Page<HearingForListingWithNotes>> {

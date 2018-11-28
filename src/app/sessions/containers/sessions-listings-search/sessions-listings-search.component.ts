@@ -38,7 +38,6 @@ import { forkJoin } from 'rxjs/observable/forkJoin';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import { HearingSearchResponseForAmendment } from '../../../hearing-part/models/filtered-hearing-viewmodel';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
-import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
 import { CaseType } from '../../../core/reference/models/case-type';
 
 @Component({
@@ -77,7 +76,6 @@ export class SessionsListingsSearchComponent implements OnInit {
     savedSessionFilters: SessionFilters;
 
     constructor(public hearingService: HearingService,
-                public hearingPartModificationService: HearingModificationService,
                 public notesService: NotesService,
                 public sessionsService: SessionsService,
                 public sessionSearchCriteriaService: SessionSearchCriteriaService,
@@ -195,7 +193,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             }),
             filter(amendedHearing => amendedHearing !== undefined),
             tap(amendedHearing => {
-                this.hearingPartModificationService.updateListingRequest(amendedHearing);
+                this.hearingService.updateListing(amendedHearing);
                 this.openDialog('Editing listing request', amendedHearing.notes);
             })
         ).subscribe()

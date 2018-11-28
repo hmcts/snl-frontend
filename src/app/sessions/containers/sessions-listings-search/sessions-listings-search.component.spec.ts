@@ -50,7 +50,7 @@ describe('SessionsListingsSearchComponent', () => {
         hearingsTableMock = jasmine.createSpyObj('hearingsTableMock', ['clearSelection']);
         hearingsTableMock.tableSettingsSource$ = new BehaviorSubject(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
 
-        sessionsTableMock = jasmine.createSpyObj('sessionsTableMock', ['clearSelection']);
+        sessionsTableMock = jasmine.createSpyObj('sessionsTableMock', ['clearSelection', 'goToFirstPage']);
         sessionsTableMock.tableSettingsSource$ = new BehaviorSubject(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
 
         sessionsFilterMock = jasmine.createSpyObj('sessionsFilterMock', ['filterSource$']);
