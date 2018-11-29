@@ -64,7 +64,7 @@ export class PossibleHearingActionsService {
         return this.possibleActions;
     }
 
-    private openAdjournDialog() {
+    private openAdjournDialog() { // NOSONAR
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
@@ -78,7 +78,7 @@ export class PossibleHearingActionsService {
         return confirmationDialogRef.afterClosed();
     }
 
-    private openUnlistDialog() {
+    private openUnlistDialog() { // NOSONAR
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
@@ -92,7 +92,7 @@ export class PossibleHearingActionsService {
         return confirmationDialogRef.afterClosed();
     }
 
-    private openWithdrawDialog(): Observable<any> {
+    private openWithdrawDialog(): Observable<any> { // NOSONAR
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
