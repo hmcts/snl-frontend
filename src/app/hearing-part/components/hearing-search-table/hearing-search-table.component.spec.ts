@@ -51,12 +51,12 @@ describe('HearingSearchTableComponent', () => {
     component.paginator = {
         page: Observable.of({})
     } as MatPaginator;
-    component.hearings = [generateHearing('123', moment().add(1, 'day'))];
+    component.hearings = [generateHearing('123')];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearings[0]).toEqual(generateHearing('123', moment().add(1, 'day')));
+      expect(component.hearings[0]).toEqual(generateHearing('123'));
     });
   });
 
@@ -112,7 +112,7 @@ describe('HearingSearchTableComponent', () => {
     });
 });
 
-function generateHearing(id: string, listingDate: moment.Moment): FilteredHearingViewmodel {
+function generateHearing(id: string): FilteredHearingViewmodel {
     return {
         id: id,
         caseNumber: null,
@@ -129,7 +129,7 @@ function generateHearing(id: string, listingDate: moment.Moment): FilteredHearin
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudgeName: null,
-        listingDate: listingDate,
+        listingDate: null,
         status: Status.Listed,
         multiSession: null,
         numberOfSessions: null
