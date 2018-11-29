@@ -39,6 +39,7 @@ export class HearingAmendComponent {
             this.chosenListingType = ListingTypeTab.Single
         }
 
+        this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
         this.setFormGroup();
     }
 
@@ -73,6 +74,7 @@ export class HearingAmendComponent {
     public numberOfSeconds = 60;
     public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
+    public limitSessionsMaxValue: number;
 
     constructor(private readonly asDaysPipe: DurationAsDaysPipe) {}
 
@@ -116,44 +118,10 @@ export class HearingAmendComponent {
 
     onListingTypeChange(event: MatRadioChange) {
         this.chosenListingType = Number.parseInt(event.value);
-        this.listing.hearing.numberOfSessions = this.chosenListingType === ListingTypeTab.Multi ? 2 : 1;
-        this.listingRequestFormGroup.controls['listingType']['controls']['numberOfSessions'].setValidators(
-            [Validators.min(this.chosenListingType === ListingTypeTab.Multi ? 2 : 1)]
-        );
-        this.setDurationToDisplay();
-    }
-
-    setDurationToDisplay() {
-        if (this.listing.hearing.duration) {
-            if (this.listing.hearing.multiSession) {
-                return this.asDaysPipe.transform(this.listing.hearing.duration);
-            } else {
-                if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
-                    this.listing.hearing.duration = moment.duration((24 * 60) - 1, 'minutes');
-                } else {
-                    return this.listing.hearing.duration.asMinutes();
-                }
-            }
-        }
-        return undefined;
     }
 
     isMultiSession(): boolean {
         return this.listing.hearing.multiSession;
-    }
-
-    updateNumberOfSessions(event) {
-        if (this.listing.hearing.multiSession) {
-            this.listing.hearing.numberOfSessions = event.numberOfSessions;
-            this.listingRequestFormGroup.controls['listingType']['controls']['numberOfSessions'].setValidators(
-                [Validators.min(2)]
-            );
-        } else {
-            this.listing.hearing.numberOfSessions = 1;
-            this.listingRequestFormGroup.controls['listingType']['controls']['numberOfSessions'].setValidators(
-                [Validators.min(1)]
-            );
-        }
     }
 
     parseDate(date) {
@@ -196,7 +164,10 @@ export class HearingAmendComponent {
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
                 numberOfSessions: new FormControl(
-                    this.listing.hearing.numberOfSessions, [Validators.min(this.listing.hearing.multiSession ? 2 : 1)]
+                    this.listing.hearing.numberOfSessions, [
+                        Validators.min(this.listing.hearing.multiSession ? 2 : 1),
+                        Validators.max(this.listing.hearing.status === Status.Listed ? this.limitSessionsMaxValue : undefined)
+                    ]
                 )
             }),
             targetDates: new FormGroup({
