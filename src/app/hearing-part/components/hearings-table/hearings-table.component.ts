@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment'
 import { SelectionModel } from '@angular/cdk/collections';
@@ -14,6 +14,7 @@ import { HearingService } from '../../../hearing/services/hearing.service';
 import { v4 as uuid } from 'uuid';
 import { filter, mergeMap, take, tap } from 'rxjs/operators';
 import { TableSettings } from '../../models/table-settings.model';
+import { HearingForListingColumn } from '../../models/hearing-for-listing-column.model';
 
 @Component({
     selector: 'app-hearings-table',
@@ -21,7 +22,7 @@ import { TableSettings } from '../../models/table-settings.model';
     styleUrls: ['./hearings-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HearingsTableComponent implements OnChanges {
+export class HearingsTableComponent implements AfterViewChecked {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
@@ -29,7 +30,10 @@ export class HearingsTableComponent implements OnChanges {
         sortDirection: 'asc'
     };
 
-    @Input() hearings: HearingForListingWithNotes[];
+    @Input() set hearings(hearings: HearingForListingWithNotes[]) {
+        this._hearings = hearings;
+        this.dataSource = new MatTableDataSource(Object.values(this._hearings));
+    };
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onEdit = new EventEmitter();
@@ -37,23 +41,25 @@ export class HearingsTableComponent implements OnChanges {
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
+    _hearings: HearingForListingWithNotes[];
+    hearingForListingColumn = HearingForListingColumn;
     tableSettingsSource$: BehaviorSubject<TableSettings> =
         new BehaviorSubject<TableSettings>(HearingsTableComponent.DEFAULT_TABLE_SETTINGS);
     hearingSelectionModel: SelectionModel<HearingForListingWithNotes>;
     dataSource: MatTableDataSource<HearingForListingWithNotes>;
     displayedColumns = [
-        'case_number',
-        'case_title',
-        'case_type_description',
-        'hearing_type_description',
-        'duration',
-        'communication_facilitator',
-        'priority',
-        'reserved_judge_name',
-        'number_of_sessions',
+        HearingForListingColumn.CaseNumber,
+        HearingForListingColumn.CaseTitle,
+        HearingForListingColumn.CaseTypeDescription,
+        HearingForListingColumn.HearingTypeDescription,
+        HearingForListingColumn.Duration,
+        HearingForListingColumn.CommunicationFacilitator,
+        HearingForListingColumn.Priority,
+        HearingForListingColumn.ReservedJudgeName,
+        HearingForListingColumn.NumberOfSessions,
         'notes',
-        'schedule_start',
-        'schedule_end',
+        HearingForListingColumn.ScheduleStart,
+        HearingForListingColumn.ScheduleEnd,
         'select_hearing',
         'delete',
         'editor'
@@ -63,8 +69,8 @@ export class HearingsTableComponent implements OnChanges {
         this.hearingSelectionModel = new SelectionModel<HearingForListingWithNotes>(false, []);
     }
 
-    ngOnChanges() {
-        this.dataSource = new MatTableDataSource(Object.values(this.hearings));
+    ngAfterViewChecked() {
+        this.sort.disableClear = true;
     }
 
     parseDate(date) {

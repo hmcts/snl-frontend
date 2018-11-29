@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -13,7 +13,7 @@ import { SessionSearchColumn } from '../../models/session-search-column';
     templateUrl: './session-table.component.html',
     styleUrls: ['./session-table.component.scss']
 })
-export class SessionTableComponent implements OnChanges, OnInit {
+export class SessionTableComponent implements AfterViewChecked {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
@@ -27,14 +27,18 @@ export class SessionTableComponent implements OnChanges, OnInit {
     @Output() selectSessions = new EventEmitter();
     @Output() viewNotes = new EventEmitter();
 
-    @Input() sessions: SessionForListingWithNotes[];
+    @Input() set sessions(sessions: SessionForListingWithNotes[]) {
+        this._sessions = sessions;
+        this.dataSource = new MatTableDataSource(this._sessions);
+    };
     @Input() totalCount: number;
 
+    _sessions: SessionForListingWithNotes[] = [];
     tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
     selectedSessionIds: SelectionModel<string>;
     selectedSessions: SessionForListingWithNotes[] = [];
 
-    sessionSearchColumns = SessionSearchColumn
+    sessionSearchColumns = SessionSearchColumn;
     displayedColumns = [
         SessionSearchColumn.SessionTypeDescription,
         SessionSearchColumn.StartDate,
@@ -51,13 +55,14 @@ export class SessionTableComponent implements OnChanges, OnInit {
     ];
 
     dataSource: MatTableDataSource<any>;
-    tableVisible;
+    tableVisible = true;
 
     constructor() {
         this.selectedSessionIds = new SelectionModel<string>(true, []);
-        this.tableVisible = false;
+    }
 
-        this.dataSource = new MatTableDataSource(this.sessions);
+    ngAfterViewChecked() {
+        this.sort.disableClear = true;
     }
 
     goToFirstPage() {
@@ -101,7 +106,7 @@ export class SessionTableComponent implements OnChanges, OnInit {
             }
         } else {
             if (selected) {
-                this.selectedSessions.push(this.sessions.find(s => s.sessionId === id));
+                this.selectedSessions.push(this._sessions.find(s => s.sessionId === id));
             }
         }
 
@@ -110,17 +115,6 @@ export class SessionTableComponent implements OnChanges, OnInit {
 
     clearSelection() {
         this.selectedSessionIds.clear();
-    }
-
-    ngOnInit() {
-        this.dataSource = new MatTableDataSource(Object.values(this.sessions));
-    }
-
-    ngOnChanges() {
-        if (this.sessions) {
-            this.tableVisible = true;
-            this.dataSource = new MatTableDataSource(this.sessions);
-        }
     }
 
     nextTableSettingsValue() {

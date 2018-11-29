@@ -7,17 +7,17 @@ import * as moment from 'moment';
 import { fromString, Status } from '../../core/reference/models/status.model';
 
 export interface HearingForListingWithNotes {
-    id: string; //
-    caseNumber: string; //
-    caseTitle: string; //
-    caseType: CaseType; // dojoinowac case type
-    hearingType: HearingType; // dojoinowac hearing type
-    duration: moment.Duration; //
-    scheduleStart: moment.Moment; //
-    scheduleEnd: moment.Moment; //
-    notes: Note[]; // dociągnąć
-    version: number; //
-    priority: Priority; //
+    id: string;
+    caseNumber: string;
+    caseTitle: string;
+    caseType: CaseType;
+    hearingType: HearingType;
+    duration: moment.Duration;
+    scheduleStart: moment.Moment;
+    scheduleEnd: moment.Moment;
+    notes: Note[];
+    version: number;
+    priority: Priority;
     communicationFacilitator: string;
     reservedJudge: Judge;
     reservedJudgeId: string;
@@ -47,16 +47,16 @@ export const DEFAULT_HEARING_FOR_LISTING_WITH_NOTES: HearingForListingWithNotes 
 };
 
 export interface HearingForListing {
-    id: string; //
-    caseNumber: string; //
-    caseTitle: string; //
-    caseType: CaseType; // dojoinowac case type
-    hearingType: HearingType; // dojoinowac hearing type
-    duration: moment.Duration; //
-    scheduleStart: moment.Moment; //
-    scheduleEnd: moment.Moment; //
-    version: number; //
-    priority: Priority; //
+    id: string;
+    caseNumber: string;
+    caseTitle: string;
+    caseType: CaseType;
+    hearingType: HearingType;
+    duration: moment.Duration;
+    scheduleStart: moment.Moment;
+    scheduleEnd: moment.Moment;
+    version: number;
+    priority: Priority;
     communicationFacilitator: string;
     reservedJudge: Judge;
     reservedJudgeId: string;
@@ -66,18 +66,18 @@ export interface HearingForListing {
 }
 
 export interface HearingForListingResponse {
-    id: string; //
-    caseNumber: string; //
-    caseTitle: string; //
-    caseTypeCode: string; // dojoinowac case type
-    caseTypeDescription: string; // dojoinowac case type
-    hearingTypeCode: string; // dojoinowac hearing type
-    hearingTypeDescription: string; // dojoinowac hearing type
-    duration: string; //
-    scheduleStart: string; //
-    scheduleEnd: string; //
-    version: number; //
-    priority: number; //
+    id: string;
+    caseNumber: string;
+    caseTitle: string;
+    caseTypeCode: string;
+    caseTypeDescription: string;
+    hearingTypeCode: string;
+    hearingTypeDescription: string;
+    duration: string;
+    scheduleStart: string;
+    scheduleEnd: string;
+    version: number;
+    priority: number;
     communicationFacilitator: string;
     reservedJudgeName: string;
     reservedJudgeId: string;

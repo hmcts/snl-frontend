@@ -27,12 +27,12 @@ describe('HearingsTableComponent', () => {
     });
 
     describe('Initial state ', () => {
-        it('should include priority', () => {
+        it('should have hearings initialized', () => {
             expect(component.hearings[0]).toEqual(generateHearings('123'));
         });
     });
 
-    describe('', () => {
+    describe('Component ', () => {
         it('should define datasource', () => {
             component.ngOnChanges()
 

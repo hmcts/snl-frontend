@@ -12,13 +12,12 @@ import { Page } from '../../problems/models/problem.model';
 import { NotesService } from '../../notes/services/notes.service';
 
 let service: HearingService;
-// let notesService: NotesService;
 let httpMock: HttpTestingController;
 let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
 const HEARING: Hearing = {
     id: 'some-id',
     hearingPartsVersions: [{id: 'id1', version: 'ver1'}]
-} as Hearing
+} as Hearing;
 
 const filteredHearingViewModelResponse = {
     'id': '6425fe9e-43d9-4abb-b122-26a681cd6c33',
@@ -81,7 +80,6 @@ describe('HearingService', () => {
         }).compileComponents();
 
         service = TestBed.get(HearingService);
-        // notesService = TestBed.get(NotesService);
         httpMock = TestBed.get(HttpTestingController);
     });
 
