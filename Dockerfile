@@ -1,4 +1,4 @@
-FROM nginx:1.13.7
+FROM nginx:1.15.7
 
 ## Copy our default nginx config
 COPY docker/nginx/default.conf /etc/nginx/conf.d/
