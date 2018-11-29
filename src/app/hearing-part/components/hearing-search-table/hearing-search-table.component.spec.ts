@@ -51,12 +51,12 @@ describe('HearingSearchTableComponent', () => {
     component.paginator = {
         page: Observable.of({})
     } as MatPaginator;
-    component.hearings = [generateHearing('123')];
+    component.hearings = [generateHearing('123', moment().add(1, 'day'))];
   });
 
   describe('Initial state ', () => {
     it('should include priority', () => {
-      expect(component.hearings[0]).toEqual(generateHearing('123'));
+      expect(component.hearings[0]).toEqual(generateHearing('123', moment().add(1, 'day')));
     });
   });
 
@@ -92,6 +92,12 @@ describe('HearingSearchTableComponent', () => {
 
             expect(onAmendSpy).toHaveBeenCalledWith('id')
         })
+
+        it('can not amend a listed request with start <= today\'s date', () => {
+            component.hearings[0].listingDate = moment();
+
+            expect(component.canEdit(component.hearings[0])).toEqual(false)
+        })
     });
 
     describe('delete', () => {
@@ -106,7 +112,7 @@ describe('HearingSearchTableComponent', () => {
     });
 });
 
-function generateHearing(id: string): FilteredHearingViewmodel {
+function generateHearing(id: string, listingDate: moment.Moment): FilteredHearingViewmodel {
     return {
         id: id,
         caseNumber: null,
@@ -123,7 +129,7 @@ function generateHearing(id: string): FilteredHearingViewmodel {
         communicationFacilitator: null,
         reservedJudgeId: null,
         reservedJudgeName: null,
-        listingDate: null,
+        listingDate: listingDate,
         status: Status.Listed,
         multiSession: null,
         numberOfSessions: null
