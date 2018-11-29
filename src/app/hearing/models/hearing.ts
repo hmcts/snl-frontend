@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { Priority } from '../../hearing-part/models/priority-model';
+import { HearingActions } from './hearing-actions';
 
 export interface Note {
   content: string,
@@ -41,9 +42,9 @@ export interface Hearing {
 }
 
 export interface PossibleActions {
-    Unlist: boolean,
-    Withdraw: boolean,
-    Adjourn: boolean
+    [HearingActions.Unlist]: boolean,
+    [HearingActions.Adjourn]: boolean,
+    [HearingActions.Withdraw]: boolean,
 }
 
 export interface VersionInfo {
@@ -57,8 +58,10 @@ export interface UnlistHearingRequest {
   userTransactionId: string
 }
 
-export interface WithdrawHearingRequest {
+export interface AdjournHearingRequest {
     hearingId: string,
     hearingVersion: number,
     userTransactionId: string
 }
+
+export interface WithdrawHearingRequest extends AdjournHearingRequest { }

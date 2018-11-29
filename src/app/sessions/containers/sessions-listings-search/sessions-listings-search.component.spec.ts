@@ -121,7 +121,7 @@ const mockedUnlistedHearingVM: HearingViewmodel = {
     reservedJudge: mockedJudges[0],
     isListed: false,
     numberOfSessions: 1,
-    multiSession: false
+    multiSession: false,
 }
 
 const mockedHearingResponse: Hearing = {
@@ -139,7 +139,8 @@ const mockedHearingResponse: Hearing = {
     scheduleStart: nowISOSting,
     version: 2,
     numberOfSessions: 1,
-    multiSession: false
+    multiSession: false,
+    status: 'Unlisted'
 }
 
 // same as unlisted, but with session set to matching id in Session
@@ -208,7 +209,8 @@ describe('SessionsListingsSearchComponent', () => {
       store.dispatch(new judgeActions.GetComplete(mockedJudges));
 
       component.hearings$.subscribe(hearingParts => {
-        expect(hearingParts).toEqual([mockedUnlistedHearingVM]);
+        const expectedHearing = {...mockedUnlistedHearingVM, status: 'Unlisted' }
+        expect(hearingParts).toEqual([expectedHearing]);
       });
     });
     it('should fetch rooms', () => {

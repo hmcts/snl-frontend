@@ -14,4 +14,5 @@ export interface Hearing {
     version: number;
     numberOfSessions: number;
     multiSession: boolean;
+    status: string;
 }
