@@ -33,12 +33,6 @@ describe('HearingsTableComponent', () => {
     });
 
     describe('Component ', () => {
-        it('should define datasource', () => {
-            component.ngOnChanges()
-
-            expect(component.dataSource).toBeDefined();
-        });
-
         it('has notes should properly verify notes of hearingparts', () => {
             let hasNotes = component.hasNotes(generateHearings('asd'));
 

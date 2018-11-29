@@ -1,5 +1,5 @@
 import { AfterViewChecked, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, SortDirection } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SessionForListingWithNotes } from '../../models/session.viewmodel';
@@ -17,7 +17,7 @@ export class SessionTableComponent implements AfterViewChecked {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        sortByProperty: 'start_time',
+        sortByProperty: SessionSearchColumn.StartTime,
         sortDirection: 'asc'
     };
 
@@ -63,6 +63,8 @@ export class SessionTableComponent implements AfterViewChecked {
 
     ngAfterViewChecked() {
         this.sort.disableClear = true;
+        this.sort.active = this.tableSettingsSource$.getValue().sortByProperty
+        this.sort.direction = this.tableSettingsSource$.getValue().sortDirection as SortDirection
     }
 
     goToFirstPage() {
