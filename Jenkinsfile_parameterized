@@ -3,7 +3,7 @@
 
 def type = "angular"
 def product = "snl"
-def component = "notes"
+def component = "frontend"
 
 withPipeline(type, product, component) {
     afterCheckout {
