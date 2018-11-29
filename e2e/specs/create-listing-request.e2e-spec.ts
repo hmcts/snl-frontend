@@ -83,7 +83,7 @@ describe('Create Listing Request', () => {
               ...formValues,
               durationMinutes: 0,
               durationDays: 3,
-              numberOfSessions: 5,
+              numberOfSessions: numberOfSessionsToCreate,
               multiSession: true
           } as ListingCreationForm;
           await listingCreationPage.createListingRequest(multiSessionFormValues)

@@ -63,7 +63,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="2" >
+                            <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" step="1" >
                             <span matSuffix>Sessions</span>
                         </mat-form-field>
                     </div>
