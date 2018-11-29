@@ -16,7 +16,7 @@ import { TableSettings } from '../../../hearing-part/models/table-settings.model
 })
 export class SessionAmendmentTableComponent {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
-        pageSize: 10,
+        pageSize: 20,
         pageIndex: 0,
         sortByProperty: SessionSearchColumn.StartDate,
         sortDirection: 'asc'
@@ -45,7 +45,6 @@ export class SessionAmendmentTableComponent {
 
     dataSource: MatTableDataSource<any>;
     tableVisible = true;
-    initialPageSize = 20
     sessionSearchColumns = SessionSearchColumn
 
     private _sessions: SessionSearchResponse[];
@@ -68,7 +67,7 @@ export class SessionAmendmentTableComponent {
         const sortByProperty = this.sort.active;
         const sortDirection = this.sort.direction;
         const pageIndex = this.paginator.pageIndex;
-        const pageSize = this.paginator.pageSize || this.initialPageSize
+        const pageSize = this.paginator.pageSize || this.tableSettings$.getValue().pageSize;
 
         const newTableSettings = {sortByProperty, sortDirection, pageIndex, pageSize}
         this.tableSettings$.next(newTableSettings);

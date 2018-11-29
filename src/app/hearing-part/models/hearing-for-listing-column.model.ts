@@ -1,5 +1,5 @@
 export enum HearingForListingColumn {
-    CaseNumber = 'case_name',
+    CaseNumber = 'case_number',
     CaseTitle = 'case_title',
     CaseTypeDescription = 'case_type_description',
     HearingTypeDescription = 'hearing_type_description',
