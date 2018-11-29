@@ -151,7 +151,7 @@ export class HearingService {
                 return {...hearingPage, content: content}
             }), mergeMap<Page<HearingForListing>, Page<HearingForListingWithNotes>>((hearingForListingPage: Page<HearingForListing>) => {
                 let hearingIds = hearingForListingPage.content.map(h => h.id);
-                return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: Note[]) => {
+                return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: {[id: string]: Note[]}) => {
                     const hearings: Page<HearingForListingWithNotes> = {...hearingForListingPage, content: []};
                     hearingForListingPage.content.forEach(h => {
                         let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []};
