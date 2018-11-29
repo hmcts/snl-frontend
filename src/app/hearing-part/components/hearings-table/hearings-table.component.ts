@@ -26,8 +26,8 @@ export class HearingsTableComponent implements AfterViewChecked {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        sortByProperty: 'case_type_description',
-        sortDirection: 'asc'
+        sortByProperty: HearingForListingColumn.Priority,
+        sortDirection: 'desc'
     };
 
     @Input() set hearings(hearings: HearingForListingWithNotes[]) {
