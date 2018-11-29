@@ -39,7 +39,7 @@ import { State } from '../../../app.state';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import * as hearingTypeReducers from '../../../core/reference/reducers/hearing-type.reducer';
 import * as notesReducers from '../../../notes/reducers';
-import { MatSelectChange } from '@angular/material';
+import { MatRadioChange, MatSelectChange } from '@angular/material';
 import { HearingModificationService } from '../../services/hearing-modification.service';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
@@ -245,7 +245,9 @@ describe('ListingCreateComponent', () => {
             component.listing.hearing.numberOfSessions = 5;
             component.listing.hearing.multiSession = false;
 
-            component.setDurationToDisplay();
+            let event = { value: 0} as MatRadioChange;
+
+            component.onListingTypeChange(event);
             component.save();
 
             expect(storeSpy).toHaveBeenCalledTimes(3);
