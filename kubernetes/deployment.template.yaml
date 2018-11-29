@@ -17,7 +17,9 @@ spec:
       containers:
         - image: ${IMAGE_NAME}
           name: ${SERVICE_NAME}
-#          env:
+          env:
+            - name: PORT
+              value: 8094
           envFrom:
             - configMapRef:
                 name: ${SERVICE_NAME}-config
@@ -29,7 +31,7 @@ spec:
               memory: "1024Mi"
               cpu: "2500m"
           ports:
-            - containerPort: 8080
+            - containerPort: 8094
               name: http
           imagePullPolicy: Always
 ---
@@ -48,7 +50,7 @@ spec:
     - name: http
       protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 8094
   selector:
     app: ${SERVICE_NAME}
 ---
