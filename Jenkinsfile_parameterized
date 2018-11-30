@@ -6,6 +6,7 @@ def product = "snl"
 def component = "frontend"
 
 withPipeline(type, product, component) {
+    env.TEST_URL = 'https://snl-frontend-saat.service.core-compute-saat.internal'
     afterCheckout {
         sh "yarn cache clean"
     }
