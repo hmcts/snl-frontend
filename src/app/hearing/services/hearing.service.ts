@@ -129,7 +129,7 @@ export class HearingService {
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/${(assignment).hearingId}`, assignment)
             .pipe(tap((data => this.store.dispatch(new UpdateTransaction(data))))).subscribe();
     }
-    
+
     vacate(hearing: Hearing) {
         const vacateHearingRequest: VacateHearingRequest = {
             hearingId: hearing.id,
