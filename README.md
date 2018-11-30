@@ -57,9 +57,11 @@ And you are all set! You can now modify your components on the fly without havin
 If you want your code to become available to other Docker projects (e.g. for local environment testing), you need to build the app and then the Docker image:
 
 ```bash
-yarn build
+// Note: 'build' - will build the angular app, 'ssr' will build the node js app so both are needed in order to run app on docker.
+yarn build:ssr
 docker-compose build
 ```
+
 
 You can run it by executing following command:
 
