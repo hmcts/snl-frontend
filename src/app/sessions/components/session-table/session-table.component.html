@@ -64,7 +64,7 @@
 
   <ng-container matColumnDef="{{sessionSearchColumns.AllocatedDuration}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Allocated </mat-header-cell>
-    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.allocated)}} </mat-cell>
+    <mat-cell *matCellDef="let element"> {{humanizeDuration(element.allocatedDuration)}} </mat-cell>
   </ng-container>
 
   <!-- move calculating utilisation to data, so we can sort -->

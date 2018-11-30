@@ -86,7 +86,7 @@ export class SessionTableComponent implements AfterViewChecked {
     }
 
     humanizeDuration(duration) {
-        return formatDuration(moment.duration(duration));
+        return formatDuration(duration);
     }
 
     toggleSession(id: string) {
