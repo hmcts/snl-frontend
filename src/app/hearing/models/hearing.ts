@@ -65,3 +65,4 @@ export interface AdjournHearingRequest {
 }
 
 export interface WithdrawHearingRequest extends AdjournHearingRequest { }
+export interface VacateHearingRequest extends AdjournHearingRequest { }
