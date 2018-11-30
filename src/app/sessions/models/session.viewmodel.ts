@@ -94,6 +94,25 @@ export interface SessionForListingWithNotes {
     sessionVersion: number;
 }
 
+export const DEFAULT_SESSION_FOR_LISTING_WITH_NOTES: SessionForListingWithNotes = {
+    sessionId: undefined,
+    personId: undefined,
+    personName: undefined,
+    roomId: undefined,
+    roomName: undefined,
+    sessionTypeCode: undefined,
+    sessionTypeDescription: undefined,
+    startTime: undefined,
+    startDate: undefined,
+    duration: undefined,
+    noOfHearingPartsAssignedToSession: 0,
+    allocatedDuration: undefined,
+    utilisation: 0,
+    available: undefined,
+    notes: [],
+    sessionVersion: 0
+}
+
 export function mapResponseToSessionForListing(s: SessionForListingResponse) {
     const sessionForListing: SessionForListing = {
         sessionId: s.sessionId,
