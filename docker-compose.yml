@@ -12,4 +12,4 @@ services:
       - SNL_NOTES_URL=http://localhost:8093
       - PORT=8080
     ports:
-      - 8094:80
+      - 8094:8080

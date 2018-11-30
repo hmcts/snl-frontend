@@ -19,7 +19,7 @@ spec:
           name: ${SERVICE_NAME}
           env:
             - name: PORT
-              value: 8094
+              value: "8094"
           envFrom:
             - configMapRef:
                 name: ${SERVICE_NAME}-config
