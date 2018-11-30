@@ -117,6 +117,7 @@ export class SessionTableComponent implements AfterViewChecked {
 
     clearSelection() {
         this.selectedSessionIds.clear();
+        this.selectedSessions = [];
     }
 
     nextTableSettingsValue() {
