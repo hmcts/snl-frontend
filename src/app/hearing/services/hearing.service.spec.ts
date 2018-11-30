@@ -9,15 +9,15 @@ import { Store } from '@ngrx/store';
 import { HttpRequest } from '@angular/common/http';
 import { DEFAULT_SEARCH_HEARING_REQUEST } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
-import { NotesService } from '../../notes/services/notes.service';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
 let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
 const HEARING: Hearing = {
-    id: 'some-id',
-    hearingPartsVersions: [{id: 'id1', version: 'ver1'}]
-} as Hearing;
+  id: 'some-id',
+  hearingPartsVersions: [{id: 'id1', version: 'ver1'}],
+  version: 4
+} as Hearing
 
 const filteredHearingViewModelResponse = {
     'id': '6425fe9e-43d9-4abb-b122-26a681cd6c33',
@@ -52,93 +52,108 @@ const filteredHearingViewModelPage: Page<Object> = {
 }
 
 describe('HearingService', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                HttpClientTestingModule
-            ],
-            providers: [
-                HearingService,
-                NotesService,
-                {
-                    provide: NotesPopulatorService, useValue: {
-                        populateWithNotes: function (data) {
-                            data['notes'] = ['note'];
-                            return data;
-                        }
-                    }
-                },
-                {
-                    provide: AppConfig, useValue: {
-                        getApiUrl: function () {
-                            return '';
-                        }
-                    }
-                },
-                {provide: Store, useValue: mockStore}
-            ]
-        }).compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule
+      ],
+      providers: [
+        HearingService,
+        {
+          provide: NotesPopulatorService, useValue: {
+            populateWithNotes: function (data) {
+              data['notes'] = ['note'];
+              return data;
+            }
+          }
+        },
+        {
+          provide: AppConfig, useValue: {
+            getApiUrl: function () {
+              return '';
+            }
+          }
+        },
+        { provide: Store, useValue: mockStore }
+      ]
+    }).compileComponents();
 
-        service = TestBed.get(HearingService);
-        httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.get(HearingService);
+    httpMock = TestBed.get(HttpTestingController);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  })
+
+  describe('getById', () => {
+    it('should return data from service populated with notes', (done) => {
+      const id = 'some-id';
+      service.getById(id)
+
+      const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
+      request.flush({id: id} as Hearing);
+
+      service.hearings
+      .map(hearings => hearings.find(h => h.id === id))
+      .subscribe(hearing => {
+        expect(hearing.id).toEqual(id);
+        done()
+      });
+
+      httpMock.verify();
     });
+  })
 
-    it('should be created', () => {
-        expect(service).toBeTruthy();
+  describe('unlist', () => {
+    it('should call API', () => {
+      service.unlist(HEARING)
+
+      httpMock.expectOne((request: HttpRequest<any>) => {
+        const body = JSON.parse(request.body);
+        return request.method === 'PUT' &&
+          request.url === '/hearing/unlist' &&
+          body.hearingId === HEARING.id &&
+          body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
+      }).flush({});
+
+      httpMock.verify()
     })
+  });
 
-    describe('getById', () => {
-        it('should return data from service populated with notes', (done) => {
-            const id = 'some-id';
-            service.getById(id)
+  describe('adjourn', () => {
+    it('should call API', () => {
+      service.adjourn(HEARING)
 
-            const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
-            request.flush({id: id} as Hearing);
+      httpMock.expectOne((request: HttpRequest<any>) => {
+        const body = JSON.parse(request.body);
+        return request.method === 'PUT' &&
+          request.url === '/hearing/adjourn' &&
+          body.hearingId === HEARING.id &&
+          body.hearingVersion === HEARING.version
+      }).flush({});
 
-            service.hearings
-                .map(hearings => hearings.find(h => h.id === id))
-                .subscribe(hearing => {
-                    expect(hearing.id).toEqual(id);
-                    done()
-                });
-
-            httpMock.verify();
-        });
+      httpMock.verify()
     })
+  });
 
-    describe('unlist', () => {
-        it('should call API', () => {
-            service.unlist(HEARING)
+  describe('seearchFilteredHearingViewmodels', () => {
+      const expectedUrl = `/hearing`;
 
-            httpMock.expectOne((request: HttpRequest<any>) => {
-                const body = JSON.parse(request.body);
-                return request.method === 'PUT' &&
-                    request.url === '/hearing/unlist' &&
-                    body.hearingId === HEARING.id &&
-                    body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
-            }).flush({});
+      it('should call proper url', () => {
+          service.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe();
 
-            httpMock.verify()
-        })
-    });
+          httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
+      });
 
-    describe('seearchFilteredHearingViewmodels', () => {
-        const expectedUrl = `/hearing`;
+      it('should map to dates', () => {
+          service.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe(data => {
+              expect(data.content[0].scheduleStart.isValid).toBeTruthy();
+              expect(data.content[0].scheduleEnd.isValid).toBeTruthy();
+              expect(data.content[0].listingDate.isValid).toBeTruthy();
+          });
 
-        it('should call proper url', () => {
-            service.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe();
-
-            httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
-        });
-
-        it('should map to dates', () => {
-            service.seearchFilteredHearingViewmodels(DEFAULT_SEARCH_HEARING_REQUEST).subscribe(data => {
-                expect(data.content[0].scheduleStart.isValid).toBeTruthy();
-                expect(data.content[0].scheduleEnd.isValid).toBeTruthy();
-                expect(data.content[0].listingDate.isValid).toBeTruthy();
-            });
-
-            httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
-        });
-    });
+          httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
+      });
+  });
 });

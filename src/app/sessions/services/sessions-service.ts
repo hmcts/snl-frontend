@@ -47,7 +47,7 @@ export class SessionsService {
                 return {...sessionPage, content: content}
             }), mergeMap<Page<SessionForListing>, Page<SessionForListingWithNotes>>((sessionForListingPage: Page<SessionForListing>) => {
                 let sessionIds = sessionForListingPage.content.map(s => s.sessionId);
-                return this.notesService.getByEntitiesAsDictionary(sessionIds).pipe(mergeMap((notes: Note[]) => {
+                return this.notesService.getByEntitiesAsDictionary(sessionIds).pipe(mergeMap((notes: {[id: string]: Note[]}) => {
                     const sessionsPage: Page<SessionForListingWithNotes> = {...sessionForListingPage, content: []};
                     sessionForListingPage.content.forEach(s => {
                         let sessionWithNotes: SessionForListingWithNotes = {...s, notes: notes[s.sessionId] || []};
