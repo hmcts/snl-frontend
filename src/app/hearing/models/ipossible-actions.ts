@@ -5,4 +5,5 @@ export interface IPossibleActionConfigs {
     [HearingActions.Unlist]: PossibleActionConfig;
     [HearingActions.Adjourn]: PossibleActionConfig;
     [HearingActions.Withdraw]: PossibleActionConfig;
+    [HearingActions.Vacate]: PossibleActionConfig;
 }
