@@ -72,6 +72,6 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
 
     canEdit(hearing: FilteredHearingViewmodel) {
         return hearing.status === Status.Unlisted || (hearing.status === Status.Listed
-            && moment(moment(hearing.listingDate).format('YYYY-MM-DD')).isAfter(moment(moment().format('YYYY-MM-DD'))));
+            && moment(hearing.listingDate.format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD')));
     }
 }
