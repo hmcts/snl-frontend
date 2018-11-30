@@ -106,7 +106,7 @@ export class PossibleHearingActionsService {
         return confirmationDialogRef.afterClosed();
     }
 
-    private openVacateDialog(): Observable<any> {
+    private openVacateDialog(): Observable<any> { // NOSONAR
         const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
