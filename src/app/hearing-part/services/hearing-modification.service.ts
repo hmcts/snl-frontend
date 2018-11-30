@@ -5,7 +5,6 @@ import { HearingPartToSessionAssignment, HearingToSessionAssignment } from '../m
 import {
     AssignToSession,
     CreateListingRequest,
-    Delete,
     UpdateListingRequest,
     DeleteByHearingId
 } from '../actions/hearing-part.action';
@@ -16,10 +15,11 @@ import { ListingCreate } from '../models/listing-create';
 import { v4 as uuid } from 'uuid';
 import { HearingDeletion } from '../models/hearing-deletion';
 import * as fromHearings from '../actions/hearing.action';
+import { HearingService } from '../../hearing/services/hearing.service';
 
 @Injectable()
 export class HearingModificationService {
-    constructor(private readonly store: Store<fromHearingParts.State>) {
+    constructor(private readonly store: Store<fromHearingParts.State>, private hearingService: HearingService) {
     }
 
     assignWithSession(assignment: HearingToSessionAssignment | HearingPartToSessionAssignment) {
@@ -53,10 +53,7 @@ export class HearingModificationService {
     deleteHearing(hearingDeletion: HearingDeletion) {
         hearingDeletion.userTransactionId = uuid();
 
-        this.store.dispatch(new ProblemsActions.RemoveAll());
-        this.store.dispatch(new Delete(hearingDeletion));
-        this.store.dispatch(new InitializeTransaction(this.createTransaction(hearingDeletion.hearingId,
-            hearingDeletion.userTransactionId)))
+        this.hearingService.deleteHearing(hearingDeletion);
     }
 
     removeFromState(id: string) {

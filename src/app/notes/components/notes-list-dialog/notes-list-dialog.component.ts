@@ -17,6 +17,8 @@ export class NotesListDialogComponent extends DraggableDialog {
 
         this.data.forEach(this.disposeToProperArrays);
 
+        this.freeTextNoteViewModels = this.sortOtherNotes(this.freeTextNoteViewModels);
+
         this.noteViewModels = this.putNotesInOrder();
     }
 
@@ -33,5 +35,11 @@ export class NotesListDialogComponent extends DraggableDialog {
         let facReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Facility Requirements');
 
         return [specReqNvm, facReqNvm].filter(nvm => nvm !== undefined);
+    }
+
+    protected sortOtherNotes = (notes: NoteViewmodel[]) => {
+        return notes.sort((left, right) => {
+            return right.createdAt.diff(left.createdAt);
+        });
     }
 }

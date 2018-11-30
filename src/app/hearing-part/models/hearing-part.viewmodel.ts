@@ -5,7 +5,7 @@ import { Priority } from './priority-model';
 import { Judge } from '../../judges/models/judge.model';
 import { HearingType } from '../../core/reference/models/hearing-type';
 import { CaseType } from '../../core/reference/models/case-type';
-import { HearingViewmodel } from './hearing.viewmodel';
+import { HearingForListingWithNotes } from './hearing-for-listing-with-notes.model';
 
 export interface HearingPartViewModel {
     id: string;
@@ -28,7 +28,7 @@ export interface HearingPartViewModel {
     multiSession: boolean;
 }
 
-export function mapToUpdateHearingRequest(hvm: HearingViewmodel): UpdateHearingRequest {
+export function mapToUpdateHearingRequest(hvm: HearingForListingWithNotes): UpdateHearingRequest {
     return {
         id: hvm.id,
         caseNumber: hvm.caseNumber,

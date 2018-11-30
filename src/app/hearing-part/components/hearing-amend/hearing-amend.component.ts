@@ -41,6 +41,8 @@ export class HearingAmendComponent {
 
         this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
         this.setFormGroup();
+
+        this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
     }
 
     @Output() onSave = new EventEmitter();

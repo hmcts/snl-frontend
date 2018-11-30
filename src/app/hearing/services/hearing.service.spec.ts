@@ -9,6 +9,7 @@ import { Store } from '@ngrx/store';
 import { HttpRequest } from '@angular/common/http';
 import { DEFAULT_SEARCH_HEARING_REQUEST } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
+import { NotesService } from '../../notes/services/notes.service';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
@@ -59,6 +60,7 @@ describe('HearingService', () => {
       ],
       providers: [
         HearingService,
+        NotesService,
         {
           provide: NotesPopulatorService, useValue: {
             populateWithNotes: function (data) {

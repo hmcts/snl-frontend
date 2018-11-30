@@ -1,119 +1,133 @@
-import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
+import { SessionSearchColumn } from '../../models/session-search-column';
 
 @Component({
-  selector: 'app-session-table',
-  templateUrl: './session-table.component.html',
-  styleUrls: ['./session-table.component.scss']
+    selector: 'app-session-table',
+    templateUrl: './session-table.component.html',
+    styleUrls: ['./session-table.component.scss']
 })
-export class SessionTableComponent implements OnChanges {
+export class SessionTableComponent implements AfterViewChecked {
+    public static DEFAULT_TABLE_SETTINGS: TableSettings = {
+        pageSize: 10,
+        pageIndex: 0,
+        sortByProperty: SessionSearchColumn.StartDate,
+        sortDirection: 'asc'
+    };
 
-  @Output()
-  selectSessions = new EventEmitter();
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  @Output()
-  viewNotes = new EventEmitter();
+    @Output() selectSessions = new EventEmitter();
+    @Output() viewNotes = new EventEmitter();
 
-  @Input() sessions: SessionViewModel[];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Input() set sessions(sessions: SessionForListingWithNotes[]) {
+        this._sessions = sessions;
+        this.dataSource = new MatTableDataSource(this._sessions);
+    };
+    @Input() totalCount: number;
 
-  selectedSesssions: SelectionModel<SessionViewModel>;
-  displayedColumns = [
-      'sessionType',
-      'date',
-      'time',
-      'person',
-      'room',
-      'hearingParts',
-      'utilization',
-      'notes',
-      'available',
-      'duration',
-      'allocated',
-      'select session'
-  ];
+    _sessions: SessionForListingWithNotes[] = [];
+    tableSettingsSource$: BehaviorSubject<TableSettings> = new BehaviorSubject<TableSettings>(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
+    selectedSessionIds: SelectionModel<string>;
+    selectedSessions: SessionForListingWithNotes[] = [];
 
-  dataSource: MatTableDataSource<any>;
-  tableVisible;
+    sessionSearchColumns = SessionSearchColumn;
+    displayedColumns = [
+        SessionSearchColumn.SessionTypeDescription,
+        SessionSearchColumn.StartDate,
+        SessionSearchColumn.StartTime,
+        SessionSearchColumn.PersonName,
+        SessionSearchColumn.RoomName,
+        SessionSearchColumn.NoOfHearingPartsAssignedToSession,
+        SessionSearchColumn.Utilisation,
+        'notes',
+        SessionSearchColumn.Available,
+        SessionSearchColumn.Duration,
+        SessionSearchColumn.AllocatedDuration,
+        'select_session'
+    ];
 
-  constructor() {
-    this.selectedSesssions = new SelectionModel<SessionViewModel>(true, []);
+    dataSource: MatTableDataSource<any>;
+    tableVisible = true;
 
-    this.tableVisible = false;
+    constructor() {
+        this.selectedSessionIds = new SelectionModel<string>(true, []);
+    }
 
-    this.dataSource = new MatTableDataSource(this.sessions);
-  }
+    ngAfterViewChecked() {
+        this.sort.disableClear = true;
+        this.sort.active = this.tableSettingsSource$.getValue().sortByProperty
+        this.sort.direction = this.tableSettingsSource$.getValue().sortDirection
+    }
 
-  hasNotes(session: SessionViewModel): boolean {
-      return session.notes.length > 0;
-  }
+    goToFirstPage() {
+        this.paginator.firstPage()
+    }
 
-  showNotes(session: SessionViewModel): void {
-      if (this.hasNotes(session)) {
-          this.viewNotes.emit(session);
-      }
-  }
+    hasNotes(session: SessionForListingWithNotes): boolean {
+        return session.notes.length > 0;
+    }
 
-  parseTime(date: moment.Moment) {
-    return date.format('HH:mm');
-  }
+    showNotes(session: SessionForListingWithNotes): void {
+        if (this.hasNotes(session)) {
+            this.viewNotes.emit(session);
+        }
+    }
 
-  humanizeDuration(duration) {
-      return formatDuration(moment.duration(duration));
-  }
+    parseTime(date: moment.Moment) {
+        return date.format('HH:mm');
+    }
 
-  toggleSession(session: SessionViewModel) {
-    this.selectedSesssions.toggle(session);
-    this.selectSessions.emit(this.selectedSesssions.selected)
-  }
+    humanizeDuration(duration) {
+        return formatDuration(duration);
+    }
 
-  clearSelection() {
-      this.selectedSesssions.clear();
-  }
+    toggleSession(id: string) {
+        this.selectedSessionIds.toggle(id);
+        let tempSelectedSessions = this.toggleSelectedSessions(id, this.selectedSessionIds.isSelected(id));
+        this.selectSessions.emit(tempSelectedSessions);
+    }
 
-  ngOnChanges() {
-      if (this.sessions) {
-          this.tableVisible = true;
-          this.dataSource = new MatTableDataSource(this.sessions);
+    isChecked(id: string) {
+        return this.selectedSessionIds.isSelected(id);
+    }
 
-          this.dataSource.sortingDataAccessor = (item, property) => {
-              switch (property) {
-                  case 'person':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'room':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'sessionType':
-                      const description = getPropertyMemberOrNull(item, property, 'description');
-                      if (description === 'N/A') {
-                          return null;
-                      } else {
-                        return description;
-                      }
-                  case 'hearingParts':
-                      return getPropertyMemberOrNull(item, property, 'length');
-                  case 'time':
-                  case 'date':
-                      return item['start'].unix();
-                  case 'duration':
-                  case 'allocated':
-                  case 'available':
-                      return moment.duration(item[property]).asMilliseconds();
-                  default:
-                      return item[property];
-              }
-          };
+    // Adds to the array selected sessions and removes the unselected ones.
+    toggleSelectedSessions(id: string, selected: boolean): SessionForListingWithNotes[] {
+        let sessionToToggle = this.selectedSessions.find(s => s.sessionId === id)
+        if (sessionToToggle !== undefined) {
+            if (!selected) {
+                this.selectedSessions.splice(this.selectedSessions.findIndex(s => s.sessionId === id), 1);
+            }
+        } else {
+            if (selected) {
+                this.selectedSessions.push(this._sessions.find(s => s.sessionId === id));
+            }
+        }
 
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-      }
-  }
-}
+        return this.selectedSessions;
+    }
 
-function getPropertyMemberOrNull(item: object, property: string, key: string ) {
-    return (item[property]) ? item[property][key] : null;
+    clearSelection() {
+        this.selectedSessionIds.clear();
+        this.selectedSessions = [];
+    }
+
+    nextTableSettingsValue() {
+        const ts: TableSettings = {
+            pageIndex: this.paginator.pageIndex,
+            pageSize: this.paginator.pageSize,
+            sortByProperty: this.sort.active,
+            sortDirection: this.sort.direction
+        };
+
+        this.tableSettingsSource$.next(ts)
+    }
 }

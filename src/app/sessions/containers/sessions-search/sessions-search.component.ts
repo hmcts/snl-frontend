@@ -2,7 +2,6 @@ import { SessionsFilterComponent } from './../../components/sessions-filter/sess
 import { SearchCriteria } from './../../../hearing-part/models/search-criteria';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import 'rxjs/add/observable/of';
-import * as moment from 'moment';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
@@ -13,13 +12,14 @@ import { SessionAmmendDialogData } from '../../models/ammend/session-amend-dialo
 import * as Mapper from '../../mappers/amend-session-form-session-amend';
 import { SessionAmmendForm } from '../../models/ammend/session-ammend-form.model';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
-import { SessionsService } from '../../services/sessions-service';
 import { TableSetting } from '../../models/table-settings.model';
 import { SessionAmendmentTableComponent } from '../../components/session-amendment-table/session-amendment-table.component';
 import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
 import { SessionSearchResponse } from '../../models/session-search-response.model';
 import { NotesService } from '../../../notes/services/notes.service';
 import { ActivatedRoute } from '@angular/router';
+import { SessionsService } from '../../services/sessions-service';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Component({
     selector: 'app-sessions-search',
@@ -27,8 +27,7 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./sessions-search.component.scss']
 })
 export class SessionsSearchComponent implements OnInit {
-    startDate: moment.Moment = moment().startOf('day')
-    endDate: moment.Moment = moment().add(3, 'month').endOf('day');
+
     rooms: Room[];
     judges: Judge[];
     sessionTypes: SessionType[];
@@ -55,8 +54,8 @@ export class SessionsSearchComponent implements OnInit {
             this.sessionTypes = sessionTypes;
         });
 
-        this.sessionFilterComponent.sessionFilter$.combineLatest(
-            this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
+        combineLatest(this.sessionFilterComponent.filterSource$.asObservable(),
+            this.sessionAmendmentTableComponent.tableSettings$.asObservable(), (filters: SessionFilters, tableSetting: TableSetting) => {
                 if (filters && tableSetting) {
                     if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
                         this.sessionAmendmentTableComponent.resetToFirstPage();
@@ -69,6 +68,21 @@ export class SessionsSearchComponent implements OnInit {
                 }
             }
         ).subscribe()
+        //
+        // this.sessionFilterComponent.filterSource$.asObservable().combineLatest(
+        //     this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
+        //         if (filters && tableSetting) {
+        //             if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
+        //                 this.sessionAmendmentTableComponent.resetToFirstPage();
+        //             }
+        //
+        //             const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
+        //             this.searchSessions(searchCriterions, tableSetting);
+        //             // create a deep copy
+        //             this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
+        //         }
+        //     }
+        // ).subscribe()
     }
 
     openAmendDialog(s: SessionSearchResponse) {
