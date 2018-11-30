@@ -8,6 +8,7 @@ def app = "frontend"
 
 withPipeline(type, product, app) {
     env.TEST_URL = 'https://snl-frontend-aat.service.core-compute-aat.internal'
+    env.API_URL = 'https://snl-api-aat.service.core-compute-aat.internal'
     afterCheckout {
         sh "yarn cache clean"
     }
