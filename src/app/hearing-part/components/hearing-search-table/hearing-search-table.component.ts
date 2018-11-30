@@ -11,6 +11,7 @@ import {
 import { MatDialog, MatPaginator, MatTableDataSource, PageEvent } from '@angular/material';
 import * as moment from 'moment';
 import { FilteredHearingViewmodel } from '../../models/filtered-hearing-viewmodel';
+import { Status } from '../../../core/reference/models/status.model';
 
 @Component({
     selector: 'app-hearing-search-table',
@@ -67,5 +68,10 @@ export class HearingSearchTableComponent implements OnInit, OnChanges {
 
     buildViewHearingUrl(id: string) {
         return `/home/hearing/${id}`;
+    }
+
+    canEdit(hearing: FilteredHearingViewmodel) {
+        return hearing.status === Status.Unlisted || (hearing.status === Status.Listed
+            && moment(hearing.listingDate.format('YYYY-MM-DD')).isAfter(moment().format('YYYY-MM-DD')));
     }
 }

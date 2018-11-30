@@ -39,6 +39,7 @@ export class HearingAmendComponent {
             this.chosenListingType = ListingTypeTab.Single
         }
 
+        this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
         this.setFormGroup();
 
         this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
@@ -202,7 +203,6 @@ export class HearingAmendComponent {
                 if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
-                this.listing.hearing.numberOfSessions = 1;
                 break;
         }
     }

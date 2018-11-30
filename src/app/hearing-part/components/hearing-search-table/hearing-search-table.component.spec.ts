@@ -92,6 +92,12 @@ describe('HearingSearchTableComponent', () => {
 
             expect(onAmendSpy).toHaveBeenCalledWith('id')
         })
+
+        it('can not amend a listed request with start <= today\'s date', () => {
+            component.hearings[0].listingDate = moment();
+
+            expect(component.canEdit(component.hearings[0])).toEqual(false)
+        })
     });
 
     describe('delete', () => {

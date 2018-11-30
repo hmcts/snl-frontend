@@ -179,8 +179,12 @@ export class ListingCreateComponent implements OnInit {
     }
 
     onListingTypeChange(event: MatRadioChange) {
-       this.listing.hearing.multiSession = Number.parseInt(event.value) === 1;
-       this.setDurationToDisplay();
+        this.listing.hearing.multiSession = Number.parseInt(event.value) === 1;
+        this.listing.hearing.numberOfSessions = this.listing.hearing.multiSession ?  2 : 1;
+        this.listingCreate.controls['listingType']['controls']['numberOfSessions'].setValidators(
+            [Validators.min(this.listing.hearing.multiSession ? 2 : 1)]
+        );
+        this.setDurationToDisplay();
     }
 
     setDurationToDisplay() {
@@ -188,7 +192,6 @@ export class ListingCreateComponent implements OnInit {
             if (this.listing.hearing.multiSession) {
                 return this.asDaysPipe.transform(this.listing.hearing.duration);
             } else {
-                this.listing.hearing.numberOfSessions = 1;
                 if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
                     this.listing.hearing.duration = moment.duration((24 * 60) - 1, 'minutes');
                 } else {
@@ -256,11 +259,8 @@ export class ListingCreateComponent implements OnInit {
                     this.getDurationToDisplay(),
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
-                numberOfSessions: new FormControl({
-                        value:  this.listing.hearing.numberOfSessions,
-                        disabled: this.editMode && this.listing.hearing.multiSession
-                    },
-                    [Validators.min(1)]
+                numberOfSessions: new FormControl(
+                    this.listing.hearing.numberOfSessions, [Validators.min(this.listing.hearing.multiSession ? 2 : 1)]
                 )
             }),
             targetDates: new FormGroup({
