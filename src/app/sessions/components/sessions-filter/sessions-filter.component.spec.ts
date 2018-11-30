@@ -62,7 +62,7 @@ describe('SessionsFilterComponent', () => {
         it('should emit filters', () => {
             const mockedFilters = createFiltersStub();
 
-            const filterEmit = spyOn(component.filter, 'emit');
+            const filterEmit = spyOn(component.filterSource$, 'next');
             component.filters = mockedFilters;
             component.sendFilter();
             expect(filterEmit).toHaveBeenCalledWith(mockedFilters);
@@ -71,13 +71,13 @@ describe('SessionsFilterComponent', () => {
         it('should emit filters via sessionFilters$', (done) => {
             const mockedFilters = createFiltersStub();
 
-            component.sessionFilter$.subscribe(filters => {
+            component.filters = mockedFilters;
+            component.sendFilter();
+
+            component.filterSource$.asObservable().subscribe(filters => {
                 expect(filters).toEqual(mockedFilters);
                 done()
             });
-
-            component.filters = mockedFilters;
-            component.sendFilter();
         });
     });
 

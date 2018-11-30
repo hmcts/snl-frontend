@@ -1,4 +1,4 @@
-<div style="display:flex">
+<div id="app-listing-create-or-edit" style="display:flex">
     <mat-card>
         <mat-card-header>
             <mat-card-title>Edit listing request</mat-card-title>
@@ -65,6 +65,11 @@
                                 <mat-form-field>
                                     <input id="duration-days" formControlName="duration" [value]="listing.hearing.duration | appDurationAsDays" (ngModelChange)="updateDuration($event, 'day')" type="number" matInput placeholder="Estimated duration *" min="1" step="0.5" >
                                     <span matSuffix>Days</span>
+                                </mat-form-field>
+
+                                <mat-form-field>
+                                    <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="1" >
+                                    <span matSuffix>Sessions</span>
                                 </mat-form-field>
                             </div>
                         </div>

@@ -1,72 +1,74 @@
-<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" matSort matSortActive="priority"
-matSortDirection="desc">
-  <ng-container matColumnDef="selectHearing">
+<mat-table id="hearings-part-table" *ngIf="dataSource" #table [dataSource]="dataSource" (matSortChange)="nextTableSettingsValue()"
+           matSort
+           matSortActive="{{hearingForListingColumn.Priority}}"
+           matSortDirection="desc">
+  <ng-container matColumnDef="select_hearing">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <mat-checkbox (click)="$event.stopPropagation()"
                     (change)="$event ? toggleHearing(element) : null"
-                    [checked]="selectedHearing.isSelected(element)">&nbsp;
+                    [checked]="hearingSelectionModel.isSelected(element)">&nbsp;
       </mat-checkbox>
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseNumber">
+  <ng-container matColumnDef="{{hearingForListingColumn.CaseNumber}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Number </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseNumber}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseTitle">
+  <ng-container matColumnDef="{{hearingForListingColumn.CaseTitle}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Title </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseTitle}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="caseType">
+  <ng-container matColumnDef="{{hearingForListingColumn.CaseTypeDescription}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Case Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.caseType?.description}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="communicationFacilitator">
+  <ng-container matColumnDef="{{hearingForListingColumn.CommunicationFacilitator}}">
     <mat-header-cell class="communicationFacilitator" *matHeaderCellDef mat-sort-header> Communication Facilitator </mat-header-cell>
     <mat-cell class="communicationFacilitator" *matCellDef="let element"> {{element.communicationFacilitator}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="priority">
+  <ng-container matColumnDef="{{hearingForListingColumn.Priority}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Priority </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.priority}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="reservedJudge">
+  <ng-container matColumnDef="{{hearingForListingColumn.ReservedJudgeName}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Reserved to Judge </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.reservedJudge?.name}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="requiredSessions">
+  <ng-container matColumnDef="{{hearingForListingColumn.NumberOfSessions}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Required sessions </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.numberOfSessions}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="hearingType">
+  <ng-container matColumnDef="{{hearingForListingColumn.HearingTypeDescription}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Hearing Type </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.hearingType?.description}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="duration">
+  <ng-container matColumnDef="{{hearingForListingColumn.Duration}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Estimated Duration </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{element.duration | appDurationFormat}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleStart">
+  <ng-container matColumnDef="{{hearingForListingColumn.ScheduleStart}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule From </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleStart)}} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="scheduleEnd">
+  <ng-container matColumnDef="{{hearingForListingColumn.ScheduleEnd}}">
     <mat-header-cell *matHeaderCellDef mat-sort-header> Target Schedule To </mat-header-cell>
     <mat-cell *matCellDef="let element"> {{parseDate(element.scheduleEnd)}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="notes">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> Notes </mat-header-cell>
+    <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span [class.clickable]="hasNotes(element)" (click)="openNotesDialog(element)">
         {{hasNotes(element) ? "Yes" : "No"}}
@@ -84,7 +86,7 @@ matSortDirection="desc">
   <ng-container matColumnDef="editor">
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span class="clickable" (click)="openEditDialog(element)">Edit</span>
+      <span class="clickable" (click)="openEditDialog(element.id)">Edit</span>
     </mat-cell>
   </ng-container>
 
@@ -92,4 +94,9 @@ matSortDirection="desc">
   <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
 </mat-table>
 
-<mat-paginator id="hearings-part-table-paginator" [length]="100" [pageSize]="10" [pageSizeOptions]="[100, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator id="hearings-part-table-paginator"
+               [length]="totalCount"
+               [pageSize]="10"
+               [pageSizeOptions]="[100, 10, 20]"
+               (page)="nextTableSettingsValue()"
+               showFirstLastButtons></mat-paginator>

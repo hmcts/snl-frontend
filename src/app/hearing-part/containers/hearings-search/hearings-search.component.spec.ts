@@ -48,7 +48,7 @@ describe('HearingsSearchComponent', () => {
         hearingService = jasmine.createSpyObj('hearingService', ['seearchFilteredHearingViewmodels', 'getForAmendment']);
         hearingService.seearchFilteredHearingViewmodels.and.returnValue(Observable.of(hearingPartServiceResult));
 
-        hearingPartModificationService = jasmine.createSpyObj('hearingPartModificationService',
+        hearingPartModificationService = jasmine.createSpyObj('hearingModificationService',
             ['updateListingRequest', 'open', 'deleteHearing', 'removeFromState']);
         notesService = jasmine.createSpyObj('notesService', ['getByEntities', 'upsertManyNotes']);
 

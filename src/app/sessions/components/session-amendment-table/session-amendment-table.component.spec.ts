@@ -106,20 +106,6 @@ describe('SessionAmendmentTableComponent', () => {
         })
     });
 
-    describe('ngAfterViewInit', () => {
-        it('should emit table settings', (done) => {
-            component.sort = mockSort;
-            component.paginator = mockPaginator;
-
-            component.tableSettings$.subscribe(data => {
-                expect(data).toBeDefined()
-                done()
-            })
-
-            component.ngAfterViewInit()
-        })
-    });
-
     describe('parseTime', () => {
         it('should parse date to hours and minutes', () => {
             expect(component.parseTime(date)).toEqual(expectedTime)

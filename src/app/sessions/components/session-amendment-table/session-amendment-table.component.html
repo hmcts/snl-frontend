@@ -75,7 +75,7 @@
 <mat-paginator 
   id="session-search-table-paginator" 
   [length]="totalCount" 
-  [pageSize]="initialPageSize" 
+  [pageSize]="tableSettings$.getValue().pageSize" 
   [pageSizeOptions]="[5, 10, 20]"
   [showFirstLastButtons]="true"
   (page)="emitTableSettings()">

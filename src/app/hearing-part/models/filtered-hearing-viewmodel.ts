@@ -1,6 +1,8 @@
 import { Priority } from './priority-model';
 import * as moment from 'moment';
 import { Note } from '../../notes/models/note.model';
+import { UpdateHearingRequest } from './update-hearing-request';
+import { Status } from '../../core/reference/models/status.model';
 
 export interface FilteredHearingViewmodel {
     id: string,
@@ -50,4 +52,27 @@ export interface HearingSearchResponseForAmendment {
 export interface HearingViewmodelForAmendment {
     hearing: HearingSearchResponseForAmendment;
     notes: Note[]
+}
+
+export function mapToUpdateHearingRequest(h: HearingViewmodelForAmendment, transactionId: string): UpdateHearingRequest {
+    let update: UpdateHearingRequest = {
+        id: h.hearing.id,
+        caseNumber: h.hearing.caseNumber,
+        caseTitle: h.hearing.caseTitle,
+        caseTypeCode: h.hearing.caseTypeCode,
+        hearingTypeCode: h.hearing.hearingTypeCode,
+        duration: h.hearing.duration,
+        scheduleStart: h.hearing.scheduleStart,
+        scheduleEnd: h.hearing.scheduleEnd,
+        priority: h.hearing.priority,
+        reservedJudgeId: h.hearing.reservedJudgeId,
+        communicationFacilitator: h.hearing.communicationFacilitator,
+        userTransactionId: transactionId,
+        numberOfSessions: h.hearing.numberOfSessions,
+        multiSession: h.hearing.multiSession,
+        version: h.hearing.version,
+        isListed: h.hearing.status === Status.Listed,
+    }
+
+    return update;
 }

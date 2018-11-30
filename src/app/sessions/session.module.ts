@@ -32,10 +32,10 @@ import { SessionsAmendFormComponent } from './components/sessions-amend-form/ses
 import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 import { NotesModule } from '../notes/notes.module';
 import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
-import { SessionSearchCriteriaService } from './services/session-search-criteria.service';
 import { RoomsResolver } from '../rooms/resolvers/rooms.resolver';
 import { JudgesResolver } from '../judges/resolvers/judges.resolver';
 import { SessionTypesResolver } from '../core/reference/resolvers/session-types.resolver';
+import { SessionSearchCriteriaService } from './services/session-search-criteria.service';
 
 export const COMPONENTS = [
   SessionsPageComponent,
