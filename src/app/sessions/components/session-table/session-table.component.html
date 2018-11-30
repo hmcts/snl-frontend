@@ -6,7 +6,7 @@
   </mat-card>
 </div>
 
-<mat-table id="sessions-table" *ngIf="dataSource && tableVisible" (matSortChange)="nextTableSettingsValue()" #table [dataSource]="dataSource" matSort matSortActive="{{sessionSearchColumns.StartTime}}" matSortDirection="asc">
+<mat-table id="sessions-table" *ngIf="dataSource && tableVisible" (matSortChange)="nextTableSettingsValue()" #table [dataSource]="dataSource" matSort matSortActive="{{sessionSearchColumns.StartDate}}" matSortDirection="asc">
   <!-- Position Column -->
   <ng-container matColumnDef="select_session">
     <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>

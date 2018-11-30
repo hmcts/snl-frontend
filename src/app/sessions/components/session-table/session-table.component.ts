@@ -17,7 +17,7 @@ export class SessionTableComponent implements AfterViewChecked {
     public static DEFAULT_TABLE_SETTINGS: TableSettings = {
         pageSize: 10,
         pageIndex: 0,
-        sortByProperty: SessionSearchColumn.StartTime,
+        sortByProperty: SessionSearchColumn.StartDate,
         sortDirection: 'asc'
     };
 
