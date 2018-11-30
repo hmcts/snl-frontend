@@ -28,7 +28,7 @@ describe('HearingsTableComponent', () => {
 
     describe('Initial state ', () => {
         it('should have hearings initialized', () => {
-            expect(component.hearings[0]).toEqual(generateHearings('123'));
+            expect(component._hearings[0]).toEqual(generateHearings('123'));
         });
     });
 
