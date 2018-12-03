@@ -32,7 +32,7 @@ app.use(helmet.contentSecurityPolicy({
         defaultSrc: [`'self'`],
         fontSrc: [`'self' data:`], // , '*.hmcts.net'],
         scriptSrc: [`'self'`], // '*.hmcts.net'], // why was 'www.google-analytics.com' here?
-        connectSrc: [CONFIG.apiUrl], // ['*.core-compute-preview.internal', '*.core-compute-aat.internal', '*.hmcts.net'],
+        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'], // '*.hmcts.net'],
         mediaSrc: [`'self'`, '*.hmcts.net'],
         imgSrc: [`'self'`, '*.hmcts.net'], // why was 'www.google-analytics.com' here?
         styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
