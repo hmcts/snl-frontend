@@ -86,6 +86,27 @@ export interface HearingForListingResponse {
     isMultisession: boolean;
 }
 
+export const DEFAULT_HEARING_FOR_LISTING_RESPONSE: HearingForListingResponse = {
+    id: undefined,
+    caseNumber: undefined,
+    caseTitle: undefined,
+    caseTypeCode: undefined,
+    caseTypeDescription: undefined,
+    hearingTypeCode: undefined,
+    hearingTypeDescription: undefined,
+    duration: undefined,
+    scheduleStart: undefined,
+    scheduleEnd: undefined,
+    version: undefined,
+    priority: 1,
+    communicationFacilitator: undefined,
+    reservedJudgeName: undefined,
+    reservedJudgeId: undefined,
+    status: 'Listed',
+    numberOfSessions: undefined,
+    isMultisession: undefined
+}
+
 export function mapResponseToHearingForListing(hvr: HearingForListingResponse): HearingForListing {
     let caseType: CaseType = { code: hvr.caseTypeCode, description: hvr.caseTypeDescription, hearingTypes: []};
     let hearingType: HearingType = { code: hvr.hearingTypeCode, description: hvr.hearingTypeDescription};

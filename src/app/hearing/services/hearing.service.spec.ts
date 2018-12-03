@@ -10,6 +10,10 @@ import { HttpRequest } from '@angular/common/http';
 import { DEFAULT_SEARCH_HEARING_REQUEST } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
 import { NotesService } from '../../notes/services/notes.service';
+import { DEFAULT_NOTE } from '../../notes/models/note.model';
+import { DEFAULT_HEARING_FOR_LISTING_RESPONSE, HearingForListingWithNotes }
+  from '../../hearing-part/models/hearing-for-listing-with-notes.model';
+import { Observable } from 'rxjs/Observable';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
@@ -157,5 +161,34 @@ describe('HearingService', () => {
 
           httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
       });
+  });
+
+  describe('getHearingsForListing', () => {
+      const expectedUrl = `/hearing/for-listing`;
+
+      it('should call proper url', () => {
+          spyOn(service.notesService, 'getByEntitiesAsDictionary').and.returnValue(Observable.of({'hearingId': [DEFAULT_NOTE]}))
+          service.getHearingsForListing(DEFAULT_SEARCH_HEARING_REQUEST).subscribe();
+
+          httpMock.expectOne(expectedUrl).flush({content: [{...DEFAULT_HEARING_FOR_LISTING_RESPONSE, id: 'hearingId'}]});
+      });
+
+      it('should append respective notes', () => {
+          spyOn(service.notesService, 'getByEntitiesAsDictionary').and.returnValue(Observable.of({'hearingId': [DEFAULT_NOTE]}))
+          service.getHearingsForListing(DEFAULT_SEARCH_HEARING_REQUEST).subscribe((data: Page<HearingForListingWithNotes>) => {
+              expect(data.content[0].notes[0]).toEqual(DEFAULT_NOTE);
+          });
+
+          httpMock.expectOne(expectedUrl).flush({content: [{...DEFAULT_HEARING_FOR_LISTING_RESPONSE, id: 'hearingId'}]});
+      });
+
+      it('if there are no notes fetched it should return empty array', () => {
+        spyOn(service.notesService, 'getByEntitiesAsDictionary').and.returnValue(Observable.of({}))
+        service.getHearingsForListing(DEFAULT_SEARCH_HEARING_REQUEST).subscribe((data: Page<HearingForListingWithNotes>) => {
+            expect(data.content[0].notes).toEqual([]);
+        });
+
+        httpMock.expectOne(expectedUrl).flush({content: [{...DEFAULT_HEARING_FOR_LISTING_RESPONSE, id: 'hearingId'}]});
+    });
   });
 });
