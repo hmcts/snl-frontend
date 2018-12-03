@@ -11,7 +11,8 @@ import { DEFAULT_SEARCH_HEARING_REQUEST } from '../../hearing-part/models/search
 import { Page } from '../../problems/models/problem.model';
 import { NotesService } from '../../notes/services/notes.service';
 import { DEFAULT_NOTE } from '../../notes/models/note.model';
-import { DEFAULT_HEARING_FOR_LISTING_RESPONSE, HearingForListingWithNotes } from '../../hearing-part/models/hearing-for-listing-with-notes.model';
+import { DEFAULT_HEARING_FOR_LISTING_RESPONSE, HearingForListingWithNotes }
+  from '../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { Observable } from 'rxjs/Observable';
 
 let service: HearingService;
@@ -177,7 +178,7 @@ describe('HearingService', () => {
           service.getHearingsForListing(DEFAULT_SEARCH_HEARING_REQUEST).subscribe((data: Page<HearingForListingWithNotes>) => {
               expect(data.content[0].notes[0]).toEqual(DEFAULT_NOTE);
           });
- 
+
           httpMock.expectOne(expectedUrl).flush({content: [{...DEFAULT_HEARING_FOR_LISTING_RESPONSE, id: 'hearingId'}]});
       });
 

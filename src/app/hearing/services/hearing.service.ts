@@ -181,7 +181,7 @@ export class HearingService {
                 }))
             }))
     }
- 
+
     seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {
         return this.http
             .post<Page<FilteredHearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {
