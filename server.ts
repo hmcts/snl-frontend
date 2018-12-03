@@ -30,11 +30,11 @@ app.use(helmet.referrerPolicy({
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: [`'self'`],
-        fontSrc: [`'self' data:`], // , '*.hmcts.net'],
-        scriptSrc: [`'self'`], // '*.hmcts.net'], // why was 'www.google-analytics.com' here?
-        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'], // '*.hmcts.net'],
-        mediaSrc: [`'self'`, '*.hmcts.net'],
-        imgSrc: [`'self'`, '*.hmcts.net'], // why was 'www.google-analytics.com' here?
+        fontSrc: [`'self' data:`],
+        scriptSrc: [`'self'`], // why was 'www.google-analytics.com' here?
+        imgSrc: [`'self'`], // '*.hmcts.net'], // why was 'www.google-analytics.com' here?
+        mediaSrc: [`'self'`], // '*.hmcts.net'],
+        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
         frameSrc: [`'none'`],
         frameAncestors: [`'none'`],
