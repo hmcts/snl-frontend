@@ -28,7 +28,6 @@ import {
     mapResponseToHearingForListing
 } from '../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { NotesService } from '../../notes/services/notes.service';
-import { Note } from '../../notes/models/note.model';
 import { HearingDeletion } from '../../hearing-part/models/hearing-deletion';
 import { HearingToSessionAssignment } from '../../hearing-part/models/hearing-to-session-assignment';
 import { UpdateHearingRequest } from '../../hearing-part/models/update-hearing-request';
@@ -43,7 +42,7 @@ export class HearingService {
         private readonly http: HttpClient,
         private readonly config: AppConfig,
         private readonly notesPopulatorService: NotesPopulatorService,
-        private readonly notesService: NotesService,
+        public readonly notesService: NotesService,
         private readonly store: Store<State>
     ) {
         this.hearings = this._hearings.asObservable();
@@ -176,18 +175,13 @@ export class HearingService {
                 });
                 return {...hearingPage, content: content}
             }), mergeMap<Page<HearingForListing>, Page<HearingForListingWithNotes>>((hearingForListingPage: Page<HearingForListing>) => {
-                let hearingIds = hearingForListingPage.content.map(h => h.id);
-                return this.notesService.getByEntitiesAsDictionary(hearingIds).pipe(mergeMap((notes: {[id: string]: Note[]}) => {
-                    const hearings: Page<HearingForListingWithNotes> = {...hearingForListingPage, content: []};
-                    hearingForListingPage.content.forEach(h => {
-                        let hearing: HearingForListingWithNotes = {...h, notes: notes[h.id] || []};
-                        hearings.content.push(hearing)
-                    });
-                    return Observable.of(hearings);
+                return this.notesService.populateWithNotes(hearingForListingPage.content).pipe(mergeMap(entitiesWithNotes => {
+                    hearingForListingPage.content = entitiesWithNotes;
+                    return Observable.of(hearingForListingPage);
                 }))
             }))
     }
-
+ 
     seearchFilteredHearingViewmodels(request: SearchHearingRequest): Observable<Page<FilteredHearingViewmodel>> {
         return this.http
             .post<Page<FilteredHearingViewmodel>>(`${this.config.getApiUrl()}/hearing`, request.searchCriteria, {

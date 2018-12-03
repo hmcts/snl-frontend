@@ -22,3 +22,13 @@ export function getNoteFromViewModel(note: NoteViewmodel): Note {
         modifiedBy: note.modifiedBy
     } as Note
 }
+
+export const DEFAULT_NOTE: Note = {
+    id: undefined,
+    type: undefined,
+    content: '',
+    entityId: undefined,
+    entityType: undefined,
+    createdAt: undefined,
+    modifiedBy: undefined
+}
