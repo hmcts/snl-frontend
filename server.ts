@@ -31,9 +31,9 @@ app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: [`'self'`],
         fontSrc: [`'self' data:`],
-        scriptSrc: [`'self'`], // why was 'www.google-analytics.com' here?
-        imgSrc: [`'self'`], // '*.hmcts.net'], // why was 'www.google-analytics.com' here?
-        mediaSrc: [`'self'`], // '*.hmcts.net'],
+        scriptSrc: [`'self'`],
+        imgSrc: [`'self'`],
+        mediaSrc: [`'self'`],
         connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal'],
         styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
         frameSrc: [`'none'`],
@@ -44,7 +44,7 @@ app.use(helmet.contentSecurityPolicy({
 }));
 app.use(helmet.hidePoweredBy());
 app.use(helmet.permittedCrossDomainPolicies());
-app.use(helmet.noCache()); // this is not recommended as it may decrease performance
+app.use(helmet.noCache());
 app.use(helmet.ieNoOpen());
 
 app.all('/*', function(req, res, next) {
