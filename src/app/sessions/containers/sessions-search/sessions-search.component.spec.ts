@@ -1,85 +1,55 @@
 import { TestBed } from '@angular/core/testing';
 import { SessionsSearchComponent } from './sessions-search.component';
-import { StoreModule, Store } from '@ngrx/store';
-import * as fromHearingParts from '../../../hearing-part/reducers/index';
-import * as sessionReducers from '../../reducers/index';
-import * as judgesReducers from '../../../judges/reducers/index';
-import * as sessionTypeReducer from '../../../core/reference/reducers/session-type.reducer';
-import * as caseTypeReducer from '../../../core/reference/reducers/case-type.reducer';
-import * as roomTypeReducer from '../../../core/reference/reducers/room-type.reducer';
-import * as hearingTypeReducer from '../../../core/reference/reducers/hearing-type.reducer';
-import * as noteReducer from '../../../notes/reducers/index';
-import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { MatDialog } from '@angular/material';
-import * as hearingPartActions from '../../../hearing-part/actions/hearing-part.action';
-import { SessionsStatisticsService } from '../../services/sessions-statistics-service';
-import * as roomActions from '../../../rooms/actions/room.action';
-import * as judgeActions from '../../../judges/actions/judge.action';
-import * as referenceDataActions from '../../../core/reference/actions/reference-data.action';
-import * as sessionActions from './../../actions/session.action';
-import * as notesActions from './../../../notes/actions/notes.action';
-import { SessionType } from '../../../core/reference/models/session-type';
-import moment = require('moment');
-import { SessionViewModel } from '../../models/session.viewmodel';
+import { SessionSearchResponse } from '../../models/session-search-response.model';
+import { SessionsService } from '../../services/sessions-service';
+import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
+import { NotesService } from '../../../notes/services/notes.service';
+import { Observable } from 'rxjs';
+import { TableSetting } from '../../models/table-settings.model';
 import { SessionFilters } from '../../models/session-filter.model';
+import { SearchCriteria } from '../../../hearing-part/models/search-criteria';
+import { SessionAmendResponse } from '../../models/session-amend.response';
+import { Page } from '../../../problems/models/problem.model';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 let component: SessionsSearchComponent
-const matDialogSpy: jasmine.SpyObj<MatDialog> =
-    jasmine.createSpyObj('MatDialog', ['open'])
-let storeSpy;
-let store: Store<any>;
-
-const mockedSessionType: SessionType[] = [{code: 'session-type-code', description: 'session-type-desc'}]
-
-  const svm: SessionViewModel = {
-    id: 'some-id',
-    duration: 6000,
-    start: moment(),
-    sessionType: mockedSessionType[0],
-    person: undefined,
-    room: undefined,
-    hearingParts: [],
-    jurisdiction: undefined,
-    version: 0,
-    allocated: undefined,
-    utilization: undefined,
-    available: undefined,
-    notes: []
+const mockMatDialog: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open'])
+const mockActivatedRoute = {data: Observable.of({judges: [], rooms: [], sessionTypes: []})}
+const mockSessionService: jasmine.SpyObj<SessionsService> =
+    jasmine.createSpyObj('SessionsService', ['paginatedSearchSessions', 'getSessionAmendById'])
+const mockSessionSearchCriteriaService: jasmine.SpyObj<SessionSearchCriteriaService> =
+    jasmine.createSpyObj('SessionSearchCriteriaService', ['convertToSearchCriterions'])
+const mockNotesService: jasmine.SpyObj<NotesService> =
+    jasmine.createSpyObj('NotesService', ['getByEntities'])
+const tableSettings: TableSetting = {
+    sortByProperty: 'test',
+    sortDirection: 'asc',
+    pageIndex: 0,
+    pageSize: 10
 }
-const svms = [svm];
+const searchCriterions: SearchCriteria[] = [{
+    key: 'room',
+    operation: 'equal',
+    value: ['room-id']
+}]
+const expectedSessionId = 'Session-id'
+const sessionSearchResponse: any = {sessionId: expectedSessionId} as SessionSearchResponse;
 
 describe('SessionsSearchComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                StoreModule.forRoot({}),
-                StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
-                StoreModule.forFeature('sessions', sessionReducers.reducers),
-                StoreModule.forFeature('judges', judgesReducers.reducers),
-                StoreModule.forFeature('sessionTypes', sessionTypeReducer.reducer),
-                StoreModule.forFeature('caseTypes', caseTypeReducer.reducer),
-                StoreModule.forFeature('roomTypes', roomTypeReducer.reducer),
-                StoreModule.forFeature('hearingTypes', hearingTypeReducer.reducer),
-                StoreModule.forFeature('notes', noteReducer.reducers),
-            ],
             providers: [
-                SessionsFilterService,
-                SessionsStatisticsService,
-                { provide: MatDialog, useValue: matDialogSpy },
-                Store,
                 SessionsSearchComponent,
+                {provide: ActivatedRoute, useValue: mockActivatedRoute},
+                {provide: SessionsService, useValue: mockSessionService},
+                {provide: SessionSearchCriteriaService, useValue: mockSessionSearchCriteriaService},
+                {provide: NotesService, useValue: mockNotesService},
+                {provide: MatDialog, useValue: mockMatDialog},
             ]
         });
-        store = TestBed.get(Store);
-        store.dispatch(new hearingPartActions.SearchComplete([]))
-        store.dispatch(new roomActions.GetComplete([]))
-        store.dispatch(new judgeActions.GetComplete([]))
-        store.dispatch(new referenceDataActions.GetAllSessionTypeComplete([]))
-        store.dispatch(new referenceDataActions.GetAllRoomTypeComplete([]))
-        store.dispatch(new referenceDataActions.GetAllCaseTypeComplete([]))
-        store.dispatch(new referenceDataActions.GetAllHearingTypeComplete([]))
-        store.dispatch(new sessionActions.SearchComplete([]))
-        store.dispatch(new notesActions.UpsertMany([]))
         component = TestBed.get(SessionsSearchComponent);
     })
 
@@ -87,64 +57,158 @@ describe('SessionsSearchComponent', () => {
         it('should be defined', () => {
             expect(component).toBeDefined();
         });
-
-        it('should set start and end date', () => {
-            expect(component.startDate).toBeDefined()
-            expect(component.endDate).toBeDefined()
-        });
     });
 
     describe('ngOnInit', () => {
-        [
-            { actionName: 'Session.SearchForDates', instance: sessionActions.SearchForDates },
-            { actionName: 'HearingPart.Search', instance: hearingPartActions.Search },
-            { actionName: 'RoomActions.Get', instance: roomActions.Get },
-            { actionName: 'JudgeActions.Get', instance: judgeActions.Get }
-        ].forEach(pair => {
-            it(`should dispatch ${pair.actionName}`, () => {
-                storeSpy = spyOn(store, 'dispatch').and.callThrough();
-                component.ngOnInit()
-                const actions = storeSpy.calls.allArgs()
-                    .filter(arg => arg[0] instanceof pair.instance);
-                expect(actions.length).toEqual(1);
+        beforeEach(() => {
+            const sessionFilters: SessionFilters = defaultSessionFilter();
+            sessionFilters.rooms = ['room-id'];
+
+            mockSessionSearchCriteriaService.convertToSearchCriterions.and.returnValue(searchCriterions)
+            mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
+
+            component.sessionAmendmentTableComponent = {
+                tableSettings$: Observable.of(tableSettings), resetToFirstPage: () => {
+                }
+            } as any;
+            component.sessionFilterComponent = {tableSettings$: Observable.of(sessionFilters)} as any;
+        });
+
+        it('should set rooms, judges and sessionTypes', () => {
+            component.sessionFilterComponent.filterSource$ = new BehaviorSubject<SessionFilters>({} as any);
+            component.sessionAmendmentTableComponent = {
+                tableSettings$: new Subject<SessionFilters>(),
+            } as any;
+
+            component.ngOnInit();
+
+            expect(component.rooms).toBeDefined()
+            expect(component.judges).toBeDefined()
+            expect(component.sessionTypes).toBeDefined()
+        });
+
+        describe('when TableSettings and PaginationSettings are available ', () => {
+            it('should make request for session', () => {
+                component.sessionFilterComponent.filterSource$ = new BehaviorSubject<SessionFilters>({} as any);
+                component.sessionAmendmentTableComponent = {
+                    tableSettings$: new BehaviorSubject<SessionFilters>({} as any),
+                    resetToFirstPage: () => {}
+                } as any;
+
+                component.ngOnInit();
+
+                expect(mockSessionService.paginatedSearchSessions).toHaveBeenCalled()
             });
         });
     });
 
     describe('openAmendDialog', () => {
-        it('should open dialog', () => {
-            component.openAmendDialog(svm)
-            expect(matDialogSpy.open).toHaveBeenCalled()
+        it('should fetch session and its notes', () => {
+            mockNotesService.getByEntities.and.returnValue({
+                combineLatest: () => {
+                    return Observable.of()
+                }
+            })
+            mockSessionService.getSessionAmendById.and.returnValue(Observable.of())
+
+            component.openAmendDialog(sessionSearchResponse)
+
+            expect(mockNotesService.getByEntities).toHaveBeenCalledWith([expectedSessionId])
+            expect(mockSessionService.getSessionAmendById).toHaveBeenCalledWith(expectedSessionId)
         })
 
-        it('should open dialog with data', () => {
-            component.openAmendDialog(svm)
-            matDialogSpy.open.calls.first()
-            const passedData = matDialogSpy.open.calls.first().args[1].data
-            expect(passedData.notes).toEqual(svm.notes)
-            expect(passedData.sessionTypes).toEqual(component.sessionTypes)
-        })
+        describe('when it fetch notes and session', () => {
+            it('should open dialog', () => {
+                const sessionAmendResponse = {id: expectedSessionId} as SessionAmendResponse;
+                const mockNotes = {};
+
+                mockNotesService.getByEntities.and.returnValue(Observable.of(mockNotes))
+                mockSessionService.getSessionAmendById.and.returnValue(Observable.of(sessionAmendResponse))
+                mockMatDialog.open.and.returnValue({
+                    afterClosed: () => {
+                        return {
+                            subscribe: () => {
+                            }
+                        }
+                    }
+                })
+
+                component.openAmendDialog(sessionSearchResponse)
+
+                expect(mockNotesService.getByEntities).toHaveBeenCalledWith([expectedSessionId])
+                expect(mockSessionService.getSessionAmendById).toHaveBeenCalledWith(expectedSessionId)
+
+                expect(mockMatDialog.open).toHaveBeenCalled()
+            })
+        });
     })
 
-    describe('filterSessions', () => {
-        it('should return all session when filter is undefined', () => {
-            expect(component.filterSessions(svms, undefined)).toBe(svms)
+    describe('searchSessions', () => {
+        it('should save recent search criterion and table settings', () => {
+            mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of())
+            component.searchSessions(searchCriterions, tableSettings)
+
+            expect(component.savedSearchCriterion).toBe(searchCriterions)
+            expect(component.savedTableSettings).toBe(tableSettings)
         });
 
-        it('when filter startDate is different than component.startDate it should search for session with new dates', () => {
-            storeSpy = spyOn(store, 'dispatch').and.callThrough();
-            const newStartDate = component.startDate.clone().add(1, 'day')
-            const newEndDate = component.endDate.clone().add(1, 'day')
+        it('should fetch and set sessions', () => {
+            const totalCount = 1;
+            const pagedSessionSearchResponse: Page<SessionSearchResponse> = {
+                content: [sessionSearchResponse],
+                last: true,
+                totalElements: 1,
+                totalPages: 1,
+                size: 1,
+                number: 1,
+                first: true,
+                sort: null,
+                numberOfElements: 1
+            }
 
-            const sessionFilter: SessionFilters = {
-                startDate: newStartDate,
-                endDate: newEndDate
-            } as SessionFilters
+            mockSessionService.paginatedSearchSessions.and.returnValue(Observable.of(pagedSessionSearchResponse))
 
-            expect(component.filterSessions([], sessionFilter)).toEqual([])
-            expect(storeSpy.calls.mostRecent().args[0] instanceof sessionActions.SearchForDates).toBeTruthy()
-            expect(component.startDate).toEqual(newStartDate)
-            expect(component.endDate).toEqual(newEndDate)
+            component.searchSessions(searchCriterions, tableSettings)
+
+            expect(component.filteredSessions).toBe(pagedSessionSearchResponse.content)
+            expect(component.totalCount).toBe(totalCount)
         });
     })
 });
+
+function defaultSessionFilter(): SessionFilters {
+    return {
+        sessionTypes: [],
+        rooms: [],
+        judges: [],
+        startDate: undefined,
+        endDate: undefined,
+        utilization: {
+            unlisted: {
+                active: false,
+                from: 0,
+                to: 0
+            },
+            partListed: {
+                active: false,
+                from: 1,
+                to: 99
+            },
+            fullyListed: {
+                active: false,
+                from: 100,
+                to: 100
+            },
+            overListed: {
+                active: false,
+                from: 101,
+                to: Infinity
+            },
+            custom: {
+                active: false,
+                from: 0,
+                to: 0
+            }
+        }
+    };
+}

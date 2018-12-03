@@ -1,95 +1,87 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../models/session.viewmodel';
 import { formatDuration } from '../../../utils/date-utils';
+import { SessionSearchResponse } from '../../models/session-search-response.model';
+import { TableSetting } from '../../models/table-settings.model';
+import { SessionSearchColumn } from '../../models/session-search-column';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
 
 @Component({
-  selector: 'app-session-amendment-table',
-  templateUrl: './session-amendment-table.component.html',
-  styleUrls: ['./session-amendment-table.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-session-amendment-table',
+    templateUrl: './session-amendment-table.component.html',
+    styleUrls: ['./session-amendment-table.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionAmendmentTableComponent implements OnChanges {
+export class SessionAmendmentTableComponent {
+    public static DEFAULT_TABLE_SETTINGS: TableSettings = {
+        pageSize: 20,
+        pageIndex: 0,
+        sortByProperty: SessionSearchColumn.StartDate,
+        sortDirection: 'asc'
+    };
 
-  @Input() sessions: SessionViewModel[];
-  @Output() amend = new EventEmitter();
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Output() amend = new EventEmitter();
 
-  displayedColumns = [
-      'id',
-      'person',
-      'time',
-      'date',
-      'duration',
-      'room',
-      'sessionType',
-      'hearingParts',
-      'allocated',
-      'utilization',
-      'available',
-      'amend'
-  ];
+    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @Input() totalCount: number;
 
-  dataSource: MatTableDataSource<any>;
-  tableVisible;
+    displayedColumns = [
+        SessionSearchColumn.SessionId,
+        SessionSearchColumn.PersonName,
+        SessionSearchColumn.StartTime,
+        SessionSearchColumn.StartDate,
+        SessionSearchColumn.Duration,
+        SessionSearchColumn.RoomName,
+        SessionSearchColumn.SessionTypeDescription,
+        SessionSearchColumn.NoOfHearingPartsAssignedToSession,
+        SessionSearchColumn.AllocatedDuration,
+        SessionSearchColumn.Utilisation,
+        SessionSearchColumn.Available,
+        SessionSearchColumn.Amend,
+    ];
 
-  constructor() {
-    this.dataSource = new MatTableDataSource(this.sessions);
-  }
+    dataSource: MatTableDataSource<any>;
+    tableVisible = true;
+    sessionSearchColumns = SessionSearchColumn
 
-  parseTime(date: moment.Moment) {
-    return date.format('HH:mm');
-  }
+    private _sessions: SessionSearchResponse[];
+    get sessions() {
+        return this._sessions;
+    }
 
-  humanizeDuration(duration) {
-      return formatDuration(moment.duration(duration));
-  }
+    @Input() set sessions(sessions: SessionSearchResponse[]) {
+        this._sessions = sessions;
+        this.dataSource = new MatTableDataSource(sessions);
+    };
 
-  ngOnChanges() {
-      if (this.sessions) {
-          if (this.sessions.length === 0) {
-              this.tableVisible = false;
-              return;
-          }
-          this.tableVisible = true;
+    public readonly tableSettings$ = new BehaviorSubject<TableSetting>(SessionAmendmentTableComponent.DEFAULT_TABLE_SETTINGS);
 
-          this.dataSource = new MatTableDataSource(this.sessions);
+    public resetToFirstPage() {
+        this.paginator.firstPage()
+    }
 
-          this.dataSource.sortingDataAccessor = (item, property) => {
-              switch (property) {
-                  case 'person':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'room':
-                      return getPropertyMemberOrNull(item, property, 'name');
-                  case 'sessionType':
-                      const description = getPropertyMemberOrNull(item, property, 'description');
-                      if (description === 'N/A') {
-                          return null;
-                      } else {
-                        return description;
-                      }
-                  case 'hearingParts':
-                      return getPropertyMemberOrNull(item, property, 'length');
-                  case 'time':
-                  case 'date':
-                      return item['start'].unix();
-                  case 'duration':
-                  case 'allocated':
-                  case 'available':
-                      return moment.duration(item[property]).asMilliseconds();
-                  default:
-                      return item[property];
-              }
-          };
+    emitTableSettings() {
+        const sortByProperty = this.sort.active;
+        const sortDirection = this.sort.direction;
+        const pageIndex = this.paginator.pageIndex;
+        const pageSize = this.paginator.pageSize || this.tableSettings$.getValue().pageSize;
 
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-      }
-  }
-}
+        const newTableSettings = {sortByProperty, sortDirection, pageIndex, pageSize}
+        this.tableSettings$.next(newTableSettings);
+    }
 
-function getPropertyMemberOrNull(item: object, property: string, key: string ) {
-    return (item[property]) ? item[property][key] : null;
+    parseTime(date: string) {
+        return moment(date).format('HH:mm');
+    }
+
+    parseDate(date: string) {
+        return moment(date).format();
+    }
+
+    humanizeDuration(duration) {
+        return formatDuration(moment.duration(duration));
+    }
 }

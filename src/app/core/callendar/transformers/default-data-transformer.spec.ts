@@ -23,22 +23,22 @@ let expectedEvent = {
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
-    color: 'gray',
+    sessionType: session.sessionType,
     room: room,
     person: person
 };
 
-let sessionWithoutJudgeAndRoomAndSessiontype = {
+let sessionWithoutJudgeAndRoomAndSessionType = {
     ...session,
     person: undefined,
     room: undefined,
     sessionType: undefined,
 } as SessionViewModel;
 
-let expectedEventWithoutJudgeAndRoomAndSessiontype = {
+let expectedEventWithoutJudgeAndRoomAndSessionType = {
     ...expectedEvent,
     title: `No Room - No Judge - No Session type`,
-    color: 'gray',
+    sessionType: undefined,
     room: undefined,
     person: undefined
 }
@@ -57,8 +57,8 @@ let tests = [
         expectedEvent: expectedEvent
     }, {
         name: 'without judge, room and Sessiontype',
-        session: sessionWithoutJudgeAndRoomAndSessiontype,
-        expectedEvent: expectedEventWithoutJudgeAndRoomAndSessiontype
+        session: sessionWithoutJudgeAndRoomAndSessionType,
+        expectedEvent: expectedEventWithoutJudgeAndRoomAndSessionType
     }, {
         name: 'with undefined id',
         session: sessionWithIdUndefined,

@@ -1,18 +1,16 @@
 import * as moment from 'moment';
 import { SessionAmmendForm } from '../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
-import { SessionViewModel } from '../models/session.viewmodel';
-import { RoomType } from '../../core/reference/models/room-type';
+import { SessionAmendResponse } from '../models/session-amend.response';
 
-export const SessionToAmendSessionForm = (session: SessionViewModel, roomTypes: RoomType[]): SessionAmmendForm => {
+export const SessionToAmendSessionForm = (session: SessionAmendResponse): SessionAmmendForm => {
     const durationInMinutes = moment.duration(session.duration).asMinutes();
     const startTime = moment(session.start).format('HH:mm');
-    const startDate = session.start;
-    const sessionTypeCode = session.sessionType.code;
-    const personName = session.person !== undefined ? session.person.name : '(No judge)';
-    const roomName = session.room !== undefined ? session.room.name : '(No room)';
-    const roomType = session.room !== undefined ? roomTypes.find(rt => rt.code === session.room.roomTypeCode).description : '';
-    const hearingPartCount = session.hearingParts !== undefined ? session.hearingParts.length : 0;
+    const startDate = moment(session.start);
+    const sessionTypeCode = session.sessionTypeCode;
+    const personName = session.personName || '(No judge)';
+    const roomName = session.roomName || '(No room)';
+    const roomType = session.roomDescription || '';
 
     return {
         id: session.id,
@@ -23,21 +21,23 @@ export const SessionToAmendSessionForm = (session: SessionViewModel, roomTypes: 
         sessionTypeCode: sessionTypeCode,
         personName: personName,
         roomName: roomName,
-        roomType: roomType,
-        hearingPartCount: hearingPartCount,
-        multiSession: session.hearingParts.find(hp => hp.multiSession) !== undefined
-    } as SessionAmmendForm
+        roomTypeDescription: roomType,
+        hearingPartCount: session.hearingPartsCount,
+        multiSession: session.hasMultiSessionHearingAssigned
+    }
 }
 
 export const AmendSessionFormToSessionAmend = (amendSessionForm: SessionAmmendForm): SessionAmmend => {
-    const sessionTypeCode = amendSessionForm.sessionTypeCode
+    const sessionTypeCode = amendSessionForm.sessionTypeCode;
     const durationInSeconds = Math.floor(amendSessionForm.durationInMinutes.valueOf() * 60)
-    const startTime = moment.utc(moment(amendSessionForm.startTime, 'HH:mm')).format('HH:mm');
+    let startTime = moment(amendSessionForm.startTime, 'HH:mm');
+    startTime = moment.utc(amendSessionForm.startDate.hour(startTime.hour()).minutes(startTime.minute()));
+    const formattedStartTime = startTime.format('HH:mm');
 
     return {
         sessionTypeCode: sessionTypeCode,
         durationInSeconds: durationInSeconds,
-        startTime: startTime,
+        startTime: formattedStartTime,
         id: amendSessionForm.id,
         userTransactionId: undefined,
         version: amendSessionForm.version,

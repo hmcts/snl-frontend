@@ -1,4 +1,7 @@
 export enum HearingActions {
     Actions = 'Actions',
-    Unlist = 'Unlist'
+    Unlist = 'Unlist',
+    Adjourn = 'Adjourn',
+    Withdraw = 'Withdraw',
+    Vacate = 'Vacate',
 }

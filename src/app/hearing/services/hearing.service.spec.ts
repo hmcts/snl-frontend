@@ -9,13 +9,15 @@ import { Store } from '@ngrx/store';
 import { HttpRequest } from '@angular/common/http';
 import { DEFAULT_SEARCH_HEARING_REQUEST } from '../../hearing-part/models/search-hearing-request';
 import { Page } from '../../problems/models/problem.model';
+import { NotesService } from '../../notes/services/notes.service';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
 let mockStore = jasmine.createSpyObj<Store<any>>('Store', ['dispatch']);
 const HEARING: Hearing = {
   id: 'some-id',
-  hearingPartsVersions: [{id: 'id1', version: 'ver1'}]
+  hearingPartsVersions: [{id: 'id1', version: 'ver1'}],
+  version: 4
 } as Hearing
 
 const filteredHearingViewModelResponse = {
@@ -58,6 +60,7 @@ describe('HearingService', () => {
       ],
       providers: [
         HearingService,
+        NotesService,
         {
           provide: NotesPopulatorService, useValue: {
             populateWithNotes: function (data) {
@@ -114,6 +117,22 @@ describe('HearingService', () => {
           request.url === '/hearing/unlist' &&
           body.hearingId === HEARING.id &&
           body.hearingPartsVersions.length === HEARING.hearingPartsVersions.length
+      }).flush({});
+
+      httpMock.verify()
+    })
+  });
+
+  describe('adjourn', () => {
+    it('should call API', () => {
+      service.adjourn(HEARING)
+
+      httpMock.expectOne((request: HttpRequest<any>) => {
+        const body = JSON.parse(request.body);
+        return request.method === 'PUT' &&
+          request.url === '/hearing/adjourn' &&
+          body.hearingId === HEARING.id &&
+          body.hearingVersion === HEARING.version
       }).flush({});
 
       httpMock.verify()

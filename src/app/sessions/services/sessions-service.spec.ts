@@ -13,9 +13,12 @@ import {
   getSessionsResponse,
   normalizedGetSessionsResponse,
   getSessionsWithHearingsResponse,
-  normalizedGetSessionsWithHearings
+  normalizedGetSessionsWithHearings,
+  paginatedSessionSearchResponse
 } from './test-data/sessions-service-test-data';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
+import { PaginatedRequestOption } from '../models/paginated-request-option';
+import { NotesService } from '../../notes/services/notes.service';
 
 const sessionID = 'some-session-id';
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
@@ -46,7 +49,15 @@ describe('SessionsService', () => {
       imports: [HttpClientTestingModule],
       providers: [
         SessionsService,
-        { provide: AppConfig, useValue: mockedAppConfig }
+        { provide: AppConfig, useValue: mockedAppConfig },
+        {
+            provide: NotesService, useValue: {
+                getByEntitiesAsDictionary: function (data) {
+                    data['notes'] = ['note'];
+                    return {};
+                }
+            }
+        },
       ]
     });
     sessionsService = TestBed.get(SessionsService);
@@ -223,6 +234,89 @@ describe('SessionsService', () => {
       sessionsService.amendSession(dummySession).subscribe();
       const req = httpMock.expectOne(expectedAmendSessionUrl);
       expect(req.request.method).toBe('POST');
+      req.flush(null);
+    });
+  });
+
+  describe('paginatedSearchSessions', () => {
+    const emptyRequestOptions: PaginatedRequestOption = {
+      pageSize: undefined,
+      pageIndex: undefined,
+      sortByProperty: undefined,
+      sortDirection: undefined
+    }
+
+    const expectedSearchSessionUrl =
+    `${mockedAppConfig.getApiUrl()}/sessions/search`;
+
+    describe('when pass all nulled properties in request options', () => {
+      it('should build valid URL', () => {
+        sessionsService
+          .paginatedSearchSessions([], emptyRequestOptions)
+          .subscribe(response => {
+            expect(response).toEqual(paginatedSessionSearchResponse)
+          });
+
+        httpMock
+          .expectOne(expectedSearchSessionUrl)
+          .flush(paginatedSessionSearchResponse);
+      });
+    });
+
+    describe('when pass not nulled properties in request options', () => {
+      it('should build valid URL', () => {
+        const requestOptions: PaginatedRequestOption = {
+          pageSize: 10,
+          pageIndex: 0,
+          sortByProperty: 'startDate',
+          sortDirection: 'asc'
+        }
+
+        const expectedSearchSessionUrlWithParams =
+        `${mockedAppConfig.getApiUrl()}/sessions/search?size=10&page=0&sort=startDate:asc`;
+
+        sessionsService
+          .paginatedSearchSessions([], requestOptions)
+          .subscribe(response => {
+            expect(response).toEqual(paginatedSessionSearchResponse)
+          });
+
+        httpMock
+          .expectOne(expectedSearchSessionUrlWithParams)
+          .flush(paginatedSessionSearchResponse);
+      });
+    });
+
+    it('should make POST request', () => {
+      sessionsService.paginatedSearchSessions([], emptyRequestOptions).subscribe();
+      const req = httpMock.expectOne(expectedSearchSessionUrl);
+      expect(req.request.method).toBe('POST');
+      req.flush(null);
+    });
+  });
+
+  describe('getSessionAmendById', () => {
+    const sessionId = 'someSessionId'
+
+    const expectedGetSessionAmendUrl =
+    `${mockedAppConfig.getApiUrl()}/sessions/amend/${sessionId}`;
+
+    describe('when pass all nulled properties in request options', () => {
+      it('should build valid URL', () => {
+        sessionsService
+          .getSessionAmendById(sessionId)
+          .subscribe();
+
+        httpMock
+          .expectOne(expectedGetSessionAmendUrl)
+          .flush(null);
+      });
+    });
+
+    it('should make GET request', () => {
+      sessionsService.getSessionAmendById(sessionId).subscribe();
+      const req = httpMock.expectOne(expectedGetSessionAmendUrl);
+      expect(req.request.method).toBe('GET');
       req.flush(null);
     });
   });

@@ -1,12 +1,9 @@
 <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="20px">
   <div fxFlex="25%">
     <app-sessions-filter
-            (filter)="filters$.next($event)"
             [rooms]="rooms$ | async"
             [judges]="judges$ | async"
-            [sessionTypes]="sessionTypes$ | async"
-            [startDate]="startDate"
-            [endDate]="endDate">
+            [sessionTypes]="sessionTypes$ | async">
     </app-sessions-filter>
   </div>
   <div fxFlex>
@@ -15,12 +12,13 @@
     </div>
 
     <div>
-      <app-hearing-parts-preview id="hearing-part-preview"
-                                 [hearings]="hearings$ | async"
-                                 [sessions]="sessions$ | async"
-                                 (onClearSelection)="onHearingsClearSelection()"
-                                 (selectHearing)="selectHearing($event)">
-      </app-hearing-parts-preview>
+      <app-hearings-table id="hearing-part-preview"
+                          [hearings]="hearings$ | async"
+                          [totalCount]="totalHearingsCount"
+                          (onClearSelection)="onHearingsClearSelection()"
+                          (onEdit)="openEditDialog($event)"
+                          (selectHearing)="selectHearing($event)">
+      </app-hearings-table>
     </div>
 
     <div class="heading">
@@ -45,7 +43,8 @@
       <app-session-table
               (selectSessions)="selectSession($event)"
               (viewNotes)="openNotesDialog($event)"
-              [sessions]="filteredSessions">
+              [totalCount]="totalSessionsCount"
+              [sessions]="sessions$ | async">
       </app-session-table>
     </div>
   </div>

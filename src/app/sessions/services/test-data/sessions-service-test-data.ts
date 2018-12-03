@@ -195,3 +195,64 @@ export const normalizedGetSessionsWithHearings = {
   },
   result: undefined
 };
+
+export const paginatedSessionSearchResponse = {
+  content: [
+    {
+      sessionId: 'f080f856-e4dd-4fdc-8f0e-090d47e096b7',
+      personId: '1143b1ea-1813-4acc-8b08-f37d1db59492',
+      personName: 'Judge Linda',
+      roomId: null,
+      roomName: null,
+      sessionTypeCode: 'small-claims',
+      sessionTypeDescription: 'Small Claims',
+      startTime: '2018-11-26T10:00:00+01:00',
+      startDate: '2018-11-26T10:00:00+01:00',
+      duration: 'PT2H',
+      noOfHearingPartsAssignedToSession: 1,
+      allocatedDuration: 'PT2H',
+      utilisation: 100,
+      available: 'PT0S'
+    },
+    {
+      sessionId: 'be460d12-1a2b-4dbf-8b8e-a6fa95db55a9',
+      personId: '1143b1ea-1813-4acc-8b08-f37d1db59492',
+      personName: 'Judge Linda',
+      roomId: null,
+      roomName: null,
+      sessionTypeCode: 'fast-track',
+      sessionTypeDescription: 'Fast Track',
+      startTime: '2018-11-27T10:00:00+01:00',
+      startDate: '2018-11-27T10:00:00+01:00',
+      duration: 'PT2H',
+      noOfHearingPartsAssignedToSession: 2,
+      allocatedDuration: 'PT3H',
+      utilisation: 150,
+      available: 'PT0S'
+    },
+    {
+      sessionId: '48876471-3468-45c7-8899-bd9d28cdd775',
+      personId: '1143b1ea-1813-4acc-8b08-f37d1db59492',
+      personName: 'Judge Linda',
+      roomId: null,
+      roomName: null,
+      sessionTypeCode: 'multi-track',
+      sessionTypeDescription: 'Multi Track',
+      startTime: '2018-11-28T10:00:00+01:00',
+      startDate: '2018-11-28T10:00:00+01:00',
+      duration: 'PT3H',
+      noOfHearingPartsAssignedToSession: 1,
+      allocatedDuration: 'PT3H',
+      utilisation: 100,
+      available: 'PT0S'
+    }
+  ],
+  last: true,
+  totalPages: 1,
+  totalElements: 3,
+  size: 20,
+  number: 0,
+  first: true,
+  sort: null,
+  numberOfElements: 3
+};

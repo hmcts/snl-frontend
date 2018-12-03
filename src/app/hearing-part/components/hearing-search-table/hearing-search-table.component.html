@@ -70,7 +70,7 @@
     <mat-header-cell *matHeaderCellDef></mat-header-cell>
 
     <mat-cell *matCellDef="let element">
-      <span [class.clickable]="true" (click)="amend(element.id)">Amend</span>
+      <span *ngIf="canEdit(element)" [class.clickable]="true" (click)="amend(element.id)">Amend</span>
     </mat-cell>
   </ng-container>
 

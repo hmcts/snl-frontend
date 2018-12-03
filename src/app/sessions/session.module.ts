@@ -32,6 +32,10 @@ import { SessionsAmendFormComponent } from './components/sessions-amend-form/ses
 import { SessionAmendDialogComponent } from './components/session-amend-dialog/session-amend-dialog';
 import { NotesModule } from '../notes/notes.module';
 import { SessionCreateNotesConfiguration } from './models/session-create-notes-configuration.model';
+import { RoomsResolver } from '../rooms/resolvers/rooms.resolver';
+import { JudgesResolver } from '../judges/resolvers/judges.resolver';
+import { SessionTypesResolver } from '../core/reference/resolvers/session-types.resolver';
+import { SessionSearchCriteriaService } from './services/session-search-criteria.service';
 
 export const COMPONENTS = [
   SessionsPageComponent,
@@ -67,7 +71,8 @@ export const COMPONENTS = [
         {path: '', redirectTo: 'search', pathMatch: 'full'},
         {
           path: 'search',
-          component: SessionsSearchComponent
+          component: SessionsSearchComponent,
+          resolve: { judges: JudgesResolver, rooms: RoomsResolver, sessionTypes: SessionTypesResolver}
         }, {
           path: 'create',
           component: SessionsCreateComponent
@@ -80,7 +85,8 @@ export const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [SessionsService, JudgeService, RoomService, SessionsStatisticsService,
-    SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration]
+    SessionsCreationService, SessionsFilterService, SessionCreateNotesConfiguration,
+    SessionSearchCriteriaService, RoomsResolver]
 })
 export class SessionModule {
 }

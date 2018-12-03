@@ -1,4 +1,4 @@
-<div style="display:flex">
+<div id="app-listing-create-or-edit" style="display:flex">
     <mat-card>
         <mat-card-header>
             <mat-card-title *ngIf="editMode">Edit listing request</mat-card-title>
@@ -63,7 +63,7 @@
                         </mat-form-field>
 
                         <mat-form-field>
-                            <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" min="1" >
+                            <input id="number-of-sessions" formControlName="numberOfSessions" [(ngModel)]="listing.hearing.numberOfSessions" type="number" matInput placeholder="Number of sessions" step="1" >
                             <span matSuffix>Sessions</span>
                         </mat-form-field>
                     </div>

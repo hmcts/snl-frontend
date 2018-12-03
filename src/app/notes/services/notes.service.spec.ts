@@ -66,4 +66,15 @@ describe('NotesService', () => {
             httpMock.expectOne(expectedUrl).flush([{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]);
         });
     });
+
+    describe('getByEntitiesAsDictionary', () => {
+        const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes/entities-dictionary`;
+
+        it('should call proper url', () => {
+            notesService.getByEntitiesAsDictionary(['id']).subscribe(
+                data => expect(data['id'][0].createdAt.isValid()).toBeTruthy()
+            );
+            httpMock.expectOne(expectedUrl).flush({'id': [{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]});
+        });
+    });
 });

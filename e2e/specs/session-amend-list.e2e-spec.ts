@@ -68,6 +68,7 @@ describe('Go to search session', () => {
     it('click filter and edit session', async () => {
         await navigationFlow.goToAmendSessionsListPage();
         await sessionAmendListPage.filterSession(filterFormValues);
+        await sessionAmendListPage.isSessionDisplayed(sessionId)
         await sessionAmendListPage.amendSession(sessionId);
         const form: SessionAmendForm = {
             sessionTypeCode: SessionTypes.MTRACK_TRIAL_ONLY,

@@ -1,43 +1,44 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { select, Store } from '@ngrx/store';
-import { SearchForDates } from '../../actions/session.action';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import * as fromHearingParts from '../../../hearing-part/reducers';
-import * as fromSessions from '../../reducers';
-import * as fromJudges from '../../../judges/reducers';
-import * as fromReferenceData from '../../../core/reference/reducers';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
-import { SessionViewModel } from '../../models/session.viewmodel';
-import * as RoomActions from '../../../rooms/actions/room.action';
-import * as JudgeActions from '../../../judges/actions/judge.action';
-import * as fromHearingPartsActions from '../../../hearing-part/actions/hearing-part.action';
+import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
 import { SessionFilters } from '../../models/session-filter.model';
-import { map } from 'rxjs/operators';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Subject } from 'rxjs/Subject';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { MatDialog } from '@angular/material';
 import { HearingToSessionAssignment } from '../../../hearing-part/models/hearing-to-session-assignment';
-import { HearingModificationService } from '../../../hearing-part/services/hearing-modification.service';
-import { asArray } from '../../../utils/array-utils';
 import { SessionType } from '../../../core/reference/models/session-type';
-import { SessionsFilterService } from '../../services/sessions-filter-service';
 import { safe } from '../../../utils/js-extensions';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
-import { getNoteViewModel } from '../../../notes/models/note.viewmodel';
-import { HearingViewmodel } from '../../../hearing-part/models/hearing.viewmodel';
-import {
-    AssignHearingData,
-    AssignHearingDialogComponent
-} from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
-import * as fromNotes from '../../../notes/actions/notes.action';
+import { getNoteViewModel, NoteViewmodel } from '../../../notes/models/note.viewmodel';
+import { AssignHearingData, AssignHearingDialogComponent }
+    from '../../../hearing-part/components/assign-hearing-dialog/assign-hearing-dialog.component';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
-import { HearingPartsPreviewComponent } from '../../../hearing-part/components/hearing-parts-preview/hearing-parts-preview.component';
 import { SessionTableComponent } from '../../components/session-table/session-table.component';
+import { ActivatedRoute } from '@angular/router';
+import { HearingService } from '../../../hearing/services/hearing.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { SessionsFilterComponent } from '../../components/sessions-filter/sessions-filter.component';
+import { combineLatest } from 'rxjs/observable/combineLatest';
+import { NotesService } from '../../../notes/services/notes.service';
+import { HearingsTableComponent } from '../../../hearing-part/components/hearings-table/hearings-table.component';
+import { HearingForListingWithNotes } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
+import { TableSettings } from '../../../hearing-part/models/table-settings.model';
+import { SessionsService } from '../../services/sessions-service';
+import { SessionSearchCriteriaService } from '../../services/session-search-criteria.service';
+import {
+    HearingAmendDialogComponent,
+    HearingAmendDialogData
+} from '../../../hearing-part/components/hearing-amend-dialog/hearing-amend-dialog.component';
+import { Note } from '../../../notes/models/note.model';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { filter, mergeMap, tap } from 'rxjs/operators';
+import { HearingSearchResponseForAmendment } from '../../../hearing-part/models/filtered-hearing-viewmodel';
+import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
+import { CaseType } from '../../../core/reference/models/case-type';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -45,75 +46,69 @@ import { SessionTableComponent } from '../../components/session-table/session-ta
     styleUrls: ['./sessions-listings-search.component.scss']
 })
 export class SessionsListingsSearchComponent implements OnInit {
-
-    @ViewChild(HearingPartsPreviewComponent) hearingPartsTable;
+    @ViewChild(HearingsTableComponent) hearingsTable;
     @ViewChild(SessionTableComponent) sessionsTable;
+    @ViewChild(SessionsFilterComponent) sessionFilter;
 
-    startDate: moment.Moment;
-    endDate: moment.Moment;
-    hearings$: Observable<HearingViewmodel[]>;
-    sessions$: Observable<SessionViewModel[]>;
-    rooms$: Observable<Room[]>;
-    judges$: Observable<Judge[]>;
-    selectedSessions: SessionViewModel[] = [];
-    selectedHearing: HearingViewmodel = undefined;
-    filters$ = new Subject<SessionFilters>();
-    sessionTypes$: Observable<SessionType[]>;
-    filteredSessions: SessionViewModel[];
+    totalSessionsCount: number;
+    totalHearingsCount: number;
+
+    selectedSessions: SessionForListingWithNotes[] = [];
+    selectedHearing: HearingForListingWithNotes = undefined;
+
+    filterSource$: Observable<SessionFilters>;
+    sessionTableSettingsSource$: Observable<TableSettings>;
+    hearingTableSettingsSource$: Observable<TableSettings>;
     errorMessage: string;
     numberOfSessions = 1;
-    multiSession = false;
 
-    constructor(private readonly store: Store<fromHearingParts.State>,
-                private readonly sessionsFilterService: SessionsFilterService,
-                public hearingModificationService: HearingModificationService,
+    hearingsSource$: BehaviorSubject<HearingForListingWithNotes[]>;
+    sessionsSource$: BehaviorSubject<SessionForListingWithNotes[]>;
+    hearings$: Observable<HearingForListingWithNotes[]>;
+    sessions$: Observable<SessionForListingWithNotes[]>;
+
+    sessionTypes$: Observable<SessionType[]>;
+    rooms$: Observable<Room[]>;
+    judges$: Observable<Judge[]>;
+    caseTypes: CaseType[];
+    judges: Judge[];
+
+    savedSessionFilters: SessionFilters;
+
+    constructor(public hearingService: HearingService,
+                public notesService: NotesService,
+                public sessionsService: SessionsService,
+                public sessionSearchCriteriaService: SessionSearchCriteriaService,
+                public route: ActivatedRoute,
                 public dialog: MatDialog) {
-        this.hearings$ = this.store.pipe(
-          select(fromHearingParts.getFullUnlistedHearings),
-            map(asArray),
-          ) as Observable<HearingViewmodel[]>;
-
-        this.rooms$ = this.store.pipe(select(fromSessions.getRooms), map(asArray)) as Observable<Room[]>;
-        this.judges$ = this.store.pipe(select(fromJudges.getJudges), map(asArray)) as Observable<Judge[]>;
-        this.sessionTypes$ = this.store.pipe(select(fromReferenceData.selectSessionTypes));
-
-        this.sessions$ = this.store.pipe(select(fromSessions.getFullSessions));
-        this.startDate = moment();
-        this.endDate = moment().add(5, 'years');
-
-        combineLatest(this.sessions$, this.filters$, this.filterSessions).subscribe((data) => { this.filteredSessions = data});
+        this.hearingsSource$ = new BehaviorSubject<HearingForListingWithNotes[]>([]);
+        this.sessionsSource$ = new BehaviorSubject<SessionForListingWithNotes[]>([]);
+        this.hearings$ = this.hearingsSource$.asObservable();
+        this.sessions$ = this.sessionsSource$.asObservable();
+        this.route.data.subscribe(({judges, sessionTypes, rooms, caseTypes}) => {
+            this.judges$ = Observable.of(judges);
+            this.judges = judges;
+            this.caseTypes = caseTypes;
+            this.sessionTypes$ = Observable.of(sessionTypes);
+            this.rooms$ = Observable.of(rooms);
+        });
     }
 
     ngOnInit() {
-        this.store.dispatch(new SearchForDates({startDate: this.startDate, endDate: this.endDate}));
-        this.store.dispatch(new fromHearingPartsActions.Search({ isListed: false }));
-        this.store.dispatch(new RoomActions.Get());
-        this.store.dispatch(new JudgeActions.Get());
+        this.hearingTableSettingsSource$ = this.hearingsTable.tableSettingsSource$.asObservable();
+        this.hearingTableSettingsSource$.subscribe(this.fetchHearings);
+
+        this.filterSource$ = this.sessionFilter.filterSource$.asObservable();
+        this.sessionTableSettingsSource$ = this.sessionsTable.tableSettingsSource$.asObservable();
+        combineLatest(this.sessionTableSettingsSource$, this.filterSource$, this.fetchSessions).subscribe()
     }
 
-    filterSessions = (sessions: SessionViewModel[], filters: SessionFilters): SessionViewModel[] => {
-        if (!filters) {
-            return sessions;
-        }
-        if (filters.startDate !== this.startDate) {
-            this.store.dispatch(new SearchForDates({startDate: filters.startDate, endDate: filters.endDate}));
-            this.startDate = filters.startDate;
-            this.endDate = filters.endDate;
-        }
-
-        return sessions.filter(s => this.sessionsFilterService.filterByProperty(s.person, filters.judges))
-            .filter(s => this.sessionsFilterService.filterByProperty(s.room, filters.rooms))
-            .filter(s => this.sessionsFilterService.filterBySessionType(s, filters))
-            .filter(s => this.sessionsFilterService.filterByUtilization(s, filters.utilization));
-    }
-
-    selectHearing(hearing: HearingViewmodel) {
+    selectHearing(hearing: HearingForListingWithNotes) {
         this.selectedHearing = hearing;
         this.numberOfSessions = this.selectedHearing !== undefined ? this.selectedHearing.numberOfSessions : 0;
-        this.multiSession = this.selectedHearing !== undefined ? this.selectedHearing.multiSession : false;
     }
 
-    selectSession(sessions: SessionViewModel[]) {
+    selectSession(sessions: SessionForListingWithNotes[]) {
         this.selectedSessions = sessions;
     }
 
@@ -121,18 +116,20 @@ export class SessionsListingsSearchComponent implements OnInit {
         let assignment = {
             hearingId: this.selectedHearing.id,
             hearingVersion: this.selectedHearing.version,
-            sessionsData: this.selectedSessions.map(session => {return {sessionId: session.id, sessionVersion: session.version}}),
+            sessionsData: this.selectedSessions.map(s => {return {sessionId: s.sessionId, sessionVersion: s.sessionVersion}}),
             userTransactionId: uuid(),
             start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
         } as HearingToSessionAssignment;
 
-        this.hearingModificationService.assignWithSession(assignment);
+        this.hearingService.assignToSession(assignment);
 
         this.openSummaryDialog().afterClosed().subscribe((accepted) => {
-            this.store.dispatch(new fromHearingPartsActions.Search());
             if (accepted) {
-                this.store.dispatch(new fromNotes.CreateMany(assignHearingData.notes));
+                this.notesService.upsertManyNotes(assignHearingData.notes).subscribe()
             }
+
+            this.fetchHearings(this.hearingsTable.tableSettingsSource$.getValue());
+            this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
 
             this.onHearingsClearSelection();
             this.onSessionsClearSelection();
@@ -154,7 +151,11 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     openAssignDialog() {
         this.dialog.open(AssignHearingDialogComponent, {
-            data: {hearingId: this.selectedHearing.id, startTimeDisplayed: !(this.selectedSessions.length > 1)}
+            data: {
+                hearingId: this.selectedHearing.id,
+                startTimeDisplayed: !(this.selectedSessions.length > 1),
+                startTime: (this.selectedSessions.length >= 1) ? this.selectedSessions[0].startTime : undefined
+            }
         }).afterClosed().subscribe((data: AssignHearingData) => {
             if (data.confirmed) {
                 this.assignToSessions(data)
@@ -162,7 +163,7 @@ export class SessionsListingsSearchComponent implements OnInit {
         })
     }
 
-    openNotesDialog(session: SessionViewModel) {
+    openNotesDialog(session: SessionForListingWithNotes) {
         this.dialog.open(NotesListDialogComponent, {
             data: session.notes.map(getNoteViewModel),
             hasBackdrop: false,
@@ -177,7 +178,56 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     onSessionsClearSelection() {
         this.resetSelections();
-        this.hearingPartsTable.clearSelection();
+        this.hearingsTable.clearSelection();
+    }
+
+    openEditDialog(hearingId: string) {
+        this.onHearingsClearSelection();
+        this.onSessionsClearSelection();
+
+        let hearingSource$: Observable<HearingSearchResponseForAmendment> = this.hearingService.getForAmendment(hearingId);
+        let hearingNotesSource$: Observable<Note[]> = this.notesService.getByEntities([hearingId]);
+
+        forkJoin([hearingSource$, hearingNotesSource$]).pipe(mergeMap(([hearing, hearingNotes]) => {
+                return this.openAmendDialog(hearing, hearingNotes).afterClosed();
+            }),
+            filter(amendedHearing => amendedHearing !== undefined),
+            tap(amendedHearing => {
+                this.hearingService.updateListing(amendedHearing);
+                this.openDialog('Editing listing request', amendedHearing.notes);
+            })
+        ).subscribe()
+    }
+
+    private openAmendDialog(hearing: HearingSearchResponseForAmendment, notes: Note[]) {
+        const hearingAmendDialogData: HearingAmendDialogData = {
+            hearingViewModel: { hearing, notes },
+            judges: this.judges,
+            caseTypes: this.caseTypes
+        };
+        return this.dialog.open(HearingAmendDialogComponent, {
+            data: hearingAmendDialogData
+        })
+    }
+
+    private openDialog(actionTitle: string, notes: NoteViewmodel[]) {
+        this.dialog.open<any, ITransactionDialogData>(TransactionDialogComponent, {
+            ...DEFAULT_DIALOG_CONFIG,
+            data: {actionTitle}
+        }).afterClosed().subscribe((confirmed) => {
+            if (confirmed) {
+                if (notes.length > 0) {
+                    this.notesService.upsertManyNotes(notes).subscribe(() => {
+                        this.fetchHearings(this.hearingsTable.tableSettingsSource$.getValue());
+                        this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
+                        return;
+                    });
+                }
+
+                this.fetchHearings(this.hearingsTable.tableSettingsSource$.getValue());
+                this.fetchSessions(this.sessionsTable.tableSettingsSource$.getValue(), this.sessionFilter.filterSource$.getValue());
+            }
+        });
     }
 
     private checkIfOnlyOneJudgeSelected() {
@@ -185,7 +235,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             this.errorMessage = '';
             return true;
         } else if (!this.selectedSessions.every((val, i, arr) =>
-            safe(() => val.person.id) === safe(() => arr[0].person.id) && val.person !== undefined)) {
+            safe(() => val.personId) === safe(() => arr[0].personId) && val.personId !== null)) {
             this.errorMessage = 'All selected sessions should have the same judge assigned';
             return false;
         } else {
@@ -203,5 +253,47 @@ export class SessionsListingsSearchComponent implements OnInit {
     private resetSelections() {
         this.selectedSessions = [];
         this.selectedHearing = undefined;
+    }
+
+    private fetchHearings = (tableSettings: TableSettings) => {
+        const request = {
+            httpParams: {
+                size: tableSettings.pageSize,
+                page: tableSettings.pageIndex,
+                sortByProperty: tableSettings.sortByProperty,
+                sortByDirection: tableSettings.sortDirection,
+            },
+            searchCriteria: []
+        };
+
+        this.hearingService.getHearingsForListing(request).subscribe(hearings => {
+            this.hearingsSource$.next(hearings.content || []);
+            this.totalHearingsCount = hearings.totalElements;
+        })
+    };
+
+    private fetchSessions = (tableSettings: TableSettings, filters: SessionFilters) => {
+        const request = {
+            httpParams: {
+                size: tableSettings.pageSize,
+                page: tableSettings.pageIndex,
+                sortByProperty: tableSettings.sortByProperty,
+                sortDirection: tableSettings.sortDirection,
+            },
+            searchCriteria: this.sessionSearchCriteriaService.convertToSearchCriterions(filters)
+        };
+
+        this.totalSessionsCount = 0;
+
+        this.sessionsService.getSessionsForListing(request).subscribe(sessions => {
+            this.sessionsSource$.next(sessions.content || []);
+            this.totalSessionsCount = sessions.totalElements;
+
+            if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
+                this.sessionsTable.goToFirstPage();
+            }
+
+            this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
+        })
     }
 }

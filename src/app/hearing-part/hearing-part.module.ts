@@ -4,7 +4,6 @@ import { ListingCreateComponent } from './components/listing-create/listing-crea
 import { AngularMaterialModule } from '../../angular-material/angular-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HearingPartsPreviewComponent } from './components/hearing-parts-preview/hearing-parts-preview.component';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './reducers';
 import { HearingPartService } from './services/hearing-part-service';
@@ -28,9 +27,10 @@ import { DateTimeToHHmmPipe } from '../core/pipes/datetime-hhmm.pipe';
 import { RouterModule } from '@angular/router';
 import { HearingAmendDialogComponent } from './components/hearing-amend-dialog/hearing-amend-dialog.component';
 import { HearingAmendComponent } from './components/hearing-amend/hearing-amend.component';
+import { HearingsTableComponent } from './components/hearings-table/hearings-table.component';
 
 export const COMPONENTS = [
-    HearingPartsPreviewComponent,
+    HearingsTableComponent,
     ListingCreateComponent,
     DraggableHearingPartComponent,
     ListingCreateDialogComponent,
