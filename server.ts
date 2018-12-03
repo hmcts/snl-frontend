@@ -21,35 +21,30 @@ const DIST_FOLDER = join(process.cwd());
 app.use(cors());
 app.options('*', cors()); // include before other routes
 
-// helmetjs configuration
 app.use(helmet());
-// Referrer policy configuration
+
 app.use(helmet.referrerPolicy({
     policy: 'origin'
 }));
-// CSP settings
+
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: [`'self'`],
-        // [`'self'`], // , '*.hmcts.net', '*.core-compute-preview.internal:*', '*.core-compute-aat.internal:*'],
-        fontSrc: [`'self' data:`, '*.hmcts.net'], // , '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        scriptSrc: [`'self'`, '*.hmcts.net'],
-        // '*.hmcts.net', 'www.google-analytics.com', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        connectSrc: ['*.core-compute-preview.internal', '*.core-compute-aat.internal', '*.hmcts.net'],
-        mediaSrc: [`'self'`, '*.hmcts.net'], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        frameSrc: [`'none'`], // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
-        imgSrc: [`'self'`, '*.hmcts.net'],
-        // 'www.google-analytics.com', '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal'],
+        fontSrc: [`'self' data:`], // , '*.hmcts.net'],
+        scriptSrc: [`'self'`], // '*.hmcts.net'], // why was 'www.google-analytics.com' here?
+        connectSrc: [CONFIG.apiUrl], // ['*.core-compute-preview.internal', '*.core-compute-aat.internal', '*.hmcts.net'],
+        mediaSrc: [`'self'`, '*.hmcts.net'],
+        imgSrc: [`'self'`, '*.hmcts.net'], // why was 'www.google-analytics.com' here?
         styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
+        frameSrc: [`'none'`],
         frameAncestors: [`'none'`],
-        // '*.hmcts.net', '*.core-compute-preview.internal', '*.core-compute-aat.internal']
     },
     browserSniff: true,
     setAllHeaders: true
 }));
-app.use(helmet.hidePoweredBy({ setTo: 'shhh..Its a secret' }));
+app.use(helmet.hidePoweredBy());
 app.use(helmet.permittedCrossDomainPolicies());
-app.use(helmet.noCache());
+app.use(helmet.noCache()); // this is not recommended as it may decrease performance
 app.use(helmet.ieNoOpen());
 
 app.all('/*', function(req, res, next) {
