@@ -82,7 +82,6 @@ app.get('/cfg', (req, res) => {
     res.status(200).json(CONFIG);
 });
 
-// TODO: implement data requests securely
 app.get('/api/*', (req, res) => {
   res.status(404).send('data requests are not supported');
 });
