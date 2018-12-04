@@ -20,3 +20,117 @@ export interface SessionViewModel {
     available: moment.Duration;
     notes: Note[]
 }
+
+export interface SessionForListingResponse {
+    sessionId: string;
+    personId: string;
+    personName: string;
+    roomId: string;
+    roomName: string;
+    sessionTypeCode: string;
+    sessionTypeDescription: string;
+    startTime: string;
+    startDate: string;
+    duration: string;
+    noOfHearingPartsAssignedToSession: number;
+    allocatedDuration: string;
+    utilisation: number;
+    available: string;
+    sessionVersion: number;
+}
+
+export interface SessionForListing {
+    sessionId: string;
+    personId: string;
+    personName: string;
+    roomId: string;
+    roomName: string;
+    sessionTypeCode: string;
+    sessionTypeDescription: string;
+    startTime: moment.Moment;
+    startDate: moment.Moment;
+    duration: moment.Duration;
+    noOfHearingPartsAssignedToSession: number;
+    allocatedDuration: moment.Duration;
+    utilisation: number;
+    available: moment.Duration;
+    sessionVersion: number;
+}
+
+export const DEFAULT_SESSION_FOR_LISTING: SessionForListing = {
+    sessionId: undefined,
+    personId: undefined,
+    personName: undefined,
+    roomId: undefined,
+    roomName: undefined,
+    sessionTypeCode: undefined,
+    sessionTypeDescription: undefined,
+    startTime: undefined,
+    startDate: undefined,
+    duration: undefined,
+    noOfHearingPartsAssignedToSession: undefined,
+    allocatedDuration: undefined,
+    utilisation: undefined,
+    available: undefined,
+    sessionVersion: undefined,
+};
+
+export interface SessionForListingWithNotes {
+    sessionId: string;
+    personId: string;
+    personName: string;
+    roomId: string;
+    roomName: string;
+    sessionTypeCode: string;
+    sessionTypeDescription: string;
+    startTime: moment.Moment;
+    startDate: moment.Moment;
+    duration: moment.Duration;
+    noOfHearingPartsAssignedToSession: number;
+    allocatedDuration: moment.Duration;
+    utilisation: number;
+    available: moment.Duration;
+    notes: Note[]
+    sessionVersion: number;
+}
+
+export const DEFAULT_SESSION_FOR_LISTING_WITH_NOTES: SessionForListingWithNotes = {
+    sessionId: undefined,
+    personId: undefined,
+    personName: undefined,
+    roomId: undefined,
+    roomName: undefined,
+    sessionTypeCode: undefined,
+    sessionTypeDescription: undefined,
+    startTime: undefined,
+    startDate: undefined,
+    duration: undefined,
+    noOfHearingPartsAssignedToSession: 0,
+    allocatedDuration: undefined,
+    utilisation: 0,
+    available: undefined,
+    notes: [],
+    sessionVersion: 0
+}
+
+export function mapResponseToSessionForListing(s: SessionForListingResponse) {
+    const sessionForListing: SessionForListing = {
+        sessionId: s.sessionId,
+        personId: s.personId,
+        personName: s.personName,
+        roomId: s.roomId,
+        roomName: s.roomName,
+        sessionTypeCode: s.sessionTypeCode,
+        sessionTypeDescription: s.sessionTypeDescription,
+        startTime: moment(s.startTime),
+        startDate: moment(s.startDate),
+        duration: moment.duration(s.duration),
+        noOfHearingPartsAssignedToSession: s.noOfHearingPartsAssignedToSession,
+        allocatedDuration: moment.duration(s.allocatedDuration),
+        utilisation: s.utilisation,
+        available: moment.duration(s.available),
+        sessionVersion: s.sessionVersion,
+    }
+
+    return sessionForListing;
+}

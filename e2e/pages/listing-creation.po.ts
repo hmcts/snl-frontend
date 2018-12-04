@@ -25,7 +25,7 @@ export const LISTING_NOTES: {[s: string]: ListingNote} = {
 };
 
 export class ListingCreationPage {
-  private parentElement = element(by.css('app-listing-create'))
+  private parentElement = element(by.id('app-listing-create-or-edit'))
   private caseNumberInput = this.parentElement.element(by.id('caseNumber'));
   private caseTitleInput = this.parentElement.element(by.id('caseTitle'));
   private selectCaseTypeSelectOption = this.parentElement.element(by.id('selectCaseType'));

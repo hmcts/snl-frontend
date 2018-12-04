@@ -20,3 +20,15 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
         modifiedBy: note.modifiedBy,
     }
 }
+
+export const DEFAULT_NOTE_VIEW_MODEL: NoteViewmodel = {
+    id: undefined,
+    type: undefined,
+    content: '',
+    entityId: undefined,
+    entityType: undefined,
+    createdAt: undefined,
+    modifiedBy: undefined,
+    modified: false,
+    inputLabel: undefined
+}

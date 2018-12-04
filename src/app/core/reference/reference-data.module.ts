@@ -21,8 +21,8 @@ import { SessionTypesResolver } from './resolvers/session-types.resolver';
         StoreModule.forFeature('sessionTypes', fromST.reducer),
         EffectsModule.forFeature([ReferenceDataEffects])
     ],
-    providers: [ReferenceDataService, StatusConfigService, StatusConfigResolver, CaseTypesResolver, HearingTypesResolver,
-        SessionTypesResolver]
+    providers: [ReferenceDataService, StatusConfigService,
+        StatusConfigResolver, CaseTypesResolver, HearingTypesResolver, SessionTypesResolver]
 })
 export class ReferenceDataModule {
 }

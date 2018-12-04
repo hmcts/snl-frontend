@@ -66,4 +66,29 @@ describe('NotesService', () => {
             httpMock.expectOne(expectedUrl).flush([{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]);
         });
     });
+
+    describe('getByEntitiesAsDictionary', () => {
+        const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes/entities-dictionary`;
+        const returnedNotes = {'id': [{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]};
+
+        it('should call proper url', () => {
+            notesService.getByEntitiesAsDictionary(['id']).subscribe(
+                data => expect(data['id'][0].createdAt.isValid()).toBeTruthy()
+            );
+            httpMock.expectOne(expectedUrl).flush(returnedNotes);
+        });
+    });
+
+    describe('populateWithNotes', () => {
+        const expectedUrl = `${mockedAppConfig.getNotesUrl()}/notes/entities-dictionary`;
+        const returnedNotes = {'some-uuid-value': [{...note, createdAt: '2018-11-14T12:15:03.869+01:00'}]};
+
+        it('should call proper url', () => {
+            notesService.populateWithNotes([{id: 'some-uuid-value', notes: undefined}]).subscribe(
+                data => expect(data[0].notes).toEqual(returnedNotes['some-uuid-value'])
+            );
+
+            httpMock.expectOne(expectedUrl).flush(returnedNotes);
+        });
+    });
 });

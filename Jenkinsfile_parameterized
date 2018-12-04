@@ -1,18 +1,21 @@
 #!groovy
 @Library("Infrastructure") _
 
-properties([
-    parameters([
-        string(name: 'PRODUCT_NAME', defaultValue: 'snl', description: ''),
-        string(name: 'APP', defaultValue: 'frontend', description: ''),
-        string(name: 'TYPE', defaultValue: 'angular', description: ''),
-        string(name: 'ENVIRONMENT', defaultValue: 'saat', description: 'Environment where code should be build and deployed'),
-        choice(name: 'SUBSCRIPTION', choices: 'sandbox', description: 'Azure subscriptions available to build in')
-    ]),
-    [$class: 'GithubProjectProperty', projectUrlStr: 'https://github.com/hmcts/snl-frontend.git'],
-    pipelineTriggers([[$class: 'GitHubPushTrigger']])
-])
+def type = "angular"
+def product = "snl"
+def component = "frontend"
 
-withParameterizedPipeline(params.TYPE, params.PRODUCT_NAME, params.APP, params.ENVIRONMENT, params.SUBSCRIPTION) {
+withPipeline(type, product, component) {
+    env.TEST_URL = 'https://snl-frontend-saat.service.core-compute-saat.internal'
+    env.API_URL = 'https://snl-api-saat.service.core-compute-saat.internal'
+    afterCheckout {
+        sh "yarn cache clean"
+    }
 
+    echo env.CHANGE_TITLE
+    if (env.CHANGE_TITLE && !env.CHANGE_TITLE.contains('[PREVIEW]')
+            && env.CHANGE_TITLE.contains('[AKS]')) {
+        enableDockerBuild()
+        enableDeployToAKS()
+    }
 }

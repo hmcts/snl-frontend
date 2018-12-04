@@ -39,7 +39,10 @@ export class HearingAmendComponent {
             this.chosenListingType = ListingTypeTab.Single
         }
 
+        this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
         this.setFormGroup();
+
+        this.limitSessionsMaxValue = this.listing.hearing.numberOfSessions;
     }
 
     @Output() onSave = new EventEmitter();
@@ -73,6 +76,7 @@ export class HearingAmendComponent {
     public numberOfSeconds = 60;
     public binIntMaxValue = 86399; // 24h * 60m * 60s -1s
     public limitMaxValue = this.binIntMaxValue / this.numberOfSeconds;
+    public limitSessionsMaxValue: number;
 
     constructor(private readonly asDaysPipe: DurationAsDaysPipe) {}
 
@@ -162,7 +166,10 @@ export class HearingAmendComponent {
                     [Validators.required, Validators.min(1), Validators.max(this.limitMaxValue)]
                 ),
                 numberOfSessions: new FormControl(
-                    this.listing.hearing.numberOfSessions, [Validators.min(1)]
+                    this.listing.hearing.numberOfSessions, [
+                        Validators.min(this.listing.hearing.multiSession ? 2 : 1),
+                        Validators.max(this.listing.hearing.status === Status.Listed ? this.limitSessionsMaxValue : undefined)
+                    ]
                 )
             }),
             targetDates: new FormGroup({
@@ -196,7 +203,6 @@ export class HearingAmendComponent {
                 if (safe(() => this.listing.hearing.duration.asHours() >= 24)) {
                     this.listing.hearing.duration = moment.duration(24 * 60 - 1, 'minutes');
                 }
-                this.listing.hearing.numberOfSessions = 1;
                 break;
         }
     }

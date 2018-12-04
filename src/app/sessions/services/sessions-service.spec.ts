@@ -18,6 +18,7 @@ import {
 } from './test-data/sessions-service-test-data';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
 import { PaginatedRequestOption } from '../models/paginated-request-option';
+import { NotesService } from '../../notes/services/notes.service';
 
 const sessionID = 'some-session-id';
 const mockedAppConfig = { getApiUrl: () => 'https://google.co.uk' };
@@ -48,7 +49,15 @@ describe('SessionsService', () => {
       imports: [HttpClientTestingModule],
       providers: [
         SessionsService,
-        { provide: AppConfig, useValue: mockedAppConfig }
+        { provide: AppConfig, useValue: mockedAppConfig },
+        {
+            provide: NotesService, useValue: {
+                getByEntitiesAsDictionary: function (data) {
+                    data['notes'] = ['note'];
+                    return {};
+                }
+            }
+        },
       ]
     });
     sessionsService = TestBed.get(SessionsService);

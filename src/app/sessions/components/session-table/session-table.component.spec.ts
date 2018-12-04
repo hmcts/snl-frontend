@@ -1,127 +1,123 @@
-import { StoreModule } from '@ngrx/store';
-import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
-import * as fromHearingParts from '../../reducers';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NoteListComponent } from '../../../notes/components/notes-list/note-list.component';
-import { NoteComponent } from '../../../notes/components/note/note.component';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
-import * as judgesReducers from '../../../judges/reducers';
-import * as transactionsReducers from '../../../features/transactions/reducers';
-import { DurationAsMinutesPipe } from '../../../core/pipes/duration-as-minutes.pipe';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
-import * as moment from 'moment';
 import { SessionTableComponent } from './session-table.component';
-import { SessionViewModel } from '../../models/session.viewmodel';
-import { SessionType } from '../../../core/reference/models/session-type';
+import { DEFAULT_SESSION_FOR_LISTING_WITH_NOTES } from '../../models/session.viewmodel';
 
-const now = moment();
 let component: SessionTableComponent;
-let fixture: ComponentFixture<SessionTableComponent>;
 
 describe('SessionTableComponent', () => {
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                AngularMaterialModule,
-                ReactiveFormsModule,
-                FormsModule,
-                StoreModule.forRoot({}),
-                StoreModule.forFeature('hearingParts', fromHearingParts.reducers),
-                StoreModule.forFeature('judges', judgesReducers.reducers),
-                StoreModule.forFeature('transactions', transactionsReducers.reducers),
-                BrowserAnimationsModule
-            ],
-            declarations: [
-                SessionTableComponent,
-                NoteComponent,
-                NoteListComponent,
-                DurationFormatPipe,
-                DurationAsMinutesPipe,
-                TransactionDialogComponent
-            ],
-            providers: [
-                NoteListComponent,
-                NotesPreparerService
-            ]
-        });
-
-        TestBed.overrideModule(BrowserDynamicTestingModule, {
-            set: {
-                entryComponents: [TransactionDialogComponent]
-            }
-        });
-
-        fixture = TestBed.createComponent(SessionTableComponent);
-        component = fixture.componentInstance;
+        component = new SessionTableComponent();
     });
 
-    describe('Implementation check of sortingDataAccessor on displayedColumns to sort with proper data ', () => {
-        const sampleSessionViewModel = {
-            id: '-1',
-            start: now,
-            duration: 1000,
-            room: {name: 'room-name'},
-            person: {name: 'judge-name'},
-            sessionType: {code: 'st-code', description: 'st-description'} as SessionType,
-            hearingParts: [],
-            jurisdiction: '',
-            version: 0,
-            allocated: moment.duration('PT10M'),
-            utilization: 0,
-            available: moment.duration('PT10H'),
-        } as SessionViewModel;
+    describe('When setting sessions', () => {
+        it('datasource is defined', () => {
+            component.sessions = [];
+            expect(component.dataSource).toBeDefined();
+        });
+    });
 
-        const displayedColumnsExpectedValues = [
-            {columnName: 'sessionType', expected: sampleSessionViewModel.sessionType.description},
-            {columnName: 'date', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'time', expected: sampleSessionViewModel.start.unix()},
-            {columnName: 'person', expected: sampleSessionViewModel.person.name},
-            {columnName: 'room', expected: sampleSessionViewModel.room.name},
-            {columnName: 'hearingParts', expected: 0},
-            {columnName: 'utilization', expected: 0},
-            {columnName: 'notes', expected: undefined},
-            {columnName: 'available', expected: sampleSessionViewModel.available.asMilliseconds()},
-            {columnName: 'duration', expected: moment.duration('PT1S').asMilliseconds()},
-            {columnName: 'allocated', expected: sampleSessionViewModel.allocated.asMilliseconds()},
-            {columnName: 'select session', expected: undefined}
-        ];
+    describe('Go to first page', () => {
+        it('calls paginator function', () => {
+            component.paginator = {firstPage: jasmine.createSpy('firstPage')} as any;
 
-        beforeEach(() => {
-            component.sessions = [sampleSessionViewModel];
+            component.goToFirstPage();
+
+            expect(component.paginator.firstPage).toHaveBeenCalled();
+        });
+    });
+
+    describe('Toggle session', () => {
+        it('when selected it adds new session to array if it does not exist', () => {
+            component.sessions = [{...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, sessionId: 'id'}]
+            component.toggleSession('id');
+            expect(component.selectedSessions).toEqual([{...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, sessionId: 'id'}])
+            expect(component.selectedSessionIds.isSelected('id')).toBeTruthy();
         });
 
-        it(' tested columns should equal component displayedColumns field', () => {
-            const columnsArray: string[] = displayedColumnsExpectedValues.map(r => r.columnName);
-            expect(component.displayedColumns).toEqual(columnsArray);
+        it('when unselected it removes session from array if session exists', () => {
+            component.sessions = [{...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, sessionId: 'id'}]
+            component.toggleSession('id');
+            component.toggleSession('id');
+
+            expect(component.selectedSessions).toEqual([]);
+            expect(component.selectedSessionIds.isEmpty()).toBeTruthy();
+        });
+    });
+
+    describe('Is checked', () => {
+        it('When session is selected it returns strue', () => {
+            component.sessions = [{...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, sessionId: 'id'}]
+            component.toggleSession('id');
+
+            expect(component.isChecked('id')).toBeTruthy();
+        });
+    });
+
+    describe('Clear selection', () => {
+        it('sessionIds and selectedSessions tables are cleared', () => {
+            component.sessions = [{...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, sessionId: 'id'}]
+            component.toggleSession('id');
+            component.clearSelection();
+
+            expect(component.selectedSessionIds.isEmpty()).toBeTruthy();
+            expect(component.selectedSessions).toEqual([])
+        });
+    });
+
+    describe('Table settings', () => {
+        it('Has properly initialized default value', () => {
+            expect(component.tableSettingsSource$.getValue()).toEqual(SessionTableComponent.DEFAULT_TABLE_SETTINGS);
         });
 
-        for (let testCase of displayedColumnsExpectedValues) {
-            it(`${testCase.columnName} should return proper value`, () => {
-                const expected = testCase.expected;
+        it('emits current paginator and sorting settings', () => {
+            component.paginator = { pageSize: 4, pageIndex: 4  } as any;
+            component.sort = { direction: 'asc', active: 'active' } as any;
 
-                component.ngOnChanges();
-                const result = component.dataSource.sortingDataAccessor(sampleSessionViewModel, testCase.columnName);
+            component.nextTableSettingsValue();
 
-                expect(result).toBe(expected);
+            expect(component.tableSettingsSource$.getValue()).toEqual({
+                pageIndex: 4,
+                pageSize: 4,
+                sortByProperty: 'active',
+                sortDirection: 'asc'
             });
-        }
+        });
+    });
 
-        it (' should return null when sessionType is with N/A description', () => {
-            const testSamle = {
-                ...sampleSessionViewModel,
-                sessionType: {code: 'N/A', description: 'N/A'} as SessionType,
-            };
+    describe('Show notes', () => {
+        it('does not emit when notes === 0', () => {
+            let viewNotesSpy = spyOn(component.viewNotes, 'emit');
+            component.showNotes({...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, notes: []});
+            expect(viewNotesSpy).not.toHaveBeenCalled();
+        });
 
-            const expected = null;
+        it('emits when notes > 0', () => {
+            let viewNotesSpy = spyOn(component.viewNotes, 'emit');
+            component.showNotes({...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, notes: [{} as any]});
+            expect(viewNotesSpy).toHaveBeenCalled();
+        });
+    });
 
-            component.ngOnChanges();
-            const result = component.dataSource.sortingDataAccessor(testSamle, 'sessionType');
+    describe('Has notes', () => {
+        it('retuns true if notes > 0', () => {
+            expect(component.hasNotes({...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, notes: [{} as any]})).toBeTruthy();
+        });
 
-            expect(result).toBe(expected);
-        })
+        it('retuns false if notes === 0', () => {
+            expect(component.hasNotes({...DEFAULT_SESSION_FOR_LISTING_WITH_NOTES, notes: []})).toBeFalsy();
+        });
+
+        it('emits current paginator and sorting settings', () => {
+            component.paginator = { pageSize: 4, pageIndex: 4  } as any;
+            component.sort = { direction: 'asc', active: 'active' } as any;
+
+            component.nextTableSettingsValue();
+
+            expect(component.tableSettingsSource$.getValue()).toEqual({
+                pageIndex: 4,
+                pageSize: 4,
+                sortByProperty: 'active',
+                sortDirection: 'asc'
+            });
+        });
     });
 });
