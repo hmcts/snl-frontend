@@ -34,7 +34,7 @@ app.use(helmet.contentSecurityPolicy({
         scriptSrc: [`'self'`],
         imgSrc: [`'self'`],
         mediaSrc: [`'self'`],
-        connectSrc: [CONFIG.apiUrl, CONFIG.notesUrl],
+        connectSrc: [`'self'`, CONFIG.apiUrl, CONFIG.notesUrl],
         styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
         frameSrc: [`'none'`],
         frameAncestors: [`'none'`],
