@@ -75,8 +75,7 @@ describe('Withdraw a Hearing', () => {
         });
     });
     afterAll(async () => {
-        // await API.deleteListingRequest(id);
-        console.log('DELETED: ' + id);
+        await API.deleteListingRequest(id);
     });
 
 });

@@ -35,7 +35,7 @@ export class API {
         await API.login();
         const options = {
             method: 'GET',
-            uri: `${API.baseUrl}/hearing-part/${id}`,
+            uri: `${API.baseUrl}/hearing/${id}`,
             headers: API.headers,
             resolveWithFullResponse: true
         };
@@ -60,8 +60,7 @@ export class API {
 
     static async deleteListingRequest(id: string) {
         await API.login();
-        const versionId = 1; // todo: should get version id from below line
-        await API.getListingRequestById(id);
+        const versionId =  (await API.getListingRequestById(id)).version;
         const transactionId = uuid().toString();
 
         await API.deleteListingRequestWithBody({
