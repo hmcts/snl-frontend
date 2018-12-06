@@ -43,7 +43,7 @@ describe('Withdraw a Hearing', () => {
         await loginFlow.loginIfNeeded();
     });
 
-    describe('I can search for listing request and view it', () => {
+    describe('I can search for listing request and Withdraw it', () => {
         it('Given there is a Listing Request', async () => {
             const statusCode = await createListingRequestWithCaseNumberAndId(caseNumber, id);
             expect(statusCode).toEqual(200);
