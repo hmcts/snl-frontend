@@ -58,10 +58,11 @@ describe('PossibleHearingActionsService', () => {
             describe('when dialog return confirmed as true', () => {
                 it('should call service, open summary dialog and fetch heairng by id ', () => {
                     dialogMock.open.and.returnValue({afterClosed: () => Observable.of(true)} )
+                    hearingServiceMock.getById.and.returnValue(Observable.of())
                     const possibleActionService = new PossibleHearingActionsService(dialogMock, hearingServiceMock)
                     possibleActionService.mapToHearingPossibleActions(hearingWithAllPossibleActions)
                     const expectedId = 'someid'
-                    possibleActionService.handleAction(HearingActions.Unlist, {id: expectedId} as Hearing)
+                    possibleActionService.handleAction(HearingActions.Unlist, {id: expectedId} as Hearing).subscribe()
 
                     expect(hearingServiceMock.unlist).toHaveBeenCalled()
                     expect(hearingServiceMock.getById).toHaveBeenCalledWith(expectedId)

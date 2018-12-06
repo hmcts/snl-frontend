@@ -33,7 +33,7 @@ const HEARING = {
 
 const hearingServiceMock = {
   getById: function (id: string) {
-    return Observable.of();
+    return Observable.of(HEARING);
   },
   unlist: () => {},
   hearings: Observable.of([])
@@ -106,7 +106,7 @@ describe('ViewHearingComponent', () => {
 
     fixture = TestBed.createComponent(ViewHearingComponent);
     hearingService = TestBed.get(HearingService)
-    hearingServiceGetByIdSpy = spyOn(hearingService, 'getById')
+    hearingServiceGetByIdSpy = spyOn(hearingService, 'getById').and.callThrough()
     component = fixture.componentInstance;
   }));
 
@@ -148,6 +148,7 @@ describe('ViewHearingComponent', () => {
 
   describe('onActionChanged', () => {
     it('should call PossibleHearingActionsService.handleAction', () => {
+      possibleHearingActionsServiceMock.handleAction.and.returnValue(Observable.of())
       component.actionSelect = jasmine.createSpyObj('MatSelect', ['writeValue'])
       component.hearing = HEARING
       const expectedValue = HearingActions.Unlist

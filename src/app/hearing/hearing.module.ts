@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotesModule } from '../notes/notes.module';
 import { CreateHearingNoteComponent } from './components/create-hearing-note/create-hearing-note.component';
 import { CoreModule } from '../core/core.module';
+import { ActivityLogModule } from '../features/activityLog/activity-log.module';
 
 const COMPONENTS = [
   ViewHearingComponent,
@@ -21,7 +22,8 @@ const COMPONENTS = [
     FlexLayoutModule,
     FormsModule,
     NotesModule,
-    CoreModule
+    CoreModule,
+    ActivityLogModule
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,

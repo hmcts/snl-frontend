@@ -1,0 +1,19 @@
+<mat-list id="activities-list">
+    <mat-list-item *ngFor="let activityLog of activities">
+        <div matLine fxLayout="row">
+            <div fxFlex>
+                <strong>{{activityLog.activityStatus}}</strong>
+            </div>
+            <div fxFlex>
+                {{activityLog.createdBy}}
+            </div>
+
+            <div fxFlex>
+                {{activityLog.createdAt | appDateTimeToDate}}
+            </div>
+        </div>
+        <p matLine>
+            {{activityLog?.description}}
+        </p>
+    </mat-list-item>
+</mat-list>

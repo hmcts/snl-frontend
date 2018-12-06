@@ -13,6 +13,7 @@ import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
+import { ActivitiesLogComponent } from '../../../features/activityLog/components/activities-log.component';
 
 @Component({
   selector: 'app-view-hearing',
@@ -25,6 +26,7 @@ export class ViewHearingComponent implements OnInit {
   hearing: Hearing;
   hearingActions = HearingActions;
   @ViewChild(MatSelect) actionSelect: MatSelect;
+  @ViewChild(ActivitiesLogComponent) activitiesLogComponent: ActivitiesLogComponent;
   possibleActionsKeys: string[];
   possibleActions: IPossibleActionConfigs;
   note: NoteViewmodel;
@@ -88,7 +90,11 @@ export class ViewHearingComponent implements OnInit {
     }
 
     onActionChanged(event: {value: HearingActions}) {
-        this.possibleActionsService.handleAction(event.value, this.hearing);
+        this.possibleActionsService.handleAction(event.value, this.hearing)
+            .subscribe(() => {
+                this.activitiesLogComponent.fetchActivities()
+            });
+
         this.actionSelect.writeValue(HearingActions.Actions)
     }
 
@@ -105,6 +111,6 @@ export class ViewHearingComponent implements OnInit {
     }
 
     private fetchHearing() {
-        this.hearingService.getById(this.hearingId);
+        this.hearingService.getById(this.hearingId).subscribe();
     }
 }
