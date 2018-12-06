@@ -1,4 +1,3 @@
-import { AllowEvent } from './../../../common/ng-fullcalendar/models/allow-event.model';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
@@ -59,7 +58,6 @@ export class CalendarComponent implements OnInit {
     @Output() eventDropCallback = new EventEmitter();
     @Output() dropCallback = new EventEmitter();
     @Output() eventMouseOverCallback = new EventEmitter();
-    @Output() eventAllowCallback = new EventEmitter<CustomEvent<AllowEvent>>();
 
     constructor() {
         this.header = {
@@ -153,10 +151,6 @@ export class CalendarComponent implements OnInit {
 
     public eventResize(event) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
-    }
-
-    public eventAllow(event: CustomEvent<AllowEvent>) {
-        this.eventAllowCallback.emit(event);
     }
 
     private parseDates(): { startDate: moment.Moment, endDate: moment.Moment } {

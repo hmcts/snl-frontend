@@ -1,4 +1,3 @@
-import { AllowEvent } from './../../common/ng-fullcalendar/models/allow-event.model';
 import { SummaryMessageService } from './../services/summary-message.service';
 import { Component, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
@@ -24,7 +23,6 @@ import { SessionViewModel } from '../../sessions/models/session.viewmodel';
 import { ITransactionDialogData } from '../../features/transactions/models/transaction-dialog-data.model';
 import * as SessionActions from '../../sessions/actions/session.action';
 import { DEFAULT_DIALOG_CONFIG } from '../../features/transactions/models/default-dialog-confg';
-import { safe } from '../../utils/js-extensions';
 
 @Component({
     selector: 'app-planner',
@@ -94,17 +92,6 @@ export class PlannerComponent implements OnInit {
             data: new SessionDialogDetails(sessionViewModel),
             hasBackdrop: false
         });
-    }
-
-    public allowEvent(event: CustomEvent<AllowEvent<SessionCalendarViewModel>>) {
-        const hasSomeMultiSessionHearingParts = event.detail.darggedEvent.hearingParts.filter(hpvm => hpvm.multiSession).length > 0;
-        const alreadyAssignedPersonId = safe(() => event.detail.darggedEvent.person.id);
-        const targetPersonId = safe(() => event.detail.dropInfo.resourceId.split(Separator).pop());
-        if (!hasSomeMultiSessionHearingParts) {
-            return true;
-        }
-
-        return targetPersonId === alreadyAssignedPersonId;
     }
 
     public eventModifyConfirmationClosed = (confirmed: boolean) => {

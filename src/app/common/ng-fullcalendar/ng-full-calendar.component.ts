@@ -8,8 +8,6 @@ import { UpdateEventModel } from './models/updateEventModel';
 import { RenderEventModel } from './models/renderEventModel';
 import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-types';
 import * as moment from 'moment';
-import { DropInfo } from 'fullcalendar/src/types/input-types';
-import { AllowEvent } from './models/allow-event.model';
 
 @Component({
     // tslint:disable-next-line
@@ -55,7 +53,6 @@ export class NgFullCalendarComponent implements AfterViewInit {
     @Output() drop = new EventEmitter<any>();
     @Output() eventMouseOver = new EventEmitter<any>();
     @Output() eventMouseOut = new EventEmitter<any>();
-    @Output() eventAllow = new EventEmitter<any>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
     }
@@ -260,16 +257,6 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 detail: detail
             });
             elem[0].dispatchEvent(widgetEvent);
-        };
-
-        this.options.eventAllow = (dropInfo: DropInfo, darggedEvent: Event): boolean => {
-            let detail: AllowEvent = { dropInfo, darggedEvent };
-            const widgetEvent = new CustomEvent<AllowEvent>('eventAllow', {
-                bubbles: true,
-                detail: detail
-            });
-
-            return elem[0].dispatchEvent(widgetEvent);
         };
     }
 
