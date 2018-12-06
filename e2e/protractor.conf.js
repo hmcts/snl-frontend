@@ -14,7 +14,7 @@ exports.config = {
     SELENIUM_PROMISE_MANAGER: false,
     allScriptsTimeout: 111000,
     suites: {
-      e2e: './**/view-hearing.e2e-spec.ts'
+      e2e: './**/withdraw-hearing.e2e-spec.ts'
     },
     capabilities: {
         'browserName': 'chrome',

@@ -8,12 +8,16 @@ import { Priority } from '../../src/app/hearing-part/models/priority-model';
 import { HearingTypeCodes } from '../enums/hearing-types';
 import { v4 as uuid } from 'uuid';
 import { ViewHearingPage } from '../pages/view-hearing.po';
+import { DialogPage } from '../pages/dialog.po';
+import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 
 const loginFlow: LoginFlow = new LoginFlow();
 const navigationFlow: NavigationFlow = new NavigationFlow();
 
 const searchListingRequestPage: SearchListingRequestPage = new SearchListingRequestPage();
 const viewHearingPage: ViewHearingPage = new ViewHearingPage();
+const popup: DialogPage = new DialogPage();
+const transactionDialog: TransactionDialogPage = new TransactionDialogPage();
 
 const caseNumber = `vh-${new Date().toLocaleString()}`;
 const id = uuid();
@@ -34,7 +38,7 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
     );
 };
 
-describe('View Hearing details', () => {
+describe('Withdraw a Hearing', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
     });
@@ -62,7 +66,8 @@ describe('View Hearing details', () => {
         });
         it('When I Withdraw the Listing Request', async () => {
             await viewHearingPage.chooseAnActionFromDropDown('Withdraw');
-            // todo: add accept on popup
+            await popup.clickOk();
+            await transactionDialog.clickAcceptButton();
         });
         it(`Then the Status should be 'Withdrawn'`, async () => {
             // todo: check status
@@ -70,7 +75,7 @@ describe('View Hearing details', () => {
         });
     });
     afterAll(async () => {
-        await API.deleteListingRequest(id);
+        // await API.deleteListingRequest(id);
         console.log('DELETED: ' + id);
     });
 

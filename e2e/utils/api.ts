@@ -60,7 +60,7 @@ export class API {
 
     static async deleteListingRequest(id: string) {
         await API.login();
-        const versionId = 1; // should get version id from below
+        const versionId = 1; // todo: should get version id from below line
         await API.getListingRequestById(id);
         const transactionId = uuid().toString();
 
