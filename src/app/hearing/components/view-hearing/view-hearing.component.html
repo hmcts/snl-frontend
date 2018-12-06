@@ -97,18 +97,18 @@
 
     <mat-tab label="Scheduled listings">
       <mat-accordion>
-        <mat-expansion-panel [expanded]="false" *ngFor="let session of hearing.sessions" [disabled]="isSessionPanelDisabled(session)">
+        <mat-expansion-panel [expanded]="false" *ngFor="let session of hearing.sessions" [disabled]="isScheduledListingNotesPanelDisabled(session)">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div class="listing-header">
                 <div class="tile small">
-                  {{formatDate(session.start)}}
+                    {{formatStartTime(session.hearingPartStartTime)}}
                 </div>
                 <div class="tile">
                   {{session.sessionType}}
                 </div>
                 <div class="tile">
-                  Start {{formatDate(session.start)}}
+                    Start {{formatStartTime(session.hearingPartStartTime)}}
                 </div>
                 <div class="tile small">
                   {{session.duration | appDurationFormat}}
@@ -119,6 +119,9 @@
                 <div class="tile">
                   {{session.judgeName}}
                 </div>
+                <span class="tile" [class.clickable]="true" (click)="openAmendDialog(session)">
+                  Amend
+                </span>
               </div>
               <div class="clear"></div>
 

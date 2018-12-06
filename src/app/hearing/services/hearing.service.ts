@@ -52,6 +52,7 @@ export class HearingService {
         this.http
             .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
             .subscribe(data => {
+                data.sessions.forEach(s => s.hearingPartStartTime = moment(s.hearingPartStartTime));
                 this.notesPopulatorService.populateWithNotes(data);
                 const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
 
@@ -140,6 +141,17 @@ export class HearingService {
 
         this.http
             .put<Transaction>(`${this.config.getApiUrl()}/hearing/vacate`, JSON.stringify(vacateHearingRequest), {
+                headers: {'Content-Type': 'application/json'}
+            }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
+    }
+
+    amendScheduledListing(amendScheduledListing: AmendScheduledListing) {
+        amendScheduledListing.userTransactionId = uuid();
+
+        this.removeEntitiesFromStateAndInitializeTransaction(amendScheduledListing.userTransactionId);
+
+        this.http
+            .put<Transaction>(`${this.config.getApiUrl()}/hearing-part/amend-scheduled-listing`, JSON.stringify(amendScheduledListing), {
                 headers: {'Content-Type': 'application/json'}
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
     }

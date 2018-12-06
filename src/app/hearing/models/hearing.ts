@@ -8,12 +8,14 @@ export interface Note {
   modifiedBy: string
 }
 
-export interface Session {
-  start: moment.Moment,
+export interface ScheduledListing {
+  hearingPartStartTime: moment.Moment,
   duration: number,
   room: string,
   judge: string,
   sessionType: string,
+  hearingPartIdOfCurrentHearing: string,
+  hearingPartVersionOfCurrentHearing: number,
   notes: Note[]
 }
 
@@ -32,7 +34,7 @@ export interface Hearing {
   facilityRequirements: string,
   reservedToJudge: string,
   notes: Note[],
-  sessions: Session[],
+  sessions: ScheduledListing[],
   numberOfSessions: number,
   multiSession: boolean
   version: number,
