@@ -60,6 +60,18 @@ describe('View Hearing details', () => {
             await viewHearingPage.waitUntilVisible();
             expect(await viewHearingPage.getHeaderText()).toEqual(caseNumber);
         });
+        it('When I Withdraw the Listing Request', async () => {
+            await viewHearingPage.chooseAnActionFromDropDown('Withdraw');
+            // todo: add accept on popup
+        });
+        it(`Then the Status should be 'Withdrawn'`, async () => {
+            // todo: check status
+            expect(true).toBe(true);
+        });
+    });
+    afterAll(async () => {
+        await API.deleteListingRequest(id);
+        console.log('DELETED: ' + id);
     });
 
 });

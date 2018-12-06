@@ -14,8 +14,7 @@ exports.config = {
     SELENIUM_PROMISE_MANAGER: false,
     allScriptsTimeout: 111000,
     suites: {
-      e2e: './**/*.e2e-spec.ts',
-      smoke: '../smoke-test/*.smoke-spec.ts'
+      e2e: './**/view-hearing.e2e-spec.ts'
     },
     capabilities: {
         'browserName': 'chrome',
