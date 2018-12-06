@@ -1,4 +1,4 @@
 {
-  "apiUrl": "http://10.0.2.2:8090",
-  "notesUrl": "http://10.0.2.2:8093"
+  "apiUrl": "http://localhost:8090",
+  "notesUrl": "http://localhost:8093"
 }
