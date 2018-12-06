@@ -9,6 +9,7 @@ import { Judge } from '../../../judges/models/judge.model';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
 import * as judgeActions from '../../../judges/actions/judge.action';
 import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
+import { AllowEvent } from '../../../common/ng-fullcalendar/models/allow-event.model';
 
 @Component({
     selector: 'app-judge-planner',
@@ -28,6 +29,7 @@ export class JudgePlannerComponent implements OnInit {
     @Output() eventDrop = new EventEmitter();
     @Output() drop = new EventEmitter();
     @Output() eventMouseOver = new EventEmitter();
+    @Output() allowEvent = new EventEmitter<CustomEvent<AllowEvent>>();
     @Input() initialStartDate: Date;
     @Input() sessions: SessionViewModel[];
 
@@ -92,5 +94,9 @@ export class JudgePlannerComponent implements OnInit {
 
     childDrop(event) {
         this.drop.emit(event);
+    }
+
+    childAllowEvent(event: CustomEvent<AllowEvent>) {
+        this.allowEvent.emit(event);
     }
 }
