@@ -70,8 +70,7 @@ describe('Withdraw a Hearing', () => {
             await transactionDialog.clickAcceptButton();
         });
         it(`Then the Status should be 'Withdrawn'`, async () => {
-            // todo: check status
-            expect(true).toBe(true);
+            expect(await viewHearingPage.getStatusText()).toBe('Withdrawn');
         });
     });
     afterAll(async () => {

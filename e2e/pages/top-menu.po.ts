@@ -7,18 +7,17 @@ import { SessionAmendListPage } from './session-amend-list.po';
 import { ProblemsPage } from './problems.po';
 import { PlannerPage } from './planner.po';
 import { SearchListingRequestPage } from './search-listing-request.po';
-import { Logger } from '../utils/logger';
 
 export class TopMenu {
     private parentElement = element(by.css('nav.hmcts-primary-navigation'));
     private listingsButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Listings');
     private calendarButtonSelector = by.cssContainingText('.hmcts-primary-navigation__link', 'Calendar');
     private problemsButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Problems'));
-    private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'))
+    private logoutButtonElement = element(by.cssContainingText('.hmcts-header__navigation-link', 'Logout'));
     private plannerButtonElement = element(by.cssContainingText('.hmcts-primary-navigation__link', 'Planner'));
-    private sessionCreatePage = new SessionCreationPage()
-    private sessionSearchPage = new SessionSearchPage()
-    private listingCreatePage = new ListingCreationPage()
+    private sessionCreatePage = new SessionCreationPage();
+    private sessionSearchPage = new SessionSearchPage();
+    private listingCreatePage = new ListingCreationPage();
     private searchListingRequestPage = new SearchListingRequestPage();
     private sessionAmendListPage = new SessionAmendListPage();
     private problemsPage = new ProblemsPage();
@@ -89,6 +88,5 @@ export class TopMenu {
             `Cant find ${optionName} menu button`
         );
         await subElement.click();
-        Logger.log(`'${optionName}' button clicked`)
     }
 }

@@ -3,13 +3,14 @@ import { Wait } from '../enums/wait';
 
 export class ViewHearingPage {
     private header = element(by.id('case-number')).$('.case-number');
+    private status = element(by.id('status'));
     private actionsDropDown = element(by.id('action'));
 
     async waitUntilVisible() {
         await browser.wait(
             ExpectedConditions.visibilityOf(this.header),
             Wait.normal,
-            'View Hearing page is not visible'
+            `'View Hearing' page is not visible`
         );
 
         return this;
@@ -17,6 +18,10 @@ export class ViewHearingPage {
 
     getHeaderText() {
         return this.header.getText();
+    }
+
+    getStatusText() {
+        return this.status.getText();
     }
 
     async chooseAnActionFromDropDown(optionName: string) {
