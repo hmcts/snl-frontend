@@ -27,6 +27,8 @@ import { v4 as uuid } from 'uuid';
     providers: [PossibleHearingActionsService]
 })
 export class ViewHearingComponent implements OnInit {
+    public readonly HEARING_PART_STARTTIME_FORMAT = 'DD/MM/YYYY HH:mm';
+
     hearingId: string;
     hearing: Hearing;
     hearingActions = HearingActions;
@@ -50,25 +52,17 @@ export class ViewHearingComponent implements OnInit {
     ngOnInit() {
         this.hearingId = this.route.snapshot.paramMap.get('id');
         this.note = this.listingCreateNotesConfiguration.getOrCreateNote([], NoteType.LISTING_NOTE, 'Add listing note');
-        this.hearingService.hearings
-            .map(hearings => hearings.find(h => h.id === this.hearingId))
-            .subscribe(hearing => {
+        this.hearingService.hearings.pipe(
+            map(hearings => hearings.find(h => h.id === this.hearingId)),
+            filter(hearing => (hearing !== undefined) && (hearing !== null)),
+            tap(hearing => {
                 this.hearing = hearing;
-                if (hearing) {
-                    this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
-                    this.possibleActionsKeys = Object.keys(this.possibleActions)
-                }
-            });
+                this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
+                this.possibleActionsKeys = Object.keys(this.possibleActions)
+            })
+        ).subscribe();
 
         this.fetchHearing();
-    }
-
-    formatStartTime(startTime: moment.Moment): string {
-        return startTime.format('DD/MM/YYYY HH:mm')
-    }
-
-    formatDate(date: string): string {
-        return moment(date).format();
     }
 
     getListBetween() {
@@ -80,17 +74,17 @@ export class ViewHearingComponent implements OnInit {
         }
 
         if (start && !end) {
-            return 'after ' + this.formatDate(start);
+            return 'after ' + moment(start).format();
         }
 
         if (!start && end) {
-            return 'before ' + this.formatDate(end);
+            return 'before ' + moment(end).format();
         }
 
         if (start && end) {
-            return this.formatDate(start)
+            return moment(start).format()
                 + ' - '
-                + this.formatDate(end);
+                + moment(end).format();
         }
     }
 
@@ -123,7 +117,7 @@ export class ViewHearingComponent implements OnInit {
             data: amendData
         }).afterClosed().pipe(
             filter(data => data !== undefined),
-            map<AmendScheduledListingData, AmendScheduledListing>(data => {
+            map<AmendScheduledListingData, AmendScheduledListing>((data: AmendScheduledListingData) => {
                 return {
                     hearingPartId: scheduledListing.hearingPartIdOfCurrentHearing,
                     hearingPartVersion: scheduledListing.hearingPartVersionOfCurrentHearing,

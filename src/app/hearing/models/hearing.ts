@@ -11,8 +11,8 @@ export interface Note {
 export interface ScheduledListing {
   hearingPartStartTime: moment.Moment,
   duration: number,
-  room: string,
-  judge: string,
+  roomName: string,
+  judgeName: string,
   sessionType: string,
   hearingPartIdOfCurrentHearing: string,
   hearingPartVersionOfCurrentHearing: number,

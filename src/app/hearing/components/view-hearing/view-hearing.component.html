@@ -87,7 +87,7 @@
           </div>
           <div class="author-info">
             <strong>{{note.modifiedBy}}</strong><br>
-            {{formatDate(note.createdAt)}}
+            {{note.createdAt | appMomentFormat}}
           </div>
         </mat-list-item>
       </mat-list>
@@ -97,45 +97,43 @@
 
     <mat-tab label="Scheduled listings">
       <mat-accordion>
-        <mat-expansion-panel [expanded]="false" *ngFor="let session of hearing.sessions" [disabled]="isScheduledListingNotesPanelDisabled(session)">
+        <mat-expansion-panel [expanded]="!isScheduledListingNotesPanelDisabled(session)" *ngFor="let session of hearing.sessions" [disabled]="isScheduledListingNotesPanelDisabled(session)">
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <div class="listing-header">
-                <div class="tile small">
-                    {{formatStartTime(session.hearingPartStartTime)}}
+              <div style="display:flex" fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
+                <div fxFlex="25%">
+                    {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}
                 </div>
-                <div class="tile">
+                <div fxFlex="15%">
                   {{session.sessionType}}
                 </div>
-                <div class="tile">
-                    Start {{formatStartTime(session.hearingPartStartTime)}}
+                <div fxFlex="25%">
+                  Start {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}
                 </div>
-                <div class="tile small">
+                <div fxFlex="5%">
                   {{session.duration | appDurationFormat}}
                 </div>
-                <div class="tile">
+                <div fxFlex="10%">
                   {{session.roomName}}
                 </div>
-                <div class="tile">
+                <div fxFlex="10%">
                   {{session.judgeName}}
                 </div>
-                <span class="tile" [class.clickable]="true" (click)="openAmendDialog(session)">
+                <div [class.clickable]="true" (click)="openAmendDialog(session)">
                   Amend
-                </span>
+                </div>
               </div>
-              <div class="clear"></div>
-
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <mat-list class="session-notes">
+          <mat-list>
             <mat-list-item *ngFor="let note of session.notes" class="note">
               <div class="content">
                 {{note.content}}
               </div>
               <div class="author-info">
                 <strong>{{note.modifiedBy}}</strong><br>
-                {{formatDate(note.createdAt)}}
+                {{note.createdAt | appMomentFormat}}
               </div>
             </mat-list-item>
           </mat-list>
