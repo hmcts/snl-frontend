@@ -1,10 +1,10 @@
 import { IcalendarTransformer } from './icalendar-transformer';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { SessionViewModel, SessionCalendarViewModel } from '../../../sessions/models/session.viewmodel';
 import { DefaultDataTransformer } from './default-data-transformer';
 
 export const Separator = ':-:';
 
-export class DataWithSimpleResourceTransformer implements IcalendarTransformer<SessionViewModel> {
+export class DataWithSimpleResourceTransformer implements IcalendarTransformer<SessionViewModel, SessionCalendarViewModel> {
     private readonly _defaultTransformer: DefaultDataTransformer;
 
     constructor(private readonly eventResourceField: string) {
@@ -12,13 +12,14 @@ export class DataWithSimpleResourceTransformer implements IcalendarTransformer<S
     }
 
     transform(session: SessionViewModel) {
-        let resource = this._defaultTransformer.transform(session); // NOSONAR not const
+        let resource: SessionCalendarViewModel = this._defaultTransformer.transform(session); // NOSONAR not const
 
         let resourceId = this.eventResourceField + Separator + 'empty';
         if (this.eventResourceField && session[this.eventResourceField]) {
             resourceId = `${this.eventResourceField}${Separator}${session[this.eventResourceField].id}`;
         }
         resource['resourceId'] = resourceId;
+
         return resource;
     }
 
