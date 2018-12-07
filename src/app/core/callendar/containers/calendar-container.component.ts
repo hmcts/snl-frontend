@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import * as fromReducer from '../../../sessions/reducers';
 import { SearchForDates, SearchForJudgeWithHearings, } from '../../../sessions/actions/session.action';
 import { SessionQueryForDates } from '../../../sessions/models/session-query.model';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { SessionViewModel, SessionCalendarViewModel } from '../../../sessions/models/session.viewmodel';
 import { ActivatedRoute } from '@angular/router';
 import { SecurityService } from '../../../security/services/security.service';
 import { DiaryLoadParameters } from '../../../sessions/models/diary-load-parameters.model';
@@ -15,6 +15,8 @@ import { SessionDialogDetails } from '../../../sessions/models/session-dialog-de
 import { DefaultDataTransformer } from '../transformers/default-data-transformer';
 import * as judgeActions from '../../../judges/actions/judge.action';
 import * as fromRoomActions from '../../../rooms/actions/room.action';
+import { IcalendarTransformer } from '../transformers/icalendar-transformer';
+import { CalendarEventSessionViewModel } from '../../../planner/types/calendar-event-session-view-model.type';
 
 @Component({
     selector: 'app-calendar-container',
@@ -25,7 +27,7 @@ export class CalendarContainerComponent implements OnInit {
 
     sessions$: Observable<SessionViewModel[]>;
     loadData;
-    readonly dataTransformer: DefaultDataTransformer;
+    readonly dataTransformer: IcalendarTransformer<SessionViewModel, SessionCalendarViewModel>;
 
     constructor(private readonly store: Store<State>,
                 private readonly route: ActivatedRoute,
@@ -58,15 +60,11 @@ export class CalendarContainerComponent implements OnInit {
         this.store.dispatch(new SearchForJudgeWithHearings(query));
     }
 
-    public eventClick(eventId) {
-        if (eventId instanceof CustomEvent) {
-            return;
-        }
-
+    public eventClick(event: CalendarEventSessionViewModel) {
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
-            data: new SessionDialogDetails(this.store.pipe(select(fromReducer.getSessionViewModelById(eventId)))),
+            data: new SessionDialogDetails(this.store.pipe(select(fromReducer.getSessionViewModelById(event.detail.event.id)))),
             hasBackdrop: false
         });
     }

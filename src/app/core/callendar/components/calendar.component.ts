@@ -59,7 +59,7 @@ export class CalendarComponent implements OnInit {
     @Input() views: any;
     @Input() initialStartDate: Date = moment().toDate();
     @Output() loadData = new EventEmitter<SessionQueryForDates>();
-    @Output() eventClickCallback = new EventEmitter<string>();
+    @Output() eventClickCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
     @Output() eventResizeCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
     @Output() eventDropCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
     @Output() dropCallback = new EventEmitter<CustomEvent<EventDrop>>();
@@ -139,8 +139,8 @@ export class CalendarComponent implements OnInit {
         event.detail.element.find('div.fc-scroller').css('overflow-y', 'hidden !important');
     }
 
-    public eventClick(event: CustomEvent<UpdateEventModel<{id: string}>>) {
-        this.eventClickCallback.emit(event.detail.event.id);
+    public eventClick(event: CustomEvent<UpdateEventModel<TransformedType>>) {
+        this.eventClickCallback.emit(event);
     }
 
     public eventDrop(event: CustomEvent<UpdateEventModel<TransformedType>>) {

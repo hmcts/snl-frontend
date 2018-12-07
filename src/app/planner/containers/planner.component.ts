@@ -90,12 +90,10 @@ export class PlannerComponent implements OnInit {
         this.sessionCreationService.fetchUpdatedEntities();
     }
 
-    public eventClick(eventId: CustomEvent<CalendarMouseEvent> | string) {
-        if (eventId instanceof CustomEvent) {
-            return;
-        }
+    public eventClick(event: CalendarEventSessionViewModel ) {
+        const sessionId = event.detail.event.id
 
-        const sessionViewModel = this.store.pipe(select(fromSessions.getSessionViewModelById(eventId)))
+        const sessionViewModel = this.store.pipe(select(fromSessions.getSessionViewModelById(sessionId)))
         this.dialog.open(DetailsDialogComponent, {
             width: 'auto',
             minWidth: 350,
