@@ -28,6 +28,8 @@ import { ProblemEffects } from '../../../problems/effects/problem.effects';
 import { CommitTransaction, RollbackTransaction } from '../../../features/transactions/actions/transaction.action';
 import { TransactionEffects } from '../../../features/transactions/effects/transaction.effects';
 import { TransactionsModule } from '../../../features/transactions/transactions.module';
+import { DialogInfoComponent } from '../../../features/notification/components/dialog-info/dialog-info.component';
+import { NotificationModule } from '../../../features/notification/notification.module';
 
 let httpMock: HttpTestingController;
 let component: SessionsCreateComponent;
@@ -76,7 +78,8 @@ describe('SessionsCreateComponent', () => {
                 EffectsModule.forRoot([]),
                 EffectsModule.forFeature([SessionEffects, JudgeEffects, RoomEffects, ProblemEffects, TransactionEffects]),
                 BrowserAnimationsModule,
-                HttpClientTestingModule
+                HttpClientTestingModule,
+                NotificationModule
             ],
             providers: [SessionsCreateComponent, SessionsStatisticsService, HearingModificationService,
                 { provide: AppConfig, useValue: mockedAppConfig }, Actions],
@@ -85,7 +88,7 @@ describe('SessionsCreateComponent', () => {
 
         TestBed.overrideModule(BrowserDynamicTestingModule, {
             set: {
-                entryComponents: [TransactionDialogComponent]
+                entryComponents: [TransactionDialogComponent, DialogInfoComponent]
             }
         }).compileComponents();
 

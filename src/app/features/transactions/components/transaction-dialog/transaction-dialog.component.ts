@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
@@ -15,6 +15,8 @@ import { Problem } from '../../../../problems/models/problem.model';
 import { EntityTransaction } from '../../models/transaction-status.model';
 import * as fromProblems from '../../../../problems/reducers';
 import { ITransactionDialogData } from '../../models/transaction-dialog-data.model';
+import { DialogInfoComponent } from '../../../notification/components/dialog-info/dialog-info.component';
+import { DEFAULT_DIALOG_CONFIG } from '../../models/default-dialog-confg';
 
 @Component({
   selector: 'app-transaction-dialog',
@@ -34,10 +36,12 @@ export class TransactionDialogComponent {
   success: boolean;
 
   constructor(
-  private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
-  public actionListener$: ActionsSubject,
-  @Inject(MAT_DIALOG_DATA) public data: ITransactionDialogData,
-  private readonly store: Store<State>) {
+      private notificationDialog: MatDialog,
+      private readonly dialogRef: MatDialogRef<TransactionDialogComponent>,
+      public actionListener$: ActionsSubject,
+      @Inject(MAT_DIALOG_DATA) public data: ITransactionDialogData,
+      private readonly store: Store<State>) {
+
       dialogRef.disableClose = true
       this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentTransactionStatus));
@@ -60,6 +64,16 @@ export class TransactionDialogComponent {
               }
               case EntityTransactionActionTypes.TransactionRolledBack: {
                   this.dialogRef.close(false);
+                  break;
+              }
+              case EntityTransactionActionTypes.TransactionCommitFailed:
+              case EntityTransactionActionTypes.TransactionRollbackFailed: {
+                  this.dialogRef.close(false);
+                  this.notificationDialog.open(DialogInfoComponent, {
+                      ...DEFAULT_DIALOG_CONFIG,
+                      data: 'Sorry, you have exceeded the time allowed to respond to this request. ' +
+                          'If you still wish to make this change please try again'
+                  });
                   break;
               }
           }
