@@ -114,7 +114,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
                                   revertFunc: Function, jsEvent: Event, ui: any, view: View) => {
             let detail: UpdateEventModel = { event: event, delta, revertFunc, jsEvent, ui, view };
             let widgetEvent = new CustomEvent<UpdateEventModel>('eventDrop', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             this.updateEventsBeforeResize();
@@ -127,7 +127,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
             const duration =  delta ? delta : moment.duration(moment(event.end).diff(moment(event.start)));
             let detail: UpdateEventModel = { event: event, delta: duration, revertFunc: revertFunc, jsEvent, ui, view };
             let widgetEvent = new CustomEvent<UpdateEventModel>('eventResize', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             this.updateEventsBeforeResize();
@@ -138,7 +138,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.eventRender = function (event: EventObjectInput, element: JQuery, view: View) {
             let detail: RenderEventModel = { event: event, element: element, view: view };
             let widgetEvent = new CustomEvent('eventRender', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -148,7 +148,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.eventClick = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
             let detail: CalendarMouseEvent = { event, jsEvent, view };
             let widgetEvent = new CustomEvent<CalendarMouseEvent>('eventClick', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -158,7 +158,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.windowResize = function (view: View) {
             let detail = { view: view };
             let widgetEvent = new CustomEvent('windowResize', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             if (elem && elem[0]) {
@@ -170,7 +170,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.viewRender = function (view: View, element: JQuery) {
             let detail = { view: view, element: element };
             let widgetEvent = new CustomEvent('viewRender', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -180,7 +180,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.viewDestroy = function (view: View, element: JQuery) {
             let detail = { view: view, element: element };
             let widgetEvent = new CustomEvent('viewDestroy', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -190,7 +190,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.select = function (start: any, end: any, jsEvent: MouseEvent, view: any, resource?: any) {
             let detail = { start: start, end: end, jsEvent: jsEvent, view: view, resource: resource };
             let widgetEvent = new CustomEvent('select', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -200,7 +200,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.unselect = function (view: any, jsEvent: Event) {
             let detail = { view: view, jsEvent: jsEvent };
             let widgetEvent = new CustomEvent('unselect', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -210,7 +210,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.dayClick = function (date: any, jsEvent: Event, view: any) {
             let detail = { date: date, jsEvent: jsEvent, view: view };
             let widgetEvent = new CustomEvent('dayClick', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -220,7 +220,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.navLinkDayClick = function (date: any, jsEvent: Event) {
             let detail = { date: date, jsEvent: jsEvent };
             let widgetEvent = new CustomEvent('navLinkDayClick', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -230,7 +230,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.navLinkWeekClick = function (weekStart: any, jsEvent: Event) {
             let detail = { weekStart: weekStart, jsEvent: jsEvent };
             let widgetEvent = new CustomEvent('navLinkWeekClick', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
@@ -245,7 +245,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
             let detail: EventDrop = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
 
             const widgetEvent = new CustomEvent<EventDrop>('drop', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             // probably need to add an event - not handled!
@@ -254,7 +254,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.eventMouseover = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
             let detail: CalendarMouseEvent = { event, jsEvent, view };
             const widgetEvent = new CustomEvent<CalendarMouseEvent>('eventMouseOver', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             elem[0].dispatchEvent(widgetEvent);
@@ -262,7 +262,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.eventMouseout = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
             let detail: CalendarMouseEvent = { event, jsEvent, view };
             const widgetEvent = new CustomEvent<CalendarMouseEvent>('eventMouseOut', {
-                bubbles: true,
+                bubbles: false,
                 detail: detail
             });
             elem[0].dispatchEvent(widgetEvent);
