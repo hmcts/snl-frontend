@@ -19,8 +19,7 @@ export class SummaryMessageService {
             return this.buildListHearingMsg();
         }
 
-        const eventDetails = event.detail.event;
-        let [resourceType, resourceId] = eventDetails.resourceId.split(`${Separator}`);
+        let [resourceType, resourceId] = event.detail.event.resourceId.split(`${Separator}`);
         const isTimeChanged = this.isTimeChanged(event);
         const isResourceChanged = this.isResourceChanged(event, resourceType, resourceId);
 

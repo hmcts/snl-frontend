@@ -29,8 +29,8 @@ export interface SessionCalendarViewModel {
     end: moment.Moment,
     id: string,
     hearingParts: HearingPartViewModel[],
-    sessionType: SessionType
-    version: number;
+    sessionType: SessionType,
+    version: number,
 }
 
 export interface SessionForListingResponse {

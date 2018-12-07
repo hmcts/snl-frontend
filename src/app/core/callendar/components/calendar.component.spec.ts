@@ -5,7 +5,7 @@ import * as moment from 'moment';
 
 let component: CalendarComponent;
 const testData: any[] = ['one', 'two', 'three'];
-const testTransformer: IcalendarTransformer<string> = {
+const testTransformer: IcalendarTransformer<string, string> = {
   transform: (element: string) => {
     return element;
   }
@@ -88,19 +88,18 @@ describe('CalendarComponent', () => {
 
   describe('eventClick', () => {
     it('should call emit on eventClickCallback with detail event id', () => {
-      const expectedEventId = 'some event id';
-      const event = { detail: { event: { id: expectedEventId } } };
+      const event: any = { detail: { event: { id: 'some event id' } } } as any;
       const emitSpy = spyOn(component.eventClickCallback, 'emit');
 
       component.eventClick(event);
 
-      expect(emitSpy).toHaveBeenCalledWith(expectedEventId);
+      expect(emitSpy).toHaveBeenCalledWith(event);
     });
   });
 
   describe('eventDrop', () => {
     it('should call emit on eventDropCallback with event', () => {
-      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const event: any = { detail: { event: { start: moment(), end: moment() } } };
       const emitSpy = spyOn(component.eventDropCallback, 'emit');
 
       component.eventDrop(event);
@@ -111,7 +110,7 @@ describe('CalendarComponent', () => {
 
   describe('drop', () => {
     it('should call emit on dropCallback with event', () => {
-      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const event: any = { detail: { event: { start: moment(), end: moment() } } };
       const emitSpy = spyOn(component.dropCallback, 'emit');
 
       component.drop(event);
@@ -122,7 +121,7 @@ describe('CalendarComponent', () => {
 
   describe('eventMouseOver', () => {
     it('should call emit on eventMouseOverCallback with event', () => {
-      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const event: any = { detail: { event: { start: moment(), end: moment() } } };
       const emitSpy = spyOn(component.eventMouseOverCallback, 'emit');
 
       component.eventMouseOver(event);
@@ -133,7 +132,7 @@ describe('CalendarComponent', () => {
 
   describe('eventResize', () => {
     it('should call emit on eventResize with event', () => {
-      const event = { detail: { event: { start: moment(), end: moment() } } };
+      const event: any = { detail: { event: { start: moment(), end: moment() } } };
       const emitSpy = spyOn(component.eventResizeCallback, 'emit');
 
       component.eventResize(event);

@@ -1,3 +1,6 @@
+import { SessionCalendarViewModel } from './../../sessions/models/session.viewmodel';
+import { HearingType } from './../../core/reference/models/hearing-type';
+import { HearingPartViewModel } from './../../hearing-part/models/hearing-part.viewmodel';
 import { SummaryMessageService } from './../services/summary-message.service';
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store, ActionsSubject } from '@ngrx/store';
@@ -18,6 +21,10 @@ import * as caseTypeReducers from '../../core/reference/reducers/case-type.reduc
 import * as sessionTypeReducers from '../../core/reference/reducers/session-type.reducer';
 import * as hearingTypeReducers from '../../core/reference/reducers/hearing-type.reducer';
 import { Priority } from '../../hearing-part/models/priority-model';
+import { CaseType } from '../../core/reference/models/case-type';
+import { EventDrop } from '../../common/ng-fullcalendar/models/event-drop.model';
+import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
+import { UpdateEventModel } from '../../common/ng-fullcalendar/models/updateEventModel';
 
 let component: PlannerComponent;
 let store: Store<State>;
@@ -33,23 +40,42 @@ const hearingPartModificationServiceSpy = jasmine.createSpyObj(
   'HearingModificationService',
   ['assignWithSession']
 );
-const event = <CustomEvent>{
-  detail: {
-    event: {
-      id: 'some-id',
-      resourceId: 'some-string',
-      start: moment(),
-      end: moment()
-    },
-    duration: moment.duration({'minutes' : 30}),
+
+const eventDrop = {
+    resourceId: 'some-string',
     jsEvent: {
       target: {
-        getAttribute: () => {return hearingPartId}
+        getAttribute: () =>  hearingPartId
       }
-    },
-    revertFunc: () => {}
-  }
+    } as any,
+} as EventDrop
+const event = new CustomEvent<EventDrop>('some event', { detail: eventDrop });
+
+const sessionCalendarViewModel: SessionCalendarViewModel = {
+    room: undefined,
+    person: undefined,
+    title: '',
+    start: moment(),
+    end: moment(),
+    id: 'someId',
+    hearingParts: [],
+    sessionType: undefined,
+    version: 1,
 };
+
+const updateEvent: UpdateEventModel<SessionCalendarViewModel> = {
+    event: { ...sessionCalendarViewModel, resourceId: 'some:-:id'},
+    delta: moment.duration(30, 'minutes'),
+    revertFunc: () => { },
+    jsEvent: undefined,
+    ui: undefined,
+    view: undefined,
+}
+
+const calendarWithSessionEvent: CalendarEventSessionViewModel = new CustomEvent<UpdateEventModel<SessionCalendarViewModel>>('eventName', {
+  detail: updateEvent,
+})
+
 const openDialogMockObj = {
   afterClosed: (): Observable<boolean> => new Observable(() => {})
 };
@@ -139,39 +165,31 @@ describe('PlannerComponent', () => {
   });
 
   describe('eventClick', () => {
-    it('should not call dialog open when event is type of CustomEvent', () => {
-      const mockCustomEvent = new CustomEvent('');
-      component.eventClick(mockCustomEvent);
-      matDialogSpy.open.calls.reset();
-      expect(matDialogSpy.open).not.toHaveBeenCalled();
-    });
     it('should call dialog open when event is other type then CustomEvent', () => {
-      const mockCustomEvent = {};
+      const mockCustomEvent: any = {detail: {event: {id: 'some-id'}}};
       component.eventClick(mockCustomEvent);
       expect(matDialogSpy.open).toHaveBeenCalled();
     });
-  });
 
-  describe('eventModifyConfirmationClosed', () => {
-    it('should update session when confirmed', () => {
-      matDialogSpy.open.and.returnValue(openDialogMockObj);
-      component.eventModify(event);
-      component.eventModifyConfirmationClosed(true);
-      expect(sessionsCreationServiceSpy.update).toHaveBeenCalled();
-    });
-    it('should revert latest event when declined', () => {
-      matDialogSpy.open.and.returnValue(openDialogMockObj);
-      const revertFuncSpy = spyOn(event.detail, 'revertFunc');
-      component.eventModify(event);
-      component.eventModifyConfirmationClosed(false);
-      expect(revertFuncSpy).toHaveBeenCalled();
+    describe('eventModifyConfirmationClosed', () => {
+      it('should update session when confirmed', () => {
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(true) });
+        component.eventModify(calendarWithSessionEvent);
+        expect(sessionsCreationServiceSpy.update).toHaveBeenCalled();
+      });
+      it('should revert latest event when declined', () => {
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(false) });
+        const revertFuncSpy = spyOn(calendarWithSessionEvent.detail, 'revertFunc');
+        component.eventModify(calendarWithSessionEvent);
+        expect(revertFuncSpy).toHaveBeenCalled();
+      });
     });
   });
 
   describe('eventModify', () => {
     it('should open dialog ', () => {
       matDialogSpy.open.and.returnValue(openDialogMockObj);
-      component.eventModify(event);
+      component.eventModify(calendarWithSessionEvent);
       expect(matDialogSpy.open).toHaveBeenCalled();
     });
   });
@@ -181,7 +199,7 @@ describe('PlannerComponent', () => {
       component.hearingParts = [{
           id: hearingPartId,
           multiSession: false
-      }];
+      } as HearingPartViewModel];
 
       matDialogSpy.open.and.returnValue(openDialogMockObj);
       component.drop(event);
@@ -192,7 +210,7 @@ describe('PlannerComponent', () => {
       component.hearingParts = [{
           id: hearingPartId,
           multiSession: true,
-      }];
+      } as HearingPartViewModel];
 
       matDialogSpy.open.and.returnValue({
           afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
@@ -227,28 +245,29 @@ describe('PlannerComponent', () => {
 
       component.hearingParts = [{
           id: hearingPartId,
-          session: undefined,
+          sessionId: undefined,
+          hearingId: undefined,
+          multiSession: false,
           caseNumber: 'abc123',
           caseTitle: 'some-case-title',
-          caseType: 'asd',
-          hearingType: 'asd',
+          caseType: { code: 'asd', description: 'asd'} as CaseType,
+          hearingType: { code: 'asd', description: 'asd'} as HearingType,
           duration: moment.duration(30),
-          scheduleStart: moment.now(),
-          scheduleEnd: moment.now(),
+          start: moment(),
+          scheduleStart: moment(),
+          scheduleEnd: moment(),
           version: 2,
           priority: Priority.Low,
+          reservedJudge: undefined,
           reservedJudgeId: undefined,
           communicationFacilitator: 'interpreter',
           notes: [],
-          reservedJudge: undefined
-      }
-      ]
+      }]
 
       matDialogSpy.open.and.returnValue({
           afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
       });
 
-      component.eventModify(event);
       matDialogSpy.open.calls.reset();
       component.drop(event);
       expect(
