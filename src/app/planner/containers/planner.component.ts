@@ -27,7 +27,6 @@ import { DEFAULT_DIALOG_CONFIG } from '../../features/transactions/models/defaul
 import { DragAndDropSession } from '../../sessions/models/drag-and-drop-session.model';
 import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
 import { EventDrop } from '../../common/ng-fullcalendar/models/event-drop.model';
-import { CalendarMouseEvent } from '../../common/ng-fullcalendar/models/calendar-mouse-event.model';
 import { safe } from '../../utils/js-extensions';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as fromRoomActions from '../../rooms/actions/room.action';
@@ -40,9 +39,8 @@ export class PlannerComponent implements OnInit {
     public view: string;
     public lastSearchDateRange: SessionQueryForDates;
     private confirmationDialogRef;
-    private confirmationDialogOpen = false
     public selectedSessionId: string;
-    private latestEvent: CalendarEventSessionViewModel;
+    private latestEvent: CustomEvent;
     public sessions: SessionViewModel[] = [];
     public hearingParts: HearingPartViewModel[];
 
@@ -103,27 +101,22 @@ export class PlannerComponent implements OnInit {
     }
 
     public eventModify(event: CalendarEventSessionViewModel) {
-        if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = this.openConfirmationDialog();
-            this.latestEvent = event;
-            this.confirmationDialogRef.afterClosed().subscribe(this.eventModifyConfirmationClosed);
-        }
+        this.confirmationDialogRef = this.openConfirmationDialog();
+        this.latestEvent = event;
+        this.confirmationDialogRef.afterClosed().subscribe(this.eventModifyConfirmationClosed);
     }
 
     public drop(event: CustomEvent<EventDrop>) {
-        this.latestEvent = event as any;
+        this.latestEvent = event;
         let hearingPartId = event.detail.jsEvent.target.getAttribute('data-hearingid');
         let isNotMultiSession = !this.hearingParts.find(hp => hp.id === hearingPartId).multiSession;
 
-        if (!this.confirmationDialogOpen) {
-            this.confirmationDialogRef = isNotMultiSession ? this.openConfirmationDialog() : this.openMultiSessionDialog();
-            this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
-                this.confirmationDialogOpen = false;
-                if (isNotMultiSession && confirmed) {
-                    this.updateHearingPart(hearingPartId)
-                }
-            });
-        }
+        this.confirmationDialogRef = isNotMultiSession ? this.openConfirmationDialog() : this.openMultiSessionDialog();
+        this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
+            if (isNotMultiSession && confirmed) {
+                this.updateHearingPart(hearingPartId)
+            }
+        });
     }
 
     public eventMouseOver(event: CalendarEventSessionViewModel) {
@@ -143,8 +136,6 @@ export class PlannerComponent implements OnInit {
         } else {
             this.revertLatestEvent();
         }
-
-        this.confirmationDialogOpen = false;
     };
 
     private updateHearingPart(hearingPartId: string) {
@@ -194,8 +185,6 @@ export class PlannerComponent implements OnInit {
     }
 
     private openMultiSessionDialog(): MatDialogRef<DialogInfoComponent> {
-        this.confirmationDialogOpen = true;
-
         return this.dialog.open(DialogInfoComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: 'This is a multi-session hearing and you cannot move just part of it.'
@@ -203,8 +192,6 @@ export class PlannerComponent implements OnInit {
     }
 
     private openConfirmationDialog(): MatDialogRef<DialogWithActionsComponent> {
-        this.confirmationDialogOpen = true;
-
         return this.dialog.open(DialogWithActionsComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
