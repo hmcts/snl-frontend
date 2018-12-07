@@ -8,12 +8,13 @@ import { Separator } from '../../core/callendar/transformers/data-with-simple-re
 import { Room } from '../../rooms/models/room.model';
 import { Judge } from '../../judges/models/judge.model';
 import { safe } from '../../utils/js-extensions';
+import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
 
 @Injectable()
 export class SummaryMessageService {
     constructor(private readonly store: Store<State>) { }
 
-    public buildSummaryMessage(event): Observable<string> {
+    public buildSummaryMessage(event: CalendarEventSessionViewModel): Observable<string> {
         if (event.detail.event === undefined) {
             return this.buildListHearingMsg();
         }
@@ -28,16 +29,16 @@ export class SummaryMessageService {
             return Observable.of(null)
         } else {
             return (resourceId === 'empty') ?
-                this.buildUnassignedMsg(resourceType, event.detail.event) :
+                this.buildUnassignedMsg(resourceType, event) :
                 this.buildAssignedMsg(resourceType, resourceId)
         }
     }
 
-    private isTimeChanged(event): boolean {
-        return event.detail.duration.asMilliseconds() !== 0;
+    private isTimeChanged(event: CalendarEventSessionViewModel): boolean {
+        return event.detail.delta.asMilliseconds() !== 0;
     }
 
-    private isResourceChanged(event, resourceType, resourceId): boolean {
+    private isResourceChanged(event: CalendarEventSessionViewModel, resourceType: string, resourceId: string): boolean {
         const roomId = safe(() => event.detail.event.room.id) || 'empty'
         const personId = safe(() => event.detail.event.person.id) || 'empty'
 
@@ -59,12 +60,12 @@ export class SummaryMessageService {
         return assignedMsg$
     }
 
-    private buildUnassignedMsg(resourceType: string, event: any): Observable<string> {
+    private buildUnassignedMsg(resourceType: string, event: CalendarEventSessionViewModel): Observable<string> {
         let resourceName = 'Judge or Room'
         if (resourceType === 'room') {
-            resourceName = event.room.name
+            resourceName = event.detail.event.room.name
         } else if (resourceType === 'person') {
-            resourceName = event.person.name
+            resourceName = event.detail.event.person.name
         }
 
         return Observable.of(`${resourceName} has been unassigned`)
