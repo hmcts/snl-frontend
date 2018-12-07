@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../../app.config';
 import { Observable } from 'rxjs/Observable';
-import { ActivityLog } from '../models/activity-log.model';
+import { ActivityLog, ActivityLogResponse, mapResponseToActivityLog } from '../models/activity-log.model';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ActivityLogService {
@@ -11,7 +12,10 @@ export class ActivityLogService {
 
     getActivitiesForEntity(entityId: string): Observable<ActivityLog[]> {
         return this.http
-            .get<ActivityLog[]>(`${this.getUrl()}/${entityId}`)
+            .get<ActivityLogResponse[]>(`${this.getUrl()}/${entityId}`)
+            .pipe(map<ActivityLogResponse[], ActivityLog[]>(activityLogs => {
+                return activityLogs.map(mapResponseToActivityLog)
+            }));
     }
 
     private getUrl() {
