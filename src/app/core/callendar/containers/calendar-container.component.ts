@@ -13,6 +13,8 @@ import { DetailsDialogComponent } from '../../../sessions/components/details-dia
 import { MatDialog } from '@angular/material';
 import { SessionDialogDetails } from '../../../sessions/models/session-dialog-details.model';
 import { DefaultDataTransformer } from '../transformers/default-data-transformer';
+import * as judgeActions from '../../../judges/actions/judge.action';
+import * as fromRoomActions from '../../../rooms/actions/room.action';
 
 @Component({
     selector: 'app-calendar-container',
@@ -38,6 +40,9 @@ export class CalendarContainerComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.store.dispatch(new judgeActions.Get());
+        this.store.dispatch(new fromRoomActions.Get());
+
         this.route.data.subscribe((data) => {
             this.loadData = data.forSpecificJudge ? this.loadDataForJudge : this.loadDataForAllJudges;
         });
