@@ -6,8 +6,11 @@ import './lib/customEvent';
 import { ButtonClickModel } from './models/buttonClickModel';
 import { UpdateEventModel } from './models/updateEventModel';
 import { RenderEventModel } from './models/renderEventModel';
+import { CalendarMouseEvent } from './models/calendar-mouse-event.model'
 import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-types';
 import * as moment from 'moment';
+import { EventDrop } from './models/event-drop.model';
+import { View } from 'fullcalendar';
 
 @Component({
     // tslint:disable-next-line
@@ -36,9 +39,9 @@ export class NgFullCalendarComponent implements AfterViewInit {
     eventsModelChange = new EventEmitter<any>();
 
     @Input() options: OptionsInput;
-    @Output() eventDrop = new EventEmitter<any>();
-    @Output() eventResize = new EventEmitter<any>();
-    @Output() eventClick = new EventEmitter<any>();
+    @Output() eventDrop = new EventEmitter<CustomEvent<UpdateEventModel>>();
+    @Output() eventResize = new EventEmitter<CustomEvent<UpdateEventModel>>();
+    @Output() eventClick = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
     @Output() clickButton = new EventEmitter<any>();
     @Output() windowResize = new EventEmitter<any>();
     @Output() viewRender = new EventEmitter<any>();
@@ -50,9 +53,9 @@ export class NgFullCalendarComponent implements AfterViewInit {
     @Output() dayClick = new EventEmitter<any>();
     @Output() navLinkDayClick = new EventEmitter<any>();
     @Output() navLinkWeekClick = new EventEmitter<any>();
-    @Output() drop = new EventEmitter<any>();
-    @Output() eventMouseOver = new EventEmitter<any>();
-    @Output() eventMouseOut = new EventEmitter<any>();
+    @Output() drop = new EventEmitter<CustomEvent<EventDrop>>();
+    @Output() eventMouseOver = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
+    @Output() eventMouseOut = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
     }
@@ -107,9 +110,10 @@ export class NgFullCalendarComponent implements AfterViewInit {
 
     updaterOptions() {
         let elem = document.getElementsByTagName('ng-fullcalendar');
-        this.options.eventDrop = (event, duration, revertFunc) => {
-            let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
-            let widgetEvent = new CustomEvent('eventDrop', {
+        this.options.eventDrop = (event: EventObjectInput, delta: moment.Duration,
+                                  revertFunc: Function, jsEvent: Event, ui: any, view: View) => {
+            let detail: UpdateEventModel = { event: event, delta, revertFunc, jsEvent, ui, view };
+            let widgetEvent = new CustomEvent<UpdateEventModel>('eventDrop', {
                 bubbles: true,
                 detail: detail
             });
@@ -118,10 +122,11 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.eventResize = (event, duration, revertFunc) => {
-            duration =  duration ? duration : moment.duration(moment(event.end).diff(moment(event.start)));
-            let detail: UpdateEventModel = { event: event, duration: duration, revertFunc: revertFunc  };
-            let widgetEvent = new CustomEvent('eventResize', {
+        this.options.eventResize = (event: EventObjectInput, delta: moment.Duration,
+                                    revertFunc: Function, jsEvent: Event, ui: any, view: View) => {
+            const duration =  delta ? delta : moment.duration(moment(event.end).diff(moment(event.start)));
+            let detail: UpdateEventModel = { event: event, delta: duration, revertFunc: revertFunc, jsEvent, ui, view };
+            let widgetEvent = new CustomEvent<UpdateEventModel>('eventResize', {
                 bubbles: true,
                 detail: detail
             });
@@ -130,7 +135,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.eventRender = function (event, element, view) {
+        this.options.eventRender = function (event: EventObjectInput, element: JQuery, view: View) {
             let detail: RenderEventModel = { event: event, element: element, view: view };
             let widgetEvent = new CustomEvent('eventRender', {
                 bubbles: true,
@@ -140,18 +145,17 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.eventClick = (event) => {
-            let detail: UpdateEventModel = { event: event, duration: null, revertFunc: null };
-            let widgetEvent = new CustomEvent('eventClick', {
+        this.options.eventClick = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
+            let detail: CalendarMouseEvent = { event, jsEvent, view };
+            let widgetEvent = new CustomEvent<CalendarMouseEvent>('eventClick', {
                 bubbles: true,
                 detail: detail
             });
             for (let i = 0; i < elem.length; i++) {
                 elem[i].dispatchEvent(widgetEvent);
             }
-
         };
-        this.options.windowResize = function (view) {
+        this.options.windowResize = function (view: View) {
             let detail = { view: view };
             let widgetEvent = new CustomEvent('windowResize', {
                 bubbles: true,
@@ -163,7 +167,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 }
             }
         };
-        this.options.viewRender = function (view, element) {
+        this.options.viewRender = function (view: View, element: JQuery) {
             let detail = { view: view, element: element };
             let widgetEvent = new CustomEvent('viewRender', {
                 bubbles: true,
@@ -173,7 +177,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.viewDestroy = function (view, element) {
+        this.options.viewDestroy = function (view: View, element: JQuery) {
             let detail = { view: view, element: element };
             let widgetEvent = new CustomEvent('viewDestroy', {
                 bubbles: true,
@@ -233,26 +237,31 @@ export class NgFullCalendarComponent implements AfterViewInit {
                 elem[i].dispatchEvent(widgetEvent);
             }
         };
-        this.options.drop = (date: any, jsEvent: Event, ui: any, resourceId?: any) => {
-            let detail = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
-            const widgetEvent = new CustomEvent('drop', {
+        // based on docs https://fullcalendar.io/docs/drop
+        // 'jsEvent holds the jQuery event, with information like mouse coordinates'
+        // but in types definitions it expect to be MouseEvent, using *any* as in this case jQuery object is returned instead of MouseEvent
+        // worth checking if others events also returns jQuery events
+        this.options.drop = (date: moment.Moment, jsEvent: any, ui: any, resourceId?: any) => {
+            let detail: EventDrop = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
+
+            const widgetEvent = new CustomEvent<EventDrop>('drop', {
                 bubbles: true,
                 detail: detail
             });
             // probably need to add an event - not handled!
             elem[0].dispatchEvent(widgetEvent);
         };
-        this.options.eventMouseover = (event: any, jsEvent: Event, view: any) => {
-            let detail = { event: event, jsEvent: jsEvent, view: view };
-            const widgetEvent = new CustomEvent('eventMouseOver', {
+        this.options.eventMouseover = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
+            let detail: CalendarMouseEvent = { event, jsEvent, view };
+            const widgetEvent = new CustomEvent<CalendarMouseEvent>('eventMouseOver', {
                 bubbles: true,
                 detail: detail
             });
             elem[0].dispatchEvent(widgetEvent);
         };
-        this.options.eventMouseout = (event: any, jsEvent: Event, view: any) => {
-            let detail = { event: event, jsEvent: jsEvent, view: view };
-            const widgetEvent = new CustomEvent('eventMouseOut', {
+        this.options.eventMouseout = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
+            let detail: CalendarMouseEvent = { event, jsEvent, view };
+            const widgetEvent = new CustomEvent<CalendarMouseEvent>('eventMouseOut', {
                 bubbles: true,
                 detail: detail
             });
