@@ -107,19 +107,19 @@ describe('PlannerComponent', () => {
 
   describe('loadDataForAllJudges', () => {
     it('should set lastSearchDateRange', () => {
-      component.loadDataForAllJudges(sessionQuery);
+      component.searchSessions(sessionQuery);
       expect(component.lastSearchDateRange).toEqual(sessionQuery);
     });
 
     it('should dispatch [Session] SearchForDates action', () => {
-      component.loadDataForAllJudges(sessionQuery);
+      component.searchSessions(sessionQuery);
       const passedObj = storeSpy.calls.argsFor(0)[0];
       expect(passedObj instanceof SearchForDates).toBeTruthy();
       expect(passedObj.payload).toEqual(sessionQuery);
     });
 
     it('should NOT dispatch [Session] SearchForDates action when query is null', () => {
-      component.loadDataForAllJudges(undefined);
+      component.searchSessions(undefined);
       expect(storeSpy).not.toHaveBeenCalled();
     });
   });
