@@ -60,11 +60,11 @@ export class API {
 
     static async deleteListingRequest(id: string) {
         await API.login();
-        const versionId =  (await API.getListingRequestById(id)).version;
+        const hearingVersion =  (await API.getListingRequestById(id)).version;
         const transactionId = uuid().toString();
 
         await API.deleteListingRequestWithBody({
-            hearingId: id, hearingVersion: versionId, userTransactionId: transactionId
+            hearingId: id, hearingVersion: hearingVersion, userTransactionId: transactionId
         })
     }
 

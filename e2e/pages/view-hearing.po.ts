@@ -1,10 +1,12 @@
 import { browser, by, element, ExpectedConditions } from 'protractor';
 import { Wait } from '../enums/wait';
+import { ElementHelper } from '../utils/element-helper';
 
 export class ViewHearingPage {
     private header = element(by.id('case-number')).$('.case-number');
     private status = element(by.id('status'));
     private actionsDropDown = element(by.id('action'));
+    private helper: ElementHelper = new ElementHelper();
 
     async waitUntilVisible() {
         await browser.wait(
@@ -25,14 +27,6 @@ export class ViewHearingPage {
     }
 
     async chooseAnActionFromDropDown(optionName: string) {
-        await browser.wait(ExpectedConditions.elementToBeClickable(this.actionsDropDown),
-            Wait.normal,
-            `'Actions' dropdown is not clickable`);
-        await this.actionsDropDown.click();
-        const subElement = element(by.cssContainingText('.mat-option', optionName));
-        await browser.wait(ExpectedConditions.visibilityOf((subElement)),
-            Wait.normal,
-            `'${optionName}' is not displayed in the 'Actions' dropdown`);
-        await subElement.click();
+        this.helper.selectValueFromSingleSelectOption(this.actionsDropDown, 'Withdraw')
     }
 }
