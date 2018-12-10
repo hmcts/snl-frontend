@@ -14,6 +14,7 @@ import { NotesService } from '../../../notes/services/notes.service';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
 import { ActivitiesLogComponent } from '../../../features/activityLog/components/activities-log.component';
+import { ActivityLogService } from '../../../features/activityLog/services/activity-log.service';
 
 @Component({
   selector: 'app-view-hearing',
@@ -38,7 +39,8 @@ export class ViewHearingComponent implements OnInit {
     private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
     private readonly notesService: NotesService,
     private readonly location: Location,
-    private readonly possibleActionsService: PossibleHearingActionsService
+    private readonly possibleActionsService: PossibleHearingActionsService,
+    private readonly activityLogService: ActivityLogService
   ) {
   }
 
@@ -51,7 +53,9 @@ export class ViewHearingComponent implements OnInit {
         this.hearing = hearing;
         if (hearing) {
             this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
-            this.possibleActionsKeys = Object.keys(this.possibleActions)
+            this.possibleActionsKeys = Object.keys(this.possibleActions);
+
+            this.activityLogService.getActivitiesForEntity(this.hearingId);
         }
       });
 
@@ -91,10 +95,6 @@ export class ViewHearingComponent implements OnInit {
 
     onActionChanged(event: {value: HearingActions}) {
         this.possibleActionsService.handleAction(event.value, this.hearing)
-            .subscribe(() => {
-                this.activitiesLogComponent.fetchActivities()
-            });
-
         this.actionSelect.writeValue(HearingActions.Actions)
     }
 
@@ -111,6 +111,6 @@ export class ViewHearingComponent implements OnInit {
     }
 
     private fetchHearing() {
-        this.hearingService.getById(this.hearingId).subscribe();
+        this.hearingService.getById(this.hearingId)
     }
 }

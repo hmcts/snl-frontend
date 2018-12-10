@@ -62,7 +62,7 @@ describe('PossibleHearingActionsService', () => {
                     const possibleActionService = new PossibleHearingActionsService(dialogMock, hearingServiceMock)
                     possibleActionService.mapToHearingPossibleActions(hearingWithAllPossibleActions)
                     const expectedId = 'someid'
-                    possibleActionService.handleAction(HearingActions.Unlist, {id: expectedId} as Hearing).subscribe()
+                    possibleActionService.handleAction(HearingActions.Unlist, {id: expectedId} as Hearing)
 
                     expect(hearingServiceMock.unlist).toHaveBeenCalled()
                     expect(hearingServiceMock.getById).toHaveBeenCalledWith(expectedId)

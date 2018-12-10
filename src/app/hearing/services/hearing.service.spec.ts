@@ -95,7 +95,7 @@ describe('HearingService', () => {
   describe('getById', () => {
     it('should return data from service populated with notes', (done) => {
       const id = 'some-id';
-      service.getById(id).subscribe();
+      service.getById(id);
 
       const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
       request.flush({id: id} as Hearing);

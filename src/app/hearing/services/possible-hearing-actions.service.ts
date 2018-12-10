@@ -9,7 +9,6 @@ import { Hearing } from '../models/hearing';
 import { PossibleActionConfig } from '../models/possible-action-config';
 import { IPossibleActionConfigs } from '../models/ipossible-actions';
 import { Observable } from 'rxjs';
-import { filter, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class PossibleHearingActionsService {
@@ -49,12 +48,9 @@ export class PossibleHearingActionsService {
         const action: PossibleActionConfig = this.possibleActions[value];
 
         if (action.enabled) {
-            return action.openDialog().pipe(
-                filter(confirmed => confirmed === true),
-                mergeMap(() => {
-                    return this.confirmationDialogClosed(() => action.callService(hearing), hearing, action.summaryText)
-                })
-                );
+            action.openDialog().subscribe((confirmed) => {
+                this.confirmationDialogClosed(confirmed, () => action.callService(hearing), hearing, action.summaryText)
+            });
         }
     }
 
@@ -124,12 +120,13 @@ export class PossibleHearingActionsService {
         return confirmationDialogRef.afterClosed();
     }
 
-    private confirmationDialogClosed = (callService: () => void, hearing: Hearing, summaryDialogText: string) => {
-        callService();
-
-        return this.openSummaryDialog(summaryDialogText).afterClosed().pipe(mergeMap(() => {
-            return this.fetchHearing(hearing.id);
-        }));
+    private confirmationDialogClosed = (confirmed: boolean, callService: () => void, hearing: Hearing, summaryDialogText: string) => {
+        if (confirmed) {
+            callService();
+            this.openSummaryDialog(summaryDialogText).afterClosed().subscribe(() => {
+                this.fetchHearing(hearing.id);
+            });
+        }
     };
 
     private openSummaryDialog(summaryDialogText: string) {
@@ -140,6 +137,6 @@ export class PossibleHearingActionsService {
     }
 
     private fetchHearing(id: string) {
-        return this.hearingService.getById(id);
+        this.hearingService.getById(id);
     }
 }

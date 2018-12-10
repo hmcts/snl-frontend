@@ -22,3 +22,10 @@ export function mapResponseToActivityLog(activityLogResponse: ActivityLogRespons
         createdAt: moment(activityLogResponse.createdAt)
     }
 }
+
+export const DEFAULT_ACTIVITY_LOG: ActivityLog = {
+    activityStatus: undefined,
+    description: undefined,
+    createdAt: undefined,
+    createdBy: undefined
+}

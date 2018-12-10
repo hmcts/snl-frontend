@@ -49,9 +49,9 @@ export class HearingService {
     }
 
     getById(id: string) {
-        return this.http
+        this.http
             .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
-            .pipe(map(data => {
+            .subscribe(data => {
                 this.notesPopulatorService.populateWithNotes(data);
                 const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
 
@@ -62,7 +62,7 @@ export class HearingService {
                 }
 
                 this._hearings.next({...this.dataStore}.hearings);
-            }));
+            });
     }
 
     unlist(hearing: Hearing) {
