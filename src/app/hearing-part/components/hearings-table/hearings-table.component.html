@@ -70,8 +70,8 @@
   <ng-container matColumnDef="notes">
     <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
     <mat-cell *matCellDef="let element">
-      <span [class.clickable]="hasNotes(element)" (click)="openNotesDialog(element)">
-        {{hasNotes(element) ? "Yes" : "No"}}
+      <span [class.clickable]="hasOtherOrListingNotes(element)" (click)="openNotesDialog(element)">
+        {{hasOtherOrListingNotes(element) ? "Yes" : "No"}}
       </span>
     </mat-cell>
   </ng-container>

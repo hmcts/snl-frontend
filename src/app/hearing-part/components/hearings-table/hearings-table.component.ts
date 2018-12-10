@@ -1,6 +1,6 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import * as moment from 'moment'
+import * as moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
 import { NotesListDialogComponent } from '../../../notes/components/notes-list-dialog/notes-list-dialog.component';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
@@ -15,6 +15,7 @@ import { v4 as uuid } from 'uuid';
 import { filter, mergeMap, take, tap } from 'rxjs/operators';
 import { TableSettings } from '../../models/table-settings.model';
 import { HearingForListingColumn } from '../../models/hearing-for-listing-column.model';
+import { NoteType } from '../../../notes/models/note-type';
 
 @Component({
     selector: 'app-hearings-table',
@@ -34,6 +35,7 @@ export class HearingsTableComponent implements AfterViewChecked {
         this._hearings = hearings;
         this.dataSource = new MatTableDataSource(Object.values(this._hearings));
     };
+
     @Input() totalCount: number;
     @Output() selectHearing = new EventEmitter();
     @Output() onEdit = new EventEmitter();
@@ -77,12 +79,17 @@ export class HearingsTableComponent implements AfterViewChecked {
         return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
-    hasNotes(hearing: HearingForListingWithNotes): boolean {
-        return hearing.notes.length > 0;
+    hasOtherOrListingNotes(hearing: HearingForListingWithNotes): boolean {
+        for (const note of hearing.notes) {
+            if (NoteType.OTHER_NOTE === note.type || NoteType.LISTING_NOTE === note.type) {
+                return true;
+            }
+        }
+        return false;
     }
 
     goToFirstPage() {
-        this.paginator.firstPage()
+        this.paginator.firstPage();
     }
 
     openEditDialog(id: string) {
@@ -90,12 +97,12 @@ export class HearingsTableComponent implements AfterViewChecked {
     }
 
     openNotesDialog(hearing: HearingForListingWithNotes) {
-        if (this.hasNotes(hearing)) {
+        if (this.hasOtherOrListingNotes(hearing)) {
             this.dialog.open(NotesListDialogComponent, {
                 data: hearing.notes.map(getNoteViewModel),
                 hasBackdrop: false,
                 width: '30%'
-            })
+            });
         }
     }
 
@@ -107,10 +114,10 @@ export class HearingsTableComponent implements AfterViewChecked {
         }).afterClosed().pipe(
             filter(confirmed => confirmed === true),
             tap(() => {
-                this.deleteHearing(hearing)
+                this.deleteHearing(hearing);
             }),
             mergeMap(() => {
-                return this.openTransactionDialog().afterClosed()
+                return this.openTransactionDialog().afterClosed();
             }),
             filter(success => success === true),
             tap(() => this.tableSettingsSource$.next(this.tableSettingsSource$.getValue())),
@@ -136,7 +143,7 @@ export class HearingsTableComponent implements AfterViewChecked {
             sortDirection: this.sort.direction
         };
 
-        this.tableSettingsSource$.next(ts)
+        this.tableSettingsSource$.next(ts);
     }
 
     private openTransactionDialog() {
