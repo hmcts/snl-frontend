@@ -20,7 +20,7 @@ export class ActivitiesLogComponent implements OnInit {
         this.fetchActivities();
     }
 
-    public fetchActivities() {
+    private fetchActivities() {
         this.activityLogService.activityLogs
             .subscribe(activityLog => {
                     this.activities = activityLog[this.entityId]
