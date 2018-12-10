@@ -20,13 +20,11 @@ describe('Transaction Effects', () => {
     let transactionBackendService: TransactionBackendService;
 
     let transactionId = 'tr-id';
-
     let successfulCommitResponse = {
         id: transactionId,
         action: 'commit',
         success: true
     };
-
     let successfulRollbackResponse = {
         id: transactionId,
         action: 'rollback',
