@@ -110,9 +110,9 @@
 
                 <div fxFlex="20%">
                   <span matInput>Start: {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</span>
-                    <button mat-button matSuffix aria-label="search" (click)="openAmendDialog(session)">
-                      Modify
-                    </button>
+                  <button mat-icon-button (click)="openAmendDialog(session)">
+                    <mat-icon>arrow_drop_down_circle</mat-icon>
+                  </button>
                 </div>
                 <div fxFlex="5%">
                   {{session.duration | appDurationFormat}}
