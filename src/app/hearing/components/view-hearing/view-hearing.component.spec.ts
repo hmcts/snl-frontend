@@ -1,22 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async } from '@angular/core/testing';
 import { ViewHearingComponent } from './view-hearing.component';
-import { AngularMaterialModule } from '../../../../angular-material/angular-material.module';
-import { ActivatedRoute } from '@angular/router';
-import { HearingService } from '../../services/hearing.service';
 import { Observable } from 'rxjs/Observable';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Hearing } from '../../models/hearing';
+import { DEFAULT_SCHEDULED_LISTING, Hearing, ScheduledListing } from '../../models/hearing';
 import * as moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
 import { HearingActions } from '../../models/hearing-actions';
-import { Location } from '@angular/common';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ListingCreateNotesConfiguration } from '../../../hearing-part/models/listing-create-notes-configuration.model';
-import { NotesService } from '../../../notes/services/notes.service';
-import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
-import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
+import { AmendScheduledListing, DEFAULT_AMEND_SCHEDULED_LISTING_DATA } from '../../models/amend-scheduled-listing';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -31,33 +22,25 @@ const HEARING = {
   sessions: []
 } as Hearing
 
-const hearingServiceMock = {
-  getById: function (id: string) {
-    return Observable.of();
-  },
-  unlist: () => {},
-  hearings: Observable.of([])
-}
-
-const notesPreparerService = {
+const notesPreparerService: any = {
     prepare: function (id: string) {
         return Observable.of();
     }
 }
 
-const listingCreateNotesConfiguration = {
+const listingCreateNotesConfiguration: any = {
     getOrCreateNote: function (id: string) {
         return Observable.of();
     }
 }
 
-const notesService = {
+const notesService: any = {
     upsertMany: function (id: string) {
         return Observable.of();
     }
 }
 
-const routeMock = {
+const routeMock: any = {
   snapshot: {
     paramMap: {
       get: function (param: string) {
@@ -67,47 +50,27 @@ const routeMock = {
   }
 }
 
+const locationMock: any = {
+  back: () => {}
+}
+
 const possibleHearingActionsServiceMock: jasmine.SpyObj<PossibleHearingActionsService> =
   jasmine.createSpyObj('PossibleHearingActionsService', ['mapToHearingPossibleActions', 'handleAction'])
 
-let hearingService: HearingService
-let hearingServiceGetByIdSpy
+let hearingServiceMock: any
+let dialogMock: any
 
 describe('ViewHearingComponent', () => {
   let component: ViewHearingComponent;
-  let fixture: ComponentFixture<ViewHearingComponent>;
 
   beforeEach(async(() => {
-    TestBed.overrideComponent(ViewHearingComponent, {
-      set: {
-        providers: [{ provide: PossibleHearingActionsService, useValue: possibleHearingActionsServiceMock }]
-      }
-    });
+      hearingServiceMock = jasmine.createSpyObj('dialog', ['getById', 'unlist', 'amendScheduledListing']);
+      hearingServiceMock.getById.and.returnValue(Observable.of());
+      hearingServiceMock = {...hearingServiceMock, hearings: Observable.of([])};
+      dialogMock = jasmine.createSpyObj('dialog', ['open']);
 
-    TestBed.configureTestingModule({
-      imports: [
-        AngularMaterialModule,
-        BrowserAnimationsModule
-      ],
-      providers: [
-        { provide: ActivatedRoute, useValue: routeMock },
-        { provide: HearingService, useValue: hearingServiceMock },
-        { provide: NotesPreparerService, useValue: notesPreparerService},
-        { provide: ListingCreateNotesConfiguration, useValue: listingCreateNotesConfiguration},
-        { provide: NotesService, useValue: notesService},
-        { provide: Location, useValue: () => {} },
-      ],
-      declarations: [
-        ViewHearingComponent,
-        DurationFormatPipe
-      ],
-      schemas: [NO_ERRORS_SCHEMA]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ViewHearingComponent);
-    hearingService = TestBed.get(HearingService)
-    hearingServiceGetByIdSpy = spyOn(hearingService, 'getById')
-    component = fixture.componentInstance;
+      component = new ViewHearingComponent(routeMock, dialogMock, hearingServiceMock,
+        notesPreparerService, listingCreateNotesConfiguration, notesService, locationMock, possibleHearingActionsServiceMock);
   }));
 
   it('should create', () => {
@@ -122,7 +85,7 @@ describe('ViewHearingComponent', () => {
 
     it('should get hearing from hearing service', () => {
       possibleHearingActionsServiceMock.mapToHearingPossibleActions.and.returnValue({})
-      hearingService.hearings = new BehaviorSubject([HEARING])
+      hearingServiceMock.hearings = new BehaviorSubject([HEARING])
       component.ngOnInit()
       expect(component.hearing).toEqual(HEARING)
     });
@@ -132,7 +95,7 @@ describe('ViewHearingComponent', () => {
         const expectedKeys = ['Unlist', 'Withdraw']
         const possibleActions = {Unlist: {}, Withdraw: {}} as IPossibleActionConfigs
         possibleHearingActionsServiceMock.mapToHearingPossibleActions.and.returnValue(possibleActions)
-        hearingService.hearings = new BehaviorSubject([HEARING])
+        hearingServiceMock.hearings = new BehaviorSubject([HEARING])
         component.ngOnInit()
         expect(possibleHearingActionsServiceMock.mapToHearingPossibleActions).toHaveBeenCalledWith(HEARING)
         expect(component.possibleActions).toEqual(possibleActions)
@@ -142,7 +105,7 @@ describe('ViewHearingComponent', () => {
 
     it('should fetch given hearing part', () => {
        component.ngOnInit()
-       expect(hearingServiceGetByIdSpy).toHaveBeenCalled()
+       expect(hearingServiceMock.getById).toHaveBeenCalled()
     })
   });
 
@@ -195,4 +158,62 @@ describe('ViewHearingComponent', () => {
 
     expect(component.getListBetween()).toEqual('');
   });
+
+    describe('when amending a scheduled listing', () => {
+        let scheduledListing: ScheduledListing;
+        let startTime = '12:00';
+
+        beforeEach(() => {
+            scheduledListing = {
+                ...DEFAULT_SCHEDULED_LISTING,
+                hearingPartIdOfCurrentHearing: 'hpid',
+                hearingPartVersionOfCurrentHearing: 0,
+                hearingPartStartTime: moment()
+            }
+        });
+
+        it('and dialog returns "undefined" service is not called', () => {
+            dialogMock.open.and.returnValue({afterClosed: () => Observable.of(undefined)});
+
+            component.openAmendDialog(scheduledListing);
+
+            expect(hearingServiceMock.getById).not.toHaveBeenCalled()
+        });
+
+        it('and dialog returns data then service is called and entity is not fetched after rollback', () => {
+            dialogMock.open.and.returnValues(
+                {afterClosed: () => Observable.of({...DEFAULT_AMEND_SCHEDULED_LISTING_DATA, startTime: startTime})},
+                {afterClosed: () => Observable.of(false)});
+
+            component.openAmendDialog(scheduledListing);
+
+            // @ts-ignore jasmine typeings are broken and jasmine.anything() does not match all types as it should
+            let expectedAmendScheduledListing: AmendScheduledListing = {
+                userTransactionId: jasmine.anything(),
+                hearingPartId: scheduledListing.hearingPartIdOfCurrentHearing,
+                hearingPartVersion: scheduledListing.hearingPartVersionOfCurrentHearing,
+                startTime: startTime
+            }
+            expect(hearingServiceMock.amendScheduledListing).toHaveBeenCalledWith(expectedAmendScheduledListing)
+            expect(hearingServiceMock.getById).not.toHaveBeenCalled()
+        });
+
+        it('and dialog returns data then service is called and entity is fetched after commit', () => {
+            dialogMock.open.and.returnValues(
+                {afterClosed: () => Observable.of({...DEFAULT_AMEND_SCHEDULED_LISTING_DATA, startTime: startTime})},
+                {afterClosed: () => Observable.of(true)});
+
+            component.openAmendDialog(scheduledListing);
+
+            // @ts-ignore jasmine typeings are broken and jasmine.anything() does not match all types as it should
+            let expectedAmendScheduledListing: AmendScheduledListing = {
+                userTransactionId: jasmine.anything(),
+                hearingPartId: scheduledListing.hearingPartIdOfCurrentHearing,
+                hearingPartVersion: scheduledListing.hearingPartVersionOfCurrentHearing,
+                startTime: startTime
+            }
+            expect(hearingServiceMock.amendScheduledListing).toHaveBeenCalledWith(expectedAmendScheduledListing)
+            expect(hearingServiceMock.getById).toHaveBeenCalled()
+        });
+    });
 });

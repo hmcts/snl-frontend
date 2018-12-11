@@ -14,6 +14,7 @@ import { DEFAULT_NOTE } from '../../notes/models/note.model';
 import { DEFAULT_HEARING_FOR_LISTING_RESPONSE, HearingForListingWithNotes }
   from '../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { Observable } from 'rxjs/Observable';
+import { AmendScheduledListing } from '../models/amend-scheduled-listing';
 
 let service: HearingService;
 let httpMock: HttpTestingController;
@@ -98,12 +99,16 @@ describe('HearingService', () => {
       service.getById(id)
 
       const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
-      request.flush({id: id} as Hearing);
+      request.flush({id: id, sessions: [{start: '2018-12-11T07:17:00Z', hearingPartStartTime: '2018-12-11T07:17:00Z'} as any]} as Hearing);
 
       service.hearings
       .map(hearings => hearings.find(h => h.id === id))
       .subscribe(hearing => {
         expect(hearing.id).toEqual(id);
+        hearing.sessions.forEach(s => {
+            expect(s.start.isValid).toBeDefined()
+            expect(s.hearingPartStartTime.isValid).toBeDefined()
+        });
         done()
       });
 
@@ -162,6 +167,17 @@ describe('HearingService', () => {
           httpMock.expectOne(expectedUrl).flush(filteredHearingViewModelPage);
       });
   });
+
+    describe('amendScheduledListing', () => {
+        const expectedUrl = `/hearing-part/amend-scheduled-listing`;
+
+        it('should call proper url', () => {
+            service.amendScheduledListing({} as AmendScheduledListing);
+
+            httpMock.expectOne(expectedUrl).flush({});
+        });
+
+    });
 
   describe('getHearingsForListing', () => {
       const expectedUrl = `/hearing/for-listing`;

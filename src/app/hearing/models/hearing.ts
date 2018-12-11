@@ -20,6 +20,18 @@ export interface ScheduledListing {
   notes: Note[]
 }
 
+export const DEFAULT_SCHEDULED_LISTING: ScheduledListing = {
+    hearingPartStartTime: undefined,
+    start: undefined,
+    duration: undefined,
+    roomName: undefined,
+    judgeName: undefined,
+    sessionType: undefined,
+    hearingPartIdOfCurrentHearing: undefined,
+    hearingPartVersionOfCurrentHearing: undefined,
+    notes: undefined
+}
+
 export interface Hearing {
   id: string,
   caseNumber: string,
