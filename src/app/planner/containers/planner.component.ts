@@ -162,6 +162,8 @@ export class PlannerComponent implements OnInit {
         let roomId = safe(() => event.detail.event.room.id);
 
         let [resourceType, resourceId] = event.detail.event.resourceId.split(`${Separator}`);
+        resourceId = (resourceId === 'empty') ? null : resourceId
+
         if (resourceType === 'person') {
             personId = resourceId
         } else {

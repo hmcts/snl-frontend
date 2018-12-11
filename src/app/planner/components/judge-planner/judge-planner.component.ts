@@ -15,6 +15,7 @@ import { DialogInfoComponent } from '../../../features/notification/components/d
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { EventDrop } from '../../../common/ng-fullcalendar/models/event-drop.model';
 import { CalendarMouseEvent } from '../../../common/ng-fullcalendar/models/calendar-mouse-event.model';
+import { safe } from '../../../utils/js-extensions';
 
 @Component({
     selector: 'app-judge-planner',
@@ -103,7 +104,7 @@ export class JudgePlannerComponent implements OnInit {
 
     private verifyActionCanBeMade(event: CalendarEventSessionViewModel): boolean {
         const hasMultiHearingPart = event.detail.event.hearingParts.filter(hp => hp.multiSession).length > 0
-        const sourcePersonId = event.detail.event.person.id
+        const sourcePersonId = safe(() => event.detail.event.person.id)
         const targetPersonId = event.detail.event.resourceId.split(Separator).pop()
 
         if (hasMultiHearingPart && sourcePersonId !== targetPersonId) {
