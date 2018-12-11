@@ -101,17 +101,17 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div style="display:flex" fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
-                <div fxFlex="25%">
+                <div fxFlex="20%">
                     {{session.start | appMomentFormat: SESSION_STARTTIME_FORMAT}}
                 </div>
                 <div fxFlex="20%">
                   {{session.sessionType}}
                 </div>
 
-                <div fxFlex="20%">
-                  <span matInput>Start: {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</span>
-                  <button mat-icon-button (click)="openAmendDialog(session)">
-                    <mat-icon>arrow_drop_down_circle</mat-icon>
+                <div fxFlex="25%" fxLayout="row">
+                  <div matInput>Start: {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</div>
+                  <button mat-basic-chip (click)="openAmendDialog(session)">
+                    Edit
                   </button>
                 </div>
                 <div fxFlex="5%">
