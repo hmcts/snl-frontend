@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
+import { AmendScheduledListingData } from '../../models/amend-scheduled-listing';
 
 @Component({
     selector: 'app-amend-scheduled-listing',

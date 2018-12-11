@@ -102,13 +102,17 @@
             <mat-panel-title>
               <div style="display:flex" fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
                 <div fxFlex="25%">
-                    {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}
+                    {{session.start | appMomentFormat: SESSION_STARTTIME_FORMAT}}
                 </div>
-                <div fxFlex="15%">
+                <div fxFlex="20%">
                   {{session.sessionType}}
                 </div>
-                <div fxFlex="25%">
-                  Start {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}
+
+                <div fxFlex="20%">
+                  <span matInput>Start: {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</span>
+                    <button mat-button matSuffix aria-label="search" (click)="openAmendDialog(session)">
+                      Modify
+                    </button>
                 </div>
                 <div fxFlex="5%">
                   {{session.duration | appDurationFormat}}
@@ -118,9 +122,6 @@
                 </div>
                 <div fxFlex="10%">
                   {{session.judgeName}}
-                </div>
-                <div [class.clickable]="true" (click)="openAmendDialog(session)">
-                  Amend
                 </div>
               </div>
             </mat-panel-title>

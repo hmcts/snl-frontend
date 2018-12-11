@@ -10,6 +10,7 @@ export interface Note {
 
 export interface ScheduledListing {
   hearingPartStartTime: moment.Moment,
+  start: moment.Moment,
   duration: number,
   roomName: string,
   judgeName: string,

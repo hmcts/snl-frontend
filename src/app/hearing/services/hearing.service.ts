@@ -31,6 +31,7 @@ import { NotesService } from '../../notes/services/notes.service';
 import { HearingDeletion } from '../../hearing-part/models/hearing-deletion';
 import { HearingToSessionAssignment } from '../../hearing-part/models/hearing-to-session-assignment';
 import { UpdateHearingRequest } from '../../hearing-part/models/update-hearing-request';
+import { AmendScheduledListing } from '../models/amend-scheduled-listing';
 
 @Injectable()
 export class HearingService {
@@ -53,6 +54,7 @@ export class HearingService {
             .get<Hearing>(`${this.config.getApiUrl()}/hearing/${id}/with-sessions`)
             .subscribe(data => {
                 data.sessions.forEach(s => s.hearingPartStartTime = moment(s.hearingPartStartTime));
+                data.sessions.forEach(s => s.start = moment(s.start));
                 this.notesPopulatorService.populateWithNotes(data);
                 const oldHearingIndex = this.dataStore.hearings.findIndex(h => h.id === data.id)
 

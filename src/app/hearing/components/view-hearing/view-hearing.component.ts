@@ -13,12 +13,13 @@ import { NoteType } from '../../../notes/models/note-type';
 import { NotesService } from '../../../notes/services/notes.service';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
-import { AmendScheduledListingComponent } from '../amend-scheduled-listing/amend-scheduled-listing.component';
 import { filter, map, tap } from 'rxjs/operators';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { TransactionDialogComponent } from '../../../features/transactions/components/transaction-dialog/transaction-dialog.component';
 import { v4 as uuid } from 'uuid';
+import { AmendScheduledListingComponent } from '../amend-scheduled-listing/amend-scheduled-listing.component';
+import { AmendScheduledListing, AmendScheduledListingData } from '../../models/amend-scheduled-listing';
 
 @Component({
     selector: 'app-view-hearing',
@@ -27,7 +28,8 @@ import { v4 as uuid } from 'uuid';
     providers: [PossibleHearingActionsService]
 })
 export class ViewHearingComponent implements OnInit {
-    public readonly HEARING_PART_STARTTIME_FORMAT = 'DD/MM/YYYY HH:mm';
+    public readonly HEARING_PART_STARTTIME_FORMAT = 'HH:mm';
+    public readonly SESSION_STARTTIME_FORMAT = 'DD/MM/YYYY';
 
     hearingId: string;
     hearing: Hearing;

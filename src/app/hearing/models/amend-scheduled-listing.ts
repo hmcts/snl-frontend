@@ -1,10 +1,10 @@
-interface AmendScheduledListing {
+export interface AmendScheduledListing {
     userTransactionId: string,
     hearingPartId: string,
     hearingPartVersion: number,
     startTime: string
 }
 
-interface AmendScheduledListingData {
+export interface AmendScheduledListingData {
     startTime: string
 }
