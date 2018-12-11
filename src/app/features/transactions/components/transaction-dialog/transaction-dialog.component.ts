@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
@@ -17,13 +17,14 @@ import * as fromProblems from '../../../../problems/reducers';
 import { ITransactionDialogData } from '../../models/transaction-dialog-data.model';
 import { DialogInfoComponent } from '../../../notification/components/dialog-info/dialog-info.component';
 import { DEFAULT_DIALOG_CONFIG } from '../../models/default-dialog-confg';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-transaction-dialog',
   templateUrl: './transaction-dialog.component.html',
   styleUrls: ['./transaction-dialog.component.scss']
 })
-export class TransactionDialogComponent {
+export class TransactionDialogComponent implements OnDestroy {
   problems$: Observable<Problem[]>;
   transactionStatus$: Observable<EntityTransaction>;
   transacted$: Observable<boolean>;
@@ -34,6 +35,7 @@ export class TransactionDialogComponent {
   transactionId: string;
   actionTitle: string;
   success: boolean;
+  alive: boolean;
 
   constructor(
       private notificationDialog: MatDialog,
@@ -42,6 +44,7 @@ export class TransactionDialogComponent {
       @Inject(MAT_DIALOG_DATA) public data: ITransactionDialogData,
       private readonly store: Store<State>) {
 
+      this.alive = true;
       dialogRef.disableClose = true
       this.problems$ = this.store.pipe(select(fromProblems.getProblemsEntities), map(problems => problems ? Object.values(problems) : []));
       this.transactionStatus$ = this.store.pipe(select(fromSessionIndex.getRecentTransactionStatus));
@@ -56,7 +59,7 @@ export class TransactionDialogComponent {
           (s, p, c) => { return (s && p && !c) }).subscribe(s => { this.success = s});
       this.actionTitle = data.actionTitle;
 
-      this.actionListener$.subscribe(actions => {
+      this.actionListener$.pipe(takeWhile(() => this.alive)).subscribe(actions => {
           switch (actions.type) {
               case EntityTransactionActionTypes.TransactionCommitted: {
                   this.dialogRef.close(this.success);
@@ -94,5 +97,9 @@ export class TransactionDialogComponent {
 
   onDeleteClick(): void {
     this.store.dispatch(new RollbackTransaction(this.transactionId));
+  }
+
+  ngOnDestroy(): void {
+     this.alive = false;
   }
 }
