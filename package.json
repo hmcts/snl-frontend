@@ -65,12 +65,10 @@
     "govuk-elements-sass": "^3.1.2",
     "govuk-frontend": "^2.0.0",
     "govuk_template_mustache": "^0.23.0",
-    "helmet": "^3.14.0",
     "http-status-codes": "^1.3.0",
     "jasmine-marbles": "^0.2.0",
     "jquery": "^3.3.1",
     "jquery-ui": "^1.12.1",
-    "material-design-icons": "^3.0.1",
     "mocha": "^5.0.5",
     "moment": "^2.22.1",
     "ngx-md": "^3.1.1",
@@ -86,7 +84,8 @@
     "ts-loader": "^3.1.1",
     "url": "^0.11.0",
     "uuid": "^3.3.2",
-    "zone.js": "^0.8.4"
+    "zone.js": "^0.8.4",
+    "helmet": "^3.14.0"
   },
   "devDependencies": {
     "@angular/cli": "1.6.5",

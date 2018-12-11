@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~material-design-icons/iconfont/material-icons.css';
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "~fullcalendar/dist/fullcalendar.css";
 @import "~fullcalendar-scheduler/dist/scheduler.css";
@@ -11,7 +10,7 @@ body {
 }
 
 html * {
-    font-family: nta;
+    font-family: nta !important;
 }
 
 .primary-colored-background {
