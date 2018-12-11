@@ -103,12 +103,86 @@ export class SessionsCreateFormComponent {
         return this.notePreparerService.removeEmptyNotes(notes);
     }
 
+    private addLeadingZeros(value: string): string {
+        while (value.length < 2) {
+            value = `0${value}`;
+        }
+        return value;
+    }
+
+    private getNormalizedNumericString(value: string, maxValue: number): string {
+        const intValue = parseInt(value, 10);
+        if (isNaN(intValue) || intValue < 0) {
+            return '00';
+        }
+
+        if (intValue > maxValue) {
+            return this.addLeadingZeros(maxValue.toString());
+        }
+
+        return this.addLeadingZeros(intValue.toString());
+    }
+
+    private getHours(time: string): string {
+        const value = time.split(':')[0].substr(0, 2);
+
+        return this.getNormalizedNumericString(value, 23);
+    }
+
+    private getMinutes(time: string): string {
+        const timeArray = time.split(':');
+        const value = timeArray.length === 1 ? timeArray[0].substr(2) : timeArray[1];
+
+        return this.getNormalizedNumericString(value, 59);
+    }
+
+    formatTime(event) {
+
+        const time = event.target.value;
+        console.log('event', event, time);
+
+        const hour = this.getHours(time);
+        const minute = this.getMinutes(time)
+
+        console.log(hour, minute, `${this.getHours(time)}:${this.getMinutes(time)}`)
+
+        event.target.value = this.createSessionForm.startTime = `${this.getHours(time)}:${this.getMinutes(time)}`
+    }
+
+    private formatDate(dateObj): string {
+        return `${dateObj.date}/${dateObj.month}/${dateObj.year}`;
+    }
+
     private initiateFormGroup() {
         this.sessionCreateFormGroup = new FormGroup({
             sessionTypeCode: new FormControl(this.createSessionForm.sessionTypeCode, Validators.required),
-            startDate: new FormControl(this.createSessionForm.startDate, [Validators.required]),
-            startTime: new FormControl(this.createSessionForm.startTime, [Validators.required]),
-            durationInMinutes: new FormControl(this.createSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
+            startDate: new FormControl(this.createSessionForm.startDate, [Validators.required, (input) => {
+                const d = input.value;
+                const date = d && ((d._isAMomentObject && typeof d._i === 'string' && d._i)
+                    || (typeof d._i === 'object' && this.formatDate(d._i)))
+                    || null;
+
+                console.log('let me validate DATE for you!', input, date, typeof date);
+
+                if (/^\d{2}\/\d{2}\/\d{4}$/.test(date)) {
+                    console.log('DATE valid');
+                    return null;
+                }
+                console.log('DATE is INvalid');
+                return { error: 'wrong format' };
+            }]),
+            startTime: new FormControl(this.createSessionForm.startTime, [Validators.required, (input) => {
+                console.log('let me validate TIME for you!', input);
+                if (/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(input.value)) {
+                    console.log('time valid');
+                    return null;
+                }
+                console.log('Time is INvalid');
+                return { error: 'wrong format' };
+            }]),
+            durationInMinutes: new FormControl(
+                this.createSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]
+            ),
         });
     }
 }
