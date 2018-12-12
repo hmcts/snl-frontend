@@ -35,13 +35,13 @@ describe('HearingsTableComponent', () => {
     });
 
     describe('Component ', () => {
-        it('hasOtherOrListingNotes should properly verify notes of hearingparts', () => {
+        it('hasNotes should properly verify notes of hearingparts', () => {
             let hasNotes = component.hasNotes(generateHearings('asd'));
 
             expect(hasNotes).toBeFalsy();
         });
 
-        it('hasOtherOrListingNotes should return true when hearing contains listing note type', () => {
+        it('hasNotes should return true when hearing contains listing note type', () => {
             let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.LISTING_NOTE), generateNote(NoteType.OTHER_NOTE)]
             };
@@ -49,7 +49,7 @@ describe('HearingsTableComponent', () => {
             expect(hasNotes).toBeTruthy();
         });
 
-        it('hasOtherOrListingNotes should return true when hearing contains facility requirement note type', () => {
+        it('hasNotes should return true when hearing contains facility requirement note type', () => {
             let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.FACILITY_REQUIREMENTS)]
             };
@@ -57,7 +57,7 @@ describe('HearingsTableComponent', () => {
             expect(hasNotes).toBeTruthy();
         });
 
-        it('hasOtherOrListingNotes should return true when hearing contains special requirement note type', () => {
+        it('hasNotes should return true when hearing contains special requirement note type', () => {
             let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.SPECIAL_REQUIREMENTS)]
             };

@@ -35,7 +35,7 @@ describe('NotesListDialogComponent', () => {
         this.listingReqNote = {
             ...this.note,
             type: NoteType.LISTING_NOTE,
-            createdAt: moment()
+            createdAt: moment().subtract(1, 'minute')
         }
 
         this.olderOtherNote = {
@@ -66,8 +66,8 @@ describe('NotesListDialogComponent', () => {
         it('they are disposed into proper arrays based on their type', () => {
             expect(noteListDialogComponent.noteViewModels).toEqual([this.specReqNote, this.facReqNote]);
             expect(noteListDialogComponent.freeTextNoteViewModels).toEqual([
-                this.listingReqNote,
                 this.otherNote,
+                this.listingReqNote,
                 this.olderOtherNote,
                 this.oldestOtherNote]);
         });
