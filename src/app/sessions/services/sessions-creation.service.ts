@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { State } from '../../app.state';
 import { v4 as uuid } from 'uuid';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
+import { DragAndDropSession } from '../models/drag-and-drop-session.model';
 
 @Injectable()
 export class SessionsCreationService {
@@ -30,16 +31,14 @@ export class SessionsCreationService {
         this.store.dispatch(new ProblemsActions.RemoveAll());
     }
 
-    update(session: any) {
-        this.recentSessionId = session.id;
+    update(dragAndDropSession: DragAndDropSession) {
+        this.recentSessionId = dragAndDropSession.sessionId;
 
         const transactionId = uuid();
-
-        session.userTransactionId = transactionId;
-        const transaction = this.createTransaction(session.id, transactionId);
+        const transaction = this.createTransaction(dragAndDropSession.sessionId, transactionId);
 
         this.store.dispatch(new SessionCreationActions.InitializeTransaction(transaction));
-        this.store.dispatch(new SessionActions.Update(session));
+        this.store.dispatch(new SessionActions.Update({...dragAndDropSession, userTransactionId: transactionId}));
         this.store.dispatch(new ProblemsActions.RemoveAll());
     }
 

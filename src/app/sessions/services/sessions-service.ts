@@ -25,6 +25,7 @@ import { SessionSearchResponse } from '../models/session-search-response.model';
 import { Page } from '../../problems/models/problem.model';
 import { PaginatedRequestOption } from '../models/paginated-request-option';
 import { SessionAmendResponse } from '../models/session-amend.response';
+import { DragAndDropSessionRequest } from '../models/drag-and-drop-session-request.model';
 
 @Injectable()
 export class SessionsService {
@@ -126,14 +127,9 @@ export class SessionsService {
             .post<string>(`${this.config.getApiUrl()}/sessions/amend`, sessionAmend)
     }
 
-    /**
-     * @param update - should contain {version: number} and other elements
-     * @returns {Observable<any>}
-     */
-    updateSession(update: any, version: number): Observable<any> {
-        update.version = version;
+    updateSession(dragAndDropSessionReq: DragAndDropSessionRequest): Observable<any> {
         return this.http
-            .put<string>(`${this.config.getApiUrl()}/sessions/update`, update);
+            .put<string>(`${this.config.getApiUrl()}/sessions/update`, dragAndDropSessionReq);
     }
 
     private createJudgeDiaryUrl(parameters: DiaryLoadParameters) {

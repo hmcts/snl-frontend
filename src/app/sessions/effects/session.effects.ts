@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
-import { catchError, distinctUntilChanged, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-import { Action, Store } from '@ngrx/store';
+import { Action } from '@ngrx/store';
 import * as sessionActions from '../actions/session.action';
 import * as transactionActions from '../../features/transactions/actions/transaction.action';
 import * as roomActions from '../../rooms/actions/room.action';
@@ -14,8 +14,6 @@ import { SessionsService } from '../services/sessions-service';
 import { HttpErrorResponse } from '@angular/common/http';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
-import { State } from '../../app.state';
-import * as fromSessionIndex from '../reducers/index';
 import * as notesActions from '../../notes/actions/notes.action';
 
 @Injectable()
@@ -63,16 +61,8 @@ export class SessionEffects {
     update$: Observable<Action> = this.actions$.pipe(
         ofType<sessionActions.Update>(sessionActions.SessionActionTypes.Update),
         distinctUntilChanged(),
-        withLatestFrom(this.store, (action, state: fromSessionIndex.State) => {
-            return {
-                ...action, payload: {
-                    ...action.payload,
-                    version: state.sessions.sessions.entities[action.payload.id].version
-                }
-            }
-        }),
         mergeMap(action =>
-            this.sessionsService.updateSession(action.payload, action.payload.version).pipe(
+            this.sessionsService.updateSession(action.payload).pipe(
                 mergeMap((data) => [
                     new transactionActions.UpdateTransaction(data),
                     new sessionActions.UpdateComplete()
@@ -152,7 +142,6 @@ export class SessionEffects {
     );
 
     constructor(private readonly sessionsService: SessionsService,
-                private readonly store: Store<State>,
                 private readonly actions$: Actions) {
     }
 }
