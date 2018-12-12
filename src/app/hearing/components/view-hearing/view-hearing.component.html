@@ -101,22 +101,22 @@
           <mat-expansion-panel-header>
             <mat-panel-title>
               <div style="display:flex" fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
-                <div fxFlex="20%">
+                <div fxFlex="15%">
                     {{session.start | appMomentFormat: SESSION_STARTTIME_FORMAT}}
                 </div>
-                <div fxFlex="20%">
+                <div fxFlex="25%">
                   {{session.sessionType}}
                 </div>
 
-                <div fxFlex="25%" fxLayout="row">
+                <div fxFlex="15%" fxLayout="row">
                   <div matInput>
                     <span>Start:</span>
                     <span class="clickable" (click)="openAmendDialog(session)">{{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</span></div>
                 </div>
-                <div fxFlex="5%">
+                <div fxFlex="10%">
                   {{session.duration | appDurationFormat}}
                 </div>
-                <div fxFlex="10%">
+                <div fxFlex="15%">
                   {{session.roomName}}
                 </div>
                 <div fxFlex="10%">
