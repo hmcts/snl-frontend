@@ -7,6 +7,13 @@ const URL = require('./e2e-url.js');
 
 const isHeadlessModeEnabled = !!process.env.TEST_URL;
 const frontendURL = (process.env.TEST_URL || URL.frontendURL).replace('https', 'http');
+const isDemo = frontendURL.includes('demo');
+const isAat = frontendURL.includes('aat');
+const apiDbHost = (process.env.API_DB_HOST || 'localhost');
+const apiDbPort = (process.env.API_DB_PORT || 5434);
+const apiDbName = (process.env.API_DB_NAME || 'snl');
+const apiDbUser = (process.env.API_DB_USER || 'snluser');
+const apiDbPassword = (process.env.API_DB_PASSWORD || 'snlpass');
 
 console.log('Frontend URL: ' + frontendURL);
 
@@ -54,6 +61,14 @@ exports.config = {
         clearFoldersBeforeTest: true
       }],
     onPrepare() {
+        // If aat or demo env, make sure we have test user data
+        if(isAat || isDemo) {
+            const insertUsers = require('./insert-users.js');
+            insertUsers.insertUserData(apiDbHost, apiDbPort, apiDbName, apiDbUser, apiDbPassword).catch(err => {
+                console.error("ERROR:", err.message() || err);
+                // TODO: is it possible to fail all tests early from here?
+            });
+        };
         // Uncomment below line while debugging
         // jasmine.DEFAULT_TIMEOUT_INTERVAL = 60 * 60 * 1000;
 

@@ -1,4 +1,4 @@
-var attEnv = {
+var aatEnv = {
     proxy: 'http://proxyout.reform.hmcts.net:8080',
     frontendURL: "http://snl-frontend-aat.service.core-compute-aat.internal",
     apiURL: "http://snl-api-aat.service.core-compute-aat.internal"
@@ -15,6 +15,6 @@ var localEnv = {
     apiURL: "http://localhost:8090"
 };
 
-//module.exports = attEnv;
+//module.exports = aatEnv;
 //module.exports = prEnv;
 module.exports = localEnv;
