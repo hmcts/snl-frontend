@@ -15,7 +15,7 @@ export class DialogWithActionsComponent {
     }
 
     onOkClick(): void {
-        this.closeWith(this.data.okData);
+        this.closeWith(this.data);
     }
 
     onDeclineClick(): void {

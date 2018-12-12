@@ -9,10 +9,12 @@ import { NotesModule } from '../notes/notes.module';
 import { CreateHearingNoteComponent } from './components/create-hearing-note/create-hearing-note.component';
 import { CoreModule } from '../core/core.module';
 import { ActivityLogModule } from '../features/activityLog/activity-log.module';
+import { AdjournHearingDialogComponent } from './components/adjourn-hearing-dialog/adjourn-hearing.dialog.component';
 
 const COMPONENTS = [
   ViewHearingComponent,
-  CreateHearingNoteComponent
+  CreateHearingNoteComponent,
+  AdjournHearingDialogComponent
 ];
 
 @NgModule({
@@ -27,7 +29,8 @@ const COMPONENTS = [
   ],
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: [HearingService]
+  providers: [HearingService],
+  entryComponents: [AdjournHearingDialogComponent]
 })
 export class HearingModule {
 }

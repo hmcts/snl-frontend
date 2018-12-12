@@ -1,0 +1,16 @@
+<div>
+    <h2 *ngIf="data.title">{{data.title}}</h2>
+    <div>{{data.message}}</div>
+
+    <div fxLayout="column">
+        <mat-form-field fxFlex>
+            <textarea matInput matTextareaAutosize="true" [(ngModel)]="description"></textarea>
+        </mat-form-field>
+
+        <div fxFlex fxLayout="column" fxLayoutGap="2%" style="margin-top:16px;">
+            <button fxFlex *ngIf="showDecline()" mat-raised-button (click)="onDeclineClick()">Cancel</button>
+            <button id="ok-button" fxFlex mat-raised-button color="primary" (click)="onOkClick()">Adjourn hearing</button>
+        </div>
+    </div>
+
+</div>
