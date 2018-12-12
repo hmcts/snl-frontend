@@ -54,7 +54,7 @@ describe('NotesListDialogComponent', () => {
             ...this.note,
             type: NoteType.OTHER_NOTE,
             createdAt: moment().subtract(2, 'day')
-        }
+        };
 
         const matDialogRefSpy = jasmine.createSpyObj('MatDialog', ['close']);
         this.noteViewModels = [this.specReqNote, this.facReqNote, this.listingReqNote,
