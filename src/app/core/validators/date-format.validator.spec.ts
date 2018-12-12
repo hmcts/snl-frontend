@@ -14,7 +14,7 @@ describe('DateFormatValidator.validate', () => {
         });
 
         it('one-digit values given', () => {
-            expect(validate({ date: 1, month: 1, year: 2010})).toBeNull();
+            expect(validate({ date: 8, month: 1, year: 2000})).toBeNull();
         });
 
     });
