@@ -86,8 +86,7 @@ import { AppConfig } from '../app/app.config';
     MatCardModule,
     MatDividerModule,
     MatTabsModule,
-    MatExpansionModule,
-    MatIconModule
+    MatExpansionModule
   ],
   declarations: [],
   providers: [
