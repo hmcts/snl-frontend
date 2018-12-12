@@ -1,11 +1,13 @@
 import { NotesListDialogComponent } from './notes-list-dialog.component';
 import moment = require('moment');
+import { NoteType } from '../../models/note-type';
 
 let noteListDialogComponent: NotesListDialogComponent;
 
 describe('NotesListDialogComponent', () => {
     this.specReqNote = {};
     this.facReqNote = {};
+    this.listingReqNote = {};
     this.otherNote = {};
     this.olderOtherNote = {};
 
@@ -22,41 +24,50 @@ describe('NotesListDialogComponent', () => {
 
         this.specReqNote = {
             ...this.note,
-            type: 'Special Requirements'
+            type: NoteType.SPECIAL_REQUIREMENTS
         }
 
         this.facReqNote = {
             ...this.note,
-            type: 'Facility Requirements'
+            type: NoteType.FACILITY_REQUIREMENTS
+        }
+
+        this.listingReqNote = {
+            ...this.note,
+            type: NoteType.LISTING_NOTE,
+            createdAt: moment()
         }
 
         this.olderOtherNote = {
             ...this.note,
-            type: 'Other note',
+            type: NoteType.OTHER_NOTE,
             createdAt: moment().subtract(1, 'day')
         }
 
         this.otherNote = {
             ...this.note,
-            type: 'Other note',
+            type: NoteType.OTHER_NOTE,
             createdAt: moment()
         }
 
         this.oldestOtherNote = {
             ...this.note,
-            type: 'Other note',
+            type: NoteType.OTHER_NOTE,
             createdAt: moment().subtract(2, 'day')
         }
 
         const matDialogRefSpy = jasmine.createSpyObj('MatDialog', ['close']);
-        this.noteViewModels = [this.specReqNote, this.facReqNote, this.olderOtherNote, this.oldestOtherNote, this.otherNote];
+        this.noteViewModels = [this.specReqNote, this.facReqNote, this.listingReqNote,
+            this.olderOtherNote, this.oldestOtherNote, this.otherNote];
         noteListDialogComponent = new NotesListDialogComponent(matDialogRefSpy, this.noteViewModels);
     });
 
     describe('When notes are passed into constructor', () => {
         it('they are disposed into proper arrays based on their type', () => {
             expect(noteListDialogComponent.noteViewModels).toEqual([this.specReqNote, this.facReqNote]);
-            expect(noteListDialogComponent.freeTextNoteViewModels).toEqual([this.otherNote,
+            expect(noteListDialogComponent.freeTextNoteViewModels).toEqual([
+                this.listingReqNote,
+                this.otherNote,
                 this.olderOtherNote,
                 this.oldestOtherNote]);
         });

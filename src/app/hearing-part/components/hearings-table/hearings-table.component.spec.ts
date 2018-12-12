@@ -36,25 +36,33 @@ describe('HearingsTableComponent', () => {
 
     describe('Component ', () => {
         it('hasOtherOrListingNotes should properly verify notes of hearingparts', () => {
-            let hasNotes = component.hasOtherOrListingNotes(generateHearings('asd'));
+            let hasNotes = component.hasNotes(generateHearings('asd'));
 
             expect(hasNotes).toBeFalsy();
         });
 
-        it('hasOtherOrListingNotes should return true when hearing contain proper note type', () => {
+        it('hasOtherOrListingNotes should return true when hearing contains listing note type', () => {
             let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.LISTING_NOTE), generateNote(NoteType.OTHER_NOTE)]
             };
-            let hasNotes = component.hasOtherOrListingNotes(hearingWithNotes);
+            let hasNotes = component.hasNotes(hearingWithNotes);
             expect(hasNotes).toBeTruthy();
         });
 
-        it('hasOtherOrListingNotes should return false when hearing does not contain proper note type', () => {
+        it('hasOtherOrListingNotes should return true when hearing contains facility requirement note type', () => {
             let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.FACILITY_REQUIREMENTS)]
             };
-            let hasNotes = component.hasOtherOrListingNotes(hearingWithNotes);
-            expect(hasNotes).toBeFalsy();
+            let hasNotes = component.hasNotes(hearingWithNotes);
+            expect(hasNotes).toBeTruthy();
+        });
+
+        it('hasOtherOrListingNotes should return true when hearing contains special requirement note type', () => {
+            let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+                notes: [generateNote(NoteType.SPECIAL_REQUIREMENTS)]
+            };
+            let hasNotes = component.hasNotes(hearingWithNotes);
+            expect(hasNotes).toBeTruthy();
         });
 
         it('confirming on delete dialog should call service method', () => {

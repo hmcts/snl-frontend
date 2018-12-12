@@ -79,13 +79,13 @@ export class HearingsTableComponent implements AfterViewChecked {
         return date ? moment(date).format('DD/MM/YYYY') : null;
     }
 
-    hasOtherOrListingNotes(hearing: HearingForListingWithNotes): boolean {
-        for (const note of hearing.notes) {
-            if (NoteType.OTHER_NOTE === note.type || NoteType.LISTING_NOTE === note.type) {
-                return true;
-            }
-        }
-        return false;
+    hasNotes(hearing: HearingForListingWithNotes): boolean {
+        return hearing.notes.filter(note => {
+            return note.type === NoteType.OTHER_NOTE ||
+                note.type === NoteType.LISTING_NOTE ||
+                note.type === NoteType.SPECIAL_REQUIREMENTS ||
+                note.type === NoteType.FACILITY_REQUIREMENTS;
+        }).length > 0;
     }
 
     goToFirstPage() {
@@ -97,7 +97,7 @@ export class HearingsTableComponent implements AfterViewChecked {
     }
 
     openNotesDialog(hearing: HearingForListingWithNotes) {
-        if (this.hasOtherOrListingNotes(hearing)) {
+        if (this.hasNotes(hearing)) {
             this.dialog.open(NotesListDialogComponent, {
                 data: hearing.notes.map(getNoteViewModel),
                 hasBackdrop: false,

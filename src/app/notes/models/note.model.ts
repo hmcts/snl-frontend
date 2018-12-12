@@ -1,5 +1,6 @@
 import { NoteViewmodel } from './note.viewmodel';
 import * as moment from 'moment';
+import { NoteType } from './note-type';
 
 export interface Note {
   id: string;
@@ -21,6 +22,10 @@ export function getNoteFromViewModel(note: NoteViewmodel): Note {
         createdAt: note.createdAt,
         modifiedBy: note.modifiedBy
     } as Note
+}
+
+export function isOfTypeOtherOrListing(note: Note) {
+    return note.type === NoteType.OTHER_NOTE || note.type === NoteType.LISTING_NOTE;
 }
 
 export const DEFAULT_NOTE: Note = {

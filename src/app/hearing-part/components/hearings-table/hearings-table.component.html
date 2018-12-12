@@ -71,7 +71,7 @@
     <mat-header-cell *matHeaderCellDef> Notes </mat-header-cell>
     <mat-cell *matCellDef="let element">
       <span [class.clickable]="hasOtherOrListingNotes(element)" (click)="openNotesDialog(element)">
-        {{hasOtherOrListingNotes(element) ? "Yes" : "No"}}
+        {{hasNotes(element) ? "Yes" : "No"}}
       </span>
     </mat-cell>
   </ng-container>
