@@ -1,8 +1,8 @@
 // These are important and needed before anything else
-import 'zone.js/dist/zone-node';
-import 'reflect-metadata';
+// import 'zone.js/dist/zone-node';
+// import 'reflect-metadata';
 import { CONFIG } from './url-config';
-import { enableProdMode } from '@angular/core';
+// import { enableProdMode } from '@angular/core';
 
 import * as express from 'express';
 import { join } from 'path';
@@ -10,13 +10,13 @@ let cors = require('cors');
 const helmet = require('helmet');
 
 // Faster server renders w/ Prod mode (dev mode never needed)
-enableProdMode();
+// enableProdMode();
 
 // Express server
 const app = express();
 
 const PORT = process.env.PORT || 3451;
-const DIST_FOLDER = join(process.cwd());
+const DIST_FOLDER = join(process.cwd(), 'dist');
 
 app.use(cors());
 app.options('*', cors()); // include before other routes
@@ -64,7 +64,7 @@ app.all('/*', function(req, res, next) {
 });
 
 app.set('view engine', 'html');
-app.set('views', join(DIST_FOLDER, 'browser'));
+// app.set('views', join(DIST_FOLDER, 'browser'));
 
 app.get('/health', (req, res) => {
   res.status(200).json({
