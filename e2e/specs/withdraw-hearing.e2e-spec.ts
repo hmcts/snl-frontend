@@ -8,12 +8,16 @@ import { Priority } from '../../src/app/hearing-part/models/priority-model';
 import { HearingTypeCodes } from '../enums/hearing-types';
 import { v4 as uuid } from 'uuid';
 import { ViewHearingPage } from '../pages/view-hearing.po';
+import { DialogPage } from '../pages/dialog.po';
+import { TransactionDialogPage } from '../pages/transaction-dialog.po';
 
 const loginFlow: LoginFlow = new LoginFlow();
 const navigationFlow: NavigationFlow = new NavigationFlow();
 
 const searchListingRequestPage: SearchListingRequestPage = new SearchListingRequestPage();
 const viewHearingPage: ViewHearingPage = new ViewHearingPage();
+const popup: DialogPage = new DialogPage();
+const transactionDialog: TransactionDialogPage = new TransactionDialogPage();
 
 const caseNumber = `vh-${new Date().toLocaleString()}`;
 const id = uuid();
@@ -34,12 +38,12 @@ const createListingRequestWithCaseNumberAndId = async function (givenCaseNumber:
     );
 };
 
-describe('View Hearing details', () => {
+describe('Withdraw a Hearing', () => {
     beforeAll(async () => {
         await loginFlow.loginIfNeeded();
     });
 
-    describe('I can search for listing request and view it', () => {
+    describe('I can search for listing request and withdraw it', () => {
         it('Given there is a Listing Request', async () => {
             const statusCode = await createListingRequestWithCaseNumberAndId(caseNumber, id);
             expect(statusCode).toEqual(200);
@@ -60,6 +64,17 @@ describe('View Hearing details', () => {
             await viewHearingPage.waitUntilVisible();
             expect(await viewHearingPage.getHeaderText()).toEqual(caseNumber);
         });
+        it('When I Withdraw the Listing Request', async () => {
+            await viewHearingPage.chooseAnActionFromDropDown('Withdraw');
+            await popup.clickOk();
+            await transactionDialog.clickAcceptButton();
+        });
+        it(`Then the Status should be 'Withdrawn'`, async () => {
+            expect(await viewHearingPage.getStatusText()).toBe('Withdrawn');
+        });
+    });
+    afterAll(async () => {
+        await API.deleteListingRequest(id);
     });
 
 });

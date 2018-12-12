@@ -7,6 +7,7 @@ import { enableProdMode } from '@angular/core';
 import * as express from 'express';
 import { join } from 'path';
 let cors = require('cors');
+const helmet = require('helmet');
 
 // Faster server renders w/ Prod mode (dev mode never needed)
 enableProdMode();
@@ -17,8 +18,34 @@ const app = express();
 const PORT = process.env.PORT || 3451;
 const DIST_FOLDER = join(process.cwd());
 
-app.use(cors())
-app.options('*', cors()) // include before other routes
+app.use(cors());
+app.options('*', cors()); // include before other routes
+
+app.use(helmet());
+
+app.use(helmet.referrerPolicy({
+    policy: 'origin'
+}));
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: [`'self'`],
+        fontSrc: [`'self' data:`],
+        scriptSrc: [`'self'`],
+        imgSrc: [`'self'`],
+        mediaSrc: [`'self'`],
+        connectSrc: [`'self'`, CONFIG.apiUrl, CONFIG.notesUrl],
+        styleSrc: [`'self'`, '*.hmcts.net', `'unsafe-inline'`],
+        frameSrc: [`'none'`],
+        frameAncestors: [`'none'`],
+    },
+    browserSniff: true,
+    setAllHeaders: true
+}));
+app.use(helmet.hidePoweredBy());
+app.use(helmet.permittedCrossDomainPolicies());
+app.use(helmet.noCache());
+app.use(helmet.ieNoOpen());
 
 app.all('/*', function(req, res, next) {
     let allowedOrigins = [CONFIG.apiUrl, CONFIG.notesUrl];
@@ -55,7 +82,6 @@ app.get('/cfg', (req, res) => {
     res.status(200).json(CONFIG);
 });
 
-// TODO: implement data requests securely
 app.get('/api/*', (req, res) => {
   res.status(404).send('data requests are not supported');
 });

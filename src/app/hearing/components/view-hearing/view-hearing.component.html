@@ -59,7 +59,7 @@
 
     <div class="tile">
       <strong>Status</strong><br>
-      {{hearing.status}}
+      <span id="status">{{hearing.status}}</span>
     </div>
 
     <div class="tile">
@@ -138,6 +138,10 @@
           </mat-list>
         </mat-expansion-panel>
       </mat-accordion>
+    </mat-tab>
+
+    <mat-tab label="History">
+      <app-activities-log [entityId]="hearingId"></app-activities-log>
     </mat-tab>
   </mat-tab-group>
 </mat-card>
