@@ -20,6 +20,8 @@ import { TransactionDialogComponent } from '../../../features/transactions/compo
 import { v4 as uuid } from 'uuid';
 import { AmendScheduledListingComponent } from '../amend-scheduled-listing/amend-scheduled-listing.component';
 import { AmendScheduledListing, AmendScheduledListingData } from '../../models/amend-scheduled-listing';
+import { ActivitiesLogComponent } from '../../../features/activityLog/components/activities-log.component';
+import { ActivityLogService } from '../../../features/activityLog/services/activity-log.service';
 
 @Component({
     selector: 'app-view-hearing',
@@ -35,21 +37,23 @@ export class ViewHearingComponent implements OnInit {
     hearing: Hearing;
     hearingActions = HearingActions;
     @ViewChild(MatSelect) actionSelect: MatSelect;
+    @ViewChild(ActivitiesLogComponent) activitiesLogComponent: ActivitiesLogComponent;
     possibleActionsKeys: string[];
     possibleActions: IPossibleActionConfigs;
     note: NoteViewmodel;
 
-    constructor(
-        private readonly route: ActivatedRoute,
-        private readonly dialog: MatDialog,
-        private readonly hearingService: HearingService,
-        private readonly notesPreparerService: NotesPreparerService,
-        private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
-        private readonly notesService: NotesService,
-        private readonly location: Location,
-        private readonly possibleActionsService: PossibleHearingActionsService
-    ) {
-    }
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly dialog: MatDialog,
+    private readonly hearingService: HearingService,
+    private readonly notesPreparerService: NotesPreparerService,
+    private readonly listingCreateNotesConfiguration: ListingCreateNotesConfiguration,
+    private readonly notesService: NotesService,
+    private readonly location: Location,
+    private readonly possibleActionsService: PossibleHearingActionsService,
+    private readonly activityLogService: ActivityLogService
+  ) {
+  }
 
     ngOnInit() {
         this.hearingId = this.route.snapshot.paramMap.get('id');
@@ -61,6 +65,8 @@ export class ViewHearingComponent implements OnInit {
                 this.hearing = hearing;
                 this.possibleActions = this.possibleActionsService.mapToHearingPossibleActions(hearing);
                 this.possibleActionsKeys = Object.keys(this.possibleActions)
+
+                this.activityLogService.getActivitiesForEntity(this.hearingId);
             })
         ).subscribe();
 
@@ -94,8 +100,8 @@ export class ViewHearingComponent implements OnInit {
         return scheduledListing.notes === undefined || scheduledListing.notes.length === 0;
     }
 
-    onActionChanged(event: { value: HearingActions }) {
-        this.possibleActionsService.handleAction(event.value, this.hearing);
+    onActionChanged(event: {value: HearingActions}) {
+        this.possibleActionsService.handleAction(event.value, this.hearing)
         this.actionSelect.writeValue(HearingActions.Actions)
     }
 
@@ -145,6 +151,6 @@ export class ViewHearingComponent implements OnInit {
     }
 
     private fetchHearing() {
-        this.hearingService.getById(this.hearingId);
+        this.hearingService.getById(this.hearingId)
     }
 }

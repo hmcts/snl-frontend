@@ -96,7 +96,7 @@ describe('HearingService', () => {
   describe('getById', () => {
     it('should return data from service populated with notes', (done) => {
       const id = 'some-id';
-      service.getById(id)
+      service.getById(id);
 
       const request = httpMock.expectOne(`/hearing/${id}/with-sessions`);
       request.flush({id: id, sessions: [{start: '2018-12-11T07:17:00Z', hearingPartStartTime: '2018-12-11T07:17:00Z'} as any]} as Hearing);

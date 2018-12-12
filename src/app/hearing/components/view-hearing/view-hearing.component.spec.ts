@@ -40,6 +40,12 @@ const notesService: any = {
     }
 }
 
+const activityLogService: any = {
+    getActivitiesForEntity: function (id: string) {
+        return Observable.of();
+    }
+}
+
 const routeMock: any = {
   snapshot: {
     paramMap: {
@@ -70,7 +76,8 @@ describe('ViewHearingComponent', () => {
       dialogMock = jasmine.createSpyObj('dialog', ['open']);
 
       component = new ViewHearingComponent(routeMock, dialogMock, hearingServiceMock,
-        notesPreparerService, listingCreateNotesConfiguration, notesService, locationMock, possibleHearingActionsServiceMock);
+        notesPreparerService, listingCreateNotesConfiguration, notesService, locationMock,
+          possibleHearingActionsServiceMock, activityLogService);
   }));
 
   it('should create', () => {
@@ -111,6 +118,7 @@ describe('ViewHearingComponent', () => {
 
   describe('onActionChanged', () => {
     it('should call PossibleHearingActionsService.handleAction', () => {
+      possibleHearingActionsServiceMock.handleAction.and.returnValue(Observable.of())
       component.actionSelect = jasmine.createSpyObj('MatSelect', ['writeValue'])
       component.hearing = HEARING
       const expectedValue = HearingActions.Unlist

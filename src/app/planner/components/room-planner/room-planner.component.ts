@@ -5,7 +5,7 @@ import * as fromRoomActions from '../../../rooms/actions/room.action';
 import { ResourceList } from '../../../core/callendar/model/resource-list';
 import { select, Store } from '@ngrx/store';
 import { DataWithSimpleResourceTransformer } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { SessionViewModel, SessionCalendarViewModel } from '../../../sessions/models/session.viewmodel';
 import { IcalendarTransformer } from '../../../core/callendar/transformers/icalendar-transformer';
 import { State } from '../../../app.state';
 import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
@@ -20,7 +20,7 @@ export class RoomPlannerComponent implements OnInit {
     views: any;
     columns: any[];
     resources: any[];
-    dataTransformer: IcalendarTransformer<SessionViewModel>;
+    dataTransformer: IcalendarTransformer<SessionViewModel, SessionCalendarViewModel>;
     defaultView: string;
     @Output() loadDataAction = new EventEmitter();
     @Output() eventClick = new EventEmitter();
