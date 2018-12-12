@@ -13,7 +13,7 @@ export class SearchListingRequestPage {
         await browser.wait(
             ExpectedConditions.visibilityOf(this.filterButton),
             Wait.normal,
-            'Search Listing Request page is not visible'
+            `'Search Listing Request' page is not visible`
         );
 
         return this;
