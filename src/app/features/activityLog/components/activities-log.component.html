@@ -10,7 +10,7 @@
             </div>
 
             <div fxFlex>
-                {{activityLog.createdAt | appDateTimeToDate}}
+                {{activityLog.createdAt | appMomentFormat:'DD/mm/YY'}}
             </div>
         </div>
         <p matLine>

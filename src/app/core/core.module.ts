@@ -10,7 +10,7 @@ import { DurationAsMinutesPipe } from './pipes/duration-as-minutes.pipe';
 import { DurationAsDaysPipe } from './pipes/duration-as-days.pipe';
 import { HmctsModule } from '../hmcts/hmcts.module';
 import { BaseResolver } from './resolvers/base.resolver';
-import { DateFormatPipe } from './pipes/date-format.pipe';
+import { MomentFormatPipe } from './pipes/moment-format.pipe';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -18,7 +18,7 @@ export const COMPONENTS = [
     DurationFormatPipe,
     DurationAsMinutesPipe,
     DurationAsDaysPipe,
-    DateFormatPipe
+    MomentFormatPipe
 ];
 
 @NgModule({
