@@ -16,7 +16,7 @@ const helmet = require('helmet');
 const app = express();
 
 const PORT = process.env.PORT || 3451;
-const DIST_FOLDER = join(process.cwd(), 'dist');
+const DIST_FOLDER = join(process.cwd());
 
 app.use(cors());
 app.options('*', cors()); // include before other routes
