@@ -24,7 +24,7 @@ export class PossibleHearingActionsService {
         [HearingActions.Adjourn]: {
             enabled: false,
             openDialog: () => this.openAdjournDialog(),
-            callService: (hearing) => {},
+            callService: (hearing, description) => this.hearingService.adjourn(hearing, description),
             summaryText: 'Adjourn hearing'
         },
         [HearingActions.Withdraw]: {
@@ -50,13 +50,8 @@ export class PossibleHearingActionsService {
 
         if (action.enabled) {
             action.openDialog().subscribe((confirmationData) => {
-                if (confirmationData.description) {
-                    this.confirmationDialogClosed(confirmationData.okData,
-                        () => this.hearingService.adjourn(hearing, confirmationData.description), hearing, action.summaryText)
-                } else {
-                    this.confirmationDialogClosed(confirmationData.okData, () => action.callService(hearing, confirmationData.description),
-                        hearing, action.summaryText)
-                }
+                this.confirmationDialogClosed(confirmationData.okData, () => action.callService(hearing, confirmationData.description),
+                    hearing, action.summaryText)
             });
         }
     }
