@@ -17,6 +17,7 @@ import { NotesPreparerService } from '../../../notes/services/notes-preparer.ser
 import { DurationFormatPipe } from '../../../core/pipes/duration-format.pipe';
 import { PossibleHearingActionsService } from '../../services/possible-hearing-actions.service';
 import { IPossibleActionConfigs } from '../../models/ipossible-actions';
+import { ActivityLogService } from '../../../features/activityLog/services/activity-log.service';
 
 // @ts-ignore is better than defining default format as const we need to pass to every format() call
 moment.defaultFormat = 'DD/MM/YYYY';
@@ -33,7 +34,7 @@ const HEARING = {
 
 const hearingServiceMock = {
   getById: function (id: string) {
-    return Observable.of();
+    return Observable.of(HEARING);
   },
   unlist: () => {},
   hearings: Observable.of([])
@@ -53,6 +54,12 @@ const listingCreateNotesConfiguration = {
 
 const notesService = {
     upsertMany: function (id: string) {
+        return Observable.of();
+    }
+}
+
+const activityLogService = {
+    getActivitiesForEntity: function (id: string) {
         return Observable.of();
     }
 }
@@ -96,6 +103,7 @@ describe('ViewHearingComponent', () => {
         { provide: ListingCreateNotesConfiguration, useValue: listingCreateNotesConfiguration},
         { provide: NotesService, useValue: notesService},
         { provide: Location, useValue: () => {} },
+        { provide: ActivityLogService, useValue: activityLogService}
       ],
       declarations: [
         ViewHearingComponent,
@@ -106,7 +114,7 @@ describe('ViewHearingComponent', () => {
 
     fixture = TestBed.createComponent(ViewHearingComponent);
     hearingService = TestBed.get(HearingService)
-    hearingServiceGetByIdSpy = spyOn(hearingService, 'getById')
+    hearingServiceGetByIdSpy = spyOn(hearingService, 'getById').and.callThrough()
     component = fixture.componentInstance;
   }));
 
@@ -148,6 +156,7 @@ describe('ViewHearingComponent', () => {
 
   describe('onActionChanged', () => {
     it('should call PossibleHearingActionsService.handleAction', () => {
+      possibleHearingActionsServiceMock.handleAction.and.returnValue(Observable.of())
       component.actionSelect = jasmine.createSpyObj('MatSelect', ['writeValue'])
       component.hearing = HEARING
       const expectedValue = HearingActions.Unlist

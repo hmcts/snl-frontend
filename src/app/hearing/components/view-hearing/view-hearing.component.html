@@ -139,5 +139,9 @@
         </mat-expansion-panel>
       </mat-accordion>
     </mat-tab>
+
+    <mat-tab label="History">
+      <app-activities-log [entityId]="hearingId"></app-activities-log>
+    </mat-tab>
   </mat-tab-group>
 </mat-card>
