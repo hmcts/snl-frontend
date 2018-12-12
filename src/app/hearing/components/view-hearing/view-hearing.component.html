@@ -109,10 +109,9 @@
                 </div>
 
                 <div fxFlex="25%" fxLayout="row">
-                  <div matInput>Start: {{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</div>
-                  <button mat-basic-chip (click)="openAmendDialog(session)">
-                    Edit
-                  </button>
+                  <div matInput>
+                    <span>Start:</span>
+                    <span class="clickable" (click)="openAmendDialog(session)">{{session.hearingPartStartTime | appMomentFormat: HEARING_PART_STARTTIME_FORMAT}}</span></div>
                 </div>
                 <div fxFlex="5%">
                   {{session.duration | appDurationFormat}}
