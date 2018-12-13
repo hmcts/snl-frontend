@@ -10,7 +10,7 @@ export class DialogWithActionsComponent {
 
     constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
         dialogRef.disableClose = true;
-        data.okData = (data.okData !== undefined) ? data.okData : true;
+        data.confirmed = (data.confirmed !== undefined) ? data.confirmed : true;
         data.declineData = data.declineData || false;
     }
 

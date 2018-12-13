@@ -50,7 +50,7 @@ export class PossibleHearingActionsService {
 
         if (action.enabled) {
             action.openDialog().subscribe((confirmationData) => {
-                this.confirmationDialogClosed(confirmationData.okData, () => action.callService(hearing, confirmationData.description),
+                this.confirmationDialogClosed(confirmationData.confirmed, () => action.callService(hearing, confirmationData.description),
                     hearing, action.summaryText)
             });
         }
