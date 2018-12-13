@@ -18,12 +18,4 @@ export class AdjournHearingDialogComponent extends DialogWithActionsComponent {
         this.data.description = this.description;
         super.onOkClick();
     }
-
-    onDeclineClick(): void {
-        super.onDeclineClick();
-    }
-
-    showDecline(): boolean {
-        return (this.data['hideDecline'] === undefined) ? true : !this.data.hideDecline;
-    }
 }

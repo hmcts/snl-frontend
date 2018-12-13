@@ -81,7 +81,7 @@ export class PlannerComponent implements OnInit {
             return;
         }
         this.store.dispatch(new SearchForDates(query));
-        this.lastSearchDateRange = query;h
+        this.lastSearchDateRange = query;
     }
 
     public fetchModifiedEntities() {

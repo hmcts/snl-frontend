@@ -23,7 +23,7 @@ export class DialogWithActionsComponent {
     }
 
     showDecline(): boolean {
-        return (this.data['hideDecline'] === undefined) ? true : !this.data.hideDecline;
+        return (this.data.hideDecline === undefined) ? true : !this.data.hideDecline;
     }
 
     private closeWith(data) {

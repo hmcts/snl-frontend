@@ -49,8 +49,8 @@ export class PossibleHearingActionsService {
         const action: PossibleActionConfig = this.possibleActions[value];
 
         if (action.enabled) {
-            action.openDialog().subscribe((confirmationData) => {
-                this.confirmationDialogClosed(confirmationData.confirmed, () => action.callService(hearing, confirmationData.description),
+            action.openDialog().subscribe((dialogData) => {
+                this.confirmationDialogClosed(dialogData.confirmed, () => action.callService(hearing, dialogData.description),
                     hearing, action.summaryText)
             });
         }
