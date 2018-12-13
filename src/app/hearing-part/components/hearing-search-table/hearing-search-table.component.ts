@@ -21,6 +21,12 @@ import { Status } from '../../../core/reference/models/status.model';
 })
 export class HearingSearchTableComponent implements OnInit, OnChanges {
     @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    @Input() set pagingValues(pagingValues: PageEvent) {
+        this.paginator.pageIndex = pagingValues.pageIndex;
+        this.paginator.pageSize = pagingValues.pageSize;
+        this.paginator.length = pagingValues.length;
+    }
     @Input() hearings: FilteredHearingViewmodel[];
     @Input() totalCount: number;
     @Output() onDelete = new EventEmitter<FilteredHearingViewmodel>();

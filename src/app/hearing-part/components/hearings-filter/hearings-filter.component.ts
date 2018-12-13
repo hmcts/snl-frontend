@@ -16,6 +16,10 @@ import { CommunicationFacilitators } from '../../models/communication-facilitato
 export class HearingsFilterComponent {
     @Output() onFilter = new EventEmitter();
 
+    @Input() set filterValues(filterValues: HearingsFilters) {
+        this.filters = filterValues || DEFAULT_HEARING_FILTERS;
+        this.sendFilter();
+    }
     @Input() judges: Judge[];
     @Input() caseTypes: CaseType[];
     @Input() hearingTypes: HearingType[];
