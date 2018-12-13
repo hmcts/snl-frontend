@@ -5,6 +5,8 @@ import * as moment from 'moment';
 import { Priority, priorityValue } from '../../models/priority-model';
 import { HearingsTableComponent } from './hearings-table.component';
 import { DEFAULT_HEARING_FOR_LISTING_WITH_NOTES, HearingForListingWithNotes } from '../../models/hearing-for-listing-with-notes.model';
+import { Note } from '../../../notes/models/note.model';
+import { NoteType } from '../../../notes/models/note-type';
 
 const openDialogMockObjConfirmed = {
     afterClosed: (): Observable<boolean> => Observable.of(true)
@@ -33,10 +35,37 @@ describe('HearingsTableComponent', () => {
     });
 
     describe('Component ', () => {
-        it('has notes should properly verify notes of hearingparts', () => {
+        it('hasNotes should properly verify notes of hearingparts', () => {
             let hasNotes = component.hasNotes(generateHearings('asd'));
 
             expect(hasNotes).toBeFalsy();
+        });
+
+        it('hasNotes should return true when hearing contains listing note type', () => {
+            let hearingWithNotes = {
+                ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+                notes: [generateNote(NoteType.LISTING_NOTE), generateNote(NoteType.OTHER_NOTE)]
+            };
+            let hasNotes = component.hasNotes(hearingWithNotes);
+            expect(hasNotes).toBeTruthy();
+        });
+
+        it('hasNotes should return true when hearing contains facility requirement note type', () => {
+            let hearingWithNotes = {
+                ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+                notes: [generateNote(NoteType.FACILITY_REQUIREMENTS)]
+            };
+            let hasNotes = component.hasNotes(hearingWithNotes);
+            expect(hasNotes).toBeTruthy();
+        });
+
+        it('hasNotes should return true when hearing contains special requirement note type', () => {
+            let hearingWithNotes = {
+                ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+                notes: [generateNote(NoteType.SPECIAL_REQUIREMENTS)]
+            };
+            let hasNotes = component.hasNotes(hearingWithNotes);
+            expect(hasNotes).toBeTruthy();
         });
 
         it('confirming on delete dialog should call service method', () => {
@@ -114,4 +143,16 @@ describe('HearingsTableComponent', () => {
 
 function generateHearings(id: string): HearingForListingWithNotes {
     return {...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES, id}
-};
+}
+
+function generateNote(type: NoteType): Note {
+    return {
+        id: 'id',
+        type: type,
+        content: '',
+        entityId: '',
+        entityType: '',
+        createdAt: now,
+        modifiedBy: ''
+    } as Note;
+}

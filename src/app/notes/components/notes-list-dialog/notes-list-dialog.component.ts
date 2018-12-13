@@ -1,7 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { DraggableDialog } from '../../../core/dialog/draggable-dialog';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { NoteViewmodel } from '../../models/note.viewmodel';
+import { NoteViewmodel, sortNotesByLatestFirst } from '../../models/note.viewmodel';
+import { isOfTypeOtherOrListing } from '../../models/note.model';
+import { NoteType } from '../../models/note-type';
 
 @Component({
     selector: 'app-notes-list-dialog',
@@ -17,29 +19,24 @@ export class NotesListDialogComponent extends DraggableDialog {
 
         this.data.forEach(this.disposeToProperArrays);
 
-        this.freeTextNoteViewModels = this.sortOtherNotes(this.freeTextNoteViewModels);
+        this.freeTextNoteViewModels = sortNotesByLatestFirst(this.freeTextNoteViewModels);
 
         this.noteViewModels = this.putNotesInOrder();
     }
 
     protected disposeToProperArrays = (n: NoteViewmodel) => {
-        if (n.type === 'Other note') {
+        if (isOfTypeOtherOrListing(n)) {
             this.freeTextNoteViewModels.push(n);
         } else {
             this.noteViewModels.push(n);
         }
-    }
+    };
 
     protected putNotesInOrder = () => {
-        let specReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Special Requirements');
-        let facReqNvm = this.noteViewModels.find(nvm => nvm.type === 'Facility Requirements');
+        let specReqNvm = this.noteViewModels.find(nvm => nvm.type === NoteType.SPECIAL_REQUIREMENTS);
+        let facReqNvm = this.noteViewModels.find(nvm => nvm.type === NoteType.FACILITY_REQUIREMENTS);
 
         return [specReqNvm, facReqNvm].filter(nvm => nvm !== undefined);
     }
 
-    protected sortOtherNotes = (notes: NoteViewmodel[]) => {
-        return notes.sort((left, right) => {
-            return right.createdAt.diff(left.createdAt);
-        });
-    }
 }
