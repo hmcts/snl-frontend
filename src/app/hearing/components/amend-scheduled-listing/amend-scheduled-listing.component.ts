@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { AmendScheduledListingData } from '../../models/amend-scheduled-listing';
+import { TimeFormatValidator } from '../../../core/validators/time-format.validator';
 
 @Component({
     selector: 'app-amend-scheduled-listing',
@@ -23,7 +24,7 @@ export class AmendScheduledListingComponent {
 
     private initiateFormGroup() {
         this.amendFormGroup = new FormGroup({
-            startTime: new FormControl(this.amendData.startTime, [Validators.required]),
+            startTime: new FormControl(this.amendData.startTime, [Validators.required, TimeFormatValidator.validate]),
         });
     }
 
