@@ -14,6 +14,7 @@ withPipeline(type, product, app) {
     }
 
     before('buildinfra:prod') {
+        currentBuild.description = "Success!"
         error 'This is PoC project for Scheduling and Listing therefore the prod environment will not be built'
     }
 

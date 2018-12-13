@@ -81,7 +81,13 @@ export class TransactionEffects {
         ofType<transactionActions.RollbackTransaction>(transactionActions.EntityTransactionActionTypes.RollbackTransaction),
         mergeMap(action =>
             this.transactionService.rollbackTransaction(action.payload).pipe(
-                mergeMap((data) => [new transactionActions.TransactionRolledBack(data.id)]),
+                mergeMap((data): Action[] => {
+                    if (data.success) {
+                        return [new transactionActions.TransactionRolledBack(data.id)];
+                    } else {
+                        return [new transactionActions.TransactionRollbackFailed(data.id)];
+                    }
+                })
             )
         ),
         catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(err.error)))
@@ -92,7 +98,13 @@ export class TransactionEffects {
         ofType<transactionActions.CommitTransaction>(transactionActions.EntityTransactionActionTypes.CommitTransaction),
         mergeMap(action =>
             this.transactionService.commitTransaction(action.payload).pipe(
-                mergeMap((data) => [new transactionActions.TransactionCommitted(data.id)]),
+                mergeMap((data): Action[] => {
+                    if (data.success) {
+                        return [new transactionActions.TransactionCommitted(data.id)];
+                    } else {
+                        return [new transactionActions.TransactionCommitFailed(data.id)];
+                    }
+                })
             )
         ),
         catchError((err: HttpErrorResponse) => of(new transactionActions.TransactionFailure(err.error)))

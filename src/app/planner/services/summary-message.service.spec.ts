@@ -1,3 +1,5 @@
+import { SessionCalendarViewModel } from './../../sessions/models/session.viewmodel';
+import { UpdateEventModel } from './../../common/ng-fullcalendar/models/updateEventModel';
 import { Separator } from './../../core/callendar/transformers/data-with-simple-resource-transformer';
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
@@ -7,6 +9,8 @@ import * as sessionReducers from '../../sessions/reducers';
 import * as roomActions from '../../rooms/actions/room.action';
 import { SummaryMessageService } from './summary-message.service';
 import * as moment from 'moment';
+import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
+import { Room } from '../../rooms/models/room.model';
 
 let store: Store<judgesReducers.State>;
 let summaryMessageService: SummaryMessageService;
@@ -34,7 +38,10 @@ describe('SummaryMessageService', () => {
 
     describe('When event details are undefined', () => {
         it('should build msg', () => {
-            summaryMessageService.buildSummaryMessage({detail: {event: undefined}}).subscribe(msg => {
+            const custom = event();
+            custom.detail.event = undefined
+
+            summaryMessageService.buildSummaryMessage(custom).subscribe(msg => {
                 expect(msg).toEqual('Hearing part has been listed!');
             });
         })
@@ -111,16 +118,28 @@ function personResourceString(personId): string {
     return `person${Separator}${personId}`
 }
 
-function event(duration: moment.Duration,
-    resourceId: string, room?: {id: string, name: string}, person?: {id: string, name: string}): any {
-    return {
-        detail: {
-            duration,
-            event: {
-                resourceId,
-                room,
-                person
-            }
-        }
-    }
+function event(delta?: moment.Duration, resourceId?: string,
+    room?: {id: string, name: string},
+    person?: {id: string, name: string}): CustomEvent<UpdateEventModel<SessionCalendarViewModel>> {
+
+    const sessionCalendarViewModel = {
+        resourceId,
+        room: room as Room,
+        person,
+        title: '',
+        start: undefined,
+        end: undefined,
+        id: 'someId',
+        hearingParts: [],
+        sessionType: undefined,
+        version: 1
+    } as SessionCalendarViewModel
+
+    const updateEvent = { event: sessionCalendarViewModel, delta } as UpdateEventModel<SessionCalendarViewModel>
+    const customEvent: CalendarEventSessionViewModel = new CustomEvent<UpdateEventModel<SessionCalendarViewModel>>('someEvent', {
+        bubbles: false,
+        detail: updateEvent
+    });
+
+    return customEvent;
 }

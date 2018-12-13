@@ -4,6 +4,7 @@ import { SessionQuery, SessionQueryForDates } from '../models/session-query.mode
 import { DiaryLoadParameters } from '../models/diary-load-parameters.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
 import { SessionCreate } from '../models/session-create.model';
+import { DragAndDropSessionRequest } from '../models/drag-and-drop-session-request.model';
 
 export enum SessionActionTypes {
   Search = '[Session] Search',
@@ -84,7 +85,7 @@ export class Get implements Action {
 export class Update implements Action {
     readonly type = SessionActionTypes.Update;
 
-    constructor(public payload: any) {}
+    constructor(public payload: DragAndDropSessionRequest) {}
 }
 
 export class Amend implements Action {

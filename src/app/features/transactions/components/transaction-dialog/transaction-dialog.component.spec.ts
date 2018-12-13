@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import * as fromHearingParts from '../../../../hearing-part/reducers/index';
 import * as fromProblems from '../../../../problems/reducers/index';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import * as sessionReducers from '../../../../sessions/reducers/index';
 import * as fromTransactions from '../../reducers/index';
 import { TransactionDialogComponent } from './transaction-dialog.component';
@@ -16,6 +16,7 @@ let store: Store<fromHearingParts.State>;
 let component: TransactionDialogComponent;
 let storeSpy: jasmine.Spy;
 const matDialogRefSpy = jasmine.createSpyObj('MatDialog', ['close']);
+const notificationMatDialogSpy = jasmine.createSpyObj('MatDialog', ['close']);
 const isEntityTransactionCompleted = false;
 const isEntityTransactionConflicted = false;
 const areProblemsLoaded = false;
@@ -49,6 +50,7 @@ describe('TransactionDialogComponent', () => {
       ],
       providers: [
         TransactionDialogComponent,
+        { provide: MatDialog, useValue: notificationMatDialogSpy },
         { provide: MatDialogRef, useValue: matDialogRefSpy },
         { provide: MAT_DIALOG_DATA, useValue: {}}
       ]

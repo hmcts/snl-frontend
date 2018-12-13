@@ -3,16 +3,18 @@ import { CreateListingRequestBody } from '../models/create-listing-request-body'
 import { SessionCreate } from '../../src/app/sessions/models/session-create.model';
 import * as requestPromise from 'request-promise'
 import * as URL from '../e2e-url.js'
+import { DeleteListingRequestBody } from '../models/delete-listing-request-body';
+import { v4 as uuid } from 'uuid';
 
 const rp = (URL.proxy) ? requestPromise.defaults({proxy: URL.proxy, strictSSL: false}) : requestPromise;
 const apiURL = (process.env.API_URL || URL.apiURL).replace('https', 'http');
 
-console.log('API URL: ' + apiURL)
+console.log('API URL: ' + apiURL);
 
 export class API {
     private static baseUrl = apiURL;
-    private static applicationJSONHeader = {'Content-Type': 'application/json'}
-    private static headers = {'Authorization': '', ...API.applicationJSONHeader}
+    private static applicationJSONHeader = {'Content-Type': 'application/json'};
+    private static headers = {'Authorization': '', ...API.applicationJSONHeader};
 
     static async createListingRequest(body: CreateListingRequestBody): Promise<number> {
         await API.login();
@@ -22,11 +24,48 @@ export class API {
             body: JSON.stringify(body),
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        await API.commitUserTransaction(body)
+        };
+        const response = await rp(options);
+        await API.commitUserTransaction(body);
 
         return response.statusCode;
+    }
+
+    private static async getListingRequestById(id: string) {
+        await API.login();
+        const options = {
+            method: 'GET',
+            uri: `${API.baseUrl}/hearing/${id}`,
+            headers: API.headers,
+            resolveWithFullResponse: true
+        };
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
+        return responseBody;
+    }
+
+    private static async deleteListingRequestWithBody(body: DeleteListingRequestBody) {
+        await API.login();
+        const options = {
+            method: 'POST',
+            uri: `${API.baseUrl}/hearing-part/delete`,
+            body: JSON.stringify(body),
+            headers: API.headers,
+            resolveWithFullResponse: true
+        };
+        const response = await rp(options);
+
+        return response.statusCode;
+    }
+
+    static async deleteListingRequest(id: string) {
+        await API.login();
+        const hearingVersion =  (await API.getListingRequestById(id)).version;
+        const transactionId = uuid().toString();
+
+        await API.deleteListingRequestWithBody({
+            hearingId: id, hearingVersion: hearingVersion, userTransactionId: transactionId
+        })
     }
 
     static async createSession(body: SessionCreate) {
@@ -37,9 +76,9 @@ export class API {
             body: JSON.stringify(body),
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        await API.commitUserTransaction(body)
+        };
+        const response = await rp(options);
+        await API.commitUserTransaction(body);
 
         return response.statusCode;
     }
@@ -51,9 +90,9 @@ export class API {
             uri: `${API.baseUrl}/problems`,
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        };
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         return responseBody;
     }
 
@@ -64,9 +103,9 @@ export class API {
             uri: `${API.baseUrl}/hearing-part`,
             headers: API.headers,
             resolveWithFullResponse: true
-        }
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        };
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         return responseBody;
     }
 
@@ -92,8 +131,8 @@ export class API {
             resolveWithFullResponse: true,
         };
 
-        const response = await rp(options)
-        const responseBody = JSON.parse(response.body)
+        const response = await rp(options);
+        const responseBody = JSON.parse(response.body);
         API.headers.Authorization = `${responseBody.tokenType} ${responseBody.accessToken}`;
     }
 
@@ -104,7 +143,7 @@ export class API {
             body: body,
             headers: {'Content-Type': 'application/json', 'Authorization': API.headers.Authorization},
             json: true // Automatically stringifies the body to JSON
-        }
+        };
         await rp(commitUserTransactionOptions)
     }
 }

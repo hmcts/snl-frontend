@@ -12,7 +12,7 @@
                       (eventDrop)="eventModify($event)"
                       (eventMouseOver)="eventMouseOver($event)"
                       (drop)="drop($event)"
-                      (loadDataAction)="loadDataForAllJudges($event)"
+                      (loadDataAction)="searchSessions($event)"
                       [initialStartDate]="lastSearchDateRange?.startDate"
                       [sessions]="sessions"
     ></app-room-planner>
@@ -22,7 +22,7 @@
                        (eventDrop)="eventModify($event)"
                        (eventMouseOver)="eventMouseOver($event)"
                        (drop)="drop($event)"
-                       (loadDataAction)="loadDataForAllJudges($event)"
+                       (loadDataAction)="searchSessions($event)"
                        [initialStartDate]="lastSearchDateRange?.startDate"
                        [sessions]="sessions"
     ></app-judge-planner>
