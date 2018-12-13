@@ -68,6 +68,10 @@ describe('DateFormatValidator.validate', () => {
                 expect(validate({ date: 'abc', month: 1, year: 2010})).not.toBeNull();
             });
         });
+
+        fit('null given', () => {
+            expect(DateFormatValidator.validate({ value: null  } as AbstractControl)).not.toBeNull();
+        });
     });
 });
 

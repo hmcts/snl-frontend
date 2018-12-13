@@ -12,12 +12,21 @@ export class DateFormatValidator {
     static validate(control: AbstractControl): ValidationErrors | null {
 
         const d = control.value;
-        const date = (typeof d._i === 'object') ? formatDateToDDmmYYYY(d._i) : d._i;
 
-        if (DateFormatValidator.pattern.test(date)) {
+        if (!d) {
+            return { error: 'Wrong input - moment object expected' };
+        }
+
+        const date = (d && '') || (typeof d._i === 'object') ? formatDateToDDmmYYYY(d._i) : d._i;
+
+        if (DateFormatValidator.isOnLoadCall(d) || DateFormatValidator.pattern.test(date)) {
             return null;
         }
 
         return { error: 'Wrong format' };
+    }
+
+    private static isOnLoadCall(date): boolean {
+        return date._isAMomentObject && date._isValid && !date._i;
     }
 }
