@@ -127,10 +127,13 @@ describe('JudgePlannerComponent', () => {
         view: undefined,
       }
 
-      matDialogSpy.open.and.returnValue({afterClosed: () => Observable.of()})
+      beforeEach(() => {
+        matDialogSpy.open.calls.reset()
+        matDialogSpy.open.and.returnValue({afterClosed: () => Observable.of()})
+      });
 
       describe('when session contains multi session hearing part and is dropped to row with different judge', () => {
-        fit('should NOT emit an event and open the dialog', () => {
+        it('should NOT emit an event and open the dialog', () => {
           updateEvent.event.person = {id: 'someId'} as Judge;
           updateEvent.event.resourceId = `some${Separator}OtherJudgeId`
 
