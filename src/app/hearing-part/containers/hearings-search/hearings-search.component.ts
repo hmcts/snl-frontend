@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import 'rxjs/add/observable/of';
 import { Judge } from '../../../judges/models/judge.model';
-import { HearingsFilters } from '../../models/hearings-filter.model';
+import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
@@ -44,7 +44,7 @@ export class HearingsSearchComponent implements OnInit {
     hearingTypes: HearingType[];
 
     filteredHearings: FilteredHearingViewmodel[] = [];
-    latestFilters: HearingsFilters;
+    latestFilters: HearingsFilters = DEFAULT_HEARING_FILTERS;
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
@@ -62,6 +62,8 @@ export class HearingsSearchComponent implements OnInit {
             this.hearingTypes = hearingTypes;
             this.caseTypes = caseTypes;
         });
+
+        this.fetchHearings(this.latestFilters, this.latestPaging);
     }
 
     onNextPage(pageEvent: PageEvent) {

@@ -27,6 +27,7 @@ module.exports = function (config) {
       environment: 'dev'
     },
     reporters: ['mocha'],
+    reportSlowerThan: 100,
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
