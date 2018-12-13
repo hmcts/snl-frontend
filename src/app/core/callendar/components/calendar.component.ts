@@ -121,6 +121,7 @@ export class CalendarComponent implements OnInit {
         // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element;
         el.css('background-color', textToColor(event.detail.event.sessionType.code));
+        el.css('overflow', 'hidden');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
             el.append(hearing.caseNumber);
