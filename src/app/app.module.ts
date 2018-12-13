@@ -30,7 +30,7 @@ import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
-import { getLocalStorage } from './utils/storage';
+import { getLocalStorage, getLocalStorageWrapper } from './utils/storage';
 import { ReportModule } from './features/reports/report.module';
 import { NotesModule } from './notes/notes.module';
 import { TransactionsModule } from './features/transactions/transactions.module';
@@ -94,6 +94,7 @@ export class XhrInterceptor implements HttpInterceptor {
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
         {provide: 'STORAGE', useFactory: getLocalStorage},
+        {provide: 'STORAGE_WRAPPER', useFactory: getLocalStorageWrapper},
     ],
     bootstrap: [AppComponent]
 })

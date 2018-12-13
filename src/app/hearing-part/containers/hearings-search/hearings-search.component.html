@@ -18,7 +18,7 @@
                                 [totalCount]="totalCount"
                                 (onDelete)="onDelete($event)"
                                 (onAmend)="onAmend($event)"
-                                (onNextPage)="onNextPage($event)">
+                                [(onNextPage)]="page($event)">
       </app-hearing-search-table>
     </div>
   </div>
