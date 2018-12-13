@@ -1,0 +1,19 @@
+<div>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-subtitle>Amend scheduled listing</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="inputs-container" fxLayout="row" fxLayoutGap="5%">
+            <form [formGroup]="amendFormGroup" novalidate #amendForm="ngForm" (ngSubmit)="amend()" id="sl-amend-form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.5%">
+                <mat-form-field>
+                    <input id="startTime" formControlName="startTime" matInput placeholder="Start time *" type="time" [(ngModel)]="amendData.startTime">
+                </mat-form-field>
+            </form>
+        </mat-card-content>
+
+        <div style="margin-top:16px;">
+            <button type="submit" id="amend" mat-raised-button (click)="amendForm.ngSubmit.emit()" [disabled]="!amendFormGroup.valid">Ok</button>
+        </div>
+    </mat-card>
+</div>

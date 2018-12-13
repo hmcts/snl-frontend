@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
 import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
 
@@ -58,7 +58,7 @@ export class XhrInterceptor implements HttpInterceptor {
         HomeComponent
     ],
     imports: [
-        BrowserModule.withServerTransition({appId: 'snl-frontend'}),
+        // BrowserModule.withServerTransition({appId: 'snl-frontend'}),
         BrowserAnimationsModule,
         StoreModule.forRoot({}),
         StoreDevtoolsModule.instrument({
