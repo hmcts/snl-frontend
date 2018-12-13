@@ -69,7 +69,7 @@ describe('DateFormatValidator.validate', () => {
             });
         });
 
-        fit('null given', () => {
+        it('null given', () => {
             expect(DateFormatValidator.validate({ value: null  } as AbstractControl)).not.toBeNull();
         });
     });
