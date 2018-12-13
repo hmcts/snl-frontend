@@ -38,8 +38,8 @@ export class ListingNoteListComponent {
         this.oldNoteViewModels = sortNotesByLatestFirst(this.oldNoteViewModels);
     }
 
-    constructor(readonly listingNotesConfig: ListingCreateNotesConfiguration,
-                public notePreparerService: NotesPreparerService) {
+    constructor(private readonly listingNotesConfig: ListingCreateNotesConfiguration,
+                private notePreparerService: NotesPreparerService) {
     }
 
     prepareNotes() {

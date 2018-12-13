@@ -15,7 +15,7 @@ import { v4 as uuid } from 'uuid';
 import { filter, mergeMap, take, tap } from 'rxjs/operators';
 import { TableSettings } from '../../models/table-settings.model';
 import { HearingForListingColumn } from '../../models/hearing-for-listing-column.model';
-import { NoteType } from '../../../notes/models/note-type';
+import { canBeShownToUser } from '../../../notes/models/note.model';
 
 @Component({
     selector: 'app-hearings-table',
@@ -80,12 +80,7 @@ export class HearingsTableComponent implements AfterViewChecked {
     }
 
     hasNotes(hearing: HearingForListingWithNotes): boolean {
-        return hearing.notes.filter(note => {
-            return note.type === NoteType.OTHER_NOTE ||
-                note.type === NoteType.LISTING_NOTE ||
-                note.type === NoteType.SPECIAL_REQUIREMENTS ||
-                note.type === NoteType.FACILITY_REQUIREMENTS;
-        }).length > 0;
+        return hearing.notes.filter(note => canBeShownToUser(note)).length > 0;
     }
 
     goToFirstPage() {

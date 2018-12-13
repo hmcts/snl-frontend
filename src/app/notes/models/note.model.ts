@@ -28,6 +28,13 @@ export function isOfTypeOtherOrListing(note: Note) {
     return note.type === NoteType.OTHER_NOTE || note.type === NoteType.LISTING_NOTE;
 }
 
+export function canBeShownToUser(note) {
+    return note.type === NoteType.OTHER_NOTE ||
+        note.type === NoteType.LISTING_NOTE ||
+        note.type === NoteType.SPECIAL_REQUIREMENTS ||
+        note.type === NoteType.FACILITY_REQUIREMENTS;
+}
+
 export const DEFAULT_NOTE: Note = {
     id: undefined,
     type: undefined,

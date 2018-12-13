@@ -42,7 +42,8 @@ describe('HearingsTableComponent', () => {
         });
 
         it('hasNotes should return true when hearing contains listing note type', () => {
-            let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+            let hearingWithNotes = {
+                ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.LISTING_NOTE), generateNote(NoteType.OTHER_NOTE)]
             };
             let hasNotes = component.hasNotes(hearingWithNotes);
@@ -50,7 +51,8 @@ describe('HearingsTableComponent', () => {
         });
 
         it('hasNotes should return true when hearing contains facility requirement note type', () => {
-            let hearingWithNotes = { ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
+            let hearingWithNotes = {
+                ...DEFAULT_HEARING_FOR_LISTING_WITH_NOTES,
                 notes: [generateNote(NoteType.FACILITY_REQUIREMENTS)]
             };
             let hasNotes = component.hasNotes(hearingWithNotes);
