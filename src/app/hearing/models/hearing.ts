@@ -8,13 +8,28 @@ export interface Note {
   modifiedBy: string
 }
 
-export interface Session {
+export interface ScheduledListing {
+  hearingPartStartTime: moment.Moment,
   start: moment.Moment,
   duration: number,
-  room: string,
-  judge: string,
+  roomName: string,
+  judgeName: string,
   sessionType: string,
+  hearingPartIdOfCurrentHearing: string,
+  hearingPartVersionOfCurrentHearing: number,
   notes: Note[]
+}
+
+export const DEFAULT_SCHEDULED_LISTING: ScheduledListing = {
+    hearingPartStartTime: undefined,
+    start: undefined,
+    duration: undefined,
+    roomName: undefined,
+    judgeName: undefined,
+    sessionType: undefined,
+    hearingPartIdOfCurrentHearing: undefined,
+    hearingPartVersionOfCurrentHearing: undefined,
+    notes: undefined
 }
 
 export interface Hearing {
@@ -32,7 +47,7 @@ export interface Hearing {
   facilityRequirements: string,
   reservedToJudge: string,
   notes: Note[],
-  sessions: Session[],
+  sessions: ScheduledListing[],
   numberOfSessions: number,
   multiSession: boolean
   version: number,

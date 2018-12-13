@@ -23,14 +23,14 @@ mat-panel-title {
 
 .listing-header {
   .tile {
-    width: 120px;
+    width: 110px;
     float: left;
     padding: 14px;
     border-left: 1px solid rgba(0,0,0,.05);
   }
 
   .tile.small {
-    width: 80px;
+    width: 70px;
   }
 }
 .scheduled-listings .listing .expand-button {
@@ -68,4 +68,10 @@ mat-panel-title {
 // easiest way to make session panel not expandable is to disable it, but by default it appears in gray
 .mat-expansion-panel-header[aria-disabled=true] {
   color: rgba(0,0,0,.87);
+}
+
+.clickable {
+  color: #0099FF;
+  text-decoration: underline;
+  cursor: pointer;
 }

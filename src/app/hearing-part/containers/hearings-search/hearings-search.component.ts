@@ -167,7 +167,7 @@ export class HearingsSearchComponent implements OnInit {
                         return;
                     });
                 }
-
+            } else {
                 this.fetchHearings(this.latestFilters, this.latestPaging)
             }
         });
