@@ -118,7 +118,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             hearingVersion: this.selectedHearing.version,
             sessionsData: this.selectedSessions.map(s => {return {sessionId: s.sessionId, sessionVersion: s.sessionVersion}}),
             userTransactionId: uuid(),
-            start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
+            start: this.calculateValidStartDateTime(assignHearingData.startTime)
         } as HearingToSessionAssignment;
 
         this.hearingService.assignToSession(assignment);
@@ -197,6 +197,20 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.openDialog('Editing listing request', amendedHearing.notes);
             })
         ).subscribe()
+    }
+
+    private calculateValidStartDateTime(hearingStartTime: string): Date | null {
+        if (this.selectedSessions.length === 1) {
+            const hearingStartMoment = moment(hearingStartTime, 'HH:mm');
+            const startTime = moment(this.selectedSessions[0].startDate);
+            startTime.hours(hearingStartMoment.hours());
+            startTime.minutes(hearingStartMoment.minutes());
+            startTime.seconds(0);
+
+            return startTime.toDate();
+        }
+
+        return null;
     }
 
     private openAmendDialog(hearing: HearingSearchResponseForAmendment, notes: Note[]) {

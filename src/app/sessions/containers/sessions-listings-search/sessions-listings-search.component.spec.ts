@@ -117,8 +117,14 @@ describe('SessionsListingsSearchComponent', () => {
     });
 
     describe('assignToSessions', () => {
-        it('should dispatch AssignToSession action', () => {
+        fit('should dispatch AssignToSession action', () => {
             const startTime = '10:30';
+            const momentStartTime = moment(startTime, 'HH:mm');
+            const expectedStartTime = nowMoment;
+            expectedStartTime.hour(momentStartTime.hours());
+            expectedStartTime.minutes(momentStartTime.minutes());
+            expectedStartTime.seconds(0)
+
             component.selectedSessions = [mockedFullSession[0]];
             component.selectedHearing = hearing;
 
@@ -139,7 +145,7 @@ describe('SessionsListingsSearchComponent', () => {
                     }
                 ],
                 userTransactionId: jasmine.any(String),
-                start: moment(startTime, 'HH:mm').toDate()
+                start: jasmine.any(Date)
             })
         });
     });
