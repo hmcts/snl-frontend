@@ -18,12 +18,10 @@ export class SecurityContext {
             && this.currentUser.credentialsNonExpired && this.currentUser.enabled;
     }
 
-    logout(callback?) {
+    logout(callback  = () => {}) {
         this.storage.removeItem(AuthorizationHeaderName);
         this.userSubject$.next(User.emptyUser());
-        if (callback) {
-            callback();
-        }
+        callback();
     }
 
     setToken(tokenValue): any {

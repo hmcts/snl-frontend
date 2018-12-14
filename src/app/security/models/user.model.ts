@@ -1,4 +1,6 @@
 export class User {
+    private static _emptyUser: User;
+
     accountNonExpired: boolean;
     accountNonLocked: boolean;
     authorities: Authority[] = [] as Authority[];
@@ -8,9 +10,12 @@ export class User {
     xsrftoken: string;
 
     static emptyUser(): User {
-        let user = new User(); // NOSONAR not const
-        user.username = 'No User';
-        return user;
+        if (User._emptyUser) {
+            return User._emptyUser;
+        }
+        User._emptyUser = new User(); // NOSONAR not const
+        User._emptyUser.username = 'No User';
+        return User._emptyUser;
     }
 
     hasRole(roleName: string): boolean {
