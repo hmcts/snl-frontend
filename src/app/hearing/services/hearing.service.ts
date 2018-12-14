@@ -93,11 +93,12 @@ export class HearingService {
             }).subscribe(data => this.store.dispatch(new UpdateTransaction(data)));
     }
 
-    adjourn(hearing: Hearing) {
+    adjourn(hearing: Hearing, description: string) {
         const adjournHearingRequest: AdjournHearingRequest = {
             hearingId: hearing.id,
             hearingVersion: hearing.version,
-            userTransactionId: uuid()
+            userTransactionId: uuid(),
+            description: description
         };
 
         this.removeEntitiesFromStateAndInitializeTransaction(adjournHearingRequest.userTransactionId);

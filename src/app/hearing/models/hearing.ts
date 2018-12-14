@@ -76,8 +76,18 @@ export interface UnlistHearingRequest {
 export interface AdjournHearingRequest {
     hearingId: string,
     hearingVersion: number,
-    userTransactionId: string
+    userTransactionId: string,
+    description: string
 }
 
-export interface WithdrawHearingRequest extends AdjournHearingRequest { }
-export interface VacateHearingRequest extends AdjournHearingRequest { }
+export interface WithdrawHearingRequest {
+    hearingId: string,
+    hearingVersion: number,
+    userTransactionId: string,
+}
+
+export interface VacateHearingRequest {
+    hearingId: string,
+    hearingVersion: number,
+    userTransactionId: string,
+}

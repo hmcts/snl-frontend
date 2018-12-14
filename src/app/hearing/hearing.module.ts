@@ -10,10 +10,12 @@ import { CreateHearingNoteComponent } from './components/create-hearing-note/cre
 import { CoreModule } from '../core/core.module';
 import { AmendScheduledListingComponent } from './components/amend-scheduled-listing/amend-scheduled-listing.component';
 import { ActivityLogModule } from '../features/activityLog/activity-log.module';
+import { AdjournHearingDialogComponent } from './components/adjourn-hearing-dialog/adjourn-hearing.dialog.component';
 
 const COMPONENTS = [
   ViewHearingComponent,
   CreateHearingNoteComponent,
+  AdjournHearingDialogComponent,
   AmendScheduledListingComponent
 ];
 
@@ -31,7 +33,7 @@ const COMPONENTS = [
   declarations: COMPONENTS,
   exports: COMPONENTS,
   providers: [HearingService],
-  entryComponents: [AmendScheduledListingComponent]
+  entryComponents: [AmendScheduledListingComponent, AdjournHearingDialogComponent]
 })
 export class HearingModule {
 }

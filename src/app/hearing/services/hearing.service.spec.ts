@@ -134,7 +134,7 @@ describe('HearingService', () => {
 
   describe('adjourn', () => {
     it('should call API', () => {
-      service.adjourn(HEARING)
+      service.adjourn(HEARING, 'description')
 
       httpMock.expectOne((request: HttpRequest<any>) => {
         const body = JSON.parse(request.body);
