@@ -71,4 +71,12 @@ describe('DateUtils', () => {
             expect(dateUtils.formatDateTimeToHHmm(momentDate)).toEqual('16:32');
         });
     });
+
+    describe('formatDateToDDmmYYYY', () => {
+        it('should display date in DD/MM/YYYY from date-time', () => {
+            const momentDate = moment.utc({date: 1, month: 2, year: 2010});
+
+            expect(dateUtils.formatDateToDDmmYYYY(momentDate)).toEqual('01/03/2010');
+        });
+    });
 });
