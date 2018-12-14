@@ -83,11 +83,17 @@ describe('HearingsSearchComponent', () => {
 
     describe('When created', () => {
         it('in onInit it should get reference data', () => {
+            let paging = undefined;
+            let filters = undefined;
+            storage.getObject.and.returnValues([filters, paging]);
+
             component.ngOnInit();
 
             expect(component.judges).toEqual([]);
             expect(component.caseTypes).toEqual([]);
             expect(component.hearingTypes).toEqual([]);
+            expect(component.latestFilters).toEqual(DEFAULT_HEARING_FILTERS);
+            expect(component.latestPaging).toBe(HearingsSearchComponent.DEFAULT_PAGING);
         });
     });
 

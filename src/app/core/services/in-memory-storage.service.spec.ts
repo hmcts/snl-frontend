@@ -4,7 +4,7 @@ import { InMemoryStorageService } from './in-memory-storage.service';
 let key: string;
 let value: string;
 
-fdescribe('InMemoryStorageService', () => {
+describe('InMemoryStorageService', () => {
     let service: InMemoryStorageService;
 
     beforeEach(() => {
