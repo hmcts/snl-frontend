@@ -30,7 +30,7 @@ import { CoreModule } from './core/core.module';
 import { PlannerModule } from './planner/planner.module';
 import { FullCalendarModule } from './common/ng-fullcalendar/module';
 import { NotificationModule } from './features/notification/notification.module';
-import { getLocalStorage, getLocalStorageWrapper } from './utils/storage';
+import { getLocalStorage } from './utils/storage';
 import { ReportModule } from './features/reports/report.module';
 import { NotesModule } from './notes/notes.module';
 import { TransactionsModule } from './features/transactions/transactions.module';
@@ -39,6 +39,7 @@ import { SecurityContext } from './security/services/security-context.service';
 import { HmctsModule } from './hmcts/hmcts.module';
 import { GovukModule } from './govuk/govuk.module';
 import { HearingModule } from './hearing/hearing.module';
+import { InMemoryStorageService } from './core/services/in-memory-storage.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -69,7 +70,7 @@ export class XhrInterceptor implements HttpInterceptor {
         EffectsModule.forRoot([]),
         HttpClientModule,
         FormsModule,
-        CoreModule,
+        CoreModule.forRoot(),
         AppRoutingModule,
         AngularMaterialModule,
         FullCalendarModule,
@@ -94,7 +95,7 @@ export class XhrInterceptor implements HttpInterceptor {
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
         {provide: 'STORAGE', useFactory: getLocalStorage},
-        {provide: 'STORAGE_WRAPPER', useFactory: getLocalStorageWrapper},
+        {provide: 'InMemoryStorageService', useValue: new InMemoryStorageService()}
     ],
     bootstrap: [AppComponent]
 })

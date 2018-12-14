@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Note } from '../../../notes/models/note.model';
 import { Observable } from 'rxjs/Observable';
 import { HearingAmendDialogComponent, HearingAmendDialogData } from '../../components/hearing-amend-dialog/hearing-amend-dialog.component';
-import { StorageWrapper } from '../../../utils/storage';
+import { IStorage } from '../../../core/services/i-storage.interface';
 
 @Component({
     selector: 'app-hearings-search',
@@ -57,10 +57,10 @@ export class HearingsSearchComponent implements OnInit {
                 private dialog: MatDialog,
                 private notesService: NotesService,
                 private searchCriteriaService: SearchCriteriaService,
-                @Inject('STORAGE_WRAPPER') private storage: StorageWrapper) {
-        this.latestFilters = this.storage.getObject(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`)
+                @Inject('InMemoryStorageService') private storage: IStorage) {
+        this.latestFilters = this.storage.getObject<HearingsFilters>(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`)
             || DEFAULT_HEARING_FILTERS;
-        this.latestPaging = this.storage.getObject(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`)
+        this.latestPaging = this.storage.getObject<PageEvent>(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`)
             || HearingsSearchComponent.DEFAULT_PAGING;
     }
 
@@ -76,13 +76,13 @@ export class HearingsSearchComponent implements OnInit {
 
     page(pageEvent: PageEvent) {
         this.latestPaging = pageEvent;
-        this.storage.setObject(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`, pageEvent);
+        this.storage.setObject<PageEvent>(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`, pageEvent);
         this.fetchHearings(this.latestFilters, pageEvent);
     }
 
     onFilter(filterValues: HearingsFilters) {
         this.latestFilters = filterValues;
-        this.storage.setObject(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`, filterValues);
+        this.storage.setObject<HearingsFilters>(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`, filterValues);
         this.fetchHearings(filterValues, this.latestPaging)
     }
 
