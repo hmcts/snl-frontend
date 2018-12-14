@@ -8,7 +8,7 @@ export class InMemoryStorageService implements IStorage {
 
     constructor() {}
 
-    public setObject<T>(key:string, object: T): void {
+    public setObject<T>(key: string, object: T): void {
         this.storage.set(key, object);
     }
 

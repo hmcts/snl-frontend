@@ -34,7 +34,7 @@ import { IStorage } from '../../../core/services/i-storage.interface';
 })
 export class HearingsSearchComponent implements OnInit {
 
-    public static STORAGE_KEY = "hearingsSearchComponent";
+    public static STORAGE_KEY = 'hearingsSearchComponent';
 
     public static DEFAULT_PAGING: PageEvent = {
         pageSize: 10,
@@ -74,7 +74,7 @@ export class HearingsSearchComponent implements OnInit {
         this.fetchHearings(this.latestFilters, this.latestPaging);
     }
 
-    page(pageEvent: PageEvent) {
+    onNextPage(pageEvent: PageEvent) {
         this.latestPaging = pageEvent;
         this.storage.setObject<PageEvent>(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`, pageEvent);
         this.fetchHearings(this.latestFilters, pageEvent);
