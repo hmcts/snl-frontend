@@ -9,24 +9,24 @@ describe('setTime', () => {
 
     describe('throws error when', () => {
         it('date is null', () => {
-            expect((() => setTime(null, '10:10'))).toThrowError('Expected instance of Moment null given.');
+            expect(() => setTime(null, '10:10')).toThrowError('Expected instance of Moment null given.');
         });
 
         it('time is null', () => {
-            expect((() => setTime(moment(), null))).toThrowError('Expected string in format hh:mm \'null\' given.');
+            expect(() => setTime(moment(), null)).toThrowError('Expected string in format hh:mm \'null\' given.');
         });
 
         it('time is empty string', () => {
-            expect((() => setTime(moment(), ''))).toThrowError('Expected string in format hh:mm \'\' given.');
+            expect(() => setTime(moment(), '')).toThrowError('Expected string in format hh:mm \'\' given.');
         });
 
         it('time is in invalid format', () => {
-            expect((() => setTime(moment(), '1010'))).toThrowError('Expected string in format hh:mm \'1010\' given.');
-            expect((() => setTime(moment(), '10:11230'))).toThrowError('Expected string in format hh:mm \'10:11230\' given.');
-            expect((() => setTime(moment(), '10:1'))).toThrowError('Expected string in format hh:mm \'10:1\' given.');
-            expect((() => setTime(moment(), '1:10'))).toThrowError('Expected string in format hh:mm \'10:1\' given.');
-            expect((() => setTime(moment(), 'ten past twelve'))).toThrowError('Expected string in format hh:mm \'ten past twelve\' given.');
-            expect((() => setTime(moment(), '@#$@#%!@#'))).toThrowError('Expected string in format hh:mm \'@#$@#%!@#\' given.');
+            expect(() => setTime(moment(), '1010')).toThrowError('Expected string in format hh:mm \'1010\' given.');
+            expect(() => setTime(moment(), '10:11230')).toThrowError('Expected string in format hh:mm \'10:11230\' given.');
+            expect(() => setTime(moment(), '10:1')).toThrowError('Expected string in format hh:mm \'10:1\' given.');
+            expect(() => setTime(moment(), '1:10')).toThrowError('Expected string in format hh:mm \'1:10\' given.');
+            expect(() => setTime(moment(), 'ten past twelve')).toThrowError('Expected string in format hh:mm \'ten past twelve\' given.');
+            expect(() => setTime(moment(), '@#$@#%!@#')).toThrowError('Expected string in format hh:mm \'@#$@#%!@#\' given.');
         });
     });
 

@@ -11,6 +11,7 @@ import { AssignHearingData } from '../../../hearing-part/components/assign-heari
 
 import { DEFAULT_HEARING_FOR_LISTING_WITH_NOTES } from '../../../hearing-part/models/hearing-for-listing-with-notes.model';
 import { DEFAULT_SESSION_FILTERS } from '../../models/session-filter.model';
+import { setTime } from '../../../utils/moment-utils';
 
 let route: any;
 let sessionsFilterMock: any;
@@ -119,7 +120,6 @@ describe('SessionsListingsSearchComponent', () => {
     describe('assignToSessions', () => {
         it('should dispatch AssignToSession action', () => {
             const startTime = '10:30';
-
             component.selectedSessions = [mockedFullSession[0]];
             component.selectedHearing = hearing;
 
@@ -140,9 +140,7 @@ describe('SessionsListingsSearchComponent', () => {
                     }
                 ],
                 userTransactionId: jasmine.any(String),
-                // unfortunately we cannot test value of date here
-                // because jasmine does let us check the value and compares reference. Custom equal didn't work here
-                start: jasmine.any(Date)
+                start: setTime(nowMoment, startTime).toDate()
             })
         });
     });
