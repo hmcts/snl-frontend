@@ -28,19 +28,15 @@ export class LoginComponent implements OnInit {
                 // TODO find a way to get away from /home just keep /judge
                 this.router.navigate(['/home/judge/main']);
             } else if (this.returnUrl) {
-                this.router.navigateByUrl(this.returnUrl);
+                this.router.navigateByUrl(this.returnUrl, { replaceUrl: true });
             } else {
                 this.router.navigate(['/home']);
             }
         });
+
         return false;
     }
 
     ngOnInit(): void {
-        this.security.refreshAuthenticatedUserData(response => {
-            if (this.security.isAuthenticated() && this.returnUrl) {
-                this.router.navigateByUrl(this.returnUrl);
-            }
-        });
     }
 }

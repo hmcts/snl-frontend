@@ -1,16 +1,30 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { StoreModule } from '@ngrx/store';
-import { APP_ID, Inject, Injectable, LOCALE_ID, NgModule, PLATFORM_ID } from '@angular/core';
+import {
+    APP_ID,
+    APP_INITIALIZER,
+    ErrorHandler,
+    Inject,
+    Injectable,
+    LOCALE_ID,
+    NgModule,
+    PLATFORM_ID
+} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
-import { HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import {
+    HTTP_INTERCEPTORS,
+    HttpClientModule,
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
+} from '@angular/common/http';
 import { SessionsService } from './sessions/services/sessions-service';
 import { FormsModule } from '@angular/forms';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppConfig } from './app.config';
-import { AppConfigGuard } from './app-config.guard';
 import { AppRoutingModule } from './app-routing.module';
 import { AngularMaterialModule } from '../angular-material/angular-material.module';
 import { isPlatformBrowser } from '@angular/common';
@@ -39,6 +53,13 @@ import { SecurityContext } from './security/services/security-context.service';
 import { HmctsModule } from './hmcts/hmcts.module';
 import { GovukModule } from './govuk/govuk.module';
 import { HearingModule } from './hearing/hearing.module';
+import { GlobalErrorHandlerService } from './errors/global-error-handler.service';
+import { PageNotFoundComponent } from './errors/page-not-found.component';
+import { GlobalErrorComponent } from './errors/global-error.component';
+
+export function init_app(appConfig: AppConfig) {
+    return () => appConfig.load();
+}
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -55,7 +76,9 @@ export class XhrInterceptor implements HttpInterceptor {
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent
+        HomeComponent,
+        PageNotFoundComponent,
+        GlobalErrorComponent
     ],
     imports: [
         BrowserModule.withServerTransition({appId: 'snl-frontend'}),
@@ -89,11 +112,14 @@ export class XhrInterceptor implements HttpInterceptor {
         GovukModule,
         HearingModule
     ],
-    providers: [SessionsService, AppConfig, AppConfigGuard, SecurityService, SecurityContext,
+    providers: [SessionsService, AppConfig, SecurityService, SecurityContext,
+        GlobalErrorHandlerService,
         {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true},
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
         {provide: 'STORAGE', useFactory: getLocalStorage},
+        {provide: APP_INITIALIZER, useFactory: init_app, deps: [AppConfig], multi: true},
+        {provide: ErrorHandler, useClass: GlobalErrorHandlerService}
     ],
     bootstrap: [AppComponent]
 })

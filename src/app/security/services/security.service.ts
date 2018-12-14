@@ -18,19 +18,27 @@ export class SecurityService {
             .subscribe(sigininResponse => {
                 const accessToken = new AccessToken(sigininResponse['accessToken'], sigininResponse['tokenType']);
                 this.context.setToken(accessToken.getAsHeader().headerToken);
-                return this.refreshAuthenticatedUserData(callback);
+                this.refreshAuthenticatedUserData(callback);
             });
     }
 
-    refreshAuthenticatedUserData(callback) {
-        this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
-            this.context.parseAuthenticationRespone(response);
-            callback();
+    refreshAuthenticatedUserData(callback = () => {}): Promise<any> {
+        return new Promise<void>((resolve, reject) => {
+            this.http.get(this.config.createApiUrl('/security/user')).subscribe(response => {
+                this.context.parseAuthenticationRespone(response);
+                callback();
+                resolve();
+            });
         });
     }
 
-    isAuthenticated() {
-        return this.context.isAuthenticated();
+    async isAuthenticated() {
+        if (!this.context.getCurrentUser() || this.context.getCurrentUser() === User.emptyUser()) {
+            await this.refreshAuthenticatedUserData();
+            return this.context.isAuthenticated();
+        } else {
+            return this.context.isAuthenticated();
+        }
     }
 
     logout(callback?) {
