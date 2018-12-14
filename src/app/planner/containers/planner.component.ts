@@ -30,6 +30,8 @@ import { EventDrop } from '../../common/ng-fullcalendar/models/event-drop.model'
 import { safe } from '../../utils/js-extensions';
 import * as judgeActions from '../../judges/actions/judge.action';
 import * as fromRoomActions from '../../rooms/actions/room.action';
+import { Validator } from '../services/validator';
+import { SessionModificationValidator } from '../validators/session-modification.validator';
 
 @Component({
     selector: 'app-planner',
@@ -43,6 +45,10 @@ export class PlannerComponent implements OnInit {
     private latestEvent: CustomEvent;
     public sessions: SessionViewModel[] = [];
     public hearingParts: HearingPartViewModel[];
+    private sessionModificationValidator = new Validator<CalendarEventSessionViewModel>([
+        SessionModificationValidator.minStartAndEndTime,
+        SessionModificationValidator.canChangeDay
+    ])
 
     constructor(private readonly store: Store<State>,
                 public dialog: MatDialog,
@@ -101,9 +107,18 @@ export class PlannerComponent implements OnInit {
     }
 
     public eventModify(event: CalendarEventSessionViewModel) {
-        this.confirmationDialogRef = this.openConfirmationDialog();
-        this.latestEvent = event;
-        this.confirmationDialogRef.afterClosed().subscribe(this.eventModifyConfirmationClosed);
+        const validation = this.sessionModificationValidator.validate(event)
+        if (validation.success) {
+            this.confirmationDialogRef = this.openConfirmationDialog();
+            this.latestEvent = event;
+            this.confirmationDialogRef.afterClosed().subscribe(this.eventModifyConfirmationClosed);
+        } else {
+            const humanReadableMsg = validation.getHumanReadableMsg()
+            this.dialog.open(DialogInfoComponent, {
+                ...DEFAULT_DIALOG_CONFIG,
+                data: humanReadableMsg
+            }).afterClosed().subscribe(() => event.detail.revertFunc());
+        }
     }
 
     public drop(event: CustomEvent<EventDrop>) {
