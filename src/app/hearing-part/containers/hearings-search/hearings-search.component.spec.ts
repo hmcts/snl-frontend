@@ -26,6 +26,7 @@ let component: HearingsSearchComponent;
 let searchCriteriaService: any;
 let route: any;
 let hearingService: any;
+let storage: any;
 let hearingPartModificationService: any;
 let notesService: any;
 let hearingFilters: HearingsFilters;
@@ -52,9 +53,11 @@ describe('HearingsSearchComponent', () => {
             ['updateListingRequest', 'open', 'deleteHearing', 'removeFromState']);
         notesService = jasmine.createSpyObj('notesService', ['getByEntities', 'upsertManyNotes']);
 
+        storage = jasmine.createSpyObj('storage', ['getObject', 'setObject']);
+
         component = new HearingsSearchComponent(hearingPartModificationService, route,
             hearingService,
-            matDialogSpy, notesService, searchCriteriaService);
+            matDialogSpy, notesService, searchCriteriaService, storage);
 
         hearingFilters = DEFAULT_HEARING_FILTERS;
         hearingModel = {
