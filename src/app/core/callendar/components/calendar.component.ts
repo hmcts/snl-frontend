@@ -1,3 +1,4 @@
+import { EventDrag } from './../../../common/ng-fullcalendar/models/event-drag.model';
 import { CalendarMouseEvent } from './../../../common/ng-fullcalendar/models/calendar-mouse-event.model';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
@@ -64,6 +65,7 @@ export class CalendarComponent implements OnInit {
     @Output() eventDropCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
     @Output() dropCallback = new EventEmitter<CustomEvent<EventDrop>>();
     @Output() eventMouseOverCallback = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
+    @Output() eventDragStartCallback = new EventEmitter<CustomEvent<EventDrag<TransformedType>>>();
 
     constructor() {
         this.header = {
@@ -158,6 +160,10 @@ export class CalendarComponent implements OnInit {
 
     public eventResize(event: CustomEvent<UpdateEventModel<TransformedType>>) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
+    }
+
+    public eventDragStart(event: CustomEvent<EventDrag<TransformedType>>) {
+        this.eventDragStartCallback.emit(event)
     }
 
     private parseDates(): SessionQueryForDates {
