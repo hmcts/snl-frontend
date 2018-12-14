@@ -25,6 +25,7 @@ let session: SessionViewModel = {
 
 let expectedEvent: SessionCalendarViewModel = {
     title: `${session.room.name} - ${session.person.name} - ${session.sessionType.description}`,
+    startDate: session.start,
     start: session.start,
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
@@ -33,6 +34,7 @@ let expectedEvent: SessionCalendarViewModel = {
     room: room,
     person: person,
     version,
+    duration: moment.duration(session.duration)
 };
 
 let sessionWithoutJudgeAndRoomAndSessionType = {

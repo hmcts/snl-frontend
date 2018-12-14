@@ -61,6 +61,8 @@ const sessionCalendarViewModel: SessionCalendarViewModel = {
     hearingParts: [],
     sessionType: undefined,
     version: 1,
+    startDate: moment(),
+    duration: moment.duration(30, 'minutes')
 };
 
 const updateEvent: UpdateEventModel<SessionCalendarViewModel> = {

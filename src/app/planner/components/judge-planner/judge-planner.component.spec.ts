@@ -116,6 +116,8 @@ describe('JudgePlannerComponent', () => {
         hearingParts: [{multiSession: true} as HearingPartViewModel],
         sessionType: undefined,
         version: 1,
+        startDate: moment(),
+        duration: moment.duration(30, 'minutes')
       };
 
       const updateEvent: UpdateEventModel<SessionCalendarViewModel> = {
