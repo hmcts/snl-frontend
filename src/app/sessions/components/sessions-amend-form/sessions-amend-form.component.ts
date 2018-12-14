@@ -18,6 +18,7 @@ import { NoteViewmodel, getNoteViewModel } from '../../../notes/models/note.view
 import { SessionCreateNotesConfiguration } from '../../models/session-create-notes-configuration.model';
 import { NoteType } from '../../../notes/models/note-type';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
+import { SessionAmendValidator } from '../../../core/validators/session-amend.validators';
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -92,11 +93,18 @@ export class SessionsAmendFormComponent {
     }
 
     private initiateFormGroup() {
+        const startTimeValidators = [Validators.required]
+        if (this.amendSessionForm.hasListedHearingParts) {
+            startTimeValidators.push(SessionAmendValidator.isSameOrBefore(this.amendSessionForm.startTime))
+        }
+
+        const minDuration = this.amendSessionForm.hasListedHearingParts ? this.amendSessionForm.durationInMinutes : 1
+
         this.sessionAmendFormGroup = new FormGroup({
             sessionTypeCode: new FormControl(this.amendSessionForm.sessionTypeCode, Validators.required),
             startDate: new FormControl({value: this.amendSessionForm.startDate, disabled: true}, [Validators.required]),
-            startTime: new FormControl(this.amendSessionForm.startTime, [Validators.required]),
-            durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
+            startTime: new FormControl(this.amendSessionForm.startTime, startTimeValidators),
+            durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(minDuration)]),
         });
     }
 }
