@@ -10,7 +10,9 @@ export enum EntityTransactionActionTypes {
 
   TransactionComplete = '[EntityTransaction] Create Complete',
   TransactionRolledBack = '[EntityTransaction] Transaction Rolledback',
+  TransactionRollbackFailed = '[EntityTransaction] Transaction rollback failed',
   TransactionCommitted = '[EntityTransaction] Transaction comitted',
+  TransactionCommitFailed = '[EntityTransaction] Transaction commit failed',
   TransactionConflicted = '[EntityTransaction] Transaction Conflicted',
 
   GetTransactionUntilStartedOrConflict = '[EntityTransaction] Get Transaction until',
@@ -88,8 +90,20 @@ export class TransactionRolledBack implements Action {
     constructor(public payload: string) {}
 }
 
+export class TransactionRollbackFailed implements Action {
+    readonly type = EntityTransactionActionTypes.TransactionRollbackFailed;
+
+    constructor(public payload: string) {}
+}
+
 export class TransactionCommitted implements Action {
     readonly type = EntityTransactionActionTypes.TransactionCommitted;
+
+    constructor(public payload: string) {}
+}
+
+export class TransactionCommitFailed implements Action {
+    readonly type = EntityTransactionActionTypes.TransactionCommitFailed;
 
     constructor(public payload: string) {}
 }

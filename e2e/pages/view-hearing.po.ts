@@ -27,6 +27,6 @@ export class ViewHearingPage {
     }
 
     async chooseAnActionFromDropDown(optionName: string) {
-        this.helper.selectValueFromSingleSelectOption(this.actionsDropDown, optionName);
+        await this.helper.selectValueFromSingleSelectOption(this.actionsDropDown, optionName);
     }
 }

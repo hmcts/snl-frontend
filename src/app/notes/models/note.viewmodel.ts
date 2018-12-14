@@ -21,6 +21,12 @@ export function getNoteViewModel(note: Note): NoteViewmodel {
     }
 }
 
+export function sortNotesByLatestFirst(notes: NoteViewmodel[]) {
+    return notes.sort((left, right) => {
+        return right.createdAt.diff(left.createdAt);
+    });
+}
+
 export const DEFAULT_NOTE_VIEW_MODEL: NoteViewmodel = {
     id: undefined,
     type: undefined,
