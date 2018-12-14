@@ -25,6 +25,7 @@ import { CaseType } from '../../core/reference/models/case-type';
 import { EventDrop } from '../../common/ng-fullcalendar/models/event-drop.model';
 import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
 import { UpdateEventModel } from '../../common/ng-fullcalendar/models/updateEventModel';
+import { Status } from '../../core/reference/models/status.model';
 
 let component: PlannerComponent;
 let store: Store<State>;
@@ -264,6 +265,7 @@ describe('PlannerComponent', () => {
           reservedJudgeId: undefined,
           communicationFacilitator: 'interpreter',
           notes: [],
+          status: Status.Listed
       }]
 
       matDialogSpy.open.and.returnValue({

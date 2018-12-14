@@ -4,4 +4,5 @@ export interface HearingPartResponse {
     version: number;
     hearingInfo: string;
     start: string;
+    status: string
 }

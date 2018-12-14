@@ -219,7 +219,7 @@ describe('SessionsService', () => {
       userTransactionId: 'some-user-transaction-id',
       durationInSeconds: 60,
       sessionTypeCode: 'some-session-type-code',
-      startTime: '12:30', // ie "12:30", "08:45"
+      startTime: moment(),
       version: 0
     };
 

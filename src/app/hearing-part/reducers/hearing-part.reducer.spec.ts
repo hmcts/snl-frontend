@@ -2,6 +2,7 @@ import { HearingPart } from './../models/hearing-part';
 import { reducer, initialState, State, getHearingPartEntities } from './hearing-part.reducer';
 import { SearchComplete } from '../actions/hearing-part.action';
 import * as moment from 'moment';
+import { Status } from '../../core/reference/models/status.model';
 
 const hearingPartIdA = 'some-id-A';
 const hearingPartA = generateHearingParts(hearingPartIdA);
@@ -40,6 +41,7 @@ function generateHearingParts(id: string): HearingPart {
         sessionId: null,
         hearingInfo: '',
         version: null,
-        start: nowISOSting
+        start: nowISOSting,
+        status: Status.Unlisted
     }
 }
