@@ -28,15 +28,6 @@ export class AppConfig {
               resolve();
             });
         });
-
-        // const response = this.http.get<Config>(configUrl)
-        //     .toPromise()
-        //     .then(res => {
-        //         console.log('Loading app config: OK');
-        //         return res;
-        //     });
-        //
-        // return response;
     }
 
     public getApiUrl() {

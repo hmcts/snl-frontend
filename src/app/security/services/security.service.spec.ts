@@ -63,18 +63,6 @@ describe('Security Service', () => {
         httpMock.verify();
     });
 
-    describe('Logout', () => {
-        it('Logging out should remove authorization data from storage and set user to empty', () => {
-            securityContext.userSubject$.next(exampleUserData);
-
-            securityService.logout(callbackSpy);
-
-            expect(securityService.getCurrentUser()).toEqual(User.emptyUser());
-            expect(securityContext.getToken()).toEqual(undefined);
-            expect(callbackSpy).toHaveBeenCalled();
-        });
-    });
-
     describe('Authentication verification', () => {
         let userAuthProperties = ['accountNonExpired', 'accountNonLocked', 'credentialsNonExpired', 'enabled'];
 
@@ -91,7 +79,9 @@ describe('Security Service', () => {
                 currentUser[propertyName] = false;
                 securityContext.userSubject$.next(currentUser);
 
-                expect(securityService.isAuthenticated()).toBeFalsy();
+                securityService.isAuthenticated().then(value => {
+                    expect(value).toBeFalsy();
+                });
             });
         });
 
@@ -106,6 +96,38 @@ describe('Security Service', () => {
             securityContext.userSubject$.next(currentUser);
 
             expect(securityService.isAuthenticated()).toBeTruthy();
+        });
+
+        it('null userSubject$ check', () => {
+            // httpMock.expectOne(expectedUserURL).flush(userResponse);
+            securityContext.userSubject$.next(null);
+
+            securityService.isAuthenticated().then(value => {
+                expect(value).toBeTruthy(); // given userResponse is used as refresh
+            });
+            httpMock.expectOne(expectedUserURL).flush(userResponse);
+        });
+
+        it('empty userSubject check', () => {
+            // httpMock.expectOne(expectedUserURL).flush(userResponse);
+            securityContext.userSubject$.next(User.emptyUser());
+
+            securityService.isAuthenticated().then(value => {
+                expect(value).toBeTruthy(); // given userResponse is used as refresh
+            });
+            httpMock.expectOne(expectedUserURL).flush(userResponse);
+        });
+    });
+
+    describe('Logout', () => {
+        it('Logging out should remove authorization data from storage and set user to empty', () => {
+            securityContext.userSubject$.next(exampleUserData);
+
+            securityService.logout(callbackSpy);
+
+            expect(securityService.getCurrentUser()).toEqual(User.emptyUser());
+            expect(securityContext.getToken()).toEqual(undefined);
+            expect(callbackSpy).toHaveBeenCalled();
         });
     });
 

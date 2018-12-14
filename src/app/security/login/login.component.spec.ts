@@ -95,31 +95,8 @@ describe('LoginComponent', () => {
             httpMock.expectOne(expectedUrlSignIn).flush(successfulLoginResponse);
             httpMock.expectOne(expectedUrlSecurity).flush([]);
 
-            expect(navigateByUrlSpy).toHaveBeenCalledWith('niceUrl');
+            expect(navigateByUrlSpy).toHaveBeenCalledWith('niceUrl', { replaceUrl: true } );
         });
-    });
-
-    describe('ngOnInit', () => {
-        it('should not redirect if not logged in', () => {
-            loginComponent.returnUrl = 'niceUrl';
-
-            loginComponent.ngOnInit();
-
-            httpMock.expectOne(expectedUrlSecurity).flush([]);
-
-            expect(navigateByUrlSpy).not.toHaveBeenCalled();
-        });
-
-        it('should redirect if logged in', () => {
-            loginComponent.returnUrl = 'niceUrl';
-
-            loginComponent.ngOnInit();
-
-            httpMock.expectOne(expectedUrlSecurity).flush(judgeUserResponse);
-
-            expect(navigateByUrlSpy).toHaveBeenCalledWith('niceUrl');
-        });
-
     });
 
 });

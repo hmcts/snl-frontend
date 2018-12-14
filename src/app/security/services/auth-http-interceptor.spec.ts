@@ -3,11 +3,9 @@ import { AppConfig } from '../../app.config';
 import { SecurityContext } from './security-context.service';
 import { inject, TestBed } from '@angular/core/testing';
 import { AuthHttpInterceptor } from './auth-http-interceptor';
-import { Router } from '@angular/router';
-import { HTTP_INTERCEPTORS, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
-let storageSpy, httpMock, securityContext, router: Router;
-
+let storageSpy, httpMock, securityContext;
 const fakeUrl = 'https://doesnot.matter.com';
 const mockedAppConfig = {
     getApiUrl: () => fakeUrl,
@@ -15,12 +13,6 @@ const mockedAppConfig = {
         return fakeUrl + suffix;
     }
 } as AppConfig;
-
-class MockRouter {
-    navigate(url: string[]) {
-        return url;
-    }
-}
 
 describe('AuthHttpInterceptor', () => {
     beforeEach(() => {
@@ -31,7 +23,6 @@ describe('AuthHttpInterceptor', () => {
             providers: [
                 AuthHttpInterceptor, SecurityContext,
                 {provide: AppConfig, useValue: mockedAppConfig},
-                {provide: Router, useClass: MockRouter},
                 {provide: 'STORAGE', useValue: storageSpy},
                 {
                     provide: HTTP_INTERCEPTORS,
@@ -45,7 +36,6 @@ describe('AuthHttpInterceptor', () => {
     beforeEach(() => {
         httpMock = TestBed.get(HttpTestingController);
         securityContext = TestBed.get(SecurityContext);
-        router = TestBed.get(Router);
     });
 
     afterEach(() => {
@@ -69,36 +59,38 @@ describe('AuthHttpInterceptor', () => {
             expect(spyGetToken).toHaveBeenCalled();
         }));
 
-        it('Should catch 401 status response and redirect user to login page', inject([HttpClient, HttpTestingController],
+        it('Should pass through error when status is 401', inject([HttpClient, HttpTestingController],
             (http: HttpClient, mock: HttpTestingController) => {
-                const spyLogout = spyOn(securityContext, 'logout').and.callThrough();
-                const spyNavigate = spyOn(router, 'navigate').and.callThrough();
+                expect( function() {
+                    http.get('/api').subscribe(response => expect(response).toBeTruthy());
+                    const request1 = mock.expectOne('/api');
+                    request1.flush(null, {status: 401, statusText: 'unauthorized'});
 
-                http.get('/api').subscribe(response => expect(response).toBeTruthy());
-                const request1 = mock.expectOne('/api');
-                request1.flush(null, {status: 401, statusText: 'unauthorized'});
+                    mock.verify();
+                }).toThrow(new HttpErrorResponse({
+                        status: 401,
+                        statusText: 'unauthorized',
+                        url: '/api',
+                        error: 'null'
+                    } ));
+            }
+        ));
 
-                mock.verify();
-                expect(spyLogout).toHaveBeenCalled();
-                expect(spyNavigate).toHaveBeenCalledWith(['/login']);
+        it('Should pass through error when status is 500', inject([HttpClient, HttpTestingController],
+            (http: HttpClient, mock: HttpTestingController) => {
+                expect( function() {
+                    http.get('/api').subscribe(response => expect(response).toBeTruthy());
+                    const request1 = mock.expectOne('/api');
+                    request1.flush(null, {status: 500, statusText: 'internalServerError'});
+
+                    mock.verify();
+                } ).toThrow(new HttpErrorResponse({
+                    status: 500,
+                    statusText: 'internalServerError',
+                    url: '/api',
+                    error: 'null'
+                } ));
             })
         );
-
-        // HttpResponse
-        it('Should pass through when status is 500', inject([HttpClient, HttpTestingController],
-            (http: HttpClient, mock: HttpTestingController) => {
-                const spySetToken = spyOn(securityContext, 'setToken').and.callThrough();
-                const spyNavigate = spyOn(router, 'navigate').and.callThrough();
-
-                http.get('/api').subscribe(response => expect(response).toBeTruthy());
-                const request1 = mock.expectOne('/api');
-                request1.flush(null, {status: 500, statusText: 'internalServerError'});
-
-                mock.verify();
-                expect(spySetToken).not.toHaveBeenCalled();
-                expect(spyNavigate).not.toHaveBeenCalled();
-            })
-        );
-
     });
 });

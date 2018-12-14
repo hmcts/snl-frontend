@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
     constructor(private readonly securityService: SecurityService, private readonly router: Router) {}
 
     canActivate(
-        next: ActivatedRouteSnapshot,
+        next: ActivatedRouteSnapshot, // TOASK : why do we need Observable and Promisse here?
         state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
                 if (this.securityService.isAuthenticated()) {
                     return true;
