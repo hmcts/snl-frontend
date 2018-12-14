@@ -117,13 +117,8 @@ describe('SessionsListingsSearchComponent', () => {
     });
 
     describe('assignToSessions', () => {
-        fit('should dispatch AssignToSession action', () => {
+        it('should dispatch AssignToSession action', () => {
             const startTime = '10:30';
-            const momentStartTime = moment(startTime, 'HH:mm');
-            const expectedStartTime = nowMoment;
-            expectedStartTime.hour(momentStartTime.hours());
-            expectedStartTime.minutes(momentStartTime.minutes());
-            expectedStartTime.seconds(0)
 
             component.selectedSessions = [mockedFullSession[0]];
             component.selectedHearing = hearing;
@@ -145,6 +140,8 @@ describe('SessionsListingsSearchComponent', () => {
                     }
                 ],
                 userTransactionId: jasmine.any(String),
+                // unfortunately we cannot test value of date here
+                // because jasmine does let us check the value and compares reference. Custom equal didn't work here
                 start: jasmine.any(Date)
             })
         });

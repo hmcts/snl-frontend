@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { v4 as uuid } from 'uuid';
-import * as moment from 'moment';
 import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
@@ -39,6 +38,7 @@ import { filter, mergeMap, tap } from 'rxjs/operators';
 import { HearingSearchResponseForAmendment } from '../../../hearing-part/models/filtered-hearing-viewmodel';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { setTime } from '../../../utils/moment-utils';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -201,13 +201,7 @@ export class SessionsListingsSearchComponent implements OnInit {
 
     private calculateValidStartDateTime(hearingStartTime: string): Date | null {
         if (this.selectedSessions.length === 1) {
-            const hearingStartMoment = moment(hearingStartTime, 'HH:mm');
-            const startTime = moment(this.selectedSessions[0].startDate);
-            startTime.hours(hearingStartMoment.hours());
-            startTime.minutes(hearingStartMoment.minutes());
-            startTime.seconds(0);
-
-            return startTime.toDate();
+            return setTime(this.selectedSessions[0].startDate, hearingStartTime).toDate();
         }
 
         return null;
