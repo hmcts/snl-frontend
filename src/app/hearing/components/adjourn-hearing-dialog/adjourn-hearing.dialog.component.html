@@ -1,16 +1,21 @@
 <div>
     <h2 *ngIf="data.title">{{data.title}}</h2>
     <div>{{data.message}}</div>
-
-    <div fxLayout="column">
+    <form fxLayout="column" [formGroup]="adjournmentReasonFormGroup" #adjournFormGroup="ngForm" novalidate (ngSubmit)="onOkClick()">
         <mat-form-field fxFlex>
-            <textarea matInput matTextareaAutosize="true" [(ngModel)]="description"></textarea>
+            <textarea matInput matTextareaAutosize="true" formControlName="description"
+                      [(ngModel)]="description"
+                      (change)="description = description.trim()">
+            </textarea>
         </mat-form-field>
 
         <div fxFlex fxLayout="column" fxLayoutGap="2%" style="margin-top:16px;">
-            <button fxFlex *ngIf="showDecline()" mat-raised-button (click)="onDeclineClick()">Cancel</button>
-            <button id="ok-button" fxFlex mat-raised-button color="primary" (click)="onOkClick()">Adjourn hearing</button>
+            <button type="button" fxFlex *ngIf="showDecline()" mat-raised-button (click)="onDeclineClick()">Cancel</button>
+            <button id="ok-button" fxFlex mat-raised-button color="primary"
+                    [disabled]="!adjournmentReasonFormGroup.valid"
+                    (click)="adjournFormGroup.ngSubmit.emit()">
+                Adjourn hearing
+            </button>
         </div>
-    </div>
-
+    </form>
 </div>
