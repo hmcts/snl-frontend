@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarContainerComponent } from './callendar/containers/calendar-container.component';
 import { CalendarComponent } from './callendar/components/calendar.component';
@@ -11,6 +11,7 @@ import { DurationAsDaysPipe } from './pipes/duration-as-days.pipe';
 import { HmctsModule } from '../hmcts/hmcts.module';
 import { BaseResolver } from './resolvers/base.resolver';
 import { MomentFormatPipe } from './pipes/moment-format.pipe';
+import { InMemoryStorageService } from './services/in-memory-storage.service';
 
 export const COMPONENTS = [
     CalendarContainerComponent,
@@ -18,7 +19,7 @@ export const COMPONENTS = [
     DurationFormatPipe,
     DurationAsMinutesPipe,
     DurationAsDaysPipe,
-    MomentFormatPipe
+    MomentFormatPipe,
 ];
 
 @NgModule({
@@ -30,7 +31,13 @@ export const COMPONENTS = [
     ],
     declarations: COMPONENTS,
     exports: COMPONENTS,
-    providers: [TransactionBackendService, DurationAsDaysPipe, BaseResolver]
+    providers: [BaseResolver]
 })
 export class CoreModule {
+    static forRoot(): ModuleWithProviders {
+        return {
+            ngModule: CoreModule,
+            providers: [ InMemoryStorageService, TransactionBackendService, DurationAsDaysPipe]
+        };
+    }
 }

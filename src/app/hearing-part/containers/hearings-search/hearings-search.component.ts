@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import 'rxjs/add/observable/of';
 import { Judge } from '../../../judges/models/judge.model';
-import { HearingsFilters } from '../../models/hearings-filter.model';
+import { DEFAULT_HEARING_FILTERS, HearingsFilters } from '../../models/hearings-filter.model';
 import { CaseType } from '../../../core/reference/models/case-type';
 import { HearingType } from '../../../core/reference/models/hearing-type';
 import { SearchCriteriaService } from '../../services/search-criteria.service';
@@ -25,6 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Note } from '../../../notes/models/note.model';
 import { Observable } from 'rxjs/Observable';
 import { HearingAmendDialogComponent, HearingAmendDialogData } from '../../components/hearing-amend-dialog/hearing-amend-dialog.component';
+import { IStorage } from '../../../core/services/i-storage.interface';
 
 @Component({
     selector: 'app-hearings-search',
@@ -32,6 +33,8 @@ import { HearingAmendDialogComponent, HearingAmendDialogData } from '../../compo
     styleUrls: ['./hearings-search.component.scss']
 })
 export class HearingsSearchComponent implements OnInit {
+
+    public static STORAGE_KEY = 'hearingsSearchComponent';
 
     public static DEFAULT_PAGING: PageEvent = {
         pageSize: 10,
@@ -44,7 +47,7 @@ export class HearingsSearchComponent implements OnInit {
     hearingTypes: HearingType[];
 
     filteredHearings: FilteredHearingViewmodel[] = [];
-    latestFilters: HearingsFilters;
+    latestFilters: HearingsFilters = DEFAULT_HEARING_FILTERS;
     latestPaging = HearingsSearchComponent.DEFAULT_PAGING;
     totalCount: number;
 
@@ -53,7 +56,12 @@ export class HearingsSearchComponent implements OnInit {
                 private hearingService: HearingService,
                 private dialog: MatDialog,
                 private notesService: NotesService,
-                private searchCriteriaService: SearchCriteriaService) {
+                private searchCriteriaService: SearchCriteriaService,
+                @Inject('InMemoryStorageService') private storage: IStorage) {
+        this.latestFilters = this.storage.getObject<HearingsFilters>(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`)
+            || DEFAULT_HEARING_FILTERS;
+        this.latestPaging = this.storage.getObject<PageEvent>(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`)
+            || HearingsSearchComponent.DEFAULT_PAGING;
     }
 
     ngOnInit() {
@@ -62,15 +70,19 @@ export class HearingsSearchComponent implements OnInit {
             this.hearingTypes = hearingTypes;
             this.caseTypes = caseTypes;
         });
+
+        this.fetchHearings(this.latestFilters, this.latestPaging);
     }
 
     onNextPage(pageEvent: PageEvent) {
         this.latestPaging = pageEvent;
+        this.storage.setObject<PageEvent>(`${HearingsSearchComponent.STORAGE_KEY}.latestPaging`, pageEvent);
         this.fetchHearings(this.latestFilters, pageEvent);
     }
 
     onFilter(filterValues: HearingsFilters) {
         this.latestFilters = filterValues;
+        this.storage.setObject<HearingsFilters>(`${HearingsSearchComponent.STORAGE_KEY}.latestFilters`, filterValues);
         this.fetchHearings(filterValues, this.latestPaging)
     }
 
