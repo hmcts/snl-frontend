@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import { v4 as uuid } from 'uuid';
-import * as moment from 'moment';
 import { SessionForListingWithNotes } from '../../models/session.viewmodel';
 import { Room } from '../../../rooms/models/room.model';
 import { Judge } from '../../../judges/models/judge.model';
@@ -39,6 +38,7 @@ import { filter, mergeMap, tap } from 'rxjs/operators';
 import { HearingSearchResponseForAmendment } from '../../../hearing-part/models/filtered-hearing-viewmodel';
 import { ITransactionDialogData } from '../../../features/transactions/models/transaction-dialog-data.model';
 import { CaseType } from '../../../core/reference/models/case-type';
+import { setTime } from '../../../utils/moment-utils';
 
 @Component({
     selector: 'app-sessions-listings-search',
@@ -118,7 +118,7 @@ export class SessionsListingsSearchComponent implements OnInit {
             hearingVersion: this.selectedHearing.version,
             sessionsData: this.selectedSessions.map(s => {return {sessionId: s.sessionId, sessionVersion: s.sessionVersion}}),
             userTransactionId: uuid(),
-            start: this.selectedSessions.length > 1 ? null : moment(assignHearingData.startTime, 'HH:mm').toDate()
+            start: this.calculateValidStartDateTime(assignHearingData.startTime)
         } as HearingToSessionAssignment;
 
         this.hearingService.assignToSession(assignment);
@@ -197,6 +197,14 @@ export class SessionsListingsSearchComponent implements OnInit {
                 this.openDialog('Editing listing request', amendedHearing.notes);
             })
         ).subscribe()
+    }
+
+    private calculateValidStartDateTime(hearingStartTime: string): Date | null {
+        if (this.selectedSessions.length === 1) {
+            return setTime(this.selectedSessions[0].startDate, hearingStartTime).toDate();
+        }
+
+        return null;
     }
 
     private openAmendDialog(hearing: HearingSearchResponseForAmendment, notes: Note[]) {
