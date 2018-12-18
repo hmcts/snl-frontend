@@ -94,11 +94,11 @@ export class SessionsAmendFormComponent {
 
     private initiateFormGroup() {
         const startTimeValidators = [Validators.required]
+        let minDuration = 1
         if (this.amendSessionForm.hasListedHearingParts) {
             startTimeValidators.push(SessionAmendValidator.isSameOrBefore(this.amendSessionForm.startTime))
+            minDuration = this.amendSessionForm.durationInMinutes
         }
-
-        const minDuration = this.amendSessionForm.hasListedHearingParts ? this.amendSessionForm.durationInMinutes : 1
 
         this.sessionAmendFormGroup = new FormGroup({
             sessionTypeCode: new FormControl(this.amendSessionForm.sessionTypeCode, Validators.required),
