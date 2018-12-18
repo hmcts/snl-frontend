@@ -32,7 +32,7 @@ let store: Store<State>;
 let storeSpy: jasmine.Spy;
 let hearingPartId = 'hpid';
 
-const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+const matDialogSpy: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open']);
 const sessionsCreationServiceSpy = jasmine.createSpyObj(
   'SessionsCreationService',
   ['update', 'fetchUpdatedEntities']
@@ -190,10 +190,15 @@ describe('PlannerComponent', () => {
   });
 
   describe('eventModify', () => {
-    it('should open dialog ', () => {
-      matDialogSpy.open.and.returnValue(openDialogMockObj);
-      component.eventModify(calendarWithSessionEvent);
-      expect(matDialogSpy.open).toHaveBeenCalled();
+    const confirmationMsg = 'Are you sure you want to modify this session?';
+    describe('when validation passes', () => {
+      it('should open confirmation dialog ', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObj);
+        component.eventModify(calendarWithSessionEvent);
+        const dialogMsg = matDialogSpy.open.calls.mostRecent().args[1].data.message
+        expect(matDialogSpy.open).toHaveBeenCalled();
+        expect(dialogMsg).toEqual(confirmationMsg);
+      });
     });
   });
 
