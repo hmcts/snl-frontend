@@ -19,6 +19,7 @@ import { SessionCreateNotesConfiguration } from '../../models/session-create-not
 import { NoteType } from '../../../notes/models/note-type';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { SessionAmendValidator } from '../../../core/validators/session-amend.validators';
+import moment = require('moment');
 
 @Component({
     selector: 'app-sessions-amend-form',
@@ -94,10 +95,16 @@ export class SessionsAmendFormComponent {
 
     private initiateFormGroup() {
         const startTimeValidators = [Validators.required]
+        const formGroupValidators = []
         let minDuration = 1
         if (this.amendSessionForm.hasListedHearingParts) {
             startTimeValidators.push(SessionAmendValidator.isSameOrBefore(this.amendSessionForm.startTime))
             minDuration = this.amendSessionForm.durationInMinutes
+            formGroupValidators.push(this.validateNewSessionEndTimeIsTheSameOrAfterOldSessionEndTime(
+                this.amendSessionForm.startTime,
+                this.amendSessionForm.durationInMinutes,
+                'startTime', 'durationInMinutes'
+            ))
         }
 
         this.sessionAmendFormGroup = new FormGroup({
@@ -105,6 +112,30 @@ export class SessionsAmendFormComponent {
             startDate: new FormControl({value: this.amendSessionForm.startDate, disabled: true}, [Validators.required]),
             startTime: new FormControl(this.amendSessionForm.startTime, startTimeValidators),
             durationInMinutes: new FormControl(this.amendSessionForm.durationInMinutes, [Validators.required, Validators.min(minDuration)]),
-        });
+        }, { validators: formGroupValidators });
+    }
+
+    private validateNewSessionEndTimeIsTheSameOrAfterOldSessionEndTime(
+        originalSessionStartTime: string,
+        originalDurationInMinutes: number,
+        startTimeKey: string,
+        durationInMinutesKey: string) {
+
+            const originalSessionEndTime = moment(originalSessionStartTime, 'HH:mm').add(originalDurationInMinutes, 'minutes')
+            return (group: FormGroup): {[key: string]: any} => {
+                let startTime = moment(group.controls[startTimeKey].value, 'HH:mm');
+                let durationInMinutes = +group.controls[durationInMinutesKey].value;
+                const newSessionEndTime = startTime.add(durationInMinutes, 'minutes');
+                let error = null;
+
+                if (newSessionEndTime.isBefore(originalSessionEndTime)) {
+                    error = { newEndTimeBeforeOldOne: true }
+                    group.controls[durationInMinutesKey].markAsTouched();
+                }
+
+                group.controls[durationInMinutesKey].setErrors(error)
+
+                return error;
+            }
     }
 }
