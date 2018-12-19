@@ -108,8 +108,8 @@ export class HearingsSearchComponent implements OnInit {
     private openDeleteDialog(hearing: FilteredHearingViewmodel) {
         this.dialog.open(DialogWithActionsComponent, {
             data: { message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
-        }).afterClosed().subscribe((confirmed) => {
-            this.afterDeleteClosed(confirmed, hearing)
+        }).afterClosed().subscribe((dialogData) => {
+            this.afterDeleteClosed(dialogData.confirmed, hearing)
         })
     }
 

@@ -15,11 +15,11 @@ const openDialogMockObjUndefined = {
 };
 
 const openDialogMockObjConfirmed = {
-    afterClosed: (): Observable<boolean> => Observable.of(true)
+    afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: true})
 };
 const now = moment();
 const openDialogMockObjDeclined = {
-    afterClosed: (): Observable<boolean> => Observable.of(false)
+    afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: false})
 };
 
 let component: HearingsSearchComponent;

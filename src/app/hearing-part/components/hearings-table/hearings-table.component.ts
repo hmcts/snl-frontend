@@ -107,7 +107,7 @@ export class HearingsTableComponent implements AfterViewChecked {
         this.dialog.open(DialogWithActionsComponent, {
             data: {message: `Do you want to remove the listing request for case number ${hearing.caseNumber} ?`}
         }).afterClosed().pipe(
-            filter(confirmed => confirmed === true),
+            filter(dialogData => dialogData.confirmed === true),
             tap(() => {
                 this.deleteHearing(hearing);
             }),

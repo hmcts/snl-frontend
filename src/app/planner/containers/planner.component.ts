@@ -127,8 +127,8 @@ export class PlannerComponent implements OnInit {
         let isNotMultiSession = !this.hearingParts.find(hp => hp.id === hearingPartId).multiSession;
 
         this.confirmationDialogRef = isNotMultiSession ? this.openConfirmationDialog() : this.openMultiSessionDialog();
-        this.confirmationDialogRef.afterClosed().subscribe(confirmed => {
-            if (isNotMultiSession && confirmed) {
+        this.confirmationDialogRef.afterClosed().subscribe(dialogData => {
+            if (isNotMultiSession && dialogData.confirmed) {
                 this.updateHearingPart(hearingPartId)
             }
         });
@@ -138,8 +138,8 @@ export class PlannerComponent implements OnInit {
         this.selectedSessionId = event.detail.event.id;
     }
 
-    private eventModifyConfirmationClosed = (confirmed: boolean) => {
-        if (confirmed) {
+    private eventModifyConfirmationClosed = (dialogData: {confirmed: boolean}) => {
+        if (dialogData.confirmed) {
             this.sessionCreationService.update(this.buildSessionUpdate(this.latestEvent));
             this.openSummaryDialog().afterClosed().subscribe((success) => {
                 if (!success) {

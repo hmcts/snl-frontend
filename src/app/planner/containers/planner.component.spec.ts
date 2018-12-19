@@ -176,12 +176,12 @@ describe('PlannerComponent', () => {
 
     describe('eventModifyConfirmationClosed', () => {
       it('should update session when confirmed', () => {
-        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(true) });
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of({confirmed: true}) });
         component.eventModify(calendarWithSessionEvent);
         expect(sessionsCreationServiceSpy.update).toHaveBeenCalled();
       });
       it('should revert latest event when declined', () => {
-        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(false) });
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of({confirmed: false}) });
         const revertFuncSpy = spyOn(calendarWithSessionEvent.detail, 'revertFunc');
         component.eventModify(calendarWithSessionEvent);
         expect(revertFuncSpy).toHaveBeenCalled();
@@ -274,7 +274,7 @@ describe('PlannerComponent', () => {
       }]
 
       matDialogSpy.open.and.returnValue({
-          afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
+          afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: true})
       });
 
       matDialogSpy.open.calls.reset();
