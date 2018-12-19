@@ -19,7 +19,7 @@ import { SessionCreateNotesConfiguration } from '../../models/session-create-not
 import { NoteType } from '../../../notes/models/note-type';
 import { DEFAULT_DIALOG_CONFIG } from '../../../features/transactions/models/default-dialog-confg';
 import { SessionAmendValidator } from '../../../core/validators/session-amend.validators';
-import moment = require('moment');
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-sessions-amend-form',
