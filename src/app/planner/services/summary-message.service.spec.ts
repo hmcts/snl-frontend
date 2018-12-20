@@ -132,7 +132,9 @@ function event(delta?: moment.Duration, resourceId?: string,
         id: 'someId',
         hearingParts: [],
         sessionType: undefined,
-        version: 1
+        version: 1,
+        startDate: undefined,
+        duration: undefined
     } as SessionCalendarViewModel
 
     const updateEvent = { event: sessionCalendarViewModel, delta } as UpdateEventModel<SessionCalendarViewModel>

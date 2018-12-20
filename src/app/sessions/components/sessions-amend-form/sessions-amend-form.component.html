@@ -18,6 +18,7 @@
 
       <mat-form-field>
         <input id="duration" formControlName="durationInMinutes" type="number" matInput placeholder="Duration *" [(ngModel)]="amendSessionForm.durationInMinutes">
+        <mat-error>End time of session cannot be brought forward when session already contains hearings. Please adjust the duration.</mat-error>
       </mat-form-field>
 
       <mat-form-field>

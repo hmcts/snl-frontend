@@ -35,6 +35,7 @@ let sessionSearchResponse: SessionAmendResponse = {
     hearingPartsCount: 0,
     hasMultiSessionHearingAssigned: false,
     version: 0,
+    hasListedHearingParts: false
 };
 
 let session = SessionToAmendSessionForm(sessionSearchResponse);

@@ -83,7 +83,8 @@ export class SessionsSearchComponent implements OnInit {
                     sessionTypes: this.sessionTypes,
                     notes: notes
                 },
-                height: 'auto'
+                height: 'auto',
+                maxWidth: '500px'
             }).afterClosed().subscribe(() => {
                 this.searchSessions(this.savedSearchCriterion, this.savedTableSettings)
             });

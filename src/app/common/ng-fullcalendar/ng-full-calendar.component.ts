@@ -11,6 +11,7 @@ import { EventObjectInput, OptionsInput } from 'fullcalendar/src/types/input-typ
 import * as moment from 'moment';
 import { EventDrop } from './models/event-drop.model';
 import { View } from 'fullcalendar';
+import { EventDrag } from './models/event-drag.model';
 
 @Component({
     // tslint:disable-next-line
@@ -56,6 +57,7 @@ export class NgFullCalendarComponent implements AfterViewInit {
     @Output() drop = new EventEmitter<CustomEvent<EventDrop>>();
     @Output() eventMouseOver = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
     @Output() eventMouseOut = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
+    @Output() eventDragStart = new EventEmitter<CustomEvent<EventDrag>>();
 
     constructor(private element: ElementRef, private zone: NgZone) {
     }
@@ -243,7 +245,6 @@ export class NgFullCalendarComponent implements AfterViewInit {
         // worth checking if others events also returns jQuery events
         this.options.drop = (date: moment.Moment, jsEvent: any, ui: any, resourceId?: any) => {
             let detail: EventDrop = { date: date, jsEvent: jsEvent, ui: ui, resourceId: resourceId };
-
             const widgetEvent = new CustomEvent<EventDrop>('drop', {
                 bubbles: false,
                 detail: detail
@@ -262,6 +263,14 @@ export class NgFullCalendarComponent implements AfterViewInit {
         this.options.eventMouseout = (event: EventObjectInput, jsEvent: MouseEvent, view: View) => {
             let detail: CalendarMouseEvent = { event, jsEvent, view };
             const widgetEvent = new CustomEvent<CalendarMouseEvent>('eventMouseOut', {
+                bubbles: false,
+                detail: detail
+            });
+            elem[0].dispatchEvent(widgetEvent);
+        };
+        this.options.eventDragStart = (event: EventObjectInput, jsEvent: any, ui: any, view: View): void => {
+            let detail: EventDrag = { event, jsEvent, ui, view };
+            const widgetEvent = new CustomEvent<EventDrag>('eventDragStart', {
                 bubbles: false,
                 detail: detail
             });

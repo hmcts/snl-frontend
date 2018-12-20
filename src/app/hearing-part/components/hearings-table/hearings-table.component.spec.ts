@@ -9,11 +9,11 @@ import { Note } from '../../../notes/models/note.model';
 import { NoteType } from '../../../notes/models/note-type';
 
 const openDialogMockObjConfirmed = {
-    afterClosed: (): Observable<boolean> => Observable.of(true)
+    afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: true})
 };
 const now = moment();
 const openDialogMockObjDeclined = {
-    afterClosed: (): Observable<boolean> => Observable.of(false)
+    afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: false})
 };
 let matDialogSpy;
 let hearingService: any;

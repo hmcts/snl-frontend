@@ -26,7 +26,7 @@ import { CalendarEventSessionViewModel } from '../../../planner/types/calendar-e
 export class CalendarContainerComponent implements OnInit {
 
     sessions$: Observable<SessionViewModel[]>;
-    loadData;
+    loadData: (query: SessionQueryForDates) => void;
     readonly dataTransformer: IcalendarTransformer<SessionViewModel, SessionCalendarViewModel>;
 
     constructor(private readonly store: Store<State>,

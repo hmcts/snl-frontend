@@ -1,9 +1,10 @@
 
+import * as moment from 'moment'
 export interface SessionAmmend {
     id: string,
     userTransactionId: string,
     durationInSeconds: number,
-    startTime: string, // ie "12:30", "08:45"
+    startTime: moment.Moment,
     sessionTypeCode: string,
     version: number
 }

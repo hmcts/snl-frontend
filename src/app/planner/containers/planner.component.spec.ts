@@ -25,13 +25,14 @@ import { CaseType } from '../../core/reference/models/case-type';
 import { EventDrop } from '../../common/ng-fullcalendar/models/event-drop.model';
 import { CalendarEventSessionViewModel } from '../types/calendar-event-session-view-model.type';
 import { UpdateEventModel } from '../../common/ng-fullcalendar/models/updateEventModel';
+import { Status } from '../../core/reference/models/status.model';
 
 let component: PlannerComponent;
 let store: Store<State>;
 let storeSpy: jasmine.Spy;
 let hearingPartId = 'hpid';
 
-const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
+const matDialogSpy: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open']);
 const sessionsCreationServiceSpy = jasmine.createSpyObj(
   'SessionsCreationService',
   ['update', 'fetchUpdatedEntities']
@@ -61,6 +62,8 @@ const sessionCalendarViewModel: SessionCalendarViewModel = {
     hearingParts: [],
     sessionType: undefined,
     version: 1,
+    startDate: moment(),
+    duration: moment.duration(30, 'minutes')
 };
 
 const updateEvent: UpdateEventModel<SessionCalendarViewModel> = {
@@ -173,12 +176,12 @@ describe('PlannerComponent', () => {
 
     describe('eventModifyConfirmationClosed', () => {
       it('should update session when confirmed', () => {
-        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(true) });
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of({confirmed: true}) });
         component.eventModify(calendarWithSessionEvent);
         expect(sessionsCreationServiceSpy.update).toHaveBeenCalled();
       });
       it('should revert latest event when declined', () => {
-        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of(false) });
+        matDialogSpy.open.and.returnValue({ afterClosed: () => Observable.of({confirmed: false}) });
         const revertFuncSpy = spyOn(calendarWithSessionEvent.detail, 'revertFunc');
         component.eventModify(calendarWithSessionEvent);
         expect(revertFuncSpy).toHaveBeenCalled();
@@ -187,10 +190,15 @@ describe('PlannerComponent', () => {
   });
 
   describe('eventModify', () => {
-    it('should open dialog ', () => {
-      matDialogSpy.open.and.returnValue(openDialogMockObj);
-      component.eventModify(calendarWithSessionEvent);
-      expect(matDialogSpy.open).toHaveBeenCalled();
+    const confirmationMsg = 'Are you sure you want to modify this session?';
+    describe('when validation passes', () => {
+      it('should open confirmation dialog ', () => {
+        matDialogSpy.open.and.returnValue(openDialogMockObj);
+        component.eventModify(calendarWithSessionEvent);
+        const dialogMsg = matDialogSpy.open.calls.mostRecent().args[1].data.message
+        expect(matDialogSpy.open).toHaveBeenCalled();
+        expect(dialogMsg).toEqual(confirmationMsg);
+      });
     });
   });
 
@@ -262,10 +270,11 @@ describe('PlannerComponent', () => {
           reservedJudgeId: undefined,
           communicationFacilitator: 'interpreter',
           notes: [],
+          status: Status.Listed
       }]
 
       matDialogSpy.open.and.returnValue({
-          afterClosed: (): Observable<boolean> => new Observable(observer => observer.next(true))
+          afterClosed: (): Observable<{confirmed: boolean}> => Observable.of({confirmed: true})
       });
 
       matDialogSpy.open.calls.reset();

@@ -9,7 +9,7 @@ import { HearingPart } from '../models/hearing-part';
 import { getJudgesEntities } from '../../judges/reducers';
 import * as moment from 'moment';
 import { Priority } from '../models/priority-model';
-import { Status } from '../../core/reference/models/status.model';
+import { Status, fromString } from '../../core/reference/models/status.model';
 
 export interface HearingPartsState {
     readonly hearingParts: fromHearingParts.State;
@@ -94,7 +94,8 @@ export const getFullHearingParts = createSelector(getAllHearingParts, getNotes, 
                 hearingId: hearing.id,
                 notes: sortedNotes,
                 start: moment(start),
-                multiSession: hearing.multiSession
+                multiSession: hearing.multiSession,
+                status: fromString(hearingPart.status)
             };
         });
         return finalHearingParts;

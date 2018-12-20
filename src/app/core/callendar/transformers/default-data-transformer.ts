@@ -15,12 +15,16 @@ export class DefaultDataTransformer implements IcalendarTransformer<SessionViewM
             person: session.person,
             room: session.room,
             title: `${roomName} - ${judgeName} - ${sessionType}`,
+            // used be validators
+            startDate: session.start,
+            // start & end dates are required by fullcalendar
             start: moment(session.start),
             end: moment(moment(session.start).add(moment.duration(session.duration))),
             id: session.id,
             hearingParts: session.hearingParts,
             sessionType: session.sessionType,
             version: session.version,
+            duration: moment.duration(session.duration)
         };
     }
 }

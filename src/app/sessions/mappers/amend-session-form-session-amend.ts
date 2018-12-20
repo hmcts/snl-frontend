@@ -3,18 +3,18 @@ import { SessionAmmendForm } from '../models/ammend/session-ammend-form.model';
 import { SessionAmmend } from '../models/ammend/session-ammend.model';
 import { SessionAmendResponse } from '../models/session-amend.response';
 
-export const SessionToAmendSessionForm = (session: SessionAmendResponse): SessionAmmendForm => {
-    const durationInMinutes = moment.duration(session.duration).asMinutes();
-    const startTime = moment(session.start).format('HH:mm');
-    const startDate = moment(session.start);
-    const sessionTypeCode = session.sessionTypeCode;
-    const personName = session.personName || '(No judge)';
-    const roomName = session.roomName || '(No room)';
-    const roomType = session.roomDescription || '';
+export const SessionToAmendSessionForm = (sessionAmendResponse: SessionAmendResponse): SessionAmmendForm => {
+    const durationInMinutes = moment.duration(sessionAmendResponse.duration).asMinutes();
+    const startTime = moment(sessionAmendResponse.start).format('HH:mm');
+    const startDate = moment(sessionAmendResponse.start);
+    const sessionTypeCode = sessionAmendResponse.sessionTypeCode;
+    const personName = sessionAmendResponse.personName || '(No judge)';
+    const roomName = sessionAmendResponse.roomName || '(No room)';
+    const roomType = sessionAmendResponse.roomDescription || '';
 
     return {
-        id: session.id,
-        version: session.version,
+        id: sessionAmendResponse.id,
+        version: sessionAmendResponse.version,
         durationInMinutes: durationInMinutes,
         startTime: startTime,
         startDate: startDate,
@@ -22,8 +22,9 @@ export const SessionToAmendSessionForm = (session: SessionAmendResponse): Sessio
         personName: personName,
         roomName: roomName,
         roomTypeDescription: roomType,
-        hearingPartCount: session.hearingPartsCount,
-        multiSession: session.hasMultiSessionHearingAssigned
+        hearingPartCount: sessionAmendResponse.hearingPartsCount,
+        multiSession: sessionAmendResponse.hasMultiSessionHearingAssigned,
+        hasListedHearingParts: sessionAmendResponse.hasListedHearingParts
     }
 }
 
@@ -32,12 +33,11 @@ export const AmendSessionFormToSessionAmend = (amendSessionForm: SessionAmmendFo
     const durationInSeconds = Math.floor(amendSessionForm.durationInMinutes.valueOf() * 60)
     let startTime = moment(amendSessionForm.startTime, 'HH:mm');
     startTime = moment.utc(amendSessionForm.startDate.hour(startTime.hour()).minutes(startTime.minute()));
-    const formattedStartTime = startTime.format('HH:mm');
 
     return {
         sessionTypeCode: sessionTypeCode,
         durationInSeconds: durationInSeconds,
-        startTime: formattedStartTime,
+        startTime,
         id: amendSessionForm.id,
         userTransactionId: undefined,
         version: amendSessionForm.version,
