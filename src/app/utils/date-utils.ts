@@ -30,3 +30,7 @@ export function formatDuration(duration: moment.Duration): string {
 export function formatDateTimeToHHmm(dateTime: moment.Moment): string {
     return moment(dateTime).format('HH:mm');
 }
+
+export function formatDateToDDmmYYYY(date: moment.Moment): string {
+    return moment(date).format('DD/MM/YYYY');
+}

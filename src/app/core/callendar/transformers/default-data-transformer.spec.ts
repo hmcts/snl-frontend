@@ -1,12 +1,13 @@
-import { SessionViewModel } from '../../../sessions/models/session.viewmodel';
+import { SessionViewModel, SessionCalendarViewModel } from '../../../sessions/models/session.viewmodel';
 import * as moment from 'moment';
 import { DefaultDataTransformer } from './default-data-transformer';
 import { IcalendarTransformer } from './icalendar-transformer';
 import { SessionType } from '../../reference/models/session-type';
 
-const room = { name: 'room' }
-const person = { name: 'person' }
-let session = {
+const version = 1
+const room = { id: 'roomId', name: 'room', roomTypeCode: 'some-room-type-code' }
+const person = { id: 'personId', name: 'person' }
+let session: SessionViewModel = {
     id: 'id',
     start: moment(),
     duration: 60,
@@ -14,18 +15,26 @@ let session = {
     person: person,
     sessionType: { code: 'session-type-code', description: 'session-type-description' } as SessionType,
     hearingParts: [],
-    jurisdiction: ''
-} as SessionViewModel;
+    jurisdiction: '',
+    version,
+    allocated: moment.duration(0, 'minutes'),
+    available: moment.duration(60, 'minutes'),
+    utilization: 0,
+    notes: []
+};
 
-let expectedEvent = {
+let expectedEvent: SessionCalendarViewModel = {
     title: `${session.room.name} - ${session.person.name} - ${session.sessionType.description}`,
+    startDate: session.start,
     start: session.start,
     end: moment(moment(session.start).add(moment.duration(session.duration))),
     id: session.id,
     hearingParts: session.hearingParts,
     sessionType: session.sessionType,
     room: room,
-    person: person
+    person: person,
+    version,
+    duration: moment.duration(session.duration)
 };
 
 let sessionWithoutJudgeAndRoomAndSessionType = {
@@ -43,32 +52,21 @@ let expectedEventWithoutJudgeAndRoomAndSessionType = {
     person: undefined
 }
 
-let sessionWithIdUndefined = {
-    ...session,
-    id: undefined
-}
-
-let expectedEventWithIdUndefined = sessionWithIdUndefined;
-
 let tests = [
     {
         name: 'with all fields defined',
         session: session,
         expectedEvent: expectedEvent
     }, {
-        name: 'without judge, room and Sessiontype',
+        name: 'without judge, room and Session type',
         session: sessionWithoutJudgeAndRoomAndSessionType,
         expectedEvent: expectedEventWithoutJudgeAndRoomAndSessionType
-    }, {
-        name: 'with undefined id',
-        session: sessionWithIdUndefined,
-        expectedEvent: expectedEventWithIdUndefined
     }
 ];
 
 describe('DefaultDataTransformer', () => {
 
-    let dataTransformer: IcalendarTransformer<SessionViewModel>;
+    let dataTransformer: IcalendarTransformer<SessionViewModel, SessionCalendarViewModel>;
 
     beforeAll(() => {
         dataTransformer = new DefaultDataTransformer();

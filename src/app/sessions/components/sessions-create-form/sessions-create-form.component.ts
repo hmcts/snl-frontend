@@ -14,6 +14,8 @@ import { SessionCreateNotesConfiguration } from '../../models/session-create-not
 import { NotesPreparerService } from '../../../notes/services/notes-preparer.service';
 import { NoteViewmodel } from '../../../notes/models/note.viewmodel';
 import { NoteType } from '../../../notes/models/note-type';
+import { TimeFormatValidator } from '../../../core/validators/time-format.validator';
+import { DateFormatValidator } from '../../../core/validators/date-format.validator';
 
 @Component({
     selector: 'app-sessions-create-form',
@@ -106,9 +108,11 @@ export class SessionsCreateFormComponent {
     private initiateFormGroup() {
         this.sessionCreateFormGroup = new FormGroup({
             sessionTypeCode: new FormControl(this.createSessionForm.sessionTypeCode, Validators.required),
-            startDate: new FormControl(this.createSessionForm.startDate, [Validators.required]),
-            startTime: new FormControl(this.createSessionForm.startTime, [Validators.required]),
-            durationInMinutes: new FormControl(this.createSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]),
+            startDate: new FormControl(this.createSessionForm.startDate, [Validators.required, DateFormatValidator.validate]),
+            startTime: new FormControl(this.createSessionForm.startTime, [Validators.required, TimeFormatValidator.validate]),
+            durationInMinutes: new FormControl(
+                this.createSessionForm.durationInMinutes, [Validators.required, Validators.min(1)]
+            ),
         });
     }
 }

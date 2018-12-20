@@ -39,6 +39,7 @@ import { SecurityContext } from './security/services/security-context.service';
 import { HmctsModule } from './hmcts/hmcts.module';
 import { GovukModule } from './govuk/govuk.module';
 import { HearingModule } from './hearing/hearing.module';
+import { InMemoryStorageService } from './core/services/in-memory-storage.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
@@ -69,7 +70,7 @@ export class XhrInterceptor implements HttpInterceptor {
         EffectsModule.forRoot([]),
         HttpClientModule,
         FormsModule,
-        CoreModule,
+        CoreModule.forRoot(),
         AppRoutingModule,
         AngularMaterialModule,
         FullCalendarModule,
@@ -94,6 +95,7 @@ export class XhrInterceptor implements HttpInterceptor {
         {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
         {provide: LOCALE_ID, useValue: AppConfig.locale},
         {provide: 'STORAGE', useFactory: getLocalStorage},
+        {provide: 'InMemoryStorageService', useValue: new InMemoryStorageService()}
     ],
     bootstrap: [AppComponent]
 })

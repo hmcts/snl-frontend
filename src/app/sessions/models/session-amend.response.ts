@@ -10,4 +10,5 @@ export interface SessionAmendResponse {
     hearingPartsCount: number;
     hasMultiSessionHearingAssigned: boolean;
     version: number;
+    hasListedHearingParts: boolean;
 }

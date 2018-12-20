@@ -1,3 +1,5 @@
+import { EventDrag } from './../../../common/ng-fullcalendar/models/event-drag.model';
+import { CalendarMouseEvent } from './../../../common/ng-fullcalendar/models/calendar-mouse-event.model';
 import { IcalendarTransformer } from '../transformers/icalendar-transformer';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import * as moment from 'moment';
@@ -5,6 +7,12 @@ import { Default } from 'fullcalendar/View';
 import { NgFullCalendarComponent } from '../../../common/ng-fullcalendar/ng-full-calendar.component';
 import { formatDuration, formatDateTimeToHHmm } from '../../../utils/date-utils';
 import { textToColor } from '../../../utils/color-text';
+import { UpdateEventModel } from '../../../common/ng-fullcalendar/models/updateEventModel';
+import { SessionQueryForDates } from '../../../sessions/models/session-query.model';
+import { EventDrop } from '../../../common/ng-fullcalendar/models/event-drop.model';
+
+// T2 of dataTransformer
+type TransformedType = any;
 
 @Component({
     selector: 'app-calendar',
@@ -12,13 +20,12 @@ import { textToColor } from '../../../utils/color-text';
     styleUrls: [ './calendar.component.scss' ]
 })
 export class CalendarComponent implements OnInit {
-
     @ViewChild(NgFullCalendarComponent) public ucCalendar: NgFullCalendarComponent;
     calendarOptions: any;
     errors: string;
     references = [];
     calHeight = 'auto';
-    events: any[];
+    events: TransformedType[];
 
     @Input('preTransformedData') set preTransformedData(value: any[]) {
         if (value === undefined || this.dataTransformer === undefined) {
@@ -47,17 +54,18 @@ export class CalendarComponent implements OnInit {
 
     @Input() editable = true;
     @Input() resourceColumns: any[] = undefined;
-    @Input() dataTransformer: IcalendarTransformer<any>;
+    @Input() dataTransformer: IcalendarTransformer<any, TransformedType>;
     @Input() defaultView: string;
     @Input() header: any;
     @Input() views: any;
     @Input() initialStartDate: Date = moment().toDate();
-    @Output() loadData = new EventEmitter();
-    @Output() eventClickCallback = new EventEmitter();
-    @Output() eventResizeCallback = new EventEmitter();
-    @Output() eventDropCallback = new EventEmitter();
-    @Output() dropCallback = new EventEmitter();
-    @Output() eventMouseOverCallback = new EventEmitter();
+    @Output() loadData = new EventEmitter<SessionQueryForDates>();
+    @Output() eventClickCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
+    @Output() eventResizeCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
+    @Output() eventDropCallback = new EventEmitter<CustomEvent<UpdateEventModel<TransformedType>>>();
+    @Output() dropCallback = new EventEmitter<CustomEvent<EventDrop>>();
+    @Output() eventMouseOverCallback = new EventEmitter<CustomEvent<CalendarMouseEvent>>();
+    @Output() eventDragStartCallback = new EventEmitter<CustomEvent<EventDrag<TransformedType>>>();
 
     constructor() {
         this.header = {
@@ -98,7 +106,7 @@ export class CalendarComponent implements OnInit {
     }
 
     public refreshViewData() {
-        const dateRange = this.parseDates();
+        const dateRange: SessionQueryForDates = this.parseDates();
         if (dateRange === undefined) {
             return;
         }
@@ -115,6 +123,7 @@ export class CalendarComponent implements OnInit {
         // TODO extract this method somewhere outside of component, or at least data related parts
         let el = event.detail.element;
         el.css('background-color', textToColor(event.detail.event.sessionType.code));
+        el.css('overflow', 'hidden');
         event.detail.event.hearingParts.forEach(hearing => {
             el.append('</br>');
             el.append(hearing.caseNumber);
@@ -133,27 +142,31 @@ export class CalendarComponent implements OnInit {
         event.detail.element.find('div.fc-scroller').css('overflow-y', 'hidden !important');
     }
 
-    public eventClick(event) {
-        this.eventClickCallback.emit(event.detail.event.id);
+    public eventClick(event: CustomEvent<UpdateEventModel<TransformedType>>) {
+        this.eventClickCallback.emit(event);
     }
 
-    public eventDrop(event) {
+    public eventDrop(event: CustomEvent<UpdateEventModel<TransformedType>>) {
         this.emitWithUpdatedTime(this.eventDropCallback, event);
     }
 
-    public drop(event) {
+    public drop(event: CustomEvent<EventDrop>) {
         this.dropCallback.emit(event);
     }
 
-    public eventMouseOver(event) {
+    public eventMouseOver(event: CustomEvent<CalendarMouseEvent>) {
         this.eventMouseOverCallback.emit(event);
     }
 
-    public eventResize(event) {
+    public eventResize(event: CustomEvent<UpdateEventModel<TransformedType>>) {
         this.emitWithUpdatedTime(this.eventResizeCallback, event);
     }
 
-    private parseDates(): { startDate: moment.Moment, endDate: moment.Moment } {
+    public eventDragStart(event: CustomEvent<EventDrag<TransformedType>>) {
+        this.eventDragStartCallback.emit(event)
+    }
+
+    private parseDates(): SessionQueryForDates {
         if (this.ucCalendar === undefined) {
             return undefined;
         }

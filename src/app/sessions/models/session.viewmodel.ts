@@ -21,6 +21,20 @@ export interface SessionViewModel {
     notes: Note[]
 }
 
+export interface SessionCalendarViewModel {
+    person: Judge,
+    room: Room,
+    title: string
+    startDate: moment.Moment
+    start: moment.Moment,
+    end: moment.Moment,
+    id: string,
+    hearingParts: HearingPartViewModel[],
+    sessionType: SessionType,
+    version: number,
+    duration: moment.Duration;
+}
+
 export interface SessionForListingResponse {
     sessionId: string;
     personId: string;

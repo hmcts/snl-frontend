@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { Priority } from '../models/priority-model';
 import { CreateHearingRequest } from '../models/create-hearing-request';
 import { HearingPart } from '../models/hearing-part';
+import { Status } from '../../core/reference/models/status.model';
 
 const nowISOSting = moment().toISOString();
 
@@ -154,7 +155,8 @@ describe('HearingAction', () => {
                 sessionId: '213',
                 version: 1,
                 hearingInfo: 'some info',
-                start: nowISOSting
+                start: nowISOSting,
+                status: Status.Unlisted
             };
             const action = new Create(payload);
 

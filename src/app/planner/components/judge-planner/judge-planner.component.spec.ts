@@ -1,3 +1,4 @@
+import { HearingPartViewModel } from './../../../hearing-part/models/hearing-part.viewmodel';
 import { TestBed } from '@angular/core/testing';
 import { StoreModule, Store } from '@ngrx/store';
 import * as fromHearingParts from '../../../hearing-part/reducers';
@@ -8,13 +9,16 @@ import * as judgesReducers from '../../../judges/reducers';
 import { JudgePlannerComponent } from './judge-planner.component';
 import { Judge } from '../../../judges/models/judge.model';
 import { Separator } from '../../../core/callendar/transformers/data-with-simple-resource-transformer';
+import { SessionCalendarViewModel } from '../../../sessions/models/session.viewmodel';
+import * as moment from 'moment';
+import { UpdateEventModel } from '../../../common/ng-fullcalendar/models/updateEventModel';
+import { CalendarEventSessionViewModel } from '../../types/calendar-event-session-view-model.type';
+import { Observable } from 'rxjs';
 
 let store: Store<fromHearingParts.State>;
 let storeSpy: jasmine.Spy;
 let component: JudgePlannerComponent;
-
-const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
-
+const matDialogSpy: jasmine.SpyObj<MatDialog> = jasmine.createSpyObj('MatDialog', ['open']);
 const mockedJudges: Judge[] = [{ id: 'judge-id', name: 'some-judge-name' }];
 
 describe('JudgePlannerComponent', () => {
@@ -82,9 +86,6 @@ describe('JudgePlannerComponent', () => {
                 func: 'childEventResize',
                 emitter: 'eventResize'
             }, {
-                func: 'childEventDrop',
-                emitter: 'eventDrop'
-            }, {
                 func: 'childDrop',
                 emitter: 'drop'
             }, {
@@ -102,6 +103,75 @@ describe('JudgePlannerComponent', () => {
               expect(outputSpy).toHaveBeenCalledWith('any')
           });
       })
+    });
+
+    describe('childEventDrop', () => {
+      const sessionCalendarViewModel: SessionCalendarViewModel = {
+        room: undefined,
+        person: undefined,
+        title: '',
+        start: moment(),
+        end: moment(),
+        id: 'someId',
+        hearingParts: [{multiSession: true} as HearingPartViewModel],
+        sessionType: undefined,
+        version: 1,
+        startDate: moment(),
+        duration: moment.duration(30, 'minutes')
+      };
+
+      const updateEvent: UpdateEventModel<SessionCalendarViewModel> = {
+        event: sessionCalendarViewModel,
+        delta: moment.duration(30, 'minutes'),
+        revertFunc: () => { },
+        jsEvent: undefined,
+        ui: undefined,
+        view: undefined,
+      }
+
+      beforeEach(() => {
+        matDialogSpy.open.calls.reset()
+        matDialogSpy.open.and.returnValue({afterClosed: () => Observable.of()})
+      });
+
+      describe('when session contains multi session hearing part and is dropped to row with different judge', () => {
+        it('should NOT emit an event and open the dialog', () => {
+          updateEvent.event.person = {id: 'someId'} as Judge;
+          updateEvent.event.resourceId = `some${Separator}OtherJudgeId`
+
+          const calendarWithSessionEvent: CalendarEventSessionViewModel = new CustomEvent<UpdateEventModel<SessionCalendarViewModel>>(
+            'eventName', {
+            detail: updateEvent,
+          });
+
+          let emitSpy = spyOn(component.eventDrop, 'emit');
+
+          component.childEventDrop(calendarWithSessionEvent)
+
+          expect(emitSpy).not.toHaveBeenCalledWith(calendarWithSessionEvent)
+          expect(matDialogSpy.open).toHaveBeenCalled()
+        });
+      });
+
+      describe('when session contains multi session hearing part and is dropped to row with the same judge', () => {
+        it('should emit an event when and not open the dialog', () => {
+          const judgeId = 'theSameId'
+          updateEvent.event.person = {id: judgeId} as Judge;
+          updateEvent.event.resourceId = `some${Separator}${judgeId}`
+
+          const calendarWithSessionEvent: CalendarEventSessionViewModel = new CustomEvent<UpdateEventModel<SessionCalendarViewModel>>(
+            'eventName', {
+            detail: updateEvent,
+          });
+
+          let emitSpy = spyOn(component.eventDrop, 'emit');
+
+          component.childEventDrop(calendarWithSessionEvent)
+
+          expect(emitSpy).toHaveBeenCalledWith(calendarWithSessionEvent)
+          expect(matDialogSpy.open).not.toHaveBeenCalled()
+        });
+      });
     });
   });
 });

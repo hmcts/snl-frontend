@@ -9,6 +9,7 @@ import { Hearing } from '../models/hearing';
 import { PossibleActionConfig } from '../models/possible-action-config';
 import { IPossibleActionConfigs } from '../models/ipossible-actions';
 import { Observable } from 'rxjs';
+import { AdjournHearingDialogComponent } from '../components/adjourn-hearing-dialog/adjourn-hearing.dialog.component';
 
 @Injectable()
 export class PossibleHearingActionsService {
@@ -23,7 +24,7 @@ export class PossibleHearingActionsService {
         [HearingActions.Adjourn]: {
             enabled: false,
             openDialog: () => this.openAdjournDialog(),
-            callService: (hearing) => this.hearingService.adjourn(hearing),
+            callService: (hearing, description) => this.hearingService.adjourn(hearing, description),
             summaryText: 'Adjourn hearing'
         },
         [HearingActions.Withdraw]: {
@@ -48,8 +49,9 @@ export class PossibleHearingActionsService {
         const action: PossibleActionConfig = this.possibleActions[value];
 
         if (action.enabled) {
-            action.openDialog().subscribe((confirmed) => {
-                this.confirmationDialogClosed(confirmed, () => action.callService(hearing), hearing, action.summaryText)
+            action.openDialog().subscribe((dialogData) => {
+                this.confirmationDialogClosed(dialogData.confirmed, () => action.callService(hearing, dialogData.description),
+                    hearing, action.summaryText)
             });
         }
     }
@@ -65,14 +67,14 @@ export class PossibleHearingActionsService {
     }
 
     private openAdjournDialog() { // NOSONAR
-        const confirmationDialogRef = this.dialog.open(DialogWithActionsComponent, {
+        const confirmationDialogRef = this.dialog.open(AdjournHearingDialogComponent, {
             ...DEFAULT_DIALOG_CONFIG,
             data: {
                 title: 'Adjourn hearing',
-                message: 'Are you sure you want to adjourn this hearing? ' +
-                    'Once the hearing has been adjourned it cannot be undone.',
+                message: 'Please add a reason for adjournment in the field below.' +
+                    'Once the hearing has been adjourned it cannot be undone.'
             },
-            width: '350px'
+            width: '500px'
         });
 
         return confirmationDialogRef.afterClosed();

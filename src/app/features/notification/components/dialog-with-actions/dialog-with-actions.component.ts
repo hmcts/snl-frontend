@@ -10,20 +10,20 @@ export class DialogWithActionsComponent {
 
     constructor(public dialogRef: MatDialogRef<any>, @Inject(MAT_DIALOG_DATA) public data: any) {
         dialogRef.disableClose = true;
-        data.okData = (data.okData !== undefined) ? data.okData : true;
-        data.declineData = data.declineData || false;
     }
 
     onOkClick(): void {
-        this.closeWith(this.data.okData);
+        this.data.confirmed = true;
+        this.closeWith(this.data);
     }
 
     onDeclineClick(): void {
-        this.closeWith(this.data.declineData);
+        this.data.confirmed = false;
+        this.closeWith(this.data);
     }
 
     showDecline(): boolean {
-        return (this.data['hideDecline'] === undefined) ? true : !this.data.hideDecline;
+        return (this.data.hideDecline === undefined) ? true : !this.data.hideDecline;
     }
 
     private closeWith(data) {

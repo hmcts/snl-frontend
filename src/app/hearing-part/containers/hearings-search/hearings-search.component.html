@@ -2,6 +2,7 @@
   <div fxFlex="25%">
     <app-hearings-filter
             (onFilter)="onFilter($event)"
+            [filterValues]="latestFilters"
             [judges]="judges"
             [caseTypes]="caseTypes"
             [hearingTypes]="hearingTypes">
@@ -15,6 +16,7 @@
     <div>
       <app-hearing-search-table id="hearing-search-table"
                                 [hearings]="filteredHearings"
+                                [pagingValues]="latestPaging"
                                 [totalCount]="totalCount"
                                 (onDelete)="onDelete($event)"
                                 (onAmend)="onAmend($event)"

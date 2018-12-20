@@ -1,3 +1,3 @@
-export interface IcalendarTransformer<T> {
-    transform(element: T): any;
+export interface IcalendarTransformer<T1, T2> {
+    transform(element: T1): T2;
 }

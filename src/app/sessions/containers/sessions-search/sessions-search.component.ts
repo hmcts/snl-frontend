@@ -68,21 +68,6 @@ export class SessionsSearchComponent implements OnInit {
                 }
             }
         ).subscribe()
-        //
-        // this.sessionFilterComponent.filterSource$.asObservable().combineLatest(
-        //     this.sessionAmendmentTableComponent.tableSettings$, (filters: SessionFilters, tableSetting: TableSetting) => {
-        //         if (filters && tableSetting) {
-        //             if (JSON.stringify(this.savedSessionFilters) !== JSON.stringify(filters)) {
-        //                 this.sessionAmendmentTableComponent.resetToFirstPage();
-        //             }
-        //
-        //             const searchCriterions: SearchCriteria[] = this.sessionSearchCriteriaService.convertToSearchCriterions(filters);
-        //             this.searchSessions(searchCriterions, tableSetting);
-        //             // create a deep copy
-        //             this.savedSessionFilters = JSON.parse(JSON.stringify(filters));
-        //         }
-        //     }
-        // ).subscribe()
     }
 
     openAmendDialog(s: SessionSearchResponse) {
@@ -98,7 +83,8 @@ export class SessionsSearchComponent implements OnInit {
                     sessionTypes: this.sessionTypes,
                     notes: notes
                 },
-                height: 'auto'
+                height: 'auto',
+                maxWidth: '500px'
             }).afterClosed().subscribe(() => {
                 this.searchSessions(this.savedSearchCriterion, this.savedTableSettings)
             });

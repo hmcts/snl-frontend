@@ -1,3 +1,4 @@
+import { Status } from './../../core/reference/models/status.model';
 import { UpdateHearingRequest } from './update-hearing-request';
 import * as moment from 'moment'
 import { Note } from '../../notes/models/note.model';
@@ -26,6 +27,7 @@ export interface HearingPartViewModel {
     hearingId: string;
     start: moment.Moment;
     multiSession: boolean;
+    status: Status
 }
 
 export function mapToUpdateHearingRequest(hvm: HearingForListingWithNotes): UpdateHearingRequest {
