@@ -1,4 +1,4 @@
-# Scheduling and listing Front-end
+# Scheduling and Listing Front-end
 
 [![Build Status](https://travis-ci.org/hmcts/snl-frontend.svg?branch=master)](https://travis-ci.org/hmcts/snl-frontend)
 
