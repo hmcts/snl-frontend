@@ -115,7 +115,7 @@ const navigationItemsForOfficer = [
 
 const serviceName = {
     href: '#',
-    name: 'Scheduling and listing'
+    name: 'Scheduling and Listing'
 };
 
 const exampleOfficer = Object.assign(new User(), officerResponse);
@@ -123,7 +123,7 @@ const exampleOfficer = Object.assign(new User(), officerResponse);
 const exampleJudge = Object.assign(new User(), judgeResponse);
 
 const baseNavigation = {
-    label: 'Scheduling and listing',
+    label: 'Scheduling and Listing',
     items: [
         {
             href: null,

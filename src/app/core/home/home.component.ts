@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
     this.items = this.buildNavigationItems();
 
     this.navigation = {
-      label: 'Scheduling and listing',
+      label: 'Scheduling and Listing',
       items: [
         {
           href: null,
@@ -60,7 +60,7 @@ export class HomeComponent implements OnInit {
 
     this.serviceName = {
       href: '#',
-      name: 'Scheduling and listing'
+      name: 'Scheduling and Listing'
     }
   }
 
