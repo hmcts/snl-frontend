@@ -55,7 +55,7 @@
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0-beta.5",
     "@types/jquery": "3.2.7",
     "@types/request-promise": "^4.1.42",
-    "class-transformer": "^0.1.8",
+    "class-transformer": "^0.3.1",
     "core-js": "^2.4.1",
     "cors": "^2.8.4",
     "djb2": "^0.0.2",
