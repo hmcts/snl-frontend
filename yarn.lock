@@ -1487,7 +1487,7 @@ compressible@~2.0.13:
 
 compression@^1.5.2, compression@^1.7.1:
   version "1.7.2"
-  resolved "http://registry.npmjs.org/compression/-/compression-1.7.2.tgz#aaffbcd6aaf854b44ebb280353d5ad1651f59a69"
+  resolved "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz#aaffbcd6aaf854b44ebb280353d5ad1651f59a69"
   dependencies:
     accepts "~1.3.4"
     bytes "3.0.0"
@@ -1614,7 +1614,7 @@ copy-webpack-plugin@^4.1.1:
 
 core-js@^0.9.18:
   version "0.9.18"
-  resolved "http://registry.npmjs.org/core-js/-/core-js-0.9.18.tgz#13f458e430232b0f4ec1f480da7c2f5288e9d095"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-0.9.18.tgz#13f458e430232b0f4ec1f480da7c2f5288e9d095"
 
 core-js@^2.2.0, core-js@^2.4.0, core-js@^2.4.1:
   version "2.5.5"
@@ -4807,9 +4807,9 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@^0.3.9:
-  version "0.3.19"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
+marked@^0.5.0:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-0.5.2.tgz#3efdb27b1fd0ecec4f5aba362bddcd18120e5ba9"
 
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
@@ -5142,12 +5142,13 @@ ng2-mock-component@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/ng2-mock-component/-/ng2-mock-component-0.1.1.tgz#5980e8887523754f855febc0c11f6c20f016d865"
 
-ngx-md@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-md/-/ngx-md-3.1.1.tgz#41310ac862713cb4cc6b4f455743d948943ed728"
+ngx-md@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/ngx-md/-/ngx-md-6.0.3.tgz#71a8edb524e1009d79e39839bd62eccdac8eb22a"
   dependencies:
-    marked "^0.3.9"
-    prismjs "^1.9.0"
+    marked "^0.5.0"
+    prismjs "^1.15.0"
+    tslib "^1.9.0"
 
 ngx-pagination@^3.0.3:
   version "3.1.0"
@@ -6081,9 +6082,9 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
-prismjs@^1.9.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.14.0.tgz#bbccfdb8be5d850d26453933cb50122ca0362ae0"
+prismjs@^1.15.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.21.0.tgz#36c086ec36b45319ec4218ee164c110f9fc015a3"
   optionalDependencies:
     clipboard "^2.0.0"
 
@@ -7721,9 +7722,9 @@ tsickle@^0.24.0:
     source-map "^0.5.6"
     source-map-support "^0.4.2"
 
-tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.0.tgz#e37a86fda8cbbaf23a057f473c9f4dc64e5fc2e8"
+tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.13.0.tgz#c881e13cc7015894ed914862d276436fa9a47043"
 
 tslint@^5.0.0:
   version "5.9.1"
