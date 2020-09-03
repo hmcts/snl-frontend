@@ -114,7 +114,7 @@
     "protractor": "^5.1.1",
     "protractor-beautiful-reporter": "^1.2.1",
     "protractor-flake": "^3.3.0",
-    "puppeteer": "1.8.0",
+    "puppeteer": "1.13.0",
     "sonar-scanner": "^3.0.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.0.0",
